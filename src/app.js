@@ -115,10 +115,13 @@ function updateConnectivity() {
 }
 
 function setSettingsOpen(open) {
-  elements.settings.hidden = !open;
-  elements.openSettings.setAttribute("aria-expanded", String(open));
-  if (open) elements.region.focus();
-  else elements.openSettings.focus();
+  if (open && !elements.settings.open) {
+    elements.settings.showModal();
+    elements.openSettings.setAttribute("aria-expanded", "true");
+    elements.region.focus();
+    return;
+  }
+  if (!open && elements.settings.open) elements.settings.close();
 }
 
 function renderRegions() {
@@ -272,7 +275,7 @@ function renderOne(item, options = {}) {
     renderHistory();
   }
   if (options.updateUrl !== false) updateUrl(item.id);
-  if (options.focus !== false) document.querySelector(`#item-${CSS.escape(item.id)}`)?.focus();
+  if (options.focus !== false) elements.resultsTitle.focus();
 }
 
 function renderChoices(results, query) {
@@ -438,8 +441,18 @@ function bindEvents() {
   });
 
   elements.reset.addEventListener("click", () => resetSearch());
-  elements.openSettings.addEventListener("click", () => setSettingsOpen(elements.settings.hidden));
+  elements.openSettings.addEventListener("click", () => setSettingsOpen(!elements.settings.open));
   elements.closeSettings.addEventListener("click", () => setSettingsOpen(false));
+  elements.settings.addEventListener("close", () => {
+    elements.openSettings.setAttribute("aria-expanded", "false");
+    elements.openSettings.focus();
+  });
+  elements.settings.addEventListener("cancel", () => {
+    elements.openSettings.setAttribute("aria-expanded", "false");
+  });
+  elements.settings.addEventListener("click", (event) => {
+    if (event.target === elements.settings) setSettingsOpen(false);
+  });
 
   elements.region.addEventListener("change", () => {
     state.selectedRegion = elements.region.value;

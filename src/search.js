@@ -92,11 +92,16 @@ function itemTerms(item) {
 
 function fuzzyTokenMatch(queryToken, termToken) {
   if (queryToken === termToken) return 1;
-  if (queryToken.length >= 3 && (termToken.startsWith(queryToken) || queryToken.startsWith(termToken))) {
+  const longest = Math.max(queryToken.length, termToken.length);
+  const shortest = Math.min(queryToken.length, termToken.length);
+  if (
+    queryToken.length >= 3 &&
+    shortest / longest >= 0.7 &&
+    (termToken.startsWith(queryToken) || queryToken.startsWith(termToken))
+  ) {
     return 0.88;
   }
 
-  const longest = Math.max(queryToken.length, termToken.length);
   if (longest < 4) return 0;
   const distance = damerauLevenshtein(queryToken, termToken);
   const allowed = longest >= 9 ? 2 : 1;

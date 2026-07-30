@@ -5,9 +5,9 @@
   "provider": "GitHub Pages",
   "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
   "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-  "sourceCommit": "461732eef5b94b5e3f941fe5530030773cb02359",
-  "sourceTree": "9cadc699807b6dbfd8d9428a77f3654daf96e192",
-  "contentVersion": "2026.07.30-1",
+  "sourceCommit": "9034b561dec88e33856697adac3877639f47006f",
+  "sourceTree": "4e0524147e308ef7f72edb9e052091fc59a5a819",
+  "contentVersion": "2026.07.30-2",
   "productionApproved": false,
   "files": [
     {
@@ -24,11 +24,11 @@
     },
     {
       "path": "healthz",
-      "sha256": "f5a397d68eb25f1a2bb33277b69fec32243ecf602d605a68ecc2b7774ef88377"
+      "sha256": "f7a60dd6818b96ac3f6cdd557577235107b731ba795b92c95ccdc8118c39da44"
     },
     {
       "path": "index.html",
-      "sha256": "cdbff80207f2003271cfa2b5271f20be6501bb3d54ab0558dd47dab075519d83"
+      "sha256": "47c3a7a25153a4c02e2e6316204c16c36ed8b0c86286263ef05705db9135ba1f"
     },
     {
       "path": "manifest.webmanifest",
@@ -36,7 +36,7 @@
     },
     {
       "path": "meta.json",
-      "sha256": "95cbfd3e5bc01b63473c6885dba29dc248d3d244a6e620b38c9192e90c39193e"
+      "sha256": "9a13eee7998fda41bc2991c7b52b30ed54ec67e0ef5dd103797a00d8ffa1cbe0"
     },
     {
       "path": "public/data/regions.v1.json",
@@ -44,19 +44,19 @@
     },
     {
       "path": "public/data/sources.v1.json",
-      "sha256": "0fd82e01487bad08561c18ae24475eed741036497f57045e7c3fbf260ec693af"
+      "sha256": "e4d999d7ec206ed2e49b9cd5a7f4a5aeac8aa74b64f7da8c27fec6a52e3d3749"
     },
     {
       "path": "public/data/waste-items.v1.json",
-      "sha256": "5af4fe06845db4dbba8a3ba0d3ffe6e83d365f4db22cdca02b29ac92e25dbac8"
+      "sha256": "78c16deb154660310ee6f28d0aae7e96d88ee5cb5f7198775d5a3d84016d3343"
     },
     {
       "path": "src/app.js",
-      "sha256": "d068f0876060d63da1bdf471392be089ba13943bec8ab4c5769b2e998aa46e73"
+      "sha256": "f646e5b20c2f041290e15d06b5cb45598dd0a1696536ebeedab45582fac19b6d"
     },
     {
       "path": "src/search.js",
-      "sha256": "48c9e245f30ddb52685a3daf9b9b52daf3c40b8a54102d6830b2acd64aed5932"
+      "sha256": "101f93813bd4275fba332e48fa72f90289a7845ebe59fc84381456a1562f8978"
     },
     {
       "path": "src/storage.js",
@@ -64,11 +64,11 @@
     },
     {
       "path": "src/styles.css",
-      "sha256": "746e072d6095663d25fc996db4bc97a7876963fe3e806841e3cac698522a12fd"
+      "sha256": "6cf867132326ce23c04bf80d7823cde9c8b1ec2fcef57e894715d777c96adc5b"
     },
     {
       "path": "sw.js",
-      "sha256": "f9279fcd4061e2e244cb0578c81af9667cb1d505747a8527f614485eed387a6f"
+      "sha256": "047dca9c974e19dff77431ea6a1330cbb28b1df5db1812fe6f76e23a34c4037f"
     }
   ]
 }
