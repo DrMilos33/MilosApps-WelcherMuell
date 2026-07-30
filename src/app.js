@@ -143,6 +143,12 @@ function updateUrl(itemId = null, replace = false) {
   window.history[method]({ itemId }, "", `${url.pathname}${url.search}`);
 }
 
+function updateUrlForNonSpecificResult(options = {}) {
+  if (options.updateUrl === false) return;
+  const hadSpecificItem = new URL(window.location.href).searchParams.has("item");
+  updateUrl(null, !hadSpecificItem);
+}
+
 function emptyState({ title, message, kicker = "Bereit" }) {
   state.currentItem = null;
   elements.resultKicker.textContent = kicker;
@@ -285,7 +291,12 @@ function renderChoices(results, query) {
           <h3>${escapeHtml(item.name)}</h3>
           <p>${escapeHtml(item.answer)}</p>
         </div>
-        <button class="secondary-button" type="button" data-select-item="${escapeHtml(item.id)}">
+        <button
+          class="secondary-button"
+          type="button"
+          data-select-item="${escapeHtml(item.id)}"
+          aria-label="${escapeHtml(`${item.name} auswählen`)}"
+        >
           Auswählen
         </button>
       </article>
@@ -307,6 +318,7 @@ function runSearch(rawQuery, options = {}) {
       message: "Gib mindestens zwei Zeichen ein, zum Beispiel „Akku“ oder „Glas“.",
       kicker: "Zu kurze Eingabe"
     });
+    updateUrlForNonSpecificResult(options);
     elements.resultsTitle.focus();
     return;
   }
@@ -325,12 +337,14 @@ function runSearch(rawQuery, options = {}) {
     });
     state.history = addSearchToHistory(query);
     renderHistory();
+    updateUrlForNonSpecificResult(options);
     elements.resultsTitle.focus();
     return;
   }
 
   if (isAmbiguous(results)) {
     renderChoices(results, query);
+    updateUrlForNonSpecificResult(options);
     return;
   }
 

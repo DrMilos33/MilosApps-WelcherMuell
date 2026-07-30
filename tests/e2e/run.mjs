@@ -174,8 +174,25 @@ try {
     await desktopPage.getByRole("heading", { name: /Was meinst du mit „Glas“/ }).waitFor();
     await assert.doesNotReject(() => desktopPage.getByRole("heading", { name: "Glasverpackung" }).waitFor());
     await assert.doesNotReject(() => desktopPage.getByRole("heading", { name: "Trinkglas" }).waitFor());
-    const choices = desktopPage.getByRole("button", { name: "Auswählen" });
-    assert.ok((await choices.count()) >= 2);
+    assert.equal(await desktopPage.getByRole("button", { name: "Glasverpackung auswählen" }).count(), 1);
+    assert.equal(await desktopPage.getByRole("button", { name: "Trinkglas auswählen" }).count(), 1);
+    assert.doesNotMatch(desktopPage.url(), /\?item=/);
+  });
+
+  await check("Desktop: unklare Zustände entfernen veraltete Deep-Links", async () => {
+    await desktopPage.getByRole("button", { name: "Glasverpackung auswählen" }).click();
+    await desktopPage.getByRole("heading", { name: "Glasverpackung", exact: true }).waitFor();
+    assert.match(desktopPage.url(), /\?item=glass-container$/);
+
+    await submitSearch(desktopPage, "quantenmüll xyz");
+    await desktopPage.getByRole("heading", { name: /Kein sicherer Treffer/ }).waitFor();
+    assert.doesNotMatch(desktopPage.url(), /\?item=/);
+    await desktopPage.goBack();
+    await desktopPage.getByRole("heading", { name: "Glasverpackung", exact: true }).waitFor();
+
+    await submitSearch(desktopPage, "x");
+    await desktopPage.getByRole("heading", { name: "Bitte etwas genauer" }).waitFor();
+    assert.doesNotMatch(desktopPage.url(), /\?item=/);
   });
 
   await check("Desktop: regionale Korrektur München und lokale Löschung", async () => {
