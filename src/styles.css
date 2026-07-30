@@ -670,6 +670,14 @@ footer nav {
   gap: 1rem;
 }
 
+.regional-box a,
+.source-list a,
+footer nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
 dialog {
   width: min(calc(100% - 2rem), 47rem);
   max-height: min(84vh, 50rem);
@@ -792,6 +800,12 @@ dialog::backdrop {
   .result-main,
   .trust-section {
     grid-template-columns: 1fr;
+  }
+
+  .results-section .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 
   .result-card.compact {

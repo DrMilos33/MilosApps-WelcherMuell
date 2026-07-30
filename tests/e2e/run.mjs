@@ -339,6 +339,29 @@ try {
     assert.ok(overflow <= 1, `Querformat-Überlauf: ${overflow}px`);
   });
 
+  await check("Smartphone: wichtige Touch-Ziele sind mindestens 44 Pixel hoch", async () => {
+    const undersized = await mobilePage
+      .locator(".header-button, .quick-search button, .result-actions button, .regional-box a, .source-list a, footer nav a")
+      .evaluateAll((controls) => {
+        return controls
+          .filter((control) => {
+            const style = getComputedStyle(control);
+            const rect = control.getBoundingClientRect();
+            return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0;
+          })
+          .map((control) => {
+            const rect = control.getBoundingClientRect();
+            return {
+              name: control.getAttribute("aria-label") || control.textContent?.trim(),
+              width: Math.round(rect.width),
+              height: Math.round(rect.height)
+            };
+          })
+          .filter((control) => control.height < 44 || control.width < 44);
+      });
+    assert.deepEqual(undersized, []);
+  });
+
   await check("Smartphone: keine Konsolenfehler", async () => {
     assert.deepEqual(mobileErrors, []);
   });
