@@ -1,0 +1,21 @@
+{
+  "name": "milosapps-welcher-muell",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Quellenbasierte, öffentliche Entsorgungs-Nachschlage-App",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "start": "node scripts/dev-server.mjs",
+    "test": "node --test tests/unit/*.test.mjs",
+    "test:sources:online": "node scripts/check-sources.mjs",
+    "test:e2e": "node tests/e2e/run.mjs",
+    "test:all": "node --test tests/unit/*.test.mjs && node tests/e2e/run.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1"
+  }
+}

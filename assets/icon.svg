@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Welcher Müll? App-Symbol</title>
+  <rect width="512" height="512" rx="112" fill="#163d36"/>
+  <path d="M116 132h280l-24 260a44 44 0 0 1-44 40H184a44 44 0 0 1-44-40z" fill="#e8ff97"/>
+  <path d="M99 128a24 24 0 0 1 24-24h78V84a20 20 0 0 1 20-20h70a20 20 0 0 1 20 20v20h78a24 24 0 0 1 0 48H123a24 24 0 0 1-24-24z" fill="#f4f1e8"/>
+  <path d="M220 316c0-47 68-49 68-88 0-19-14-29-34-29-21 0-36 11-50 28l-34-30c22-29 51-45 90-45 52 0 88 27 88 72 0 57-69 61-69 99v8h-59zm-8 57a39 39 0 1 1 78 0 39 39 0 0 1-78 0z" fill="#163d36"/>
+</svg>
