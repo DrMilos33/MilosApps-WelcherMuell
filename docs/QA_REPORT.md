@@ -116,3 +116,19 @@ ausgegeben:
 Diese Grenzen sind keine bestätigten Produktfehler. Für eine spätere
 Releasefreigabe bleiben reale Screenreader-Sprachausgabe, Browserzoom und
 native Share-/Druckdialoge sinnvolle manuelle Checks.
+
+## Unabhängiger HTTPS-DEV-Smoke
+
+Nach dem lokalen Abschluss wurde exakt Quellcommit
+`461732eef5b94b5e3f941fe5530030773cb02359` als Pages-Artefakt
+`d9e6e4506e3a07d35edd6d6787269fddb54b4f4d` veröffentlicht.
+
+Der externe Smoke prüfte die echte HTTPS-URL in einem neuen Browserkontext ohne
+Cookies oder gespeicherte Origins. Startseite, app-spezifisches `/healthz`,
+Metadaten, direkter Batterie-Link und Medikamentensuche waren erfolgreich;
+Login-/Portalsteuerungen, fehlgeschlagene Ressourcen und Konsolenfehler wurden
+nicht gefunden. Die sichtbare In-App-Browser-Prüfung bestätigte zusätzlich
+390 × 844, Dark Mode, Inhaltsstand und überlauffreies Layout.
+
+Diese Deploymentprüfung erneuert keine fachliche Quellenprüfung. Inhaltsversion
+und Reviewtermine bleiben unverändert.

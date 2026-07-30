@@ -14,7 +14,20 @@ Nutzerdatenbank sind nicht nötig.
 - Plattformen: Web, Smartphone/PWA und Desktop
 - Production: nicht freigegeben
 
-Der lokale DEV- und E2E-Port ist fest auf `4318` reserviert:
+Der unabhängige öffentliche DEV-Stand ist ohne Portal und ohne Login erreichbar:
+
+```text
+App:         https://drmilos33.github.io/MilosApps-WelcherMuell/
+Readiness:   https://drmilos33.github.io/MilosApps-WelcherMuell/healthz
+Repository:  https://github.com/DrMilos33/MilosApps-WelcherMuell
+```
+
+Deploymentquelle ist unverändert
+`461732eef5b94b5e3f941fe5530030773cb02359`; der getrennte Pages-Artefaktcommit
+ist `d9e6e4506e3a07d35edd6d6787269fddb54b4f4d`. GitHub Pages ist ausschließlich
+der DEV-Host. Production bleibt nicht freigegeben.
+
+Der lokale DEV- und E2E-Port bleibt fest auf `4318` reserviert:
 
 ```text
 App:         http://127.0.0.1:4318/
@@ -45,6 +58,9 @@ und einen app-spezifischen Healthcheck aus.
 pnpm test
 pnpm test:e2e
 pnpm test:sources:online
+pnpm build:github-pages:dev
+$env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
+pnpm test:remote:dev
 pnpm test:all
 ```
 
@@ -52,6 +68,8 @@ pnpm test:all
 Speicherung. `test:e2e` nutzt ein lokal installiertes Chrome oder Edge auf Port
 4318. `test:sources:online` ruft alle katalogisierten amtlichen Quellen live ab.
 Screenshots aus E2E-Läufen landen ignoriert unter `test-results/qa/`.
+Der Remote-Smoke prüft die echte HTTPS-URL in einem frischen Browserkontext
+ohne Cookies, Portalzustand oder Milos-Login.
 
 ## Daten und Aufbau
 
@@ -75,4 +93,5 @@ immer optional.
 - [QA-Plan](docs/QA_PLAN.md)
 - [QA-Bericht](docs/QA_REPORT.md)
 - [DEV- und Portal-Übergabe](docs/DEV_HANDOFF.md)
+- [DEV-Deployment und Rollback](docs/DEPLOYMENT.md)
 - [Erkenntnisse](docs/LEARNINGS.md)

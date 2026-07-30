@@ -1,0 +1,109 @@
+import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { chromium } from "playwright";
+
+const expectedSourceCommit = "461732eef5b94b5e3f941fe5530030773cb02359";
+const expectedContentVersion = "2026.07.30-1";
+const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
+if (!configuredUrl) throw new Error("WASTE_GUIDE_REMOTE_URL fehlt.");
+
+const baseUrl = new URL(configuredUrl);
+if (baseUrl.protocol !== "https:" && process.env.WASTE_GUIDE_ALLOW_HTTP !== "1") {
+  throw new Error(`Remote-Smoke verlangt HTTPS: ${baseUrl}`);
+}
+if (!baseUrl.pathname.endsWith("/")) baseUrl.pathname = `${baseUrl.pathname}/`;
+
+const healthUrl = new URL("healthz", baseUrl);
+const healthResponse = await fetch(healthUrl, { redirect: "error" });
+assert.equal(healthResponse.status, 200);
+const health = JSON.parse(await healthResponse.text());
+assert.deepEqual(
+  {
+    status: health.status,
+    appKey: health.appKey,
+    environment: health.environment,
+    contentVersion: health.contentVersion,
+    productionApproved: health.productionApproved,
+    sourceCommit: health.sourceCommit
+  },
+  {
+    status: "ok",
+    appKey: "waste-guide",
+    environment: "DEV",
+    contentVersion: expectedContentVersion,
+    productionApproved: false,
+    sourceCommit: expectedSourceCommit
+  }
+);
+
+const metadataResponse = await fetch(new URL("meta.json", baseUrl), { redirect: "error" });
+assert.equal(metadataResponse.status, 200);
+const metadata = await metadataResponse.json();
+assert.equal(metadata.appKey, "waste-guide");
+assert.equal(metadata.devUrl, baseUrl.toString());
+assert.equal(metadata.healthcheck, healthUrl.toString());
+assert.equal(metadata.productionApproved, false);
+assert.equal(metadata.deployment?.sourceCommit, expectedSourceCommit);
+
+const chromeCandidates = [
+  "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+  "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe"
+];
+const executablePath = chromeCandidates.find(existsSync);
+if (!executablePath) throw new Error("Kein lokaler Chrome- oder Edge-Browser gefunden.");
+
+const browser = await chromium.launch({ executablePath, headless: true });
+const context = await browser.newContext({
+  viewport: { width: 390, height: 844 },
+  colorScheme: "dark",
+  isMobile: true,
+  hasTouch: true,
+  storageState: { cookies: [], origins: [] }
+});
+const page = await context.newPage();
+const consoleErrors = [];
+const failedResponses = [];
+page.on("console", (message) => {
+  if (message.type() === "error") consoleErrors.push(message.text());
+});
+page.on("response", (response) => {
+  if (response.status() >= 400) failedResponses.push(`${response.status()} ${response.url()}`);
+});
+
+try {
+  const homeResponse = await page.goto(baseUrl.toString(), { waitUntil: "networkidle" });
+  assert.equal(homeResponse?.status(), 200);
+  assert.equal(page.url(), baseUrl.toString());
+  await page.getByRole("heading", { name: "Wohin kommt das?" }).waitFor();
+  assert.equal(await page.getByRole("search").count(), 1);
+  assert.equal(await page.getByText(/Anmelden|Login|Milos-Konto/i).count(), 0);
+
+  await page.goto(`${baseUrl}?item=battery`, { waitUntil: "networkidle" });
+  await page.getByRole("heading", { name: "Batterie oder Akku", exact: true }).waitFor();
+  assert.equal(page.url(), `${baseUrl}?item=battery`);
+
+  await page.getByLabel("Gegenstand oder Material").fill("alte Medikamente");
+  await page.getByRole("button", { name: "Nachschlagen" }).click();
+  await page.getByRole("heading", { name: "Alte Medikamente", exact: true }).waitFor();
+  await page.getByText("Örtlich prüfen").waitFor();
+
+  assert.deepEqual(consoleErrors, []);
+  assert.deepEqual(failedResponses, []);
+} finally {
+  await context.close();
+  await browser.close();
+}
+
+console.log(JSON.stringify({
+  status: "PASS",
+  appKey: health.appKey,
+  environment: health.environment,
+  contentVersion: health.contentVersion,
+  productionApproved: health.productionApproved,
+  sourceCommit: health.sourceCommit,
+  devUrl: baseUrl.toString(),
+  healthUrl: healthUrl.toString(),
+  directWithoutLogin: true,
+  portalIndependent: true
+}, null, 2));

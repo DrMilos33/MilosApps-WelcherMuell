@@ -90,6 +90,20 @@ Port.
 Gültigkeitsgrenze: Diese Prüfung bestätigt die App-Identität und den
 DEV-Status, nicht die fachliche Vollständigkeit des Inhalts.
 
+### Deployment-Evidenz und redaktioneller Review sind getrennte Verträge
+
+Der öffentliche GitHub-Pages-DEV wurde aus dem fest gepinnten Quellcommit
+`461732e` gebaut. Pages-Status, Artefakthashes, `/healthz` und externer
+Browser-Smoke belegen die ausgelieferte Revision. Sie ändern weder
+`reviewedAt`, `reviewDue` noch den Lizenzstatus der 17 Quellen.
+
+Evidenz: Pages-Build `1122927971`, Artefaktcommit `d9e6e45`,
+`deployment.json` und `test:remote:dev`.
+
+Gültigkeitsgrenze: Ein technisch gesunder Deploy kann fachlich veraltete Daten
+ausliefern. Neue Inhaltsstände benötigen weiterhin einen eigenen
+redaktionellen Review und eine bewusst angehobene Inhaltsversion.
+
 ### Mobile Zielgrößen müssen auch Links umfassen
 
 Schaltflächen waren ausreichend groß, ein Footer-Link jedoch nur rund 22 px

@@ -10,13 +10,26 @@
   "contentVersion": "2026.07.30-1",
   "contentDate": "2026-07-30",
   "validity": "Allgemeine Hinweise für private Haushalte in Deutschland; belegte regionale Ergänzungen für Berlin, Hamburg und München.",
-  "devUrl": "http://127.0.0.1:4318/",
-  "healthcheck": "http://127.0.0.1:4318/healthz",
+  "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
+  "healthcheck": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
+  "localDevUrl": "http://127.0.0.1:4318/",
+  "localHealthcheck": "http://127.0.0.1:4318/healthz",
   "suggestedPortalRoute": "/apps/waste-guide",
   "previewImage": {
     "path": "/assets/preview.svg",
     "rights": "Eigenes Werk dieses Repositorys; keine Fremdassets, Logos oder Fotografien."
   },
   "productionApproved": false,
+  "deployment": {
+    "provider": "GitHub Pages",
+    "environment": "DEV",
+    "repository": "https://github.com/DrMilos33/MilosApps-WelcherMuell",
+    "sourceBranch": "codex/waste-guide-dev",
+    "sourceCommit": "461732eef5b94b5e3f941fe5530030773cb02359",
+    "artifactBranch": "dev-pages",
+    "artifactCommit": "d9e6e4506e3a07d35edd6d6787269fddb54b4f4d",
+    "pagesBuildId": 1122927971,
+    "productionApproved": false
+  },
   "sharedDependencies": []
 }
