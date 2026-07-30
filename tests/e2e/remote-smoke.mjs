@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { chromium } from "playwright";
 
-const expectedSourceCommit = "461732eef5b94b5e3f941fe5530030773cb02359";
-const expectedContentVersion = "2026.07.30-1";
+const expectedSourceCommit = "9034b561dec88e33856697adac3877639f47006f";
+const expectedContentVersion = "2026.07.30-2";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
 if (!configuredUrl) throw new Error("WASTE_GUIDE_REMOTE_URL fehlt.");
 
@@ -84,9 +84,15 @@ try {
   assert.equal(page.url(), `${baseUrl}?item=battery`);
 
   await page.getByLabel("Gegenstand oder Material").fill("alte Medikamente");
-  await page.getByRole("button", { name: "Nachschlagen" }).click();
+  await page.getByRole("button", { name: "Suchen" }).click();
   await page.getByRole("heading", { name: "Alte Medikamente", exact: true }).waitFor();
   await page.getByText("Örtlich prüfen").waitFor();
+
+  await page.getByRole("button", { name: "Neue Suche" }).click();
+  await page.getByLabel("Gegenstand oder Material").fill("GUmmiband");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Gummi-Gegenstand", exact: true }).waitFor();
+  await page.getByText("Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen", { exact: true }).waitFor();
 
   assert.deepEqual(consoleErrors, []);
   assert.deepEqual(failedResponses, []);

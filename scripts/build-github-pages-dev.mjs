@@ -5,8 +5,8 @@ import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repositoryRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const expectedSourceCommit = "461732eef5b94b5e3f941fe5530030773cb02359";
-const expectedContentVersion = "2026.07.30-1";
+const expectedSourceCommit = "9034b561dec88e33856697adac3877639f47006f";
+const expectedContentVersion = "2026.07.30-2";
 const repositoryName = "MilosApps-WelcherMuell";
 const basePath = `/${repositoryName}`;
 const devUrl = `https://drmilos33.github.io${basePath}/`;
