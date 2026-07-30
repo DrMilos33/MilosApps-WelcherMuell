@@ -6,9 +6,9 @@ Der DEV-Stand wurde nach dem ersten lauffähigen Meilenstein in zwei getrennten
 Miteinander-Product-QA-Runden geprüft und verbessert. Der abschließende Stand
 erreichte:
 
-- 38 von 38 Unit-, Inhalts-, Quellen-, Such- und Speichertests;
-- 18 von 18 Browser-E2E-Prüfungen;
-- 17 von 17 erreichbare amtliche Quellen im Wiederholungslauf;
+- 61 von 61 Unit-, Inhalts-, Quellen-, Such- und Speichertests;
+- 22 von 22 Browser-E2E-Prüfungen;
+- 20 von 20 erreichbare amtliche Quellen;
 - keine Konsolenfehler in Desktop- und Smartphone-Kontexten;
 - keinen horizontalen Überlauf bei 390 px, 640 px und 1440 px Breite.
 
@@ -116,6 +116,51 @@ ausgegeben:
 Diese Grenzen sind keine bestätigten Produktfehler. Für eine spätere
 Releasefreigabe bleiben reale Screenreader-Sprachausgabe, Browserzoom und
 native Share-/Druckdialoge sinnvolle manuelle Checks.
+
+## QA-Erweiterung für Inhaltsversion 2026.07.30-2
+
+Ausgangsstand war der vollständig grüne DEV-Commit `92aa572` mit 38/38
+Unit-/Datenprüfungen und 18/18 Browser-E2E-Prüfungen. Die Nutzerprüfung zeigte
+zwei neue Produktlücken: häufige Gummibegriffe wurden nicht gefunden, während
+die große Region-/Speicherkarte Suche und Treffer aus dem ersten Sichtfeld
+drängte.
+
+### Verbesserungsrunde 1: Suchbreite und Informationshierarchie
+
+- 11 neue redaktionelle Einträge und belastbare Synonyme für Gummi- und
+  Alltagsgegenstände ergänzt;
+- Auto- und Motorradreifen als eigenen Sicherheitsfall von kleinen
+  Gummigegenständen getrennt;
+- Suche, Beispiele und Entsorgungsweg deutlich vor Zusatzinformationen
+  angeordnet;
+- Region und lokale Speicherung in einen kompakten, stark gerundeten Dialog
+  verschoben;
+- Methodik und Vertrauenshinweise standardmäßig eingeklappt;
+- Desktop, 390-px-Smartphone und Tastaturfluss visuell und automatisiert
+  nachgeprüft.
+
+Die erste Nachprüfung deckte auf dem Smartphone noch eine Mehrdeutigkeit für
+den Tippfehler `Gummibnad` auf. Ursache war ein zu großzügiger Präfixbonus, der
+den generischen Materialbegriff stärker als die konkrete Zusammensetzung
+wertete.
+
+### Verbesserungsrunde 2: Regressionen und kompakte Bedienung
+
+- Präfixvergleiche berücksichtigen nun das Längenverhältnis, ohne die
+  Tippfehlertoleranz für konkrete Begriffe zu schwächen;
+- `Gummibnad` führt wieder eindeutig zum passenden Eintrag;
+- Escape synchronisiert nach dem Schließen des Einstellungsdialogs auch
+  `aria-expanded`;
+- „Neue Suche“ bleibt auf schmalen Ergebniszeilen in einer Zeile;
+- Browserregressionen sichern Suchpriorität, Dialoggröße/-rundung,
+  Screenreaderstatus und den sofort sichtbaren Entsorgungsweg.
+
+Abschluss: 61/61 Unit-/Datenprüfungen, 22/22 lokale Browser-E2E-Prüfungen und
+20/20 Online-Quellenchecks bestanden. Die bestehende Matrix für Desktop,
+Smartphone, Tastatur, Screenreader-Nähe, 200-Prozent-Reflow, kurze/lange/
+mehrdeutige Eingaben, Umlaute, Singular/Plural, Sonderfälle, Quellenalter,
+Rücknavigation, Offline, Teilen und Drucken wurde erneut vollständig
+ausgeführt.
 
 ## Unabhängiger HTTPS-DEV-Smoke
 

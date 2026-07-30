@@ -40,6 +40,25 @@ describe("redaktioneller Datenvertrag", () => {
     }
   });
 
+  test("häufige kleine Alltagsabfälle sind redaktionell abgedeckt", () => {
+    const ids = new Set(catalogs.items.items.map((item) => item.id));
+    for (const id of [
+      "rubber-household-item",
+      "car-tire",
+      "vacuum-waste",
+      "pet-litter",
+      "hygiene-paper",
+      "manual-toothbrush",
+      "cleaning-sponge",
+      "writing-utensils",
+      "photos",
+      "sports-ball",
+      "contact-lenses"
+    ]) {
+      assert.ok(ids.has(id), `${id} fehlt im Alltagsbestand`);
+    }
+  });
+
   test("jede Aussage hat zum Inhaltsstand gültige Quellen", () => {
     const sources = new Map(catalogs.sources.sources.map((source) => [source.id, source]));
     for (const item of catalogs.items.items) {

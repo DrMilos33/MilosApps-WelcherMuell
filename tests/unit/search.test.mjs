@@ -53,7 +53,27 @@ describe("Suchqualität", () => {
     ["Pizzakartons", "pizza-box", "Plural"],
     ["Wohin kommt mein alter Toaster?", "electrical-device", "lange Frage"],
     ["Blaue Glasflasche", "blue-glass", "Material und Farbe"],
-    ["E Zigaretten", "e-cigarette", "Bindestrichvariation"]
+    ["E Zigaretten", "e-cigarette", "Bindestrichvariation"],
+    ["Gummi", "rubber-household-item", "breiter Materialbegriff"],
+    ["GUmmiband", "rubber-household-item", "Gummiband mit gemischter Großschreibung"],
+    ["Gummibänder", "rubber-household-item", "Plural eines Gummialltagsgegenstands"],
+    ["Gummibnad", "rubber-household-item", "Tippfehler in Gummiband"],
+    ["Gummis", "rubber-household-item", "umgangssprachlicher Gummi-Plural"],
+    ["Haargummi", "rubber-household-item", "zusammengesetzter Gummigegenstand"],
+    ["Radiergummi", "rubber-household-item", "weiterer zusammengesetzter Gummigegenstand"],
+    ["Gummiringe", "rubber-household-item", "kleines Gummiteil im Plural"],
+    ["Latexhandschuhe", "rubber-household-item", "Materialsynonym für Gummihandschuhe"],
+    ["Fahrradreifen", "rubber-household-item", "örtlich zu prüfender Gummigegenstand"],
+    ["Autoreifen", "car-tire", "Fahrzeugreifen bleibt vom Restmüllfall getrennt"],
+    ["Staubsaugerbeutel", "vacuum-waste", "häufiger Haushaltsrest"],
+    ["Katzenstreu", "pet-litter", "Haustierabfall"],
+    ["benutztes Taschentuch", "hygiene-paper", "Hygienepapier"],
+    ["alte Zahnbürste", "manual-toothbrush", "nicht elektrische Zahnbürste"],
+    ["Abwaschschwamm", "cleaning-sponge", "kleiner Reinigungsartikel"],
+    ["Kugelschreiber", "writing-utensils", "Schreibartikel"],
+    ["alte Fotos", "photos", "Fotomaterial"],
+    ["Fußball", "sports-ball", "Sportartikel"],
+    ["Kontaktlinsen", "contact-lenses", "kleiner Hygieneartikel"]
   ];
 
   for (const [query, expected, label] of cases) {
@@ -78,6 +98,24 @@ describe("Suchqualität", () => {
       asOf: new Date("2026-07-30T00:00:00Z")
     });
     assert.equal(results[0].item.id, "battery");
+    assert.equal(isAmbiguous(results), false);
+  });
+
+  test("Autoreifen wird nie als gewöhnlicher Gummi-Restmülltreffer ausgegeben", () => {
+    const results = searchItems(items, "alter Autoreifen", {
+      sourcesById,
+      asOf: new Date("2026-07-30T00:00:00Z")
+    });
+    assert.equal(results[0].item.id, "car-tire");
+    assert.notEqual(results[0].item.id, "rubber-household-item");
+  });
+
+  test("Gummiband-Tippfehler bleibt trotz generischem Gummi-Keyword eindeutig", () => {
+    const results = searchItems(items, "Gummibnad", {
+      sourcesById,
+      asOf: new Date("2026-07-30T00:00:00Z")
+    });
+    assert.equal(results[0].item.id, "rubber-household-item");
     assert.equal(isAmbiguous(results), false);
   });
 

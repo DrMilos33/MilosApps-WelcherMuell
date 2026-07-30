@@ -2,9 +2,9 @@
 
 ## Inhaltsstand
 
-- Inhaltsversion: `2026.07.30-1`
+- Inhaltsversion: `2026.07.30-2`
 - redaktionell geprüft: 30.07.2026
-- Umfang: 35 Entsorgungseinträge, 17 Quellen
+- Umfang: 46 Entsorgungseinträge, 20 Quellen
 - früheste erneute Prüfung: 30.09.2026
 - allgemeine Geltung: private Haushalte in Deutschland
 - regionale Ergänzungen: Berlin, Hamburg und München
@@ -29,10 +29,11 @@ Fachliche Aussagen stammen ausschließlich von:
   gebrauchten Spritzen.
 
 UBA- und BMG-Rechteseiten sind zusätzlich als Lizenznachweis katalogisiert.
-Am 30.07.2026 beantworteten alle 17 URLs den automatisierten Live-Check mit
-HTTP 200. Ein einzelner vorübergehender Netzwerkfehler bei der
-UBA-Problemabfallseite war im unmittelbaren Wiederholungslauf nicht mehr
-reproduzierbar.
+Am 30.07.2026 beantworteten alle 20 URLs den automatisierten Live-Check mit
+HTTP 200. Für die Erweiterung um kleine Gummi- und Alltagsgegenstände wurden
+insbesondere das Abfalllexikon des Abfallwirtschaftsbetriebs München sowie die
+UBA-Hinweise zu Haushaltsabfällen geprüft. Autoreifen sind anhand der eigenen
+UBA-Fachseite ausdrücklich vom gewöhnlichen Haus- und Sperrmüllfall getrennt.
 
 ## Lizenz und Attribution
 

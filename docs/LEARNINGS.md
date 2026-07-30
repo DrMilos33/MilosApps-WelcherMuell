@@ -1,5 +1,39 @@
 # Welcher-Müll-Erkenntnisse
 
+## 30.07.2026 · Inhaltsversion 2026.07.30-2
+
+### Materialwörter brauchen breite Synonyme und enge Sicherheitsgrenzen
+
+Ein Begriff wie `Gummi` beschreibt zugleich kleine Haushaltsartikel,
+zusammengesetzte Wörter und sicherheitsrelevante Sonderfälle. Ein einziger
+generischer Treffer wäre deshalb zwar breit, aber fachlich riskant. Der Bestand
+verknüpft häufige Zusammensetzungen mit einem vorsichtigen Alltagsfall und führt
+Auto- und Motorradreifen separat. Das Suchranking gewichtet konkrete lange
+Begriffe höher und begrenzt Präfixboni über das Längenverhältnis.
+
+Evidenz: 19 neue Suchregressionen einschließlich `GUmmiband`, `Gummibänder`,
+`Gummibnad`, `Haargummi`, `Radiergummi`, `Latexhandschuhe`, `Fahrradreifen` und
+`Autoreifen`; 61/61 Unit-/Datenprüfungen bestanden.
+
+Gültigkeitsgrenze: Ein Materialname allein verrät nicht Größe, Produktart oder
+örtliches Sammelsystem. Die App zeigt deshalb bei großen Gummiteilen und
+Fahrradreifen einen lokalen Prüfschritt und rät nicht pauschal eine Tonne.
+
+### Optionale Einstellungen gehören in progressive Offenlegung
+
+Region und lokaler Verlauf sind nützliche Nebenfunktionen, aber nicht die
+Hauptaufgabe. Als dauerhaft große Inhaltskarte erzeugten sie Scrollweg und
+verdrängten Treffer. Ein kompakter, fokussierter Dialog hält die Einstellungen
+auffindbar, während Suche und Entsorgungsweg im ersten Sichtfeld bleiben.
+
+Evidenz: Browserregressionen für Suchposition, Dialogabmessungen,
+Dialogrundung, Escape-/Fokuszustand und sofort sichtbaren Ergebnisweg; 22/22
+E2E-Prüfungen bestanden.
+
+Gültigkeitsgrenze: Progressive Offenlegung darf Datenschutzangaben nicht
+verstecken. Der Dialog nennt weiterhin ausdrücklich, dass keine
+Standortabfrage erfolgt und Angaben nur auf dem Gerät gespeichert werden.
+
 ## 30.07.2026 · Inhaltsversion 2026.07.30-1
 
 ### Quellenpflege braucht drei getrennte Signale

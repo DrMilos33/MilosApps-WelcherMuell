@@ -8,6 +8,7 @@ import { chromium } from "playwright";
 const host = "127.0.0.1";
 const port = 4318;
 const baseUrl = `http://${host}:${port}`;
+const expectedContentVersion = "2026.07.30-2";
 const artifacts = new URL("../../test-results/qa/", import.meta.url);
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -28,6 +29,7 @@ function isExpectedIdentity(health) {
   return (
     health?.appKey === "waste-guide" &&
     health?.environment === "DEV" &&
+    health?.contentVersion === expectedContentVersion &&
     health?.productionApproved === false
   );
 }
@@ -135,7 +137,7 @@ function collectPageErrors(page) {
 
 async function submitSearch(page, query) {
   await page.getByLabel("Gegenstand oder Material").fill(query);
-  await page.getByRole("button", { name: "Nachschlagen" }).click();
+  await page.getByRole("button", { name: /Suchen|Nachschlagen/ }).click();
 }
 
 await waitForServer();
@@ -150,9 +152,15 @@ try {
       {
         appKey: health.appKey,
         environment: health.environment,
+        contentVersion: health.contentVersion,
         productionApproved: health.productionApproved
       },
-      { appKey: "waste-guide", environment: "DEV", productionApproved: false }
+      {
+        appKey: "waste-guide",
+        environment: "DEV",
+        contentVersion: expectedContentVersion,
+        productionApproved: false
+      }
     );
 
     const direct = await fetch(`${baseUrl}/?item=battery`);
@@ -196,6 +204,47 @@ try {
       path: fileURLToPath(new URL("desktop-result.png", artifacts)),
       fullPage: true
     });
+  });
+
+  await check("Desktop: Suche dominiert und Zusatzinfos bleiben kompakt", async () => {
+    await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
+    const geometry = await desktopPage.evaluate(() => {
+      const hero = document.querySelector(".hero").getBoundingClientRect();
+      const search = document.querySelector(".search-control").getBoundingClientRect();
+      const results = document.querySelector(".results-section").getBoundingClientRect();
+      const trust = document.querySelector(".trust-section");
+      return {
+        heroHeight: Math.round(hero.height),
+        searchBottom: Math.round(search.bottom),
+        resultsGap: Math.round(results.top - hero.bottom),
+        trustCollapsed: trust instanceof HTMLDetailsElement && !trust.open
+      };
+    });
+    assert.ok(geometry.heroHeight <= 540, `Hero zu hoch: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.searchBottom <= 600, `Suche zu spät sichtbar: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.resultsGap <= 48, `Treffer zu weit von Suche entfernt: ${JSON.stringify(geometry)}`);
+    assert.equal(geometry.trustCollapsed, true);
+  });
+
+  await check("Desktop: Einstellungen sind ein kompakter runder Dialog", async () => {
+    await desktopPage.getByRole("button", { name: "Region & Datenschutz" }).click();
+    const settingsDialog = desktopPage.getByRole("dialog", { name: "Region & lokale Daten" });
+    await settingsDialog.waitFor();
+    const geometry = await settingsDialog.evaluate((dialog) => {
+      const rect = dialog.getBoundingClientRect();
+      return {
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        radius: Number.parseFloat(getComputedStyle(dialog).borderTopLeftRadius)
+      };
+    });
+    assert.ok(geometry.width <= 640, `Einstellungsdialog zu breit: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.height <= 620, `Einstellungsdialog zu hoch: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.radius >= 24, `Einstellungsdialog zu eckig: ${JSON.stringify(geometry)}`);
+    await desktopPage.screenshot({
+      path: fileURLToPath(new URL("settings-dialog.png", artifacts))
+    });
+    await desktopPage.getByRole("button", { name: "Einstellungen schließen" }).click();
   });
 
   await check("Desktop: Tippfehler, Umlaute, Plural und Sicherheitspriorität", async () => {
@@ -242,7 +291,7 @@ try {
     await desktopPage.getByRole("button", { name: "Region & Datenschutz" }).click();
     await desktopPage.getByLabel("Grobe Region").selectOption("munich");
     await desktopPage.getByLabel("Letzte Suchen merken").check();
-    await desktopPage.getByRole("button", { name: "Schließen" }).click();
+    await desktopPage.getByRole("button", { name: "Einstellungen schließen" }).click();
     await submitSearch(desktopPage, "Joghurtbecher");
     await assert.doesNotReject(() => desktopPage.getByText("Wertstoffinsel für Kunststoff und Metall").waitFor());
     await desktopPage.reload({ waitUntil: "networkidle" });
@@ -254,7 +303,7 @@ try {
     assert.equal(await desktopPage.getByLabel("Grobe Region").inputValue(), "de");
     assert.equal(await desktopPage.getByLabel("Letzte Suchen merken").isChecked(), false);
     assert.equal(await desktopPage.getByRole("heading", { name: "Letzte Suchen" }).count(), 0);
-    await desktopPage.getByRole("button", { name: "Schließen" }).click();
+    await desktopPage.getByRole("button", { name: "Einstellungen schließen" }).click();
   });
 
   await check("Desktop: schnelle Rücknavigation stellt Ergebnisse wieder her", async () => {
@@ -297,7 +346,10 @@ try {
     await desktopPage.getByRole("heading", { name: "Kassenzettel", exact: true }).waitFor();
 
     await desktopPage.getByRole("button", { name: "Quellen & Datenschutz" }).click();
-    await desktopPage.getByRole("dialog").waitFor();
+    const aboutDialog = desktopPage.getByRole("dialog");
+    await aboutDialog.waitFor();
+    const radius = await aboutDialog.evaluate((dialog) => Number.parseFloat(getComputedStyle(dialog).borderTopLeftRadius));
+    assert.ok(radius >= 24, `Transparenzdialog zu eckig: ${radius}px`);
     await desktopPage.getByRole("button", { name: "Dialog schließen" }).focus();
     await desktopPage.keyboard.press("Enter");
     assert.equal(await desktopPage.getByRole("dialog").isVisible(), false);
@@ -355,8 +407,37 @@ try {
   const mobilePage = await mobile.newPage();
   const mobileErrors = collectPageErrors(mobilePage);
 
+  await check("Smartphone: Einstellungen bleiben kompakt und schließen per Escape", async () => {
+    await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
+    await mobilePage.getByRole("button", { name: "Region & Datenschutz" }).tap();
+    const dialog = mobilePage.getByRole("dialog", { name: "Region & lokale Daten" });
+    await dialog.waitFor();
+    const geometry = await dialog.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        top: Math.round(rect.top),
+        bottom: Math.round(rect.bottom),
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        viewportHeight: innerHeight,
+        viewportWidth: innerWidth
+      };
+    });
+    assert.ok(geometry.top >= 0 && geometry.bottom <= geometry.viewportHeight, `Dialog außerhalb des Sichtfelds: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.width <= geometry.viewportWidth - 8, `Dialog zu breit: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.height <= 720, `Dialog zu hoch: ${JSON.stringify(geometry)}`);
+    await mobilePage.keyboard.press("Escape");
+    assert.equal(await dialog.isVisible(), false);
+    assert.equal(await mobilePage.getByRole("button", { name: "Region & Datenschutz" }).getAttribute("aria-expanded"), "false");
+  });
+
   await check("Smartphone: Touch, Dark Mode und lange Eingabe", async () => {
     await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
+    const startGeometry = await mobilePage.evaluate(() => {
+      const search = document.querySelector(".search-control").getBoundingClientRect();
+      return { searchBottom: Math.round(search.bottom) };
+    });
+    assert.ok(startGeometry.searchBottom <= 720, `Suche liegt nicht im ersten Smartphone-Sichtfeld: ${JSON.stringify(startGeometry)}`);
     await mobilePage.getByRole("button", { name: "Medikamente" }).tap();
     await mobilePage.getByRole("heading", { name: "Alte Medikamente", exact: true }).waitFor();
     const overflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -367,6 +448,30 @@ try {
     assert.equal((await mobilePage.getByLabel("Gegenstand oder Material").inputValue()).length, 120);
     await mobilePage.screenshot({
       path: fileURLToPath(new URL("phone-dark.png", artifacts)),
+      fullPage: true
+    });
+  });
+
+  await check("Smartphone: Gummiband zeigt den Entsorgungsweg ohne Umweg", async () => {
+    await mobilePage.setViewportSize({ width: 390, height: 844 });
+    await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
+    await submitSearch(mobilePage, "Gummibnad");
+    await mobilePage.getByRole("heading", { name: "Gummi-Gegenstand", exact: true }).waitFor();
+    await mobilePage.getByText("Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen", { exact: true }).waitFor();
+    const resultGeometry = await mobilePage.evaluate(() => {
+      const route = document.querySelector(".result-route").getBoundingClientRect();
+      const resetSearch = document.querySelector("#reset-search");
+      return {
+        top: Math.round(route.top),
+        bottom: Math.round(route.bottom),
+        viewport: innerHeight,
+        resetWhiteSpace: getComputedStyle(resetSearch).whiteSpace
+      };
+    });
+    assert.ok(resultGeometry.top < resultGeometry.viewport, `Entsorgungsweg nicht sofort sichtbar: ${JSON.stringify(resultGeometry)}`);
+    assert.equal(resultGeometry.resetWhiteSpace, "nowrap");
+    await mobilePage.screenshot({
+      path: fileURLToPath(new URL("phone-rubber-result.png", artifacts)),
       fullPage: true
     });
   });

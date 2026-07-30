@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.07.30-1",
+  "catalogVersion": "2026.07.30-2",
   "verifiedAt": "2026-07-30",
   "editorialUse": "Die App übernimmt keinen externen Datensatz, keine Logos, Bilder oder längeren Textpassagen. Entsorgungstatsachen wurden aus amtlichen Seiten geprüft und eigenständig kurz formuliert. Jeder Hinweis verlinkt die Quelle.",
   "sources": [
@@ -183,6 +183,42 @@
       "reviewDue": "2026-09-30",
       "license": "Keine offene Lizenz festgestellt. Keine Text- oder Bildübernahme; nur vorsichtige Sicherheitsgrundsätze in eigener Formulierung mit Link.",
       "attribution": "Quelle: Stadt Köln, Gesundheitsamt."
+    },
+    {
+      "id": "uba-household-waste",
+      "title": "Abfälle im Haushalt",
+      "publisher": "Umweltbundesamt",
+      "url": "https://www.umweltbundesamt.de/themen/abfaelle-im-haushalt",
+      "scope": "Deutschland; allgemeine Einordnung von Restmüll und kommunal geregelten Haushaltsabfällen",
+      "sourceDate": null,
+      "verifiedAt": "2026-07-30",
+      "reviewDue": "2026-10-30",
+      "license": "UBA-Inhalte grundsätzlich CC BY-NC-ND 4.0, sofern nicht anders gekennzeichnet; Daten nach § 12a EGovG nutzbar. Keine Text- oder Bildübernahme.",
+      "attribution": "Quelle: Umweltbundesamt; eigenständige Tatsachenzusammenfassung."
+    },
+    {
+      "id": "uba-car-tires",
+      "title": "Autoreifen: Auf Rollgeräusch, Reifendruck und Abrieb achten",
+      "publisher": "Umweltbundesamt",
+      "url": "https://www.umweltbundesamt.de/umwelttipps-fuer-den-alltag/mobilitaet/autoreifen",
+      "scope": "Deutschland; sachgerechte Entsorgung von Autoreifen",
+      "sourceDate": "2025-10-22",
+      "verifiedAt": "2026-07-30",
+      "reviewDue": "2026-10-30",
+      "license": "UBA-Inhalte grundsätzlich CC BY-NC-ND 4.0, sofern nicht anders gekennzeichnet; Daten nach § 12a EGovG nutzbar. Keine Text- oder Bildübernahme.",
+      "attribution": "Quelle: Umweltbundesamt; Entsorgungsgrundsatz eigenständig zusammengefasst."
+    },
+    {
+      "id": "munich-awm-lexicon",
+      "title": "Abfalllexikon – Entsorgungs- und Vermeidungstipps",
+      "publisher": "Abfallwirtschaftsbetrieb München (AWM)",
+      "url": "https://www.awm-muenchen.de/abfall-entsorgen/abfalllexikon",
+      "scope": "Stadt München; konkrete Alltagsabfälle aus privaten Haushalten",
+      "sourceDate": null,
+      "verifiedAt": "2026-07-30",
+      "reviewDue": "2026-09-30",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Es werden keine Texte oder Datensätze kopiert; einzelne Entsorgungstatsachen sind eigenständig formuliert und als örtliche Evidenz gekennzeichnet.",
+      "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München."
     },
     {
       "id": "uba-rights-2026",

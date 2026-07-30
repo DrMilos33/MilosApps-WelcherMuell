@@ -7,8 +7,8 @@ Nutzerdatenbank sind nicht nötig.
 
 ## DEV-Stand
 
-- Inhaltsversion: `2026.07.30-1`, Stand 30.07.2026
-- 35 redaktionelle Einträge und 17 amtliche oder kommunale Quellen
+- Inhaltsversion: `2026.07.30-2`, Stand 30.07.2026
+- 46 redaktionelle Einträge und 20 amtliche oder kommunale Quellen
 - allgemeiner Geltungsbereich: private Haushalte in Deutschland
 - belegte regionale Ergänzungen: Berlin, Hamburg und München
 - Plattformen: Web, Smartphone/PWA und Desktop
@@ -22,7 +22,7 @@ Readiness:   https://drmilos33.github.io/MilosApps-WelcherMuell/healthz
 Repository:  https://github.com/DrMilos33/MilosApps-WelcherMuell
 ```
 
-Deploymentquelle ist unverändert
+Der bislang öffentlich aktive DEV-Stand verwendet noch die Deploymentquelle
 `461732eef5b94b5e3f941fe5530030773cb02359`; der getrennte Pages-Artefaktcommit
 ist `d9e6e4506e3a07d35edd6d6787269fddb54b4f4d`. GitHub Pages ist ausschließlich
 der DEV-Host. Production bleibt nicht freigegeben.
@@ -84,6 +84,11 @@ ohne Cookies, Portalzustand oder Milos-Login.
 Fehlt eine Quelle oder ist ihre erneute Prüfung fällig, wird der betroffene
 Hinweis nicht als scheinbar sichere Tonnenregel ausgegeben. Standort bleibt
 immer optional.
+
+Die Suche deckt neben Materialbegriffen auch typische Alltagswörter und
+Zusammensetzungen ab, etwa `Gummi`, `Gummiband`, `Haargummi`, `Radiergummi`,
+`Staubsaugerbeutel`, `Katzenstreu` und `Kugelschreiber`. Sicherheitsrelevante
+Abgrenzungen wie Auto- und Motorradreifen bleiben eigene, vorsichtige Treffer.
 
 ## Dokumentation
 
