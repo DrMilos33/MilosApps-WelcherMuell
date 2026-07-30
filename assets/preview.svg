@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Welcher Müll? Vorschau</title>
+  <desc id="desc">Dunkelgrüne Vorschau mit Suchfeld und drei Entsorgungswegen.</desc>
+  <rect width="1200" height="630" fill="#f4f1e8"/>
+  <circle cx="1080" cy="90" r="210" fill="#e8ff97"/>
+  <circle cx="96" cy="590" r="180" fill="#d4ebe4"/>
+  <rect x="82" y="74" width="86" height="86" rx="24" fill="#163d36"/>
+  <text x="125" y="133" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#e8ff97">W?</text>
+  <text x="192" y="133" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#163d36">Welcher Müll?</text>
+  <text x="82" y="260" font-family="Arial, sans-serif" font-size="74" font-weight="700" fill="#112d29">Wohin kommt das?</text>
+  <rect x="82" y="310" width="750" height="92" rx="30" fill="#fff" stroke="#163d36" stroke-width="4"/>
+  <text x="124" y="369" font-family="Arial, sans-serif" font-size="30" fill="#596864">Joghurtbecher</text>
+  <rect x="650" y="326" width="166" height="60" rx="22" fill="#163d36"/>
+  <text x="733" y="365" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">Suchen</text>
+  <g transform="translate(82 458)">
+    <rect width="300" height="108" rx="28" fill="#163d36"/>
+    <text x="26" y="44" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#b7d8cf">BUNDESWEIT</text>
+    <text x="26" y="82" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#fff">Gelbe Sammlung</text>
+  </g>
+  <g transform="translate(402 458)">
+    <rect width="300" height="108" rx="28" fill="#fff" stroke="#c8cec9" stroke-width="3"/>
+    <text x="26" y="44" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#816526">ÖRTLICH PRÜFEN</text>
+    <text x="26" y="82" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#112d29">Region sichtbar</text>
+  </g>
+  <text x="82" y="605" font-family="Arial, sans-serif" font-size="20" fill="#596864">Quellenbasiert · ohne Konto · ohne Standortpflicht</text>
+</svg>

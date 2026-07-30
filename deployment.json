@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "appKey": "waste-guide",
+  "environment": "DEV",
+  "provider": "GitHub Pages",
+  "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
+  "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
+  "sourceCommit": "461732eef5b94b5e3f941fe5530030773cb02359",
+  "sourceTree": "9cadc699807b6dbfd8d9428a77f3654daf96e192",
+  "contentVersion": "2026.07.30-1",
+  "productionApproved": false,
+  "files": [
+    {
+      "path": ".nojekyll",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "assets/icon.svg",
+      "sha256": "d315cb0fd21d4c98aac50cefd7857e231aa30f7d5f1d01ce76cfab5834e709d1"
+    },
+    {
+      "path": "assets/preview.svg",
+      "sha256": "8732aa2f6b7421bf19dfdb456e5c1e52ef9468448a61757ad1936230051a98d1"
+    },
+    {
+      "path": "healthz",
+      "sha256": "f5a397d68eb25f1a2bb33277b69fec32243ecf602d605a68ecc2b7774ef88377"
+    },
+    {
+      "path": "index.html",
+      "sha256": "cdbff80207f2003271cfa2b5271f20be6501bb3d54ab0558dd47dab075519d83"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "sha256": "2b13e47d70b558cb79511cdd198e44a27dbca8fe39ba721436b97fbc6a0f849f"
+    },
+    {
+      "path": "meta.json",
+      "sha256": "95cbfd3e5bc01b63473c6885dba29dc248d3d244a6e620b38c9192e90c39193e"
+    },
+    {
+      "path": "public/data/regions.v1.json",
+      "sha256": "a8770e7f9814857a945f1d58c5d98c47c0b26a2f2b73525b5fd315b307a7f786"
+    },
+    {
+      "path": "public/data/sources.v1.json",
+      "sha256": "0fd82e01487bad08561c18ae24475eed741036497f57045e7c3fbf260ec693af"
+    },
+    {
+      "path": "public/data/waste-items.v1.json",
+      "sha256": "5af4fe06845db4dbba8a3ba0d3ffe6e83d365f4db22cdca02b29ac92e25dbac8"
+    },
+    {
+      "path": "src/app.js",
+      "sha256": "d068f0876060d63da1bdf471392be089ba13943bec8ab4c5769b2e998aa46e73"
+    },
+    {
+      "path": "src/search.js",
+      "sha256": "48c9e245f30ddb52685a3daf9b9b52daf3c40b8a54102d6830b2acd64aed5932"
+    },
+    {
+      "path": "src/storage.js",
+      "sha256": "d13f9c1b4b3622bb9da2c8dae5ac92939cc9742014d36a50507dc6b6adf30f54"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "746e072d6095663d25fc996db4bc97a7876963fe3e806841e3cac698522a12fd"
+    },
+    {
+      "path": "sw.js",
+      "sha256": "f9279fcd4061e2e244cb0578c81af9667cb1d505747a8527f614485eed387a6f"
+    }
+  ]
+}

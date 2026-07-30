@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "appKey": "waste-guide",
+  "title": "Welcher Müll?",
+  "shortDescription": "Eine kurze, quellenbasierte Antwort auf „Wohin damit?“ – mit sichtbarer Unsicherheit bei örtlichen Unterschieden.",
+  "language": "de-DE",
+  "status": "DEV",
+  "platforms": [
+    "web",
+    "mobile",
+    "desktop"
+  ],
+  "authentication": "none",
+  "contentVersion": "2026.07.30-1",
+  "contentDate": "2026-07-30",
+  "validity": "Allgemeine Hinweise für private Haushalte in Deutschland; belegte regionale Ergänzungen für Berlin, Hamburg und München.",
+  "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
+  "healthcheck": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
+  "suggestedPortalRoute": "/apps/waste-guide",
+  "previewImage": {
+    "path": "/MilosApps-WelcherMuell/assets/preview.svg",
+    "rights": "Eigenes Werk dieses Repositorys; keine Fremdassets, Logos oder Fotografien."
+  },
+  "productionApproved": false,
+  "sharedDependencies": [],
+  "deployment": {
+    "provider": "GitHub Pages",
+    "environment": "DEV",
+    "sourceCommit": "461732eef5b94b5e3f941fe5530030773cb02359",
+    "sourceTree": "9cadc699807b6dbfd8d9428a77f3654daf96e192",
+    "branch": "dev-pages",
+    "productionApproved": false
+  }
+}

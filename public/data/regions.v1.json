@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "catalogVersion": "2026.07.30-1",
+  "regions": [
+    {
+      "id": "de",
+      "label": "Deutschland – allgemeine Hinweise",
+      "scope": "Private Haushalte in Deutschland; kommunale Ausgestaltung kann abweichen.",
+      "officialName": "Örtliche Abfallberatung",
+      "url": null,
+      "sourceId": "uba-separation-2026",
+      "notice": "Ohne Region zeigt die App bundesweite Grundsätze. Bei „örtlich prüfen“ hilft die Abfallberatung deiner Stadt oder deines Landkreises.",
+      "routeOverrides": {}
+    },
+    {
+      "id": "berlin",
+      "label": "Berlin",
+      "scope": "Private Haushalte im Land Berlin",
+      "officialName": "BSR Abfall-ABC",
+      "url": "https://www.bsr.de/abfall-abc",
+      "sourceId": "berlin-bsr-abc",
+      "notice": "Für Annahmestellen, Mengen und besondere Abfälle gilt das aktuelle Abfall-ABC der BSR.",
+      "routeOverrides": {
+        "light-packaging": {
+          "label": "Berliner Wertstofftonne",
+          "note": "Für Verpackungen und weitere zugelassene Wertstoffe gilt in Berlin die örtliche Wertstofftonne.",
+          "sourceId": "berlin-bsr-recyclables"
+        }
+      }
+    },
+    {
+      "id": "hamburg",
+      "label": "Hamburg",
+      "scope": "Private Haushalte in der Freien und Hansestadt Hamburg",
+      "officialName": "Stadtreinigung Hamburg Abfall-ABC",
+      "url": "https://www.stadtreinigung.hamburg/entsorgung-recycling/abfall-abc",
+      "sourceId": "hamburg-srh-abc",
+      "notice": "Für Annahmestellen, Mengen und besondere Abfälle gilt das aktuelle Abfall-ABC der Stadtreinigung Hamburg.",
+      "routeOverrides": {
+        "light-packaging": {
+          "label": "Hamburger Wertstofftonne",
+          "note": "Hamburg sammelt Verpackungen und zugelassene Wertstoffe über die Hamburger Wertstofftonne.",
+          "sourceId": "hamburg-srh-abc"
+        }
+      }
+    },
+    {
+      "id": "munich",
+      "label": "München",
+      "scope": "Private Haushalte im Stadtgebiet München",
+      "officialName": "AWM Abfalllexikon",
+      "url": "https://www.awm-muenchen.de/abfall-entsorgen/abfalllexikon",
+      "sourceId": "munich-awm-overview",
+      "notice": "München nutzt im Inhaltsstand 2026 für Glas-, Kunststoff- und Metallverpackungen Wertstoffinseln. Die Gelbe Tonne ist laut AWM erst ab 2027 geplant.",
+      "routeOverrides": {
+        "light-packaging": {
+          "label": "Wertstoffinsel für Kunststoff und Metall",
+          "note": "In München gehören diese Verpackungen im Datenstand 2026 zur Wertstoffinsel, nicht pauschal in eine Gelbe Tonne.",
+          "sourceId": "munich-awm-overview"
+        },
+        "problem-waste": {
+          "label": "Wertstoffhof oder Giftmobil des AWM",
+          "note": "Annahmebedingungen, Höchstmengen und Termine vorher beim AWM prüfen.",
+          "sourceId": "munich-awm-giftmobile"
+        }
+      }
+    }
+  ]
+}

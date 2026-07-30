@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#163d36">
+    <meta name="description" content="Welcher Müll? gibt kurze, quellenbasierte Entsorgungshinweise und zeigt regionale Unsicherheit offen an.">
+    <meta name="color-scheme" content="light dark">
+    <link rel="manifest" href="/MilosApps-WelcherMuell/manifest.webmanifest">
+    <link rel="icon" href="/MilosApps-WelcherMuell/assets/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/MilosApps-WelcherMuell/src/styles.css">
+    <title>Welcher Müll?</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Direkt zum Inhalt</a>
+    <header class="site-header">
+      <a class="brand" href="/MilosApps-WelcherMuell/" aria-label="Welcher Müll? – Startseite">
+        <span class="brand-mark" aria-hidden="true">W?</span>
+        <span>Welcher Müll?</span>
+      </a>
+      <button class="header-button" id="open-settings" type="button" aria-controls="settings-panel" aria-expanded="false">
+        <span aria-hidden="true">◎</span>
+        <span>Region &amp; Datenschutz</span>
+      </button>
+    </header>
+
+    <aside class="offline-banner" id="offline-banner" hidden role="status">
+      Offline – die mitgelieferten Hinweise bleiben verfügbar. Quellenlinks brauchen Internet.
+    </aside>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="eyebrow-row">
+          <span class="eyebrow">Ohne Konto · ohne Standortpflicht</span>
+          <span class="content-date" id="content-date">Inhalte werden geladen …</span>
+        </div>
+        <h1 id="hero-title">Wohin kommt das?</h1>
+        <p class="hero-copy">Gegenstand eingeben, ehrliche Antwort bekommen. Wenn Regeln vor Ort abweichen, sagen wir das deutlich.</p>
+
+        <form class="search-form" id="search-form" role="search" novalidate>
+          <label for="waste-query">Gegenstand oder Material</label>
+          <div class="search-control">
+            <input
+              id="waste-query"
+              name="q"
+              type="search"
+              inputmode="search"
+              autocomplete="off"
+              enterkeyhint="search"
+              maxlength="120"
+              placeholder="z. B. Joghurtbecher, Akku, Pizzakarton"
+              aria-describedby="search-help"
+            >
+            <button type="submit">Nachschlagen</button>
+          </div>
+          <p id="search-help" class="field-help">Auch Synonyme, Umlaute und kleine Tippfehler funktionieren.</p>
+        </form>
+
+        <div class="quick-search" aria-label="Häufig gesucht">
+          <span>Direkt loslegen:</span>
+          <button type="button" data-query="Batterie">Batterie</button>
+          <button type="button" data-query="Pizzakarton">Pizzakarton</button>
+          <button type="button" data-query="Medikamente">Medikamente</button>
+          <button type="button" data-query="Glas">Glas</button>
+        </div>
+      </section>
+
+      <section class="settings-panel" id="settings-panel" hidden aria-labelledby="settings-title">
+        <div>
+          <p class="section-kicker">Optional</p>
+          <h2 id="settings-title">Region &amp; lokale Speicherung</h2>
+          <p>Die App fragt keinen Standort ab. Eine gewählte grobe Region bleibt nur auf diesem Gerät.</p>
+        </div>
+        <div class="settings-grid">
+          <div class="field-group">
+            <label for="region-select">Grobe Region</label>
+            <select id="region-select">
+              <option value="de">Deutschland – allgemeine Hinweise</option>
+            </select>
+            <p class="field-help">Regionale Links und belegte Abweichungen werden ergänzt.</p>
+          </div>
+          <label class="check-row" for="remember-searches">
+            <input id="remember-searches" type="checkbox">
+            <span>
+              <strong>Letzte Suchen merken</strong>
+              <small>Maximal fünf Suchbegriffe, nur lokal auf diesem Gerät.</small>
+            </span>
+          </label>
+        </div>
+        <div class="panel-actions">
+          <button class="secondary-button" id="clear-local-data" type="button">Lokale Angaben löschen</button>
+          <button class="text-button" id="close-settings" type="button">Schließen</button>
+        </div>
+      </section>
+
+      <section class="history-section" id="history-section" hidden aria-labelledby="history-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Nur auf diesem Gerät</p>
+            <h2 id="history-title">Letzte Suchen</h2>
+          </div>
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </section>
+
+      <section class="results-section" id="results-section" aria-labelledby="results-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker" id="result-kicker">Bereit</p>
+            <h2 id="results-title" tabindex="-1">Was möchtest du entsorgen?</h2>
+          </div>
+          <button class="text-button" id="reset-search" type="button" hidden>Neue Suche</button>
+        </div>
+        <p class="status-message" id="search-status" role="status" aria-live="polite">
+          Suche oben nach einem Gegenstand – eine Region ist dafür nicht nötig.
+        </p>
+        <div id="results" class="results-grid"></div>
+      </section>
+
+      <section class="trust-section" aria-labelledby="trust-title">
+        <div>
+          <p class="section-kicker">So entstehen die Antworten</p>
+          <h2 id="trust-title">Lieber ehrlich unklar als falsch sortiert.</h2>
+        </div>
+        <div class="trust-grid">
+          <article>
+            <span class="trust-number" aria-hidden="true">01</span>
+            <h3>Amtlich belegt</h3>
+            <p>Jede konkrete Empfehlung nennt Quelle, Geltungsgebiet und Prüfdatum.</p>
+          </article>
+          <article>
+            <span class="trust-number" aria-hidden="true">02</span>
+            <h3>Region sichtbar</h3>
+            <p>Örtliche Systeme werden nur gezeigt, wenn eine kommunale Quelle sie bestätigt.</p>
+          </article>
+          <article>
+            <span class="trust-number" aria-hidden="true">03</span>
+            <h3>Sicherheitsfälle zuerst</h3>
+            <p>Akkus, Elektrogeräte, Chemikalien und Medikamente bekommen klare Warnhinweise.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p><strong>Welcher Müll?</strong> · App-Key <code>waste-guide</code> · öffentlicher DEV-Stand</p>
+      <nav aria-label="Rechtliches und Projekthinweise">
+        <button class="text-button" id="show-about" type="button">Quellen &amp; Datenschutz</button>
+        <a href="/MilosApps-WelcherMuell/meta.json">App-Metadaten</a>
+      </nav>
+    </footer>
+
+    <dialog id="about-dialog" aria-labelledby="about-title">
+      <div class="dialog-header">
+        <div>
+          <p class="section-kicker">Transparenz</p>
+          <h2 id="about-title">Quellen, Rechte &amp; Datenschutz</h2>
+        </div>
+        <button class="icon-button" id="close-about" type="button" aria-label="Dialog schließen">×</button>
+      </div>
+      <div class="dialog-content" id="about-content">
+        <p>Die Quelleninformationen werden geladen.</p>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <noscript>
+      <div class="noscript">Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.</div>
+    </noscript>
+    <script type="module" src="/MilosApps-WelcherMuell/src/app.js"></script>
+  </body>
+</html>
