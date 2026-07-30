@@ -22,23 +22,68 @@ if (!executablePath) {
 
 await mkdir(artifacts, { recursive: true });
 
-const server = spawn(process.execPath, ["scripts/dev-server.mjs"], {
-  cwd: new URL("../../", import.meta.url),
-  env: {
-    ...process.env,
-    WASTE_GUIDE_HOST: host,
-    WASTE_GUIDE_PORT: String(port)
-  },
-  stdio: ["ignore", "pipe", "pipe"]
-});
-
 let serverOutput = "";
-server.stdout.on("data", (chunk) => {
-  serverOutput += chunk;
-});
-server.stderr.on("data", (chunk) => {
-  serverOutput += chunk;
-});
+
+function isExpectedIdentity(health) {
+  return (
+    health?.appKey === "waste-guide" &&
+    health?.environment === "DEV" &&
+    health?.productionApproved === false
+  );
+}
+
+async function inspectExistingServer() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1500);
+  let response;
+  try {
+    response = await fetch(`${baseUrl}/healthz`, { signal: controller.signal });
+  } catch (error) {
+    if (error?.cause?.code === "ECONNREFUSED") return false;
+    if (error?.name === "AbortError") {
+      throw new Error(`Port ${port} antwortet, aber die App-Identität konnte nicht rechtzeitig geprüft werden.`);
+    }
+    throw new Error(`Port ${port} konnte nicht sicher als frei bestätigt werden: ${error.message}`);
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  let health = null;
+  if (response.headers.get("content-type")?.includes("application/json")) {
+    try {
+      health = await response.json();
+    } catch {
+      health = null;
+    }
+  }
+  if (response.ok && isExpectedIdentity(health)) return true;
+  throw new Error(
+    `Port ${port} ist durch einen fremden oder ungültigen Dienst belegt ` +
+    `(HTTP ${response.status}, appKey=${health?.appKey ?? "fehlt"}, environment=${health?.environment ?? "fehlt"}).`
+  );
+}
+
+const reuseExistingServer = await inspectExistingServer();
+let server = null;
+if (reuseExistingServer) {
+  console.log("E2E-Preflight: vorhandener waste-guide-DEV auf Port 4318 eindeutig bestätigt.");
+} else {
+  server = spawn(process.execPath, ["scripts/dev-server.mjs"], {
+    cwd: new URL("../../", import.meta.url),
+    env: {
+      ...process.env,
+      WASTE_GUIDE_HOST: host,
+      WASTE_GUIDE_PORT: String(port)
+    },
+    stdio: ["ignore", "pipe", "pipe"]
+  });
+  server.stdout.on("data", (chunk) => {
+    serverOutput += chunk;
+  });
+  server.stderr.on("data", (chunk) => {
+    serverOutput += chunk;
+  });
+}
 
 async function waitForServer() {
   const deadline = Date.now() + 15000;
@@ -51,9 +96,7 @@ async function waitForServer() {
         : null;
       if (
         response.ok &&
-        health?.appKey === "waste-guide" &&
-        health?.environment === "DEV" &&
-        health?.productionApproved === false
+        isExpectedIdentity(health)
       ) {
         return;
       }
@@ -400,7 +443,7 @@ try {
   await slow.close();
 } finally {
   await browser.close();
-  server.kill("SIGTERM");
+  server?.kill("SIGTERM");
 }
 
 const failed = results.filter((result) => result.status === "FAIL");

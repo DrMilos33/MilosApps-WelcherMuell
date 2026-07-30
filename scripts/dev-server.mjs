@@ -5,7 +5,11 @@ import { fileURLToPath } from "node:url";
 
 const repositoryRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const host = process.env.WASTE_GUIDE_HOST || "127.0.0.1";
-const port = Number(process.env.WASTE_GUIDE_PORT || 4318);
+const port = 4318;
+if (process.env.WASTE_GUIDE_PORT && Number(process.env.WASTE_GUIDE_PORT) !== port) {
+  console.error(`Welcher Müll? nutzt fest den reservierten DEV-/E2E-Port ${port}.`);
+  process.exit(1);
+}
 const contentTypes = {
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
@@ -58,6 +62,15 @@ const server = createServer((request, response) => {
     "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
   });
   createReadStream(filePath).pipe(response);
+});
+
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port ${port} ist bereits belegt. Der waste-guide-DEV wurde nicht gestartet.`);
+    process.exitCode = 1;
+    return;
+  }
+  throw error;
 });
 
 server.listen(port, host, () => {
