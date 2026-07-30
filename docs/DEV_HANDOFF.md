@@ -10,7 +10,7 @@
 | Sprache | `de-DE` |
 | Status | DEV, öffentlich, ohne Anmeldung |
 | Plattformen | Web, mobile/PWA, Desktop |
-| Inhaltsstand | `2026.07.30-1`, 30.07.2026 |
+| Inhaltsstand | `2026.07.30-2`, 30.07.2026 |
 | Gültigkeit | Private Haushalte in Deutschland; belegte Ergänzungen für Berlin, Hamburg und München |
 | öffentliche DEV-URL | `https://drmilos33.github.io/MilosApps-WelcherMuell/` |
 | Healthcheck | `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz` |
@@ -29,12 +29,12 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `461732eef5b94b5e3f941fe5530030773cb02359`
-- Quellbaum: `9cadc699807b6dbfd8d9428a77f3654daf96e192`
+  `9034b561dec88e33856697adac3877639f47006f`
+- Quellbaum: `4e0524147e308ef7f72edb9e052091fc59a5a819`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `d9e6e4506e3a07d35edd6d6787269fddb54b4f4d`
-- GitHub-Pages-Build: `1122927971`, Status `built`
+  `8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`
+- GitHub-Pages-Build: `1123154848`, Status `built`
 - Draft-PR für den Quellbranch:
   `https://github.com/DrMilos33/MilosApps-WelcherMuell/pull/1`
 
@@ -48,7 +48,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.07.30-1","productionApproved":false,"sourceCommit":"461732eef5b94b5e3f941fe5530030773cb02359"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.07.30-2","productionApproved":false,"sourceCommit":"9034b561dec88e33856697adac3877639f47006f"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -64,6 +64,7 @@ Am 30.07.2026 wurden nach terminalem Pages-Status `built` geprüft:
 - leerer Browserzustand ohne Cookies und gespeicherte Origins;
 - direkter Aufruf `?item=battery`;
 - Suche nach „alte Medikamente“ mit sichtbarer örtlicher Unsicherheit;
+- Suche nach `GUmmiband` mit sofort sichtbarem, vorsichtigem Entsorgungsweg;
 - App-Key, Inhaltsversion, Quellcommit und Production-Grenze;
 - Smartphone 390 × 844, Dark Mode und kein horizontaler Überlauf;
 - keine fehlgeschlagenen Ressourcen, Konsolenfehler oder Browserwarnungen.
@@ -93,6 +94,10 @@ Ein erfolgreicher Deploy oder Healthcheck erneuert kein redaktionelles
 Prüfdatum. Inhaltsversion, Gültigkeitsgebiet, Lizenznachweis und früheste
 erneute Prüfung am 30.09.2026 bleiben unverändert. Details stehen in
 `SOURCES_AND_LICENSES.md`.
+
+Aktueller gesunder DEV-Artefaktcommit ist `8e8dfe0`; der unmittelbar vorherige
+gesunde und app-eigene Rollbackpunkt bleibt `d9e6e45` mit Inhaltsversion
+`2026.07.30-1`.
 
 ## Codex-Projektstatus
 

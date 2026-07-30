@@ -22,10 +22,11 @@ Readiness:   https://drmilos33.github.io/MilosApps-WelcherMuell/healthz
 Repository:  https://github.com/DrMilos33/MilosApps-WelcherMuell
 ```
 
-Der bislang öffentlich aktive DEV-Stand verwendet noch die Deploymentquelle
-`461732eef5b94b5e3f941fe5530030773cb02359`; der getrennte Pages-Artefaktcommit
-ist `d9e6e4506e3a07d35edd6d6787269fddb54b4f4d`. GitHub Pages ist ausschließlich
-der DEV-Host. Production bleibt nicht freigegeben.
+Deploymentquelle ist
+`9034b561dec88e33856697adac3877639f47006f`; der getrennte
+Pages-Artefaktcommit ist `8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`.
+GitHub Pages ist ausschließlich der DEV-Host. Production bleibt nicht
+freigegeben.
 
 Der lokale DEV- und E2E-Port bleibt fest auf `4318` reserviert:
 

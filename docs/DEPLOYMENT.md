@@ -7,11 +7,11 @@
 - URL: `https://drmilos33.github.io/MilosApps-WelcherMuell/`
 - Health: `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz`
 - Repository: `DrMilos33/MilosApps-WelcherMuell`
-- Quellcommit: `461732eef5b94b5e3f941fe5530030773cb02359`
-- Inhaltsversion: `2026.07.30-1`
+- Quellcommit: `9034b561dec88e33856697adac3877639f47006f`
+- Inhaltsversion: `2026.07.30-2`
 - Artefaktbranch: `dev-pages`
 - gesunder Artefaktcommit:
-  `d9e6e4506e3a07d35edd6d6787269fddb54b4f4d`
+  `8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`
 - Production-Freigabe: `false`
 
 Portal, Shared, Nutzerkonto und Datenbank sind keine Laufzeitabhängigkeiten.
@@ -53,7 +53,9 @@ Vor einer Aktualisierung gelten zwingend:
 
 ## Rollback
 
-Letzte gesunde DEV-Revision ist
+Aktuelle gesunde DEV-Revision ist
+`8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`. Der unmittelbar vorherige
+gesunde Rollbackpunkt ist
 `d9e6e4506e3a07d35edd6d6787269fddb54b4f4d`.
 
 Rollback bedeutet ausschließlich, den Remote-Ref `dev-pages` auf einen zuvor
@@ -61,9 +63,9 @@ verifizierten gesunden Artefaktcommit zurückzusetzen. Danach wird der
 Pages-Buildstatus abgewartet und `/healthz` samt Remote-Smoke erneut geprüft.
 Quellbranch, Portal und Production werden dabei nicht verändert.
 
-Beim ersten Deployment ist die aktuelle Revision zugleich die einzige gesunde
-Rollbackbasis. Spätere Deployments müssen den vorherigen gesunden
-Artefaktcommit vor dem Verschieben des Branches hier ergänzen.
+Der Rollbackpunkt `d9e6e45` enthält Inhaltsversion `2026.07.30-1` aus
+Quellcommit `461732e`. Nach einem Rollback müssen die ältere Inhaltsversion und
+deren weiterhin eigenständige Reviewtermine sichtbar bleiben.
 
 ## Deployment ist kein Quellenreview
 

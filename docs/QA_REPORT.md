@@ -165,15 +165,17 @@ ausgeführt.
 ## Unabhängiger HTTPS-DEV-Smoke
 
 Nach dem lokalen Abschluss wurde exakt Quellcommit
-`461732eef5b94b5e3f941fe5530030773cb02359` als Pages-Artefakt
-`d9e6e4506e3a07d35edd6d6787269fddb54b4f4d` veröffentlicht.
+`9034b561dec88e33856697adac3877639f47006f` als Pages-Artefakt
+`8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c` veröffentlicht. Der
+GitHub-Pages-Build `1123154848` endete mit Status `built`.
 
 Der externe Smoke prüfte die echte HTTPS-URL in einem neuen Browserkontext ohne
 Cookies oder gespeicherte Origins. Startseite, app-spezifisches `/healthz`,
-Metadaten, direkter Batterie-Link und Medikamentensuche waren erfolgreich;
-Login-/Portalsteuerungen, fehlgeschlagene Ressourcen und Konsolenfehler wurden
-nicht gefunden. Die sichtbare In-App-Browser-Prüfung bestätigte zusätzlich
-390 × 844, Dark Mode, Inhaltsstand und überlauffreies Layout.
+Metadaten, direkter Batterie-Link, Medikamentensuche und die Suche nach
+`GUmmiband` waren erfolgreich; Login-/Portalsteuerungen, fehlgeschlagene
+Ressourcen und Konsolenfehler wurden nicht gefunden. Der mobile Remote-Smoke
+bestätigte zusätzlich 390 × 844, Dark Mode, Inhaltsstand und überlauffreies
+Layout.
 
 Diese Deploymentprüfung erneuert keine fachliche Quellenprüfung. Inhaltsversion
 und Reviewtermine bleiben unverändert.
