@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { chromium } from "playwright";
 
-const expectedSourceCommit = "9034b561dec88e33856697adac3877639f47006f";
+const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT;
+if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
+  throw new Error("WASTE_GUIDE_EXPECTED_SOURCE_COMMIT muss den vollständigen deployten Quellcommit enthalten.");
+}
 const expectedContentVersion = "2026.07.30-2";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
 if (!configuredUrl) throw new Error("WASTE_GUIDE_REMOTE_URL fehlt.");
@@ -75,9 +78,12 @@ try {
   const homeResponse = await page.goto(baseUrl.toString(), { waitUntil: "networkidle" });
   assert.equal(homeResponse?.status(), 200);
   assert.equal(page.url(), baseUrl.toString());
-  await page.getByRole("heading", { name: "Wohin kommt das?" }).waitFor();
+  await page.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
   assert.equal(await page.getByRole("search").count(), 1);
   assert.equal(await page.getByText(/Anmelden|Login|Milos-Konto/i).count(), 0);
+  const shell = page.locator("milos-app-shell");
+  assert.equal(await shell.getByText("DEV", { exact: true }).count(), 1);
+  assert.equal(await shell.getByRole("link", { name: /Alle Apps/ }).getAttribute("href"), "https://dev.milos-apps.de/apps");
 
   await page.goto(`${baseUrl}?item=battery`, { waitUntil: "networkidle" });
   await page.getByRole("heading", { name: "Batterie oder Akku", exact: true }).waitFor();
@@ -93,6 +99,23 @@ try {
   await page.getByRole("button", { name: "Suchen" }).click();
   await page.getByRole("heading", { name: "Gummi-Gegenstand", exact: true }).waitFor();
   await page.getByText("Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen", { exact: true }).waitFor();
+
+  await shell.getByRole("button", { name: "EN", exact: true }).click();
+  await page.locator("html[lang='en']").waitFor();
+  await page.getByLabel("Item or material").fill("old medicine");
+  await page.getByRole("button", { name: "Search" }).click();
+  await page.getByRole("heading", { name: "Old medicine", exact: true }).waitFor();
+  await page.reload({ waitUntil: "networkidle" });
+  assert.equal(await page.locator("html").getAttribute("lang"), "en");
+  assert.equal(await page.getByText(/Sign in|Login|Milos account/i).count(), 0);
+
+  const geometry = await shell.evaluate((element) => ({
+    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    shellBottom: Math.round(element.getBoundingClientRect().bottom + scrollY),
+    documentHeight: document.documentElement.scrollHeight
+  }));
+  assert.ok(geometry.overflow <= 1, `horizontal overflow: ${JSON.stringify(geometry)}`);
+  assert.ok(Math.abs(geometry.shellBottom - geometry.documentHeight) <= 2, `footer gap: ${JSON.stringify(geometry)}`);
 
   assert.deepEqual(consoleErrors, []);
   assert.deepEqual(failedResponses, []);

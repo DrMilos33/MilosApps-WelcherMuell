@@ -5,7 +5,10 @@ import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const repositoryRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const expectedSourceCommit = "9034b561dec88e33856697adac3877639f47006f";
+const expectedSourceCommit = process.env.WASTE_GUIDE_SOURCE_COMMIT;
+if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
+  throw new Error("WASTE_GUIDE_SOURCE_COMMIT muss den vollständigen, zu veröffentlichenden Quellcommit enthalten.");
+}
 const expectedContentVersion = "2026.07.30-2";
 const repositoryName = "MilosApps-WelcherMuell";
 const basePath = `/${repositoryName}`;
@@ -33,8 +36,8 @@ if (sourceCommit !== expectedSourceCommit) {
 }
 
 const sourceTree = git(["show", "-s", "--format=%T", sourceCommit], { encoding: "utf8" }).trim();
-const deployablePrefixes = ["assets/", "public/", "src/"];
-const deployableRootFiles = new Set(["index.html", "manifest.webmanifest", "meta.json", "sw.js"]);
+const deployablePrefixes = ["assets/", "public/", "src/", "vendor/"];
+const deployableRootFiles = new Set(["index.html", "manifest.webmanifest", "meta.json", "milos-app.json", "sw.js"]);
 const sourcePaths = git(["ls-tree", "-r", "--name-only", sourceCommit], { encoding: "utf8" })
   .split(/\r?\n/)
   .filter(Boolean)

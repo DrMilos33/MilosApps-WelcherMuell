@@ -3,7 +3,7 @@
   "appKey": "waste-guide",
   "title": "Welcher Müll?",
   "shortDescription": "Eine kurze, quellenbasierte Antwort auf „Wohin damit?“ – mit sichtbarer Unsicherheit bei örtlichen Unterschieden.",
-  "language": "de-DE",
+  "language": "de-DE/en",
   "status": "DEV",
   "platforms": ["web", "mobile", "desktop"],
   "authentication": "none",
@@ -31,5 +31,13 @@
     "pagesBuildId": 1123154848,
     "productionApproved": false
   },
-  "sharedDependencies": []
+  "sharedDependencies": [
+    {
+      "id": "public-app-shell/v2",
+      "version": "2.0.2",
+      "sharedCommit": "97f695be3bdfcfdc51ad286c6ed231c4b9585295",
+      "vendored": true,
+      "runtimeImport": false
+    }
+  ]
 }

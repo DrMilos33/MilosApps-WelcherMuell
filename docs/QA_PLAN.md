@@ -2,7 +2,7 @@
 
 ## Ziel und Testgrenze
 
-Die QA prüft eine öffentliche, deutschsprachige Nachschlage-App ohne Konto und
+Die QA prüft eine öffentliche, vollständig deutsch- und englischsprachige Nachschlage-App ohne Konto und
 ohne Serverdatenhaltung. Fachliche Aussagen werden gegen den eingecheckten
 Quellenvertrag und zusätzlich durch einen Live-Erreichbarkeitscheck geprüft.
 Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
@@ -27,11 +27,14 @@ Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
 4. Browser-E2E
    - app-spezifische Readiness auf dem festen Port 4318;
    - Desktop, Smartphone Hoch-/Querformat, Tastatur und semantische Namen;
-   - 200%-Reflow-Äquivalent, Dark Mode, langsames Netz und Konsolenfehler;
+   - v2-Shell, vollständiges DE/EN und Reload-Persistenz;
+   - 360 × 800 bei echtem 200%-Textzoom, zusätzliches Reflow-Äquivalent,
+     Dark Mode, langsames Netz und Konsolenfehler;
+   - Reduced Motion, 44-px-Ziele und kein Leerraum unter dem Shell-Footer;
    - schnelle Rück-/Vorwärtsnavigation, Direkt-URL, Offline nach Erstaufruf;
    - Teilen-Fallback und Druckaufruf ohne gespeicherten Suchverlauf.
 5. Online-Quellencheck
-   - HTTPS-Erreichbarkeit aller 17 katalogisierten Primärquellen;
+   - HTTPS-Erreichbarkeit aller 20 katalogisierten Primärquellen;
    - ein Netzwerkfehler wird wiederholt und als externer Befund dokumentiert;
    - 4xx, dauerhafte Umleitung oder inhaltliche Änderung erzwingen eine
      redaktionelle Prüfung.
@@ -42,8 +45,8 @@ Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
 | --- | --- |
 | Smartphone | 390 × 844, Touch, Dark Mode, lange Eingabe, 44-px-Ziele |
 | Smartphone quer | 844 × 390, Ergebnis und Aktionen bedienbar |
-| Desktop | 1440 × 1000, Maus, Direkt-URLs, Verlauf, Dialog |
-| 200 Prozent | 640 CSS-Pixel als Reflow-Äquivalent zu 1280 px bei 200 Prozent |
+| Desktop | 1440 × 900, Maus, Direkt-URLs, Verlauf, Dialog, DE/EN |
+| 200 Prozent | 360 × 800 mit 200 % Root-Textzoom sowie 640 CSS-Pixel als Reflow-Äquivalent |
 | Tastatur | Tab-Reihenfolge, Enter-Suche, Dialog schließen, Fokus nach Ergebnis |
 | Screenreader-Nähe | Landmarken, Überschriften, Live-Status, eindeutige Namen |
 | Suchstress | 1 Zeichen, 120 Zeichen, unbekannt, mehrdeutig, Umlaut, Plural |

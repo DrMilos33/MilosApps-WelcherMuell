@@ -4,19 +4,35 @@
 
 Die App ist eine statische, frameworkfreie ES-Modul-Anwendung. Ein kleiner
 Node-HTTP-Server dient ausschließlich dem lokalen DEV-/E2E-Betrieb. Es gibt
-keine API, keine Datenbank, keine Anmeldung, keine Cookies und keine
-Shared-Abhängigkeit.
+keine API, keine Datenbank, keine Anmeldung und keine Cookies. Der öffentliche
+App-Rahmen wird aus dem fest gepinnten Shared-Vertrag `public-app-shell/v2.0.2`
+lokal vendort; es gibt keinen CDN- oder Cross-Repository-Runtimeimport.
 
 ```text
 index.html
-  ├─ src/app.js ───── UI, URL-/Historienzustand, Offline- und Dialoglogik
+  ├─ vendor/milosapps-shell/v2/ ── geprüfte lokale Shell-Kopie mit Hash-Lock
+  ├─ src/app.js ───── UI, DE/EN, URL-/Historienzustand, Offline- und Dialoglogik
+  ├─ src/i18n.js ──── vollständige sichtbare Fachübersetzung
   ├─ src/search.js ── Normalisierung, Ranking, Integritätsprüfung
   ├─ src/storage.js ─ optionale lokale Region und Suchhistorie
   └─ public/data/
        ├─ waste-items.v1.json
        ├─ sources.v1.json
-       └─ regions.v1.json
+       ├─ regions.v1.json
+       └─ locales/en.v1.json
 ```
+
+`milos-app.json` pinnt Vertrag, Version und Shared-Commit. `shell-lock.json`
+enthält SHA-256 für Komponente, Bootstrap und portablen Validator. Der lokale
+Server leitet die beiden nötigen CSP-Style-Hashes direkt aus der verifizierten
+Vendor-Datei ab; `unsafe-inline` ist nicht nötig.
+
+Die Shell besitzt Header, Footer, DEV-Links und die Sprachpersistenz unter
+`milosapps.waste-guide.language`. Die Fachoberfläche initialisiert zusätzlich
+aus `document.documentElement.lang` und hört auf
+`milosapps:localechange`. Deutsch und Englisch verwenden denselben
+redaktionellen Inhaltsstand; die Übersetzung hebt weder Inhaltsversion noch
+Quellenreview an.
 
 Der Service Worker speichert App-Shell und redaktionelle JSON-Dateien für die
 Nutzung nach einem vollständigen Erstaufruf. Inhalt und Shell werden gemeinsam
@@ -48,10 +64,11 @@ nächster Prüfschritt sichtbar.
 
 ## Lokale Daten
 
-Standardmäßig wird kein Suchverlauf gespeichert. Nach Einwilligung werden
+Standardmäßig wird kein Suchverlauf gespeichert. Nach Aktivierung werden
 höchstens fünf eindeutige Suchbegriffe und die freiwillig gewählte grobe Region
 in `localStorage` gehalten. Die App läuft bei gesperrtem Speicher weiter. Eine
-Schaltfläche löscht alle lokalen Angaben.
+Schaltfläche löscht Region und Suchverlauf. Die getrennte Sprachpräferenz wird
+vom öffentlichen App-Rahmen als reine Oberflächeneinstellung gehalten.
 
 ## DEV-Sicherheitsgrenze
 

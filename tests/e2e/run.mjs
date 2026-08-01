@@ -136,8 +136,8 @@ function collectPageErrors(page) {
 }
 
 async function submitSearch(page, query) {
-  await page.getByLabel("Gegenstand oder Material").fill(query);
-  await page.getByRole("button", { name: /Suchen|Nachschlagen/ }).click();
+  await page.getByLabel(/Gegenstand oder Material|Item or material/).fill(query);
+  await page.getByRole("button", { name: /Suchen|Search/ }).click();
 }
 
 await waitForServer();
@@ -169,7 +169,7 @@ try {
   });
 
   const desktop = await browser.newContext({
-    viewport: { width: 1440, height: 1000 },
+    viewport: { width: 1440, height: 900 },
     colorScheme: "light",
     serviceWorkers: "allow"
   });
@@ -192,7 +192,7 @@ try {
 
   await check("Desktop: Start, Semantik und exakter Suchfluss", async () => {
     await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
-    await assert.doesNotReject(() => desktopPage.getByRole("heading", { name: "Wohin kommt das?" }).waitFor());
+    await assert.doesNotReject(() => desktopPage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor());
     assert.equal(await desktopPage.getByRole("search").count(), 1);
     assert.equal(await desktopPage.getByLabel("Gegenstand oder Material").getAttribute("maxlength"), "120");
     await submitSearch(desktopPage, "Joghurtbecher");
@@ -206,6 +206,39 @@ try {
     });
   });
 
+  await check("Desktop: v2-Shell, vollständiges Englisch und Reload-Persistenz", async () => {
+    await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
+    const shell = desktopPage.locator("milos-app-shell");
+    await shell.waitFor();
+    assert.equal(await shell.getByText("MilosApps", { exact: true }).count(), 2);
+    assert.equal(await shell.getByText("DEV", { exact: true }).count(), 1);
+    assert.equal(await shell.getByRole("link", { name: /Alle Apps/ }).getAttribute("href"), "https://dev.milos-apps.de/apps");
+    assert.equal(await shell.getByRole("link", { name: "Impressum" }).getAttribute("href"), "https://dev.milos-apps.de/impressum");
+    assert.equal(await shell.getByRole("link", { name: "Datenschutz" }).getAttribute("href"), "https://dev.milos-apps.de/datenschutz");
+    const englishButton = shell.getByRole("button", { name: "EN", exact: true });
+    await englishButton.click();
+    await desktopPage.locator("html[lang='en']").waitFor();
+    await desktopPage.getByRole("heading", { name: "Waste guide", level: 1 }).waitFor();
+    assert.equal(await desktopPage.getByLabel("Item or material").getAttribute("placeholder"), "e.g. rubber band, battery, pizza box");
+    await submitSearch(desktopPage, "rubber band");
+    await desktopPage.getByRole("heading", { name: "Rubber item", exact: true }).waitFor();
+    await desktopPage.getByText("Small items: residual waste · large items and tires: check locally", { exact: true }).waitFor();
+    await desktopPage.getByText(/Car and motorcycle tires do not belong/).waitFor();
+    await desktopPage.getByRole("button", { name: "Region & privacy" }).click();
+    await desktopPage.getByRole("dialog", { name: "Region & local data" }).waitFor();
+    assert.equal(await desktopPage.getByLabel("Broad region").locator("option").first().textContent(), "Germany — general guidance");
+    await desktopPage.getByRole("button", { name: "Close settings" }).click();
+    await desktopPage.getByRole("button", { name: "Sources & privacy" }).click();
+    const englishAbout = desktopPage.getByRole("dialog", { name: "Sources, rights & privacy" });
+    await englishAbout.getByRole("heading", { name: "License evidence for the main sources" }).waitFor();
+    await desktopPage.getByRole("button", { name: "Close dialog" }).click();
+    await desktopPage.reload({ waitUntil: "networkidle" });
+    assert.equal(await desktopPage.locator("html").getAttribute("lang"), "en");
+    await desktopPage.getByRole("heading", { name: "Waste guide", level: 1 }).waitFor();
+    await shell.getByRole("button", { name: "DE", exact: true }).click();
+    await desktopPage.locator("html[lang='de']").waitFor();
+  });
+
   await check("Desktop: Suche dominiert und Zusatzinfos bleiben kompakt", async () => {
     await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
     const geometry = await desktopPage.evaluate(() => {
@@ -217,13 +250,15 @@ try {
         heroHeight: Math.round(hero.height),
         searchBottom: Math.round(search.bottom),
         resultsGap: Math.round(results.top - hero.bottom),
-        trustCollapsed: trust instanceof HTMLDetailsElement && !trust.open
+        trustCollapsed: trust instanceof HTMLDetailsElement && !trust.open,
+        horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
       };
     });
     assert.ok(geometry.heroHeight <= 540, `Hero zu hoch: ${JSON.stringify(geometry)}`);
     assert.ok(geometry.searchBottom <= 600, `Suche zu spät sichtbar: ${JSON.stringify(geometry)}`);
     assert.ok(geometry.resultsGap <= 48, `Treffer zu weit von Suche entfernt: ${JSON.stringify(geometry)}`);
     assert.equal(geometry.trustCollapsed, true);
+    assert.ok(geometry.horizontalOverflow <= 1, `horizontaler Überlauf: ${JSON.stringify(geometry)}`);
   });
 
   await check("Desktop: Einstellungen sind ein kompakter runder Dialog", async () => {
@@ -377,6 +412,23 @@ try {
     await assert.doesNotReject(() => desktopPage.getByRole("heading", { name: "Bitte etwas genauer" }).waitFor());
   });
 
+  await check("Desktop: Reduced Motion und Shell-Fokus bleiben wirksam", async () => {
+    await desktopPage.emulateMedia({ reducedMotion: "reduce" });
+    await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
+    const shell = desktopPage.locator("milos-app-shell");
+    const durations = await shell.evaluate((element) => {
+      const control = element.shadowRoot.querySelector(".control");
+      const appButton = document.querySelector(".quick-search button");
+      return {
+        shell: getComputedStyle(control).transitionDuration,
+        app: getComputedStyle(appButton).transitionDuration
+      };
+    });
+    assert.match(durations.shell, /0\.01ms|1e-05s|0s/);
+    assert.match(durations.app, /0\.01ms|1e-05s|0s/);
+    await desktopPage.emulateMedia({ reducedMotion: "no-preference" });
+  });
+
   await check("Desktop: Offline-Nutzung nach Erstaufruf", async () => {
     await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
     await desktopPage.evaluate(async () => {
@@ -438,10 +490,34 @@ try {
       return { searchBottom: Math.round(search.bottom) };
     });
     assert.ok(startGeometry.searchBottom <= 720, `Suche liegt nicht im ersten Smartphone-Sichtfeld: ${JSON.stringify(startGeometry)}`);
-    await mobilePage.getByRole("button", { name: "Medikamente" }).tap();
+    await submitSearch(mobilePage, "Medikamente");
     await mobilePage.getByRole("heading", { name: "Alte Medikamente", exact: true }).waitFor();
-    const overflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-    assert.ok(overflow <= 1, `horizontaler Überlauf: ${overflow}px`);
+    const visual = await mobilePage.evaluate(() => {
+      const rgb = (value) => value.match(/[\d.]+/g).slice(0, 3).map(Number);
+      const luminance = (value) => {
+        const channels = rgb(value).map((channel) => {
+          const normalized = channel / 255;
+          return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+      };
+      const contrast = (foreground, background) => {
+        const values = [luminance(foreground), luminance(background)].sort((a, b) => b - a);
+        return (values[0] + 0.05) / (values[1] + 0.05);
+      };
+      const shell = getComputedStyle(document.querySelector("milos-app-shell"));
+      const title = getComputedStyle(document.querySelector("h1"));
+      const card = getComputedStyle(document.querySelector(".result-card"));
+      const answer = getComputedStyle(document.querySelector(".answer"));
+      return {
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        heroContrast: contrast(title.color, shell.backgroundColor),
+        resultContrast: contrast(answer.color, card.backgroundColor)
+      };
+    });
+    assert.ok(visual.overflow <= 1, `horizontaler Überlauf: ${visual.overflow}px`);
+    assert.ok(visual.heroContrast >= 4.5, `Dark-Mode-Hero ohne ausreichenden Kontrast: ${JSON.stringify(visual)}`);
+    assert.ok(visual.resultContrast >= 4.5, `Dark-Mode-Ergebnis ohne ausreichenden Kontrast: ${JSON.stringify(visual)}`);
 
     await mobilePage.getByRole("button", { name: "Neue Suche" }).tap();
     await mobilePage.getByLabel("Gegenstand oder Material").fill("x".repeat(500));
@@ -459,16 +535,20 @@ try {
     await mobilePage.getByRole("heading", { name: "Gummi-Gegenstand", exact: true }).waitFor();
     await mobilePage.getByText("Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen", { exact: true }).waitFor();
     const resultGeometry = await mobilePage.evaluate(() => {
+      const card = document.querySelector(".result-card").getBoundingClientRect();
       const route = document.querySelector(".result-route").getBoundingClientRect();
       const resetSearch = document.querySelector("#reset-search");
       return {
         top: Math.round(route.top),
         bottom: Math.round(route.bottom),
+        routeWidth: Math.round(route.width),
+        cardWidth: Math.round(card.width),
         viewport: innerHeight,
         resetWhiteSpace: getComputedStyle(resetSearch).whiteSpace
       };
     });
     assert.ok(resultGeometry.top < resultGeometry.viewport, `Entsorgungsweg nicht sofort sichtbar: ${JSON.stringify(resultGeometry)}`);
+    assert.ok(resultGeometry.routeWidth >= resultGeometry.cardWidth - 2, `Entsorgungsweg kollabiert: ${JSON.stringify(resultGeometry)}`);
     assert.equal(resultGeometry.resetWhiteSpace, "nowrap");
     await mobilePage.screenshot({
       path: fileURLToPath(new URL("phone-rubber-result.png", artifacts)),
@@ -491,6 +571,82 @@ try {
     await mobilePage.screenshot({
       path: fileURLToPath(new URL("phone-zoom-200.png", artifacts)),
       fullPage: true
+    });
+  });
+
+  await check("360 × 800 bei 200 Prozent Textzoom bleibt überlauffrei", async () => {
+    await mobilePage.setViewportSize({ width: 360, height: 800 });
+    await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
+    await mobilePage.evaluate(() => {
+      document.documentElement.style.fontSize = "200%";
+    });
+    await mobilePage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
+    const geometry = await mobilePage.locator("milos-app-shell").evaluate((shell) => {
+      const icon = shell.shadowRoot.querySelector(".app-icon").getBoundingClientRect();
+      const controls = [...shell.shadowRoot.querySelectorAll(".control")].map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { width: Math.round(rect.width), height: Math.round(rect.height) };
+      });
+      return {
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+        iconWidth: Math.round(icon.width),
+        controls,
+        shellOffenders: [...shell.shadowRoot.querySelectorAll("*")]
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+              element: `${element.tagName.toLowerCase()}.${element.className || ""}`,
+              left: Math.round(rect.left),
+              right: Math.round(rect.right),
+              width: Math.round(rect.width),
+              scrollWidth: element.scrollWidth
+            };
+          })
+          .filter(({ left, right, width }) => width > 0 && (left < -1 || right > innerWidth + 1))
+          .slice(0, 12),
+        shadowScrollContainers: [...shell.shadowRoot.querySelectorAll("*")]
+          .filter((element) => element.scrollWidth > element.clientWidth + 1)
+          .map((element) => ({
+            element: `${element.tagName.toLowerCase()}.${element.className || ""}`,
+            clientWidth: element.clientWidth,
+            scrollWidth: element.scrollWidth,
+            overflowX: getComputedStyle(element).overflowX
+          }))
+          .slice(0, 12),
+        offenders: [...document.querySelectorAll("body *")]
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+              element: `${element.tagName.toLowerCase()}#${element.id}.${element.className || ""}`,
+              left: Math.round(rect.left),
+              right: Math.round(rect.right),
+              width: Math.round(rect.width),
+              scrollWidth: element.scrollWidth
+            };
+          })
+          .filter(({ left, right, width }) => width > 0 && (left < -1 || right > innerWidth + 1))
+          .slice(0, 12),
+        scrollContainers: [document.documentElement, document.body, ...document.querySelectorAll("body *")]
+          .filter((element) => element.scrollWidth > element.clientWidth + 1)
+          .map((element) => ({
+            element: `${element.tagName.toLowerCase()}#${element.id}.${element.className || ""}`,
+            clientWidth: element.clientWidth,
+            scrollWidth: element.scrollWidth,
+            overflowX: getComputedStyle(element).overflowX
+          }))
+          .slice(0, 12)
+      };
+    });
+    assert.ok(geometry.scrollWidth <= geometry.clientWidth + 1, `200-%-Textzoom läuft horizontal über: ${JSON.stringify(geometry)}`);
+    assert.equal(geometry.iconWidth, 38);
+    assert.deepEqual(geometry.controls.filter(({ width, height }) => width < 44 || height < 44), []);
+    await mobilePage.screenshot({
+      path: fileURLToPath(new URL("phone-text-zoom-200.png", artifacts)),
+      fullPage: true
+    });
+    await mobilePage.evaluate(() => {
+      document.documentElement.style.fontSize = "";
     });
   });
 
@@ -527,6 +683,21 @@ try {
     assert.deepEqual(undersized, []);
   });
 
+  await check("Smartphone: Shell endet ohne Leerraum unter dem Footer", async () => {
+    await mobilePage.setViewportSize({ width: 390, height: 844 });
+    await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
+    const geometry = await mobilePage.locator("milos-app-shell").evaluate((shell) => {
+      const rect = shell.getBoundingClientRect();
+      return {
+        shellBottom: Math.round(rect.bottom + scrollY),
+        documentHeight: document.documentElement.scrollHeight,
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+      };
+    });
+    assert.ok(Math.abs(geometry.shellBottom - geometry.documentHeight) <= 2, `Leerraum unter Footer: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.overflow <= 1, `horizontaler Überlauf: ${JSON.stringify(geometry)}`);
+  });
+
   await check("Smartphone: keine Konsolenfehler", async () => {
     assert.deepEqual(mobileErrors, []);
   });
@@ -541,7 +712,7 @@ try {
 
   await check("Langsames Netz: Lade- und Suchzustand bleiben verständlich", async () => {
     await slowPage.goto(baseUrl, { waitUntil: "networkidle" });
-    await slowPage.getByRole("heading", { name: "Wohin kommt das?" }).waitFor();
+    await slowPage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
     await submitSearch(slowPage, "Spraydose");
     await slowPage.getByRole("heading", { name: "Spraydose", exact: true }).waitFor();
   });

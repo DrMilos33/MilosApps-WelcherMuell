@@ -1,5 +1,10 @@
 import { isAmbiguous, searchItems, validateItemIntegrity } from "./search.js";
 import {
+  localizeCatalogs,
+  normalizeLanguage,
+  translate
+} from "./i18n.js";
+import {
   addSearchToHistory,
   clearLocalData,
   loadLocalState,
@@ -8,15 +13,10 @@ import {
 } from "./storage.js";
 
 const DATA_PATHS = {
-  items: "/public/data/waste-items.v1.json",
-  sources: "/public/data/sources.v1.json",
-  regions: "/public/data/regions.v1.json"
-};
-
-const CERTAINTY = {
-  confirmed: { label: "Bundesweit belegt", className: "" },
-  "check-local": { label: "Örtlich prüfen", className: "local" },
-  caution: { label: "Besondere Vorsicht", className: "caution" }
+  items: new URL("../public/data/waste-items.v1.json", import.meta.url),
+  sources: new URL("../public/data/sources.v1.json", import.meta.url),
+  regions: new URL("../public/data/regions.v1.json", import.meta.url),
+  locale: new URL("../public/data/locales/en.v1.json", import.meta.url)
 };
 
 const elements = {
@@ -41,21 +41,30 @@ const elements = {
   aboutContent: document.querySelector("#about-content"),
   showAbout: document.querySelector("#show-about"),
   closeAbout: document.querySelector("#close-about"),
+  trust: document.querySelector(".trust-section"),
+  trustHint: document.querySelector(".summary-hint"),
   toast: document.querySelector("#toast")
 };
 
 const state = {
+  language: normalizeLanguage(document.documentElement.lang),
+  catalogs: null,
+  contentDate: null,
   items: [],
   sources: [],
   sourcesById: new Map(),
+  sourcesEditorialUse: "",
   regions: [],
   selectedRegion: "de",
   remember: false,
   history: [],
-  currentItem: null,
+  currentItemId: null,
   lastQuery: "",
+  view: { type: "idle" },
   toastTimer: null
 };
+
+const t = (key, values) => translate(state.language, key, values);
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -67,8 +76,8 @@ function escapeHtml(value) {
 }
 
 function formatDate(value) {
-  if (!value) return "nicht angegeben";
-  return new Intl.DateTimeFormat("de-DE", {
+  if (!value) return t("dateMissing");
+  return new Intl.DateTimeFormat(state.language === "en" ? "en-GB" : "de-DE", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -76,29 +85,44 @@ function formatDate(value) {
   }).format(new Date(`${value}T00:00:00Z`));
 }
 
+function applyStaticTranslations() {
+  document.title = t("documentTitle");
+  document.querySelector('meta[name="description"]')?.setAttribute("content", t("metaDescription"));
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    element.textContent = t(element.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    element.setAttribute("placeholder", t(element.dataset.i18nPlaceholder));
+  });
+  document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+    element.setAttribute("aria-label", t(element.dataset.i18nAriaLabel));
+  });
+  document.querySelectorAll("[data-query-key]").forEach((button) => {
+    button.textContent = t(button.dataset.queryKey);
+  });
+  elements.trustHint.textContent = t(elements.trust.open ? "trustHide" : "trustShow");
+}
+
 function selectedRegion() {
   return state.regions.find((region) => region.id === state.selectedRegion) ?? state.regions[0];
 }
 
 function effectiveRoute(item) {
-  const region = selectedRegion();
-  const override = region?.routeOverrides?.[item.route.type];
+  const override = selectedRegion()?.routeOverrides?.[item.route.type];
   if (!override) return { ...item.route, note: null, sourceId: null };
   return { ...item.route, ...override };
 }
 
-function effectiveCertainty(item, integrity) {
-  if (!integrity.valid) return CERTAINTY["check-local"];
-  return CERTAINTY[item.certainty] ?? CERTAINTY["check-local"];
-}
-
-function sourceForId(sourceId) {
-  return state.sourcesById.get(sourceId);
+function certaintyFor(item, integrity) {
+  const certainty = integrity.valid ? item.certainty : "check-local";
+  if (certainty === "confirmed") return { label: t("certaintyConfirmed"), className: "" };
+  if (certainty === "caution") return { label: t("certaintyCaution"), className: "caution" };
+  return { label: t("certaintyLocal"), className: "local" };
 }
 
 function sourceList(item, route) {
-  const sourceIds = [...new Set([...(item.sources ?? []), route.sourceId].filter(Boolean))];
-  return sourceIds.map(sourceForId).filter(Boolean);
+  const ids = [...new Set([...(item.sources ?? []), route.sourceId].filter(Boolean))];
+  return ids.map((id) => state.sourcesById.get(id)).filter(Boolean);
 }
 
 function showToast(message) {
@@ -142,134 +166,91 @@ function updateUrl(itemId = null, replace = false) {
   const url = new URL(window.location.href);
   url.search = "";
   if (itemId) url.searchParams.set("item", itemId);
-  const method = replace ? "replaceState" : "pushState";
-  window.history[method]({ itemId }, "", `${url.pathname}${url.search}`);
+  window.history[replace ? "replaceState" : "pushState"]({ itemId }, "", `${url.pathname}${url.search}`);
 }
 
 function updateUrlForNonSpecificResult(options = {}) {
   if (options.updateUrl === false) return;
-  const hadSpecificItem = new URL(window.location.href).searchParams.has("item");
-  updateUrl(null, !hadSpecificItem);
+  updateUrl(null, !new URL(window.location.href).searchParams.has("item"));
 }
 
-function emptyState({ title, message, kicker = "Bereit" }) {
-  state.currentItem = null;
+function emptyState({ title, message, kicker, type = "idle", query = "" }) {
+  state.currentItemId = null;
+  state.view = { type, query };
   elements.resultKicker.textContent = kicker;
   elements.resultsTitle.textContent = title;
   elements.status.textContent = message;
   elements.status.hidden = false;
   elements.results.innerHTML = "";
-  elements.reset.hidden = kicker === "Bereit";
+  elements.reset.hidden = type === "idle";
+}
+
+function renderIdle() {
+  emptyState({
+    title: t("resultIdleTitle"),
+    message: t("resultIdleStatus"),
+    kicker: t("resultReady"),
+    type: "idle"
+  });
 }
 
 function localGuidance(item) {
   const region = selectedRegion();
   if (!region) return "";
   const route = effectiveRoute(item);
-  const needsLocalBox =
-    state.selectedRegion !== "de" ||
-    item.certainty !== "confirmed" ||
-    Boolean(item.localVariation);
-  if (!needsLocalBox) return "";
-
+  const needed = state.selectedRegion !== "de" || item.certainty !== "confirmed" || Boolean(item.localVariation);
+  if (!needed) return "";
   const link = region.url
-    ? `<a href="${escapeHtml(region.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(region.officialName)} öffnen</a>`
-    : "Suche auf der Website deiner Stadt oder deines Landkreises nach „Abfall-ABC“ oder „Abfallberatung“.";
-  const overrideNote = route.note ? `<p>${escapeHtml(route.note)}</p>` : "";
-
-  return `
-    <div class="regional-box">
-      <strong>${escapeHtml(region.label)}</strong>
-      ${overrideNote}
-      <p>${escapeHtml(item.localVariation)}</p>
-      <p>${link}</p>
-    </div>
-  `;
+    ? `<a href="${escapeHtml(region.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("localOpen", { name: region.officialName }))}</a>`
+    : escapeHtml(t("localFallback"));
+  return `<div class="regional-box"><strong>${escapeHtml(region.label)}</strong>${route.note ? `<p>${escapeHtml(route.note)}</p>` : ""}<p>${escapeHtml(item.localVariation)}</p><p>${link}</p></div>`;
 }
 
 function integrityWarning(integrity) {
   if (integrity.valid) return "";
-  return `
-    <div class="warning-box" role="alert">
-      <strong>Redaktionelle Prüfung fällig</strong>
-      <p>Dieser Treffer wird nicht als sichere Tonnenempfehlung ausgegeben. Bitte nutze die verlinkte örtliche Abfallberatung.</p>
-      <ul>${integrity.issues.map((issue) => `<li>${escapeHtml(issue)}</li>`).join("")}</ul>
-    </div>
-  `;
+  const details = integrity.issueDetails?.length
+    ? integrity.issueDetails.map(({ code, ...values }) => t(code, values))
+    : integrity.issues;
+  return `<div class="warning-box" role="alert"><strong>${escapeHtml(t("integrityTitle"))}</strong><p>${escapeHtml(t("integrityText"))}</p><ul>${details.map((issue) => `<li>${escapeHtml(issue)}</li>`).join("")}</ul></div>`;
 }
 
 function renderSource(source) {
-  const sourceDate = source.sourceDate ? `Quellenstand ${formatDate(source.sourceDate)} · ` : "";
-  return `
-    <li>
-      <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">
-        ${escapeHtml(source.title)}
-      </a>
-      <small>${escapeHtml(source.publisher)} · ${escapeHtml(source.scope)}</small>
-      <small>${sourceDate}geprüft ${formatDate(source.verifiedAt)} · nächste Prüfung bis ${formatDate(source.reviewDue)}</small>
-      <small>${escapeHtml(source.attribution)}</small>
-    </li>
-  `;
+  const sourceDate = source.sourceDate ? t("sourceDate", { date: formatDate(source.sourceDate) }) : "";
+  return `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a><small>${escapeHtml(source.publisher)} · ${escapeHtml(source.scope)}</small><small>${escapeHtml(sourceDate)}${escapeHtml(t("sourceReview", { verified: formatDate(source.verifiedAt), reviewDue: formatDate(source.reviewDue) }))}</small><small>${escapeHtml(source.attribution)}</small></li>`;
 }
 
 function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesById, new Date())) {
   const route = effectiveRoute(item);
-  const certainty = effectiveCertainty(item, integrity);
+  const certainty = certaintyFor(item, integrity);
   const sources = sourceList(item, route);
-  const warning = item.warning
-    ? `<div class="warning-box"><strong>Wichtig</strong><p>${escapeHtml(item.warning)}</p></div>`
-    : "";
-
+  const warning = item.warning ? `<div class="warning-box"><strong>${escapeHtml(t("important"))}</strong><p>${escapeHtml(item.warning)}</p></div>` : "";
   return `
     <article class="result-card" data-item-id="${escapeHtml(item.id)}">
       <div class="result-main">
         <div class="result-copy">
-          <div class="result-title-row">
-            <div>
-              <p class="section-kicker">${escapeHtml(item.category)}</p>
-              <h3 id="item-${escapeHtml(item.id)}" tabindex="-1">${escapeHtml(item.name)}</h3>
-            </div>
-            <span class="certainty-badge ${escapeHtml(certainty.className)}">${escapeHtml(certainty.label)}</span>
-          </div>
+          <div class="result-title-row"><div><p class="section-kicker">${escapeHtml(item.category)}</p><h3 id="item-${escapeHtml(item.id)}" tabindex="-1">${escapeHtml(item.name)}</h3></div><span class="certainty-badge ${escapeHtml(certainty.className)}">${escapeHtml(certainty.label)}</span></div>
           <p class="answer">${escapeHtml(item.answer)}</p>
-          <p class="reason"><strong>Warum?</strong> ${escapeHtml(item.reason)}</p>
-          <ol class="steps">
-            ${item.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
-          </ol>
-          ${warning}
-          ${integrityWarning(integrity)}
-          ${localGuidance(item)}
+          <p class="reason"><strong>${escapeHtml(t("why"))}</strong> ${escapeHtml(item.reason)}</p>
+          <ol class="steps">${item.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
+          ${warning}${integrityWarning(integrity)}${localGuidance(item)}
         </div>
-        <div class="result-route">
-          <span class="route-type">Empfohlener Weg</span>
-          <h3>${escapeHtml(integrity.valid ? route.label : "Örtliche Abfallberatung")}</h3>
-          <p>${escapeHtml(integrity.valid ? "Für private Haushalte im angegebenen Geltungsbereich." : "Bis die Quellen erneut geprüft sind, keine Tonnenangabe übernehmen.")}</p>
-        </div>
+        <div class="result-route"><span class="route-type">${escapeHtml(t("recommendedRoute"))}</span><h3>${escapeHtml(integrity.valid ? route.label : t("localAdvice"))}</h3><p>${escapeHtml(integrity.valid ? t("routeScope") : t("routeStale"))}</p></div>
       </div>
       <div class="result-details">
-        <details>
-          <summary>Quellen und Gültigkeit (${sources.length})</summary>
-          <ul class="source-list">${sources.map(renderSource).join("")}</ul>
-          <p><strong>Redaktioneller Stand:</strong> geprüft ${formatDate(item.reviewedAt)}, nächste Prüfung bis ${formatDate(item.reviewDue)}.</p>
-        </details>
-        <div class="result-actions">
-          <button class="secondary-button" type="button" data-share="${escapeHtml(item.id)}">Hinweis teilen</button>
-          <button class="secondary-button" type="button" data-print="${escapeHtml(item.id)}">Drucken</button>
-        </div>
+        <details><summary>${escapeHtml(t("sourcesAndValidity", { count: sources.length }))}</summary><ul class="source-list">${sources.map(renderSource).join("")}</ul><p><strong>${escapeHtml(t("editorialStatus", { reviewed: formatDate(item.reviewedAt), reviewDue: formatDate(item.reviewDue) }))}</strong></p></details>
+        <div class="result-actions"><button class="secondary-button" type="button" data-share="${escapeHtml(item.id)}">${escapeHtml(t("shareHint"))}</button><button class="secondary-button" type="button" data-print="${escapeHtml(item.id)}">${escapeHtml(t("print"))}</button></div>
       </div>
-    </article>
-  `;
+    </article>`;
 }
 
 function renderOne(item, options = {}) {
-  const integrity = validateItemIntegrity(item, state.sourcesById, new Date());
-  state.currentItem = item;
-  elements.resultKicker.textContent = "Entsorgungshinweis";
-  elements.resultsTitle.textContent = `Ergebnis für „${item.name}“`;
+  state.currentItemId = item.id;
+  state.view = { type: "item", itemId: item.id };
+  elements.resultKicker.textContent = t("resultKicker");
+  elements.resultsTitle.textContent = t("resultTitle", { name: item.name });
   elements.status.hidden = true;
   elements.reset.hidden = false;
-  elements.results.innerHTML = renderItem(item, integrity);
-
+  elements.results.innerHTML = renderItem(item);
   if (options.updateHistory !== false) {
     state.history = addSearchToHistory(state.lastQuery || item.name);
     renderHistory();
@@ -278,33 +259,15 @@ function renderOne(item, options = {}) {
   if (options.focus !== false) elements.resultsTitle.focus();
 }
 
-function renderChoices(results, query) {
-  state.currentItem = null;
-  elements.resultKicker.textContent = "Mehrdeutige Suche";
-  elements.resultsTitle.textContent = `Was meinst du mit „${query}“?`;
+function renderChoices(items, query) {
+  state.currentItemId = null;
+  state.view = { type: "choices", query, itemIds: items.map((item) => item.id) };
+  elements.resultKicker.textContent = t("ambiguousKicker");
+  elements.resultsTitle.textContent = t("ambiguousTitle", { query });
   elements.status.hidden = false;
-  elements.status.textContent = "Wähle den passenden Gegenstand. Ähnlich klingende Dinge können verschiedene Entsorgungswege haben.";
+  elements.status.textContent = t("ambiguousMessage");
   elements.reset.hidden = false;
-  elements.results.innerHTML = results
-    .slice(0, 6)
-    .map(({ item }) => `
-      <article class="result-card compact">
-        <div>
-          <p class="section-kicker">${escapeHtml(item.category)}</p>
-          <h3>${escapeHtml(item.name)}</h3>
-          <p>${escapeHtml(item.answer)}</p>
-        </div>
-        <button
-          class="secondary-button"
-          type="button"
-          data-select-item="${escapeHtml(item.id)}"
-          aria-label="${escapeHtml(`${item.name} auswählen`)}"
-        >
-          Auswählen
-        </button>
-      </article>
-    `)
-    .join("");
+  elements.results.innerHTML = items.slice(0, 6).map((item) => `<article class="result-card compact"><div><p class="section-kicker">${escapeHtml(item.category)}</p><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.answer)}</p></div><button class="secondary-button" type="button" data-select-item="${escapeHtml(item.id)}" aria-label="${escapeHtml(t("selectAria", { name: item.name }))}">${escapeHtml(t("select"))}</button></article>`).join("");
   state.history = addSearchToHistory(query);
   renderHistory();
   elements.resultsTitle.focus();
@@ -314,95 +277,102 @@ function runSearch(rawQuery, options = {}) {
   const query = String(rawQuery ?? "").trim().slice(0, 120);
   elements.input.value = query;
   state.lastQuery = query;
-
   if (query.length < 2) {
-    emptyState({
-      title: "Bitte etwas genauer",
-      message: "Gib mindestens zwei Zeichen ein, zum Beispiel „Akku“ oder „Glas“.",
-      kicker: "Zu kurze Eingabe"
-    });
+    emptyState({ title: t("shortTitle"), message: t("shortMessage"), kicker: t("shortKicker"), type: "short", query });
     updateUrlForNonSpecificResult(options);
     elements.resultsTitle.focus();
     return;
   }
-
-  const results = searchItems(state.items, query, {
-    sourcesById: state.sourcesById,
-    asOf: new Date(),
-    limit: 8
-  });
-
+  const results = searchItems(state.items, query, { sourcesById: state.sourcesById, asOf: new Date(), limit: 8 });
   if (results.length === 0) {
-    emptyState({
-      title: `Kein sicherer Treffer für „${query}“`,
-      message: "Bitte beschreibe Material und Funktion genauer. Bis dahin: nicht in eine Tonne raten, sondern im örtlichen Abfall-ABC nachsehen.",
-      kicker: "Unklar"
-    });
+    emptyState({ title: t("noMatchTitle", { query }), message: t("noMatchMessage"), kicker: t("unclear"), type: "no-match", query });
     state.history = addSearchToHistory(query);
     renderHistory();
     updateUrlForNonSpecificResult(options);
     elements.resultsTitle.focus();
     return;
   }
-
   if (isAmbiguous(results)) {
-    renderChoices(results, query);
+    renderChoices(results.map(({ item }) => item), query);
     updateUrlForNonSpecificResult(options);
     return;
   }
-
-  renderOne(results[0].item, {
-    updateUrl: options.updateUrl !== false,
-    updateHistory: options.updateHistory !== false,
-    focus: options.focus !== false
-  });
+  renderOne(results[0].item, options);
 }
 
 function resetSearch({ updateUrl: shouldUpdateUrl = true, focus = true } = {}) {
   state.lastQuery = "";
   elements.input.value = "";
-  emptyState({
-    title: "Was möchtest du entsorgen?",
-    message: "Suche oben nach einem Gegenstand – eine Region ist dafür nicht nötig.",
-    kicker: "Bereit"
-  });
+  renderIdle();
   if (shouldUpdateUrl) updateUrl(null);
   if (focus) elements.input.focus();
 }
 
 async function shareItem(item) {
-  const route = effectiveRoute(item);
   const url = new URL(window.location.href);
   url.search = "";
   url.searchParams.set("item", item.id);
-  const text = `${item.name}: ${item.answer} Empfohlener Weg: ${route.label}. Stand ${formatDate(item.reviewedAt)}.`;
-  const shareData = { title: `Welcher Müll? – ${item.name}`, text, url: url.toString() };
-
+  const text = t("shareText", { name: item.name, answer: item.answer, route: effectiveRoute(item).label, date: formatDate(item.reviewedAt) });
   try {
     if (navigator.share) {
-      await navigator.share(shareData);
-      showToast("Teilen geöffnet.");
+      await navigator.share({ title: t("shareTitle", { name: item.name }), text, url: url.toString() });
+      showToast(t("shareOpened"));
       return;
     }
     await navigator.clipboard.writeText(`${text}\n${url}`);
-    showToast("Hinweis und Link kopiert.");
+    showToast(t("shareCopied"));
   } catch (error) {
-    if (error?.name !== "AbortError") showToast("Teilen ist gerade nicht verfügbar.");
+    if (error?.name !== "AbortError") showToast(t("shareUnavailable"));
   }
 }
 
 function renderAbout() {
   const rightsSources = state.sources.filter((source) => source.id.includes("rights"));
-  elements.aboutContent.innerHTML = `
-    <p>Die App funktioniert ohne Konto, Cookies, Standortzugriff oder Nutzerdatenbank. Region und Suchverlauf werden nur nach deiner Auswahl im lokalen Browserspeicher abgelegt und lassen sich vollständig löschen.</p>
-    <h3>Redaktioneller Datenbestand</h3>
-    <p>${escapeHtml(state.sourcesEditorialUse)}</p>
-    <p><strong>Vorschaubild:</strong> eigenes SVG dieses Repositorys; keine Fremdassets, Logos oder Fotografien.</p>
-    <h3>Lizenznachweise der Hauptquellen</h3>
-    <ul class="source-list">${rightsSources.map(renderSource).join("")}</ul>
-    <h3>Grenzen</h3>
-    <p>Die App ersetzt keine kommunale Abfallberatung und keinen Notruf. Sie zeigt nur belegte allgemeine Hinweise und ausgewählte, amtlich bestätigte regionale Unterschiede.</p>
-  `;
+  elements.aboutContent.innerHTML = `<p>${escapeHtml(t("aboutPrivacy"))}</p><h3>${escapeHtml(t("editorialCatalog"))}</h3><p>${escapeHtml(state.sourcesEditorialUse)}</p><p><strong>${escapeHtml(t("previewRights"))}</strong></p><h3>${escapeHtml(t("sourceRights"))}</h3><ul class="source-list">${rightsSources.map(renderSource).join("")}</ul><h3>${escapeHtml(t("limits"))}</h3><p>${escapeHtml(t("limitsText"))}</p>`;
+}
+
+function rebuildLocalizedCatalogs() {
+  const localized = localizeCatalogs(state.catalogs, state.language);
+  state.items = localized.items;
+  state.sources = localized.sources;
+  state.sourcesById = new Map(state.sources.map((source) => [source.id, source]));
+  state.sourcesEditorialUse = localized.sourcesEditorialUse;
+  state.regions = localized.regions;
+}
+
+function rerenderView() {
+  if (state.view.type === "item") {
+    const item = state.items.find((candidate) => candidate.id === state.view.itemId);
+    if (item) renderOne(item, { updateUrl: false, updateHistory: false, focus: false });
+    return;
+  }
+  if (state.view.type === "choices") {
+    const items = state.view.itemIds.map((id) => state.items.find((item) => item.id === id)).filter(Boolean);
+    renderChoices(items, state.view.query);
+    return;
+  }
+  if (state.view.type === "short") {
+    emptyState({ title: t("shortTitle"), message: t("shortMessage"), kicker: t("shortKicker"), type: "short", query: state.view.query });
+    return;
+  }
+  if (state.view.type === "no-match") {
+    emptyState({ title: t("noMatchTitle", { query: state.view.query }), message: t("noMatchMessage"), kicker: t("unclear"), type: "no-match", query: state.view.query });
+    return;
+  }
+  renderIdle();
+}
+
+function applyLanguage(language) {
+  state.language = normalizeLanguage(language || document.documentElement.lang);
+  document.documentElement.lang = state.language;
+  applyStaticTranslations();
+  if (!state.catalogs) return;
+  rebuildLocalizedCatalogs();
+  elements.contentDate.textContent = t("contentDate", { date: formatDate(state.contentDate) });
+  renderRegions();
+  renderHistory();
+  renderAbout();
+  rerenderView();
 }
 
 function bindEvents() {
@@ -410,137 +380,115 @@ function bindEvents() {
     event.preventDefault();
     runSearch(elements.input.value);
   });
-
   elements.input.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && elements.input.value) {
       event.preventDefault();
       resetSearch();
     }
   });
-
-  document.querySelectorAll("[data-query]").forEach((button) => {
-    button.addEventListener("click", () => runSearch(button.dataset.query));
+  document.querySelectorAll("[data-query-key]").forEach((button) => {
+    button.addEventListener("click", () => runSearch(button.dataset[state.language === "en" ? "queryEn" : "queryDe"]));
   });
-
   elements.results.addEventListener("click", (event) => {
-    const select = event.target.closest("[data-select-item]");
-    if (select) {
-      const item = state.items.find((candidate) => candidate.id === select.dataset.selectItem);
+    const selected = event.target.closest("[data-select-item]");
+    if (selected) {
+      const item = state.items.find((candidate) => candidate.id === selected.dataset.selectItem);
       if (item) renderOne(item);
       return;
     }
-
     const share = event.target.closest("[data-share]");
     if (share) {
       const item = state.items.find((candidate) => candidate.id === share.dataset.share);
       if (item) void shareItem(item);
       return;
     }
-
     if (event.target.closest("[data-print]")) window.print();
   });
-
   elements.reset.addEventListener("click", () => resetSearch());
-  elements.openSettings.addEventListener("click", () => setSettingsOpen(!elements.settings.open));
+  elements.openSettings.addEventListener("click", () => setSettingsOpen(true));
   elements.closeSettings.addEventListener("click", () => setSettingsOpen(false));
   elements.settings.addEventListener("close", () => {
     elements.openSettings.setAttribute("aria-expanded", "false");
     elements.openSettings.focus();
   });
-  elements.settings.addEventListener("cancel", () => {
-    elements.openSettings.setAttribute("aria-expanded", "false");
-  });
+  elements.settings.addEventListener("cancel", () => elements.openSettings.setAttribute("aria-expanded", "false"));
   elements.settings.addEventListener("click", (event) => {
     if (event.target === elements.settings) setSettingsOpen(false);
   });
-
   elements.region.addEventListener("change", () => {
     state.selectedRegion = elements.region.value;
     saveRegion(state.selectedRegion);
-    if (state.currentItem) renderOne(state.currentItem, { updateUrl: false, updateHistory: false, focus: false });
-    showToast(`Region: ${selectedRegion().label}`);
+    rerenderView();
+    showToast(t("regionToast", { region: selectedRegion().label }));
   });
-
   elements.remember.addEventListener("change", () => {
     state.remember = elements.remember.checked;
     setRememberSearches(state.remember);
     if (!state.remember) state.history = [];
     renderHistory();
-    showToast(state.remember ? "Suchverlauf wird nur lokal gespeichert." : "Lokaler Suchverlauf gelöscht.");
+    showToast(t(state.remember ? "historyEnabled" : "historyDisabled"));
   });
-
   elements.clearData.addEventListener("click", () => {
     clearLocalData();
     state.selectedRegion = "de";
     state.remember = false;
     state.history = [];
-    elements.region.value = "de";
     elements.remember.checked = false;
+    renderRegions();
     renderHistory();
-    if (state.currentItem) renderOne(state.currentItem, { updateUrl: false, updateHistory: false, focus: false });
-    showToast("Alle lokalen Angaben wurden gelöscht.");
+    rerenderView();
+    showToast(t("localDataCleared"));
   });
-
   elements.historyList.addEventListener("click", (event) => {
     const button = event.target.closest("[data-history-query]");
     if (button) runSearch(button.dataset.historyQuery);
   });
-
   elements.showAbout.addEventListener("click", () => elements.aboutDialog.showModal());
   elements.closeAbout.addEventListener("click", () => elements.aboutDialog.close());
   elements.aboutDialog.addEventListener("click", (event) => {
     if (event.target === elements.aboutDialog) elements.aboutDialog.close();
   });
-
+  elements.trust.addEventListener("toggle", () => {
+    elements.trustHint.textContent = t(elements.trust.open ? "trustHide" : "trustShow");
+  });
   window.addEventListener("online", updateConnectivity);
   window.addEventListener("offline", updateConnectivity);
   window.addEventListener("popstate", (event) => {
     const itemId = event.state?.itemId ?? new URL(window.location.href).searchParams.get("item");
-    if (!itemId) {
-      resetSearch({ updateUrl: false, focus: false });
-      return;
-    }
     const item = state.items.find((candidate) => candidate.id === itemId);
     if (item) {
       state.lastQuery = item.name;
       renderOne(item, { updateUrl: false, updateHistory: false, focus: false });
+    } else {
+      resetSearch({ updateUrl: false, focus: false });
     }
   });
 }
 
-async function loadJson(path) {
-  const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) throw new Error(`Daten konnten nicht geladen werden: ${path}`);
+async function loadJson(url) {
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`Data could not be loaded: ${url}`);
   return response.json();
 }
 
 async function initialize() {
   bindEvents();
+  applyLanguage(document.documentElement.lang);
   updateConnectivity();
-
   try {
-    const [itemsCatalog, sourcesCatalog, regionsCatalog] = await Promise.all([
-      loadJson(DATA_PATHS.items),
-      loadJson(DATA_PATHS.sources),
-      loadJson(DATA_PATHS.regions)
-    ]);
-
-    state.items = itemsCatalog.items;
-    state.sources = sourcesCatalog.sources;
-    state.sourcesById = new Map(state.sources.map((source) => [source.id, source]));
-    state.sourcesEditorialUse = sourcesCatalog.editorialUse;
-    state.regions = regionsCatalog.regions;
-
+    const [itemsCatalog, sourcesCatalog, regionsCatalog, localeCatalog] = await Promise.all(Object.values(DATA_PATHS).map(loadJson));
+    state.catalogs = { itemsCatalog, sourcesCatalog, regionsCatalog, localeCatalog };
+    state.contentDate = itemsCatalog.contentDate;
+    rebuildLocalizedCatalogs();
     const local = loadLocalState();
     state.selectedRegion = state.regions.some((region) => region.id === local.region) ? local.region : "de";
     state.remember = local.remember;
     state.history = local.history;
     elements.remember.checked = state.remember;
-    elements.contentDate.textContent = `Inhaltsstand ${formatDate(itemsCatalog.contentDate)}`;
+    elements.contentDate.textContent = t("contentDate", { date: formatDate(state.contentDate) });
     renderRegions();
     renderHistory();
     renderAbout();
-
     const requestedItem = new URL(window.location.href).searchParams.get("item");
     const item = state.items.find((candidate) => candidate.id === requestedItem);
     if (item) {
@@ -548,24 +496,22 @@ async function initialize() {
       renderOne(item, { updateUrl: false, updateHistory: false, focus: false });
       window.history.replaceState({ itemId: item.id }, "", window.location.href);
     } else {
+      renderIdle();
       window.history.replaceState({ itemId: null }, "", window.location.pathname);
     }
   } catch (error) {
     console.error(error);
-    emptyState({
-      title: "Die redaktionellen Daten fehlen",
-      message: "Bitte neu laden. Offline ist die App erst nach dem ersten vollständigen Aufruf verfügbar.",
-      kicker: "Ladefehler"
-    });
+    emptyState({ title: t("dataErrorTitle"), message: t("dataErrorMessage"), kicker: t("dataErrorKicker"), type: "error" });
   }
 
   if ("serviceWorker" in navigator) {
     try {
-      await navigator.serviceWorker.register("/sw.js");
+      await navigator.serviceWorker.register(new URL("../sw.js", import.meta.url));
     } catch (error) {
-      console.warn("Offline-Cache konnte nicht aktiviert werden.", error);
+      console.warn("Offline cache could not be enabled.", error);
     }
   }
 }
 
+window.addEventListener("milosapps:localechange", (event) => applyLanguage(event.detail?.locale));
 void initialize();

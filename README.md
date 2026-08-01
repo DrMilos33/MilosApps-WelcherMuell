@@ -12,6 +12,8 @@ Nutzerdatenbank sind nicht nötig.
 - allgemeiner Geltungsbereich: private Haushalte in Deutschland
 - belegte regionale Ergänzungen: Berlin, Hamburg und München
 - Plattformen: Web, Smartphone/PWA und Desktop
+- sichtbare Fachoberfläche: vollständig Deutsch und Englisch
+- öffentlicher App-Rahmen: lokal vendortes `public-app-shell/v2.0.2`
 - Production: nicht freigegeben
 
 Der unabhängige öffentliche DEV-Stand ist ohne Portal und ohne Login erreichbar:
@@ -57,16 +59,20 @@ und einen app-spezifischen Healthcheck aus.
 
 ```powershell
 pnpm test
+pnpm test:shell
 pnpm test:e2e
 pnpm test:sources:online
+$env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
 pnpm build:github-pages:dev
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT=(git rev-parse HEAD)
 pnpm test:remote:dev
 pnpm test:all
 ```
 
-`test` prüft Inhalt, Quellenvertrag, Suche, Synonyme, Tippfehler und lokale
-Speicherung. `test:e2e` nutzt ein lokal installiertes Chrome oder Edge auf Port
+`test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler und lokale
+Speicherung. `test:shell` prüft Manifest, Vendor-Hashes und Lock mit dem
+portablen Shared-Validator. `test:e2e` nutzt ein lokal installiertes Chrome oder Edge auf Port
 4318. `test:sources:online` ruft alle katalogisierten amtlichen Quellen live ab.
 Screenshots aus E2E-Läufen landen ignoriert unter `test-results/qa/`.
 Der Remote-Smoke prüft die echte HTTPS-URL in einem frischen Browserkontext
@@ -77,9 +83,13 @@ ohne Cookies, Portalzustand oder Milos-Login.
 - `public/data/waste-items.v1.json`: versionierbarer redaktioneller Bestand
 - `public/data/sources.v1.json`: Quelle, Geltung, Prüfung, Lizenz, Attribution
 - `public/data/regions.v1.json`: optionale grobe Regionen und belegte Overrides
+- `public/data/locales/en.v1.json`: vollständige englische Fachübersetzung
 - `src/search.js`: deutsche Normalisierung, gewichtete Suche und
   Tippfehlertoleranz
+- `src/i18n.js`: sichtbare DE/EN-Oberfläche und lokalisierte Kataloge
 - `src/storage.js`: datensparsame, optionale lokale Speicherung
+- `milos-app.json` und `vendor/milosapps-shell/v2/`: exakt gepinnter,
+  lokal ausführbarer App-Rahmen ohne CDN oder Runtimeimport
 - `meta.json`: Portal- und DEV-Metadaten
 
 Fehlt eine Quelle oder ist ihre erneute Prüfung fällig, wird der betroffene

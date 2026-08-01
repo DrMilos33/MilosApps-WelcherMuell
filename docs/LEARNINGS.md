@@ -1,5 +1,47 @@
 # Welcher-Müll-Erkenntnisse
 
+## 01.08.2026 · public-app-shell/v2.0.2
+
+### Textzoom braucht intrinsische Breitentests, nicht nur Dokument-Overflow
+
+Die zentrale Shell-Korrektur beseitigte den globalen Body-Floor. In der App
+blieben trotzdem zwei unabhängige Reflowquellen: eine horizontal scrollende
+Beispiel-Chip-Leiste und lange deutsche Zusammensetzungen in einem
+eingeklappten `summary`. Beide konnten die intrinsische Breite vergrößern, ohne
+bei normaler Smartphonebreite aufzufallen. Mobile Chips reflowen nun, lange
+Vertrauenstexte dürfen kontrolliert umbrechen und Grid-/Flex-Kinder setzen
+`min-width: 0`.
+
+Evidenz: explizite Regression 360 × 800 mit `font-size: 200%`, feste
+38-Pixel-Shell-Ikone, 44-Pixel-Ziele, Dokument- und Containerbreiten; 26/26
+Browser-E2E-Prüfungen bestanden.
+
+Gültigkeitsgrenze: Der Test bildet Root-Textzoom reproduzierbar ab, aber keinen
+bestimmten Browser-Chrome-Zoomdialog oder eine reale Screenreader-Ausgabe.
+
+### Visuelle QA findet interne Kollapsfehler trotz grüner Überlaufmetrik
+
+Eine frühe Smartphone-Messung meldete null horizontalen Überlauf, obwohl der
+Ergebnisweg intern auf eine schmale Grid-Spalte kollabierte und Wörter
+buchstabenweise umbrachen. Erst der Screenshot machte den Fehler sichtbar.
+Die Regression vergleicht deshalb jetzt Karten- und Routenbreite; die mobile
+Grid-Platzierung ist explizit einspaltig.
+
+Evidenz: Smartphone-Screenshot bei 390 × 844, anschließende geometrische
+Regression und vollständige Wiederholung der Matrix.
+
+### Vendorte Shadow-DOM-Styles brauchen einen CSP-Vertrag
+
+Die Shell bringt zwei feste Style-Blöcke mit. Eine reine `style-src 'self'`-CSP
+blockierte sie und erzeugte ungestylte, aber semantisch vorhandene Bedienung.
+Der lokale DEV-Server berechnet die erlaubten SHA-256-Hashes aus der bereits
+gelockten Vendor-Datei. Damit bleiben CSP und bewusstes Shell-Update gekoppelt,
+ohne `unsafe-inline` oder einen Runtimeimport einzuführen.
+
+Gültigkeitsgrenze: GitHub Pages liefert derzeit keine app-eigenen Response-CSP-
+Header. Der Hashvertrag sichert den lokalen DEV-/E2E-Server und dokumentiert
+die Integrationsanforderung für spätere Hosts.
+
 ## 30.07.2026 · Inhaltsversion 2026.07.30-2
 
 ### Materialwörter brauchen breite Synonyme und enge Sicherheitsgrenzen

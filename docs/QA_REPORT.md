@@ -179,3 +179,56 @@ Layout.
 
 Diese Deploymentprüfung erneuert keine fachliche Quellenprüfung. Inhaltsversion
 und Reviewtermine bleiben unverändert.
+
+## QA-Erweiterung für public-app-shell/v2.0.2
+
+Die Shell-Migration verändert Navigation, Sprache und Layout, aber nicht die
+redaktionellen Entsorgungsaussagen. Der Vertrag ist lokal auf Shared-Commit
+`97f695be3bdfcfdc51ad286c6ed231c4b9585295` vendort und per Lock verifiziert.
+
+### Runde 1: Integration und vollständige Fachübersetzung
+
+- gemeinsamer Header/Footer mit lokalem Inline-SVG, absoluten DEV-Links und
+  sichtbarem DEV-Status integriert;
+- sämtliche statischen und dynamischen Fachtexte auf DE/EN umgestellt,
+  einschließlich Treffer, Warnungen, Integritätsfehler, Regionen, Quellen,
+  Dialoge, Teilen und Fehlerzustände;
+- Sprachwechsel und Reload-Persistenz sowie englische Suchnamen, Synonyme und
+  Treffer als Regression ergänzt;
+- die lokale CSP eng auf die beiden gelockten Vendor-Style-Hashes abgestimmt.
+
+Der erste Browserlauf fand neben veralteten Testselektoren einen echten
+Dark-Mode-Kontrastfehler: Die feste Shell-Farbe wurde in die dunkle
+Fachoberfläche vererbt. App-eigene Dark-Theme-Tokens und eine gemessene
+4,5:1-Kontrastregression beheben das.
+
+### Runde 2: Smartphone, Grid und Textzoom
+
+Die visuelle Smartphonekontrolle fand einen intern kollabierten Ergebnisweg,
+obwohl kein Dokument-Overflow gemessen wurde. Die mobile Ergebnisstruktur ist
+nun explizit einspaltig; eine Regression verlangt, dass der Ergebnisweg die
+volle Kartenbreite einnimmt.
+
+Der neue 360 × 800-Test mit 200 % Root-Textzoom fand anschließend zwei
+app-eigene intrinsische Breiten: die Beispiel-Chips und lange Wörter im
+eingeklappten Vertrauensbereich. Chips reflowen auf kleinen Viewports, weniger
+wichtige Beispiele werden dort ausgeblendet und lange Texte brechen
+kontrolliert um. Ein app-spezifischer Shell-Min-Width-Workaround wurde nicht
+eingeführt.
+
+Lokaler Abschluss vor Veröffentlichung:
+
+- 65/65 Unit-, Inhalts-, Quellen-, Such-, Übersetzungs- und Speichertests;
+- portabler Shared-Validator und SHA-256-Lock: PASS;
+- 26/26 Browser-E2E-Prüfungen;
+- 20/20 amtliche Quellen technisch erreichbar;
+- 1440 × 900, 390 × 844, 844 × 390, 640-px-Reflow und
+  360 × 800 bei 200 % Textzoom ohne horizontalen Überlauf;
+- DE/EN samt Reload, Tastatur, sichtbarer Fokus, 44-px-Ziele, Reduced Motion,
+  Offline, schnelle Navigation, Teilen/Drucken und Footerabschluss grün;
+- keine Browser- oder Konsolenfehler.
+
+Die Quellenprüfung bleibt getrennt: Der Online-Lauf bestätigt nur die
+technische Erreichbarkeit. Inhaltsversion `2026.07.30-2`, Geltungsgebiet,
+Lizenz, Attribution und bestehende Reviewtermine wurden durch die
+Shell-Migration nicht erneuert.

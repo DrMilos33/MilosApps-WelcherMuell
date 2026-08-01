@@ -140,6 +140,9 @@ describe("Quellenintegrität", () => {
     const integrity = validateItemIntegrity(item, sourcesById, new Date("2026-07-30T00:00:00Z"));
     assert.equal(integrity.valid, false);
     assert.match(integrity.issues.join(" "), /fehlt/);
+    assert.deepEqual(integrity.issueDetails, [
+      { code: "issueSourceMissing", sourceId: "nicht-vorhanden" }
+    ]);
   });
 
   test("überfällige Quelle wird als fällig erkannt", () => {
@@ -152,5 +155,8 @@ describe("Quellenintegrität", () => {
     const integrity = validateItemIntegrity(item, staleSources, new Date("2026-07-30T00:00:00Z"));
     assert.equal(integrity.valid, false);
     assert.match(integrity.issues.join(" "), /erneuten Prüfung fällig/);
+    assert.deepEqual(integrity.issueDetails, [
+      { code: "issueSourceReviewDue", sourceId: "uba-separation-2026" }
+    ]);
   });
 });

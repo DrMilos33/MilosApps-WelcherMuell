@@ -8,10 +8,11 @@
     "dev": "node scripts/dev-server.mjs",
     "start": "node scripts/dev-server.mjs",
     "test": "node --test tests/unit/*.test.mjs",
+    "test:shell": "node vendor/milosapps-shell/v2/verify.mjs --app-root . --manifest milos-app.json",
     "test:sources:online": "node scripts/check-sources.mjs",
     "test:e2e": "node tests/e2e/run.mjs",
     "test:remote:dev": "node tests/e2e/remote-smoke.mjs",
-    "test:all": "node --test tests/unit/*.test.mjs && node tests/e2e/run.mjs",
+    "test:all": "pnpm test:shell && node --test tests/unit/*.test.mjs && node tests/e2e/run.mjs",
     "build:github-pages:dev": "node scripts/build-github-pages-dev.mjs"
   },
   "engines": {

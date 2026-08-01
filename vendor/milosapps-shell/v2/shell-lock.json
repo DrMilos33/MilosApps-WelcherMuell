@@ -1,0 +1,13 @@
+{
+  "contract": "public-app-shell/v2",
+  "version": "2.0.2",
+  "sharedCommit": "97f695be3bdfcfdc51ad286c6ed231c4b9585295",
+  "appKey": "waste-guide",
+  "manifest": "milos-app.json",
+  "vendorDirectory": "vendor/milosapps-shell/v2",
+  "artifacts": {
+    "milos-app-shell.js": "sha256:78508eb1b5a29540656d1074dc2f72f629227ba8d185ac8b48b43f9f48353d65",
+    "bootstrap.js": "sha256:684e7287009b0c0aab7804b9a2aeb7681b078b3f7b1a906378793b4bc66586ac",
+    "verify.mjs": "sha256:7858069b65e4fe07b7d3e5e50d78d7b7d9d24f41b77864d4678948893aa066f6"
+  }
+}

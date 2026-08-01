@@ -1,4 +1,5 @@
-import { createReadStream, existsSync, statSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,6 +19,16 @@ const contentTypes = {
   ".svg": "image/svg+xml",
   ".webmanifest": "application/manifest+json; charset=utf-8"
 };
+
+const shellSource = readFileSync(
+  join(repositoryRoot, "vendor", "milosapps-shell", "v2", "milos-app-shell.js"),
+  "utf8"
+);
+const shellStyleHashes = ["GLOBAL_STYLE", "COMPONENT_STYLE"].map((name) => {
+  const match = shellSource.match(new RegExp("const " + name + " = `([\\s\\S]*?)`;"));
+  if (!match) throw new Error(`Vendorter Shell-Style ${name} fehlt.`);
+  return `'sha256-${createHash("sha256").update(match[1]).digest("base64")}'`;
+}).join(" ");
 
 function resolveRequestPath(pathname) {
   const decoded = decodeURIComponent(pathname);
@@ -59,7 +70,7 @@ const server = createServer((request, response) => {
     "x-content-type-options": "nosniff",
     "referrer-policy": "strict-origin-when-cross-origin",
     "permissions-policy": "geolocation=(), camera=(), microphone=()",
-    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    "content-security-policy": `default-src 'self'; script-src 'self'; style-src 'self' ${shellStyleHashes}; img-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'`
   });
   createReadStream(filePath).pipe(response);
 });

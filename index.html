@@ -6,183 +6,149 @@
     <meta name="theme-color" content="#163d36">
     <meta name="description" content="Welcher Müll? gibt kurze, quellenbasierte Entsorgungshinweise und zeigt regionale Unsicherheit offen an.">
     <meta name="color-scheme" content="light dark">
-    <link rel="manifest" href="/manifest.webmanifest">
-    <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="/src/styles.css">
-    <title>Welcher Müll?</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./src/styles.css">
+    <title>Welcher Müll? – MilosApps</title>
   </head>
   <body>
-    <a class="skip-link" href="#main">Direkt zum Inhalt</a>
-    <header class="site-header">
-      <a class="brand" href="/" aria-label="Welcher Müll? – Startseite">
-        <span class="brand-mark" aria-hidden="true">W?</span>
-        <span>Welcher Müll?</span>
-      </a>
-      <button class="header-button" id="open-settings" type="button" aria-controls="settings-panel" aria-expanded="false">
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M8 14v6" />
-        </svg>
-        <span>Region &amp; Datenschutz</span>
-      </button>
-    </header>
+    <milos-app-shell>
+      <svg slot="app-icon" viewBox="0 0 48 48" role="img" aria-label="Welcher Müll?">
+        <rect width="48" height="48" rx="14" fill="#163d36" />
+        <path d="M14 16h20M18 16l1.4 19h9.2L30 16M20 12h8" fill="none" stroke="#d9ff56" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M20.5 23.5h7" fill="none" stroke="#f6f2e8" stroke-width="3" stroke-linecap="round" />
+      </svg>
 
-    <aside class="offline-banner" id="offline-banner" hidden role="status">
-      Offline – die mitgelieferten Hinweise bleiben verfügbar. Quellenlinks brauchen Internet.
-    </aside>
+      <main id="main" slot="main">
+        <aside class="offline-banner" id="offline-banner" hidden role="status" data-i18n="offline">
+          Offline – die mitgelieferten Hinweise bleiben verfügbar. Quellenlinks brauchen Internet.
+        </aside>
 
-    <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="eyebrow-row">
-          <span class="eyebrow">Ohne Konto · ohne Standortpflicht</span>
-          <span class="content-date" id="content-date">Inhalte werden geladen …</span>
-        </div>
-        <h1 id="hero-title">Wohin kommt das?</h1>
-        <p class="hero-copy">Gegenstand eingeben. Du bekommst den passenden Weg – oder einen sicheren nächsten Prüfschritt.</p>
-
-        <form class="search-form" id="search-form" role="search" novalidate>
-          <label for="waste-query">Gegenstand oder Material</label>
-          <div class="search-control">
-            <input
-              id="waste-query"
-              name="q"
-              type="search"
-              inputmode="search"
-              autocomplete="off"
-              enterkeyhint="search"
-              maxlength="120"
-              placeholder="z. B. Gummiband, Akku, Pizzakarton"
-              aria-describedby="search-help"
-            >
-            <button type="submit">Suchen</button>
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-topline">
+            <div>
+              <span class="eyebrow" data-i18n="heroKicker">Ohne Konto · ohne Standortpflicht</span>
+              <span class="content-date" id="content-date" data-i18n="contentLoading">Inhalte werden geladen …</span>
+            </div>
+            <button class="header-button" id="open-settings" type="button" aria-controls="settings-panel" aria-expanded="false">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M8 14v6" />
+              </svg>
+              <span data-i18n="settingsButton">Region &amp; Datenschutz</span>
+            </button>
           </div>
-          <p id="search-help" class="field-help">Auch Alltagssprache und kleine Tippfehler funktionieren.</p>
-        </form>
+          <h1 id="hero-title" data-i18n="heroTitle">Welcher Müll?</h1>
+          <p class="hero-prompt" data-i18n="heroPrompt">Wohin damit?</p>
+          <p class="hero-copy" data-i18n="heroCopy">Gegenstand eingeben. Du bekommst den passenden Weg – oder einen sicheren nächsten Prüfschritt.</p>
 
-        <div class="quick-search" aria-label="Häufig gesucht">
-          <span>Beispiele:</span>
-          <button type="button" data-query="Gummiband">Gummiband</button>
-          <button type="button" data-query="Batterie">Batterie</button>
-          <button type="button" data-query="Pizzakarton">Pizzakarton</button>
-          <button type="button" data-query="Medikamente">Medikamente</button>
-          <button type="button" data-query="Glas">Glas</button>
-        </div>
-      </section>
+          <form class="search-form" id="search-form" role="search" novalidate>
+            <label for="waste-query" data-i18n="searchLabel">Gegenstand oder Material</label>
+            <div class="search-control">
+              <input
+                id="waste-query"
+                name="q"
+                type="search"
+                inputmode="search"
+                autocomplete="off"
+                enterkeyhint="search"
+                maxlength="120"
+                placeholder="z. B. Gummiband, Akku, Pizzakarton"
+                data-i18n-placeholder="searchPlaceholder"
+                aria-describedby="search-help"
+              >
+              <button type="submit" data-i18n="searchSubmit">Suchen</button>
+            </div>
+            <p id="search-help" class="field-help" data-i18n="searchHelp">Auch Alltagssprache und kleine Tippfehler funktionieren.</p>
+          </form>
 
-      <dialog class="settings-dialog" id="settings-panel" aria-labelledby="settings-title">
-        <div class="dialog-header settings-dialog-header">
-          <div>
-            <p class="section-kicker">Optional</p>
-            <h2 id="settings-title">Region &amp; lokale Daten</h2>
+          <div class="quick-search" aria-label="Häufig gesucht" data-i18n-aria-label="quickSearchLabel">
+            <span data-i18n="quickExamples">Beispiele:</span>
+            <button type="button" data-query-key="quickRubber" data-query-de="Gummiband" data-query-en="rubber band">Gummiband</button>
+            <button type="button" data-query-key="quickBattery" data-query-de="Batterie" data-query-en="battery">Batterie</button>
+            <button type="button" data-query-key="quickPizza" data-query-de="Pizzakarton" data-query-en="pizza box">Pizzakarton</button>
+            <button type="button" data-query-key="quickMedicine" data-query-de="Medikamente" data-query-en="medicine">Medikamente</button>
+            <button type="button" data-query-key="quickGlass" data-query-de="Glas" data-query-en="glass">Glas</button>
           </div>
-          <button class="icon-button" id="close-settings" type="button" aria-label="Einstellungen schließen">
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path d="m6 6 12 12M18 6 6 18" />
-            </svg>
-          </button>
-        </div>
-        <div class="settings-content">
-          <p class="settings-note">Kein Standortzugriff: Die grobe Region und optional bis zu fünf Suchen bleiben nur auf diesem Gerät.</p>
-          <div class="field-group">
-            <label for="region-select">Grobe Region</label>
-            <select id="region-select">
-              <option value="de">Deutschland – allgemeine Hinweise</option>
-            </select>
-            <p class="field-help">Ergänzt belegte örtliche Abweichungen.</p>
+        </section>
+
+        <dialog class="settings-dialog" id="settings-panel" aria-labelledby="settings-title">
+          <div class="dialog-header settings-dialog-header">
+            <div>
+              <p class="section-kicker" data-i18n="optional">Optional</p>
+              <h2 id="settings-title" data-i18n="settingsTitle">Region &amp; lokale Daten</h2>
+            </div>
+            <button class="icon-button" id="close-settings" type="button" aria-label="Einstellungen schließen" data-i18n-aria-label="settingsClose">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+            </button>
           </div>
-          <label class="check-row" for="remember-searches">
-            <input id="remember-searches" type="checkbox">
-            <span>
-              <strong>Letzte Suchen merken</strong>
-              <small>Maximal fünf Suchbegriffe, nur lokal auf diesem Gerät.</small>
-            </span>
-          </label>
-          <div class="panel-actions">
-            <button class="text-button danger-text" id="clear-local-data" type="button">Lokale Angaben löschen</button>
+          <div class="settings-content">
+            <p class="settings-note" data-i18n="settingsNote">Kein Standortzugriff: Die grobe Region und optional bis zu fünf Suchen bleiben nur auf diesem Gerät.</p>
+            <div class="field-group">
+              <label for="region-select" data-i18n="regionLabel">Grobe Region</label>
+              <select id="region-select"><option value="de">Deutschland – allgemeine Hinweise</option></select>
+              <p class="field-help" data-i18n="regionHelp">Ergänzt belegte örtliche Abweichungen.</p>
+            </div>
+            <label class="check-row" for="remember-searches">
+              <input id="remember-searches" type="checkbox">
+              <span><strong data-i18n="rememberTitle">Letzte Suchen merken</strong><small data-i18n="rememberHelp">Maximal fünf Suchbegriffe, nur lokal auf diesem Gerät.</small></span>
+            </label>
+            <div class="panel-actions">
+              <button class="text-button danger-text" id="clear-local-data" type="button" data-i18n="clearLocalData">Lokale Angaben löschen</button>
+            </div>
           </div>
-        </div>
-      </dialog>
+        </dialog>
 
-      <section class="results-section" id="results-section" aria-labelledby="results-title">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker" id="result-kicker">Bereit</p>
-            <h2 id="results-title" tabindex="-1">Was möchtest du entsorgen?</h2>
+        <section class="results-section" id="results-section" aria-labelledby="results-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker" id="result-kicker" data-i18n="resultReady">Bereit</p>
+              <h2 id="results-title" tabindex="-1" data-i18n="resultIdleTitle">Was möchtest du entsorgen?</h2>
+            </div>
+            <button class="text-button" id="reset-search" type="button" hidden data-i18n="newSearch">Neue Suche</button>
           </div>
-          <button class="text-button" id="reset-search" type="button" hidden>Neue Suche</button>
-        </div>
-        <p class="status-message" id="search-status" role="status" aria-live="polite">
-          Suche oben nach einem Gegenstand – eine Region ist dafür nicht nötig.
-        </p>
-        <div id="results" class="results-grid"></div>
-      </section>
+          <p class="status-message" id="search-status" role="status" aria-live="polite" data-i18n="resultIdleStatus">
+            Suche oben nach einem Gegenstand – eine Region ist dafür nicht nötig.
+          </p>
+          <div id="results" class="results-grid"></div>
+        </section>
 
-      <section class="history-section" id="history-section" hidden aria-labelledby="history-title">
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">Nur auf diesem Gerät</p>
-            <h2 id="history-title">Letzte Suchen</h2>
+        <section class="history-section" id="history-section" hidden aria-labelledby="history-title">
+          <div class="section-heading"><div><p class="section-kicker" data-i18n="historyKicker">Nur auf diesem Gerät</p><h2 id="history-title" data-i18n="historyTitle">Letzte Suchen</h2></div></div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+
+        <details class="trust-section">
+          <summary>
+            <span><span class="section-kicker" data-i18n="trustKicker">So entstehen die Antworten</span><strong data-i18n="trustTitle">Warum du der Einordnung trauen kannst</strong></span>
+            <span class="summary-hint" aria-hidden="true" data-i18n="trustShow">Anzeigen</span>
+          </summary>
+          <div class="trust-grid">
+            <article><span class="trust-number" aria-hidden="true">01</span><h3 data-i18n="trustOneTitle">Amtlich belegt</h3><p data-i18n="trustOneText">Jede konkrete Empfehlung nennt Quelle, Geltungsgebiet und Prüfdatum.</p></article>
+            <article><span class="trust-number" aria-hidden="true">02</span><h3 data-i18n="trustTwoTitle">Region sichtbar</h3><p data-i18n="trustTwoText">Örtliche Systeme werden nur gezeigt, wenn eine kommunale Quelle sie bestätigt.</p></article>
+            <article><span class="trust-number" aria-hidden="true">03</span><h3 data-i18n="trustThreeTitle">Sicherheitsfälle zuerst</h3><p data-i18n="trustThreeText">Akkus, Elektrogeräte, Chemikalien und Medikamente bekommen klare Warnhinweise.</p></article>
           </div>
+        </details>
+
+        <div class="meta-actions">
+          <button class="text-button" id="show-about" type="button" data-i18n="aboutButton">Quellen &amp; Datenschutz</button>
+          <a href="./meta.json" data-i18n="metadata">App-Metadaten</a>
         </div>
-        <div id="history-list" class="history-list"></div>
-      </section>
 
-      <details class="trust-section">
-        <summary>
-          <span>
-            <span class="section-kicker">So entstehen die Antworten</span>
-            <strong>Warum du der Einordnung trauen kannst</strong>
-          </span>
-          <span class="summary-hint" aria-hidden="true">Anzeigen</span>
-        </summary>
-        <div class="trust-grid">
-          <article>
-            <span class="trust-number" aria-hidden="true">01</span>
-            <h3>Amtlich belegt</h3>
-            <p>Jede konkrete Empfehlung nennt Quelle, Geltungsgebiet und Prüfdatum.</p>
-          </article>
-          <article>
-            <span class="trust-number" aria-hidden="true">02</span>
-            <h3>Region sichtbar</h3>
-            <p>Örtliche Systeme werden nur gezeigt, wenn eine kommunale Quelle sie bestätigt.</p>
-          </article>
-          <article>
-            <span class="trust-number" aria-hidden="true">03</span>
-            <h3>Sicherheitsfälle zuerst</h3>
-            <p>Akkus, Elektrogeräte, Chemikalien und Medikamente bekommen klare Warnhinweise.</p>
-          </article>
-        </div>
-      </details>
-    </main>
+        <dialog id="about-dialog" aria-labelledby="about-title">
+          <div class="dialog-header">
+            <div><p class="section-kicker" data-i18n="transparency">Transparenz</p><h2 id="about-title" data-i18n="aboutTitle">Quellen, Rechte &amp; Datenschutz</h2></div>
+            <button class="icon-button" id="close-about" type="button" aria-label="Dialog schließen" data-i18n-aria-label="aboutClose">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+            </button>
+          </div>
+          <div class="dialog-content" id="about-content"><p data-i18n="aboutLoading">Die Quelleninformationen werden geladen.</p></div>
+        </dialog>
 
-    <footer>
-      <p><strong>Welcher Müll?</strong> · App-Key <code>waste-guide</code> · öffentlicher DEV-Stand</p>
-      <nav aria-label="Rechtliches und Projekthinweise">
-        <button class="text-button" id="show-about" type="button">Quellen &amp; Datenschutz</button>
-        <a href="/meta.json">App-Metadaten</a>
-      </nav>
-    </footer>
-
-    <dialog id="about-dialog" aria-labelledby="about-title">
-      <div class="dialog-header">
-        <div>
-          <p class="section-kicker">Transparenz</p>
-          <h2 id="about-title">Quellen, Rechte &amp; Datenschutz</h2>
-        </div>
-        <button class="icon-button" id="close-about" type="button" aria-label="Dialog schließen">
-          <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="m6 6 12 12M18 6 6 18" />
-          </svg>
-        </button>
-      </div>
-      <div class="dialog-content" id="about-content">
-        <p>Die Quelleninformationen werden geladen.</p>
-      </div>
-    </dialog>
-
-    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-    <noscript>
-      <div class="noscript">Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.</div>
-    </noscript>
-    <script type="module" src="/src/app.js"></script>
+        <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+        <noscript><div class="noscript" data-i18n="noscript">Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.</div></noscript>
+      </main>
+    </milos-app-shell>
+    <script type="module" src="./vendor/milosapps-shell/v2/bootstrap.js"></script>
+    <script type="module" src="./src/app.js"></script>
   </body>
 </html>

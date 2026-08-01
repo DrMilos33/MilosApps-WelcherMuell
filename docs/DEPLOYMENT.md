@@ -19,11 +19,12 @@ Portal, Shared, Nutzerkonto und Datenbank sind keine Laufzeitabhängigkeiten.
 ## Reproduzierbarer Build
 
 ```powershell
+$env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
 pnpm build:github-pages:dev
 ```
 
-`scripts/build-github-pages-dev.mjs` ist absichtlich auf den freigegebenen
-Quellcommit und die Inhaltsversion festgelegt. Es liest deploybare Dateien über
+`scripts/build-github-pages-dev.mjs` verlangt absichtlich den vollständigen,
+freigegebenen Quellcommit und bleibt auf die Inhaltsversion festgelegt. Es liest deploybare Dateien über
 Git direkt aus diesem Commit, schreibt den Repository-Basispfad für GitHub
 Pages um und erzeugt:
 
@@ -31,6 +32,10 @@ Pages um und erzeugt:
 - `deployment.json` mit Quellbaum und SHA-256 je Artefaktdatei;
 - externe `meta.json`;
 - `.nojekyll`.
+
+Zur deploybaren Shell gehören `milos-app.json` und die lokal vendorten,
+per `shell-lock.json` verifizierten Dateien. Shared oder ein CDN werden zur
+Laufzeit nicht benötigt.
 
 `dist/` bleibt ein ignoriertes Buildartefakt und wird nicht in den Quellbranch
 eingecheckt.
@@ -47,7 +52,7 @@ Vor einer Aktualisierung gelten zwingend:
 1. neuer App-Stand ausdrücklich als DEV freigegeben;
 2. vollständige lokale Unit-/Inhalts-/E2E-Matrix grün;
 3. redaktionelle Versions- und Quellenprüfung separat dokumentiert;
-4. Builder-Pin bewusst auf den freigegebenen vollständigen SHA anheben;
+4. den freigegebenen vollständigen SHA explizit an den Builder übergeben;
 5. Artefakt erzeugen, Hashmanifest prüfen und erst dann `dev-pages` bewegen;
 6. Pages-Status `built`, Remote-Smoke und Browser-Direktaufruf prüfen.
 
