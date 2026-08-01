@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "2026.07.30-2",
-  "contentDate": "2026-07-30",
+  "contentVersion": "2026.08.01-1",
+  "contentDate": "2026-08-01",
   "defaultScope": "Private Haushalte in Deutschland",
   "items": [
     {
@@ -71,6 +71,76 @@
       "sources": ["uba-separation-2026", "uba-packaging"],
       "reviewedAt": "2026-07-30",
       "reviewDue": "2026-10-30"
+    },
+    {
+      "id": "plastic-household-item",
+      "name": "Kunststoffgegenstand (keine Verpackung)",
+      "aliases": [
+        "Plastikgegenstand",
+        "Plastikblume",
+        "Plastikblumen",
+        "Kunstblume",
+        "Kunstblumen",
+        "Plastikdeko",
+        "Kunststoffdeko",
+        "Plastikdekoration",
+        "Plastikschüssel",
+        "Kunststoffschüssel",
+        "Plastikspielzeug",
+        "Kunststoffspielzeug",
+        "Plastikeimer",
+        "Kunststoffeimer",
+        "Plastikwanne",
+        "Kunststoffwanne",
+        "Gießkanne",
+        "Plastikgießkanne",
+        "Plastikkorb",
+        "Wäschekorb aus Plastik",
+        "Plastikbox",
+        "Aufbewahrungsbox aus Plastik",
+        "Plastiktablett",
+        "Kunststofftablett",
+        "Plastikschneidebrett",
+        "Schneidebrett aus Kunststoff",
+        "Kleiderbügel aus Plastik",
+        "Plastikstuhl",
+        "Gartenstuhl aus Plastik",
+        "Plastikteil",
+        "Kunststoffteil",
+        "Plastikblumentopf",
+        "Blumentopf aus Plastik"
+      ],
+      "keywords": [
+        "Kunststoffgegenstand",
+        "Nichtverpackung aus Kunststoff",
+        "stoffgleiche Nichtverpackung",
+        "Haushaltsgegenstand aus Plastik",
+        "Deko aus Plastik"
+      ],
+      "category": "Kunststoff-Nichtverpackung",
+      "route": {
+        "type": "non-packaging-plastic",
+        "label": "Wiederverwenden oder örtlichen Entsorgungsweg prüfen"
+      },
+      "certainty": "check-local",
+      "answer": "Gut erhalten weitergeben. Ist der Gegenstand unbrauchbar, Material und Funktion prüfen und den örtlichen Weg für Kunststoff-Nichtverpackungen nutzen.",
+      "reason": "Gelbe Tonne und Gelber Sack sind bundesweit für Verpackungen. Einige Kommunen sammeln auch Kunststoffgegenstände in der Wertstofftonne, andere verweisen auf Wertstoffhof oder Restmüll. Deshalb gibt es keine verlässliche Deutschland-Tonne für alle Plastikgegenstände.",
+      "steps": [
+        "Gut erhaltene Deko, Schüsseln, Körbe oder Spielsachen weitergeben.",
+        "Batterien, Kabel, Leuchten und andere Elektronik erkennen und als Elektrogerät behandeln.",
+        "Nach Möglichkeit Metall, Glas, Textilien und größere Fremdteile trennen.",
+        "Im örtlichen Abfall-ABC nach dem konkreten Gegenstand oder nach Kunststoff-Nichtverpackungen suchen."
+      ],
+      "warning": "Nicht automatisch in Gelbe Tonne oder Gelben Sack geben. Elektrische, batteriebetriebene oder mit Schadstoffen verunreinigte Gegenstände brauchen einen anderen Entsorgungsweg.",
+      "localVariation": "Berlin und Hamburg nehmen viele Kunststoff-Haushaltsgegenstände über ihre Wertstofftonne an. München nennt für eine Kunststoff-Gießkanne den Wertstoffhof. Andere Kommunen können Restmüll oder eigene Sammelsysteme vorgeben.",
+      "sources": [
+        "uba-packaging",
+        "berlin-bsr-recyclables",
+        "hamburg-srh-info-2024",
+        "munich-awm-lexicon"
+      ],
+      "reviewedAt": "2026-08-01",
+      "reviewDue": "2026-10-31"
     },
     {
       "id": "foam-packaging",
@@ -398,7 +468,7 @@
     {
       "id": "electrical-device",
       "name": "Elektrogerät",
-      "aliases": ["Elektroschrott", "Elektroaltgerät", "Handy", "Smartphone", "Toaster", "Föhn", "elektrische Zahnbürste", "Kabel", "Ladegerät", "Computer"],
+      "aliases": ["Elektroschrott", "Elektroaltgerät", "Handy", "Smartphone", "Toaster", "Föhn", "elektrische Zahnbürste", "elektronisches Spielzeug", "elektrisches Spielzeug", "elektronisches Plastikspielzeug", "Plastikspielzeug mit Elektronik", "Plastikspielzeug mit Batterie", "Spielzeug mit Batterie", "Spielzeugauto mit Batterie", "Kabel", "Ladegerät", "Computer"],
       "keywords": ["Strom", "Stecker", "Batterie", "Elektronik", "E-Schrott"],
       "category": "Elektro",
       "route": {"type": "electrical", "label": "Wertstoffhof oder Rücknahme im Handel"},

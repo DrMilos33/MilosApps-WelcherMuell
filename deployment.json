@@ -5,9 +5,9 @@
   "provider": "GitHub Pages",
   "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
   "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-  "sourceCommit": "5e7b62db0be2bbf58f1ba4b07e781cddafb78a1f",
-  "sourceTree": "2fe99a04bdeb9ee8195e3bc294b4855bf6bc44fb",
-  "contentVersion": "2026.07.30-2",
+  "sourceCommit": "373f1163293baf6aed285d82d13d8bf35b280cf5",
+  "sourceTree": "849a77d936c1dad085ac9b6b33ec7dd57b0f55cd",
+  "contentVersion": "2026.08.01-1",
   "productionApproved": false,
   "files": [
     {
@@ -24,11 +24,11 @@
     },
     {
       "path": "healthz",
-      "sha256": "19baffee8a7dba3843656a1cdcbabd79a6a853d35ec56a4feb73eb7252f2a466"
+      "sha256": "8d43db1eda35839e7ff7e7c358fbb8ea5f64acbad1ca9283bf40314b2b5011ed"
     },
     {
       "path": "index.html",
-      "sha256": "aa5aa1351c1e1672a7013554b1661dfd3ac05fcb3dc86823792cef8207804236"
+      "sha256": "8bb18c6b7129319d38bfcea4c7770b68447288e51f931894fa35688d27cb7564"
     },
     {
       "path": "manifest.webmanifest",
@@ -36,7 +36,7 @@
     },
     {
       "path": "meta.json",
-      "sha256": "500543bac55586b79dbb22644408edf6137574545ed780317fbcf772c9440b61"
+      "sha256": "4c58b8979435c7dc5f5d5c130fead765072bb1ed8fe384e402f90af88e35af30"
     },
     {
       "path": "milos-app.json",
@@ -44,31 +44,31 @@
     },
     {
       "path": "public/data/locales/en.v1.json",
-      "sha256": "e37670a6437db152ba8663bad505e7e6706e0d2812ac2dd8ad69a4ebb49871d6"
+      "sha256": "45841c34e29e86ad651bb30bb21a9815fef9a482516eb669e4c8fb09be8f19d7"
     },
     {
       "path": "public/data/regions.v1.json",
-      "sha256": "a8770e7f9814857a945f1d58c5d98c47c0b26a2f2b73525b5fd315b307a7f786"
+      "sha256": "dcea2e0b12766b1df2d94fc14c1e380cb9c24637e976519c5071c861e496b3d8"
     },
     {
       "path": "public/data/sources.v1.json",
-      "sha256": "e4d999d7ec206ed2e49b9cd5a7f4a5aeac8aa74b64f7da8c27fec6a52e3d3749"
+      "sha256": "c4bc8254d048a66443772cf1be60a397c7e2f4507f8147d560253837428bd0f5"
     },
     {
       "path": "public/data/waste-items.v1.json",
-      "sha256": "78c16deb154660310ee6f28d0aae7e96d88ee5cb5f7198775d5a3d84016d3343"
+      "sha256": "354d926cb7479c37e9b50f745977289e62d5bb2766693d8f03622957f1846c77"
     },
     {
       "path": "src/app.js",
-      "sha256": "81fed89f20caeab975b57dd0b5150cf473958570d4c56b500286926eba17235b"
+      "sha256": "e0b203259457309cc8c24808608a5a29c1788981f859317621f0c85e727106c2"
     },
     {
       "path": "src/i18n.js",
-      "sha256": "5b077fc9a0c86ec8b79abe559fb05b08d4c4f83461ffcd4a89f9d59843090825"
+      "sha256": "b6b12200e7397b917a0a02a76999736d8094e000187202412f62b545e9888fff"
     },
     {
       "path": "src/search.js",
-      "sha256": "3404539adce9848458de321ee2a7a51eb92d100884e745a7b80b754809cdcb1e"
+      "sha256": "34af8a1432a9b593cf6540cc47c078f1441ff72a28f7c81aaddf9e505d715717"
     },
     {
       "path": "src/storage.js",
@@ -76,11 +76,11 @@
     },
     {
       "path": "src/styles.css",
-      "sha256": "e7986419e92f74135eab43f5a3d38f621d54ae3618e0112611a8d0ee47785189"
+      "sha256": "ade7fe9ade9dcbc587bb37529efc5949a33544e8872187e9fc1a4a0a600d6ef9"
     },
     {
       "path": "sw.js",
-      "sha256": "c4d50e219be9d196db991e4d662aa8187f026b6477752ae0ebd6468c23b8f7e8"
+      "sha256": "f6f9abd1bfe880f27f832a909d9d5449b53bf455f41c804ab81d83910cecc64f"
     },
     {
       "path": "vendor/milosapps-shell/v2/bootstrap.js",

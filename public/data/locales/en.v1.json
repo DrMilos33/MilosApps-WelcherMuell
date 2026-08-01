@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "language": "en",
-  "contentVersion": "2026.07.30-2",
-  "contentDate": "2026-07-30",
+  "contentVersion": "2026.08.01-1",
+  "contentDate": "2026-08-01",
   "editorialUse": "The app does not reproduce an external dataset, logos, images or lengthy passages. Disposal facts were checked against official pages and rewritten as concise original summaries. Every recommendation links to its source.",
   "items": {
     "yogurt-cup": {
@@ -72,6 +72,50 @@
         "Do not stuff packaging inside other packaging."
       ],
       "localVariation": "A plastic object that is not packaging may have a different local route."
+    },
+    "plastic-household-item": {
+      "name": "Plastic household item (not packaging)",
+      "aliases": [
+        "plastic object",
+        "artificial flower",
+        "plastic flower",
+        "plastic flowers",
+        "plastic decoration",
+        "plastic bowl",
+        "plastic toy",
+        "plastic bucket",
+        "plastic tub",
+        "plastic watering can",
+        "plastic basket",
+        "plastic storage box",
+        "plastic tray",
+        "plastic chopping board",
+        "plastic clothes hanger",
+        "plastic chair",
+        "plastic garden chair",
+        "plastic part",
+        "plastic plant pot"
+      ],
+      "keywords": [
+        "non-packaging plastic",
+        "same-material non-packaging item",
+        "plastic household object",
+        "plastic decoration"
+      ],
+      "category": "Non-packaging plastic",
+      "route": {
+        "label": "Reuse it or check the local disposal route"
+      },
+      "answer": "Pass it on if it is still usable. Otherwise check its material and function and use the local route for non-packaging plastic items.",
+      "reason": "Across Germany, yellow bins and bags are for packaging. Some municipalities also collect plastic objects in a recycling bin, while others direct them to a recycling centre or residual waste. There is therefore no reliable nationwide bin for every plastic object.",
+      "steps": [
+        "Pass on usable decorations, bowls, baskets or toys.",
+        "Treat batteries, cables, lights and other electronics as electrical equipment.",
+        "Separate metal, glass, textiles and large non-plastic parts where practical.",
+        "Search the local waste guide for the exact object or non-packaging plastic items."
+      ],
+      "warning": "Do not automatically place it in a yellow bin or yellow bag. Electrical, battery-powered or contaminated items need a different route.",
+      "localVariation": "Berlin and Hamburg accept many plastic household items in their recycling bins. Munich directs a plastic watering can to a recycling centre. Other municipalities may require residual waste or another collection system."
     },
     "foam-packaging": {
       "name": "Polystyrene packaging",
@@ -401,7 +445,7 @@
     },
     "electrical-device": {
       "name": "Electrical device",
-      "aliases": ["electronic waste", "old electrical device", "phone", "smartphone", "toaster", "hair dryer", "electric toothbrush", "cable", "charger", "computer"],
+      "aliases": ["electronic waste", "old electrical device", "phone", "smartphone", "toaster", "hair dryer", "electric toothbrush", "electronic toy", "electric toy", "electronic plastic toy", "plastic toy with electronics", "plastic toy with battery", "battery-powered toy", "toy car with battery", "cable", "charger", "computer"],
       "keywords": ["electricity", "plug", "battery", "electronics", "e-waste"],
       "category": "Electrical equipment",
       "route": {
@@ -870,6 +914,12 @@
       "scope": "Hamburg; private households",
       "attribution": "Local information: Hamburg municipal cleaning service."
     },
+    "hamburg-srh-info-2024": {
+      "title": "INFO 2024 — waste and recyclable-material collection",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; same-material non-packaging items from private households",
+      "attribution": "Source: Hamburg municipal cleaning service; original summary of Hamburg's recyclable-material collection."
+    },
     "munich-awm-overview": {
       "title": "Sorting waste in Munich",
       "publisher": "Munich municipal waste management (AWM)",
@@ -942,6 +992,10 @@
         "light-packaging": {
           "label": "Berlin recycling bin",
           "note": "Berlin uses its local recycling bin for packaging and other accepted recyclable materials."
+        },
+        "non-packaging-plastic": {
+          "label": "Berlin recycling bin",
+          "note": "Plastic household items such as bowls, watering cans and toys without electronics may go in the Berlin recycling bin."
         }
       }
     },
@@ -954,6 +1008,10 @@
         "light-packaging": {
           "label": "Hamburg recycling bin",
           "note": "Hamburg collects packaging and accepted recyclable materials through the Hamburg recycling bin."
+        },
+        "non-packaging-plastic": {
+          "label": "Hamburg recycling bin or recycling bag",
+          "note": "Hamburg accepts same-material non-packaging items when at least half of the item is plastic or metal."
         }
       }
     },
@@ -970,6 +1028,10 @@
         "problem-waste": {
           "label": "AWM recycling centre or hazardous-waste vehicle",
           "note": "Check acceptance conditions, maximum quantities and schedules with AWM first."
+        },
+        "non-packaging-plastic": {
+          "label": "AWM recycling centre",
+          "note": "AWM directs a plastic watering can to a recycling centre. Check the exact object in its waste guide."
         }
       }
     }
