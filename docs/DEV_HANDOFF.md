@@ -7,7 +7,7 @@
 | App-Key | `waste-guide` |
 | Titel | Welcher Müll? |
 | Kurzbeschreibung | Eine kurze, quellenbasierte Antwort auf „Wohin damit?“ – mit sichtbarer Unsicherheit bei örtlichen Unterschieden. |
-| Sprache | `de-DE` |
+| Sprache | `de-DE/en` |
 | Status | DEV, öffentlich, ohne Anmeldung |
 | Plattformen | Web, mobile/PWA, Desktop |
 | Inhaltsstand | `2026.07.30-2`, 30.07.2026 |
@@ -18,7 +18,7 @@
 | vorgeschlagene Portalroute | `/apps/waste-guide` |
 | Vorschaubild | `/assets/preview.svg`, eigenes Werk dieses Repositorys |
 | Anmeldung | keine |
-| Shared-Abhängigkeiten | keine |
+| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` vendort; keine Laufzeitabhängigkeit |
 | Production | nicht freigegeben |
 
 Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
@@ -29,12 +29,14 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `9034b561dec88e33856697adac3877639f47006f`
-- Quellbaum: `4e0524147e308ef7f72edb9e052091fc59a5a819`
+  `5e7b62db0be2bbf58f1ba4b07e781cddafb78a1f`
+- Quellbaum: `2fe99a04bdeb9ee8195e3bc294b4855bf6bc44fb`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`
-- GitHub-Pages-Build: `1123154848`, Status `built`
+  `2f1127fff2eb9b8c7fc673cffee0ca3b40e18e72`
+- GitHub-Pages-Build: `1126772460`, Status `built`
+- Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
+  `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
 - Draft-PR für den Quellbranch:
   `https://github.com/DrMilos33/MilosApps-WelcherMuell/pull/1`
 
@@ -48,7 +50,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.07.30-2","productionApproved":false,"sourceCommit":"9034b561dec88e33856697adac3877639f47006f"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.07.30-2","productionApproved":false,"sourceCommit":"5e7b62db0be2bbf58f1ba4b07e781cddafb78a1f"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -58,7 +60,7 @@ Artefakthealthcheck und kein Prozessmonitor.
 
 ## Externe Verifikation
 
-Am 30.07.2026 wurden nach terminalem Pages-Status `built` geprüft:
+Am 01.08.2026 wurden nach terminalem Pages-Status `built` geprüft:
 
 - HTTPS-Startseite ohne Redirect zu Portal oder Login;
 - leerer Browserzustand ohne Cookies und gespeicherte Origins;
@@ -66,13 +68,25 @@ Am 30.07.2026 wurden nach terminalem Pages-Status `built` geprüft:
 - Suche nach „alte Medikamente“ mit sichtbarer örtlicher Unsicherheit;
 - Suche nach `GUmmiband` mit sofort sichtbarem, vorsichtigem Entsorgungsweg;
 - App-Key, Inhaltsversion, Quellcommit und Production-Grenze;
-- Smartphone 390 × 844, Dark Mode und kein horizontaler Überlauf;
+- `public-app-shell/v2.0.3`, vollständiger 5er-Lock und beide externen
+  Same-Origin-Stylesheets;
+- Deutsch/Englisch samt Reload-Persistenz;
+- Smartphone 390 × 844 und 360 × 800 bei 200 % Textzoom, Dark Mode und kein
+  horizontaler Überlauf;
 - keine fehlgeschlagenen Ressourcen, Konsolenfehler oder Browserwarnungen.
+
+Der lokale Browserlauf prüfte dieselbe Runtime zusätzlich mit dem exakten
+Response-Header `style-src 'self'` und ohne Hash, Nonce oder `unsafe-inline`.
+GitHub Pages bietet keinen app-eigenen Response-CSP-Header; der externe Lauf
+prüfte deshalb die CSP-sichere Distributionsform, beide CSS-URLs, fehlende
+Inline-Styles und das tatsächlich berechnete Layout. Deployment-Evidenz und
+redaktioneller Quellenreview bleiben getrennt.
 
 Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="5e7b62db0be2bbf58f1ba4b07e781cddafb78a1f"
 pnpm test:remote:dev
 ```
 
@@ -95,9 +109,10 @@ Prüfdatum. Inhaltsversion, Gültigkeitsgebiet, Lizenznachweis und früheste
 erneute Prüfung am 30.09.2026 bleiben unverändert. Details stehen in
 `SOURCES_AND_LICENSES.md`.
 
-Aktueller gesunder DEV-Artefaktcommit ist `8e8dfe0`; der unmittelbar vorherige
-gesunde und app-eigene Rollbackpunkt bleibt `d9e6e45` mit Inhaltsversion
-`2026.07.30-1`.
+Aktueller gesunder DEV-Artefaktcommit ist `2f1127f`; letzter gesunder
+vor-v2-Rollbackpunkt bleibt `8e8dfe0`, ebenfalls mit Inhaltsversion
+`2026.07.30-2`. Der gestoppte v2.0.2-Zwischenstand ist kein bezeichneter
+Rollbackpunkt.
 
 ## Codex-Projektstatus
 

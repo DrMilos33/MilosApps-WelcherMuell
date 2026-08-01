@@ -270,3 +270,12 @@ transienten Fetch-Fehler; der unveränderte Wiederholungslauf erreichte alle 20
 Quellen mit HTTP 200. Das ist ein technischer Erreichbarkeitsnachweis und kein
 neuer redaktioneller Review. Inhaltsversion, Geltungsbereich, Lizenz,
 Attribution und Prüffristen bleiben unverändert.
+
+Nach dem Pages-Build `1126772460` (`built`) bestand derselbe Stand als
+Artefaktcommit `2f1127fff2eb9b8c7fc673cffee0ca3b40e18e72` den frischen externen
+Browser-Smoke. Der Lauf bestätigte Source `5e7b62d`, No-Login-Direktaufruf,
+DE/EN samt Reload, `GUmmiband`, den vorsichtigen Medikamentenhinweis, beide
+Same-Origin-CSS-Dateien, fehlende Inline-Styles, null Ressourcen-/Konsolenfehler
+und 360 × 800 bei 200 % Textzoom. GitHub Pages selbst liefert keinen
+app-eigenen CSP-Header; die exakte strikte Response-CSP bleibt deshalb ein
+lokaler Browsernachweis am identischen Runtimeartefakt.

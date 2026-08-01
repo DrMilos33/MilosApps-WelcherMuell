@@ -7,11 +7,14 @@
 - URL: `https://drmilos33.github.io/MilosApps-WelcherMuell/`
 - Health: `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz`
 - Repository: `DrMilos33/MilosApps-WelcherMuell`
-- Quellcommit: `9034b561dec88e33856697adac3877639f47006f`
+- Quellcommit: `5e7b62db0be2bbf58f1ba4b07e781cddafb78a1f`
 - Inhaltsversion: `2026.07.30-2`
 - Artefaktbranch: `dev-pages`
 - gesunder Artefaktcommit:
-  `8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`
+  `2f1127fff2eb9b8c7fc673cffee0ca3b40e18e72`
+- Pages-Build: `1126772460`, Status `built`
+- Shell: vendortes `public-app-shell/v2.0.3`, Shared-Commit
+  `ed898412306e22c6ae1b10ee8953df29f8acd627`
 - Production-Freigabe: `false`
 
 Portal, Shared, Nutzerkonto und Datenbank sind keine Laufzeitabhängigkeiten.
@@ -34,8 +37,9 @@ Pages um und erzeugt:
 - `.nojekyll`.
 
 Zur deploybaren Shell gehören `milos-app.json` und die lokal vendorten,
-per `shell-lock.json` verifizierten Dateien. Shared oder ein CDN werden zur
-Laufzeit nicht benötigt.
+per `shell-lock.json` verifizierten Dateien. Der 5er-Lock umfasst Komponente,
+Komponenten-CSS, Bootstrap, app-spezifische Theme-CSS und Validator. Shared
+oder ein CDN werden zur Laufzeit nicht benötigt.
 
 `dist/` bleibt ein ignoriertes Buildartefakt und wird nicht in den Quellbranch
 eingecheckt.
@@ -59,18 +63,19 @@ Vor einer Aktualisierung gelten zwingend:
 ## Rollback
 
 Aktuelle gesunde DEV-Revision ist
-`8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`. Der unmittelbar vorherige
-gesunde Rollbackpunkt ist
-`d9e6e4506e3a07d35edd6d6787269fddb54b4f4d`.
+`2f1127fff2eb9b8c7fc673cffee0ca3b40e18e72`. Der letzte gesunde
+vor-v2-Rollbackpunkt ist
+`8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`.
 
 Rollback bedeutet ausschließlich, den Remote-Ref `dev-pages` auf einen zuvor
 verifizierten gesunden Artefaktcommit zurückzusetzen. Danach wird der
 Pages-Buildstatus abgewartet und `/healthz` samt Remote-Smoke erneut geprüft.
 Quellbranch, Portal und Production werden dabei nicht verändert.
 
-Der Rollbackpunkt `d9e6e45` enthält Inhaltsversion `2026.07.30-1` aus
-Quellcommit `461732e`. Nach einem Rollback müssen die ältere Inhaltsversion und
-deren weiterhin eigenständige Reviewtermine sichtbar bleiben.
+Der gestoppte v2.0.2-Zwischenstand `991132f` bleibt historisch erhalten, ist
+wegen des zentralen CSP-Defekts aber kein bezeichneter Rollbackpunkt. Der
+gesunde Rollback `8e8dfe0` enthält wie der aktuelle Stand Inhaltsversion
+`2026.07.30-2`; deren Reviewtermine bleiben eigenständig.
 
 ## Deployment ist kein Quellenreview
 

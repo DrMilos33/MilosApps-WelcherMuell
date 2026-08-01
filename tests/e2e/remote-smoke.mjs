@@ -124,7 +124,7 @@ try {
   assert.equal(shellRuntime.inlineShadowStyles, 0);
   assert.equal(shellRuntime.inlineHostStyle, false);
   assert.equal(shellRuntime.hostDisplay, "grid");
-  assert.equal(shellRuntime.accent, "#d9ff56");
+  assert.equal(shellRuntime.accent, "#d9f781");
   assert.equal(await shell.getByText("DEV", { exact: true }).count(), 1);
   assert.equal(await shell.getByRole("link", { name: /Alle Apps/ }).getAttribute("href"), "https://dev.milos-apps.de/apps");
 
@@ -146,7 +146,7 @@ try {
   await shell.getByRole("button", { name: "EN", exact: true }).click();
   await page.locator("html[lang='en']").waitFor();
   await page.getByLabel("Item or material").fill("old medicine");
-  await page.getByRole("button", { name: "Search" }).click();
+  await page.getByRole("button", { name: "Search", exact: true }).click();
   await page.getByRole("heading", { name: "Old medicine", exact: true }).waitFor();
   await page.reload({ waitUntil: "networkidle" });
   assert.equal(await page.locator("html").getAttribute("lang"), "en");
