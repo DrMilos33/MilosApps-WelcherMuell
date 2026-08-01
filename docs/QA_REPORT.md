@@ -279,3 +279,19 @@ Same-Origin-CSS-Dateien, fehlende Inline-Styles, null Ressourcen-/Konsolenfehler
 und 360 × 800 bei 200 % Textzoom. GitHub Pages selbst liefert keinen
 app-eigenen CSP-Header; die exakte strikte Response-CSP bleibt deshalb ein
 lokaler Browsernachweis am identischen Runtimeartefakt.
+
+## Portal-DEV-Revalidierung
+
+Portal & Identity veröffentlichte anschließend die öffentliche Redirect-
+Korrektur als Portal-Commit
+`9643129b5688e4bd925b3ac198619ac260a61071`. GitHub-CI-Lauf `30703116695`
+und Railway-Staging-Deployment
+`f82ad853-1134-48cb-a67d-bb05bf754b99` sind grün beziehungsweise aktiv.
+
+Cookie-lose `GET`- und `HEAD`-Aufrufe von
+`https://dev.milos-apps.de/apps/waste-guide` antworteten mit HTTP 302 und dem
+exakten unabhängigen Waste-Guide-DEV-Ziel. Die sichtbare 390-mal-844-QA
+bestätigte v2.0.3, Grid-/Flexlayout, DE/EN-Ziele von mindestens 44 Pixeln,
+fehlenden horizontalen Überlauf und null Konsolenfehler. Die entsprechende
+Productionroute blieb HTTP 404. Dieser Portalnachweis verändert weder das
+App-Artefakt noch Inhaltsversion oder Quellenreview.

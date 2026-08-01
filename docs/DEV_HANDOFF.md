@@ -15,7 +15,7 @@
 | öffentliche DEV-URL | `https://drmilos33.github.io/MilosApps-WelcherMuell/` |
 | Healthcheck | `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz` |
 | lokale DEV-URL | `http://127.0.0.1:4318/` |
-| vorgeschlagene Portalroute | `/apps/waste-guide` |
+| Portal-DEV-Route | `/apps/waste-guide`, cookie-los öffentlich validiert |
 | Vorschaubild | `/assets/preview.svg`, eigenes Werk dieses Repositorys |
 | Anmeldung | keine |
 | Shared-Abhängigkeiten | `public-app-shell/v2.0.3` vendort; keine Laufzeitabhängigkeit |
@@ -93,10 +93,27 @@ pnpm test:remote:dev
 ## Portalstatus
 
 Die unabhängige HTTPS-DEV-URL ist stabil und ohne Portal erreichbar. Portal &
-Identity kann `/apps/waste-guide` nach eigener Validierung als Redirect
-einbinden. Die App setzt keinen Portal-Cookie, kein Milos-Konto und keine
-Portalverfügbarkeit voraus. Änderungen am Portal bleiben ausschließlich beim
-Portal-Task.
+Identity hat die öffentliche Redirectroute anschließend separat veröffentlicht
+und am 01.08.2026 cookie-los validiert:
+
+- Portal-DEV-Commit:
+  `9643129b5688e4bd925b3ac198619ac260a61071`;
+- GitHub-CI `30703116695`, Job `91377476515`: success;
+- Railway-Staging-Deployment
+  `f82ad853-1134-48cb-a67d-bb05bf754b99`: Active;
+- `GET` und `HEAD` auf `https://dev.milos-apps.de/apps/waste-guide` antworten
+  mit HTTP 302 und exakt
+  `https://drmilos33.github.io/MilosApps-WelcherMuell/` als Ziel;
+- Smartphone-QA bei 390 × 844 bestätigte v2.0.3, Grid-/Flexlayout, DE/EN mit
+  44-Pixel-Zielen, fehlenden horizontalen Überlauf und null Konsolenfehler;
+- `https://milos-apps.de/apps/waste-guide` bleibt HTTP 404; Production wurde
+  nicht verändert.
+
+Die App setzt weiterhin keinen Portal-Cookie und kein Milos-Konto voraus. Ihr
+DEV-Lifecycle bleibt unabhängig von der Portalverfügbarkeit. Portal-Rollback
+sind Commit `fea204d0f63bf9197ae06b4f29313df924199dee` und Deployment
+`8d9b7ef6-60c1-450e-9348-155ce0cd645f`; Änderungen daran gehören
+ausschließlich dem Portal-Task.
 
 ## Production- und Reviewgrenze
 
