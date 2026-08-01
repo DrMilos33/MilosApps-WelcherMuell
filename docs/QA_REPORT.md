@@ -377,3 +377,10 @@ Die exakte ausgelieferte Health-Antwort lautet:
 
 Diese Deployment-Evidenz erneuert keine bestehenden redaktionellen
 Reviewtermine und ist vom neuen Kunststoffquellenreview getrennt.
+
+Portal & Identity bestätigte anschließend read-only am aktiven Portal-DEV-Stand
+`811c01c06d715999c494d45a9ef1af485e343afc` und Railway-Deployment
+`4ce30ff0-cc0e-4a31-8cfb-aa65f5d01d1d`: Cookie-lose `GET`- und `HEAD`-Aufrufe
+der bestehenden Route lieferten HTTP 302 exakt auf die App-URL; App und Health
+lieferten HTTP 200 mit Inhaltsversion `2026.08.01-1` und Source `373f116`.
+Die Productionroute blieb HTTP 404. Es erfolgte keine Portalmutation.

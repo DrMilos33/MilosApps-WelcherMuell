@@ -117,6 +117,14 @@ sind Commit `fea204d0f63bf9197ae06b4f29313df924199dee` und Deployment
 `8d9b7ef6-60c1-450e-9348-155ce0cd645f`; Änderungen daran gehören
 ausschließlich dem Portal-Task.
 
+Nach Veröffentlichung der Inhaltsversion `2026.08.01-1` revalidierte Portal &
+Identity die unveränderte Route erneut read-only. Aktiver Portal-DEV-Stand war
+`811c01c06d715999c494d45a9ef1af485e343afc`, Railway-Staging-Deployment
+`4ce30ff0-cc0e-4a31-8cfb-aa65f5d01d1d` meldete `SUCCESS`. Cookie-lose `GET`-
+und `HEAD`-Aufrufe leiteten weiterhin exakt auf die App-DEV-URL um; App und
+Health antworteten HTTP 200 mit Source `373f116`, während die Productionroute
+HTTP 404 blieb. Diese Prüfung veränderte kein Repository und kein Deployment.
+
 ## Production- und Reviewgrenze
 
 GitHub Pages ist in diesem Vertrag ausschließlich der öffentliche DEV-Host.
