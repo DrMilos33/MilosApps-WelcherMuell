@@ -350,3 +350,30 @@ Nur der neue Kunststoff-Nichtverpackungsfall und seine regionalen Overrides
 wurden fachlich am 01.08.2026 anhand von UBA, BSR, Stadtreinigung Hamburg und
 AWM München redaktionell ergänzt. Bestehende Einträge behalten ihre eigenen
 Reviewtermine; die früheste erneute Prüfung bleibt 30.09.2026.
+
+### Externe DEV-Verifikation
+
+Der non-force Quellpush veröffentlichte exakt
+`373f1163293baf6aed285d82d13d8bf35b280cf5`. Das daraus reproduzierbar gebaute
+25-Dateien-Artefakt mit Quellbaum
+`849a77d936c1dad085ac9b6b33ec7dd57b0f55cd` wurde als
+`141231c66f0e6131bc068e2ea5a4d954d32fd32e` auf `dev-pages` veröffentlicht;
+GitHub Pages meldete anschließend `built`.
+
+Der versionierte Remote-Smoke bestätigte an der echten HTTPS-URL App-Key,
+DEV-Umgebung, Inhaltsversion `2026.08.01-1`, Source-SHA,
+`productionApproved=false`, direkten Aufruf ohne Login, Portalunabhängigkeit,
+Shell v2.0.3 und 200-%-Textzoom. Eine zusätzliche frische 390-mal-844-
+Browserprüfung suchte `Plastikblume`, fand den Nichtverpackungsweg und die
+Gelbe-Tonne-Warnung, maß null horizontalen Überlauf und hielt die Sticky-Suche
+mit 3 Pixeln Abstand am oberen Rand. Der Kontext enthielt null Cookies und
+meldete null Konsolenfehler.
+
+Die exakte ausgelieferte Health-Antwort lautet:
+
+```json
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"373f1163293baf6aed285d82d13d8bf35b280cf5"}
+```
+
+Diese Deployment-Evidenz erneuert keine bestehenden redaktionellen
+Reviewtermine und ist vom neuen Kunststoffquellenreview getrennt.
