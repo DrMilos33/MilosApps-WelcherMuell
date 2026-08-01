@@ -1,4 +1,4 @@
-const CACHE_NAME = "waste-guide-2026-07-30-shell-v2-r1";
+const CACHE_NAME = "waste-guide-2026-07-30-shell-v2-r2";
 const APP_SHELL = [
   "/MilosApps-WelcherMuell/",
   "/MilosApps-WelcherMuell/index.html",
@@ -14,6 +14,8 @@ const APP_SHELL = [
   "/MilosApps-WelcherMuell/src/storage.js",
   "/MilosApps-WelcherMuell/vendor/milosapps-shell/v2/bootstrap.js",
   "/MilosApps-WelcherMuell/vendor/milosapps-shell/v2/milos-app-shell.js",
+  "/MilosApps-WelcherMuell/vendor/milosapps-shell/v2/milos-app-shell.css",
+  "/MilosApps-WelcherMuell/vendor/milosapps-shell/v2/milos-app-shell-theme.css",
   "/MilosApps-WelcherMuell/vendor/milosapps-shell/v2/shell-lock.json",
   "/MilosApps-WelcherMuell/public/data/waste-items.v1.json",
   "/MilosApps-WelcherMuell/public/data/sources.v1.json",

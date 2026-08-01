@@ -1,0 +1,15 @@
+body[data-milos-app-shell-page] {
+  min-width: 0;
+  min-height: 100%;
+  margin: 0;
+}
+
+milos-app-shell[data-milos-app-key="waste-guide"] {
+  --milos-shell-accent: #d9ff56;
+  --milos-shell-accent-contrast: #10211d;
+  --milos-shell-surface: #f6f2e8;
+  --milos-shell-text: #12231f;
+  --milos-shell-muted: #53655f;
+  --milos-shell-border: #b8c8c1;
+  --milos-shell-focus: #b44300;
+}

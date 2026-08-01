@@ -27,16 +27,16 @@
   "deployment": {
     "provider": "GitHub Pages",
     "environment": "DEV",
-    "sourceCommit": "23089ec7bfe355e36f59239fdf0e0c3367e9227b",
-    "sourceTree": "4b897c787e51ab69c4362e73b972b44b080577fd",
+    "sourceCommit": "5e7b62db0be2bbf58f1ba4b07e781cddafb78a1f",
+    "sourceTree": "2fe99a04bdeb9ee8195e3bc294b4855bf6bc44fb",
     "branch": "dev-pages",
     "productionApproved": false
   },
   "sharedDependencies": [
     {
       "id": "public-app-shell/v2",
-      "version": "2.0.2",
-      "sharedCommit": "97f695be3bdfcfdc51ad286c6ed231c4b9585295",
+      "version": "2.0.3",
+      "sharedCommit": "ed898412306e22c6ae1b10ee8953df29f8acd627",
       "vendored": true,
       "runtimeImport": false
     }
