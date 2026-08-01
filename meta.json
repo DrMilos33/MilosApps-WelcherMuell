@@ -3,7 +3,7 @@
   "appKey": "waste-guide",
   "title": "Welcher Müll?",
   "shortDescription": "Eine kurze, quellenbasierte Antwort auf „Wohin damit?“ – mit sichtbarer Unsicherheit bei örtlichen Unterschieden.",
-  "language": "de-DE",
+  "language": "de-DE/en",
   "status": "DEV",
   "platforms": [
     "web",
@@ -27,10 +27,18 @@
   "deployment": {
     "provider": "GitHub Pages",
     "environment": "DEV",
-    "sourceCommit": "9034b561dec88e33856697adac3877639f47006f",
-    "sourceTree": "4e0524147e308ef7f72edb9e052091fc59a5a819",
+    "sourceCommit": "23089ec7bfe355e36f59239fdf0e0c3367e9227b",
+    "sourceTree": "4b897c787e51ab69c4362e73b972b44b080577fd",
     "branch": "dev-pages",
     "productionApproved": false
   },
-  "sharedDependencies": []
+  "sharedDependencies": [
+    {
+      "id": "public-app-shell/v2",
+      "version": "2.0.2",
+      "sharedCommit": "97f695be3bdfcfdc51ad286c6ed231c4b9585295",
+      "vendored": true,
+      "runtimeImport": false
+    }
+  ]
 }

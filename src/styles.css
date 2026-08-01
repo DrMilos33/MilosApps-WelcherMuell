@@ -42,6 +42,16 @@
     --shadow: 0 18px 50px rgb(0 0 0 / 25%);
     --focus: #7fc4ff;
   }
+
+  milos-app-shell {
+    --milos-shell-accent: #d9f781 !important;
+    --milos-shell-accent-contrast: #10211d !important;
+    --milos-shell-surface: #0c1f1c !important;
+    --milos-shell-text: #f4f5e9 !important;
+    --milos-shell-muted: #b8c8c2 !important;
+    --milos-shell-border: #46615b !important;
+    --milos-shell-focus: #7fc4ff !important;
+  }
 }
 
 * {
@@ -57,7 +67,6 @@ html {
 
 body {
   margin: 0;
-  min-width: 20rem;
   min-height: 100vh;
   background:
     radial-gradient(circle at 96% 4%, color-mix(in srgb, var(--accent) 65%, transparent) 0 9rem, transparent 9.1rem),
@@ -98,57 +107,9 @@ select:not(:disabled) {
   outline-offset: 0.2rem;
 }
 
-.skip-link {
-  position: fixed;
-  z-index: 100;
-  inset: 0.75rem auto auto 0.75rem;
-  transform: translateY(-180%);
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  background: var(--surface-strong);
-  box-shadow: var(--shadow);
-  font-weight: 800;
-}
-
-.skip-link:focus {
-  transform: none;
-}
-
-.site-header,
-main,
-footer {
-  width: min(calc(100% - 2rem), var(--max-width));
-  margin-inline: auto;
-}
-
-.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 4.5rem;
-  gap: 1rem;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
+main {
   color: var(--ink);
-  font-size: 1.05rem;
-  font-weight: 850;
-  text-decoration: none;
-}
-
-.brand-mark {
-  display: grid;
-  width: 2.75rem;
-  aspect-ratio: 1;
-  place-items: center;
-  border-radius: 0.85rem;
-  color: var(--accent);
-  background: var(--brand);
-  font-weight: 900;
-  letter-spacing: -0.08em;
+  padding-block-end: clamp(1.25rem, 4vw, 2.5rem);
 }
 
 .header-button,
@@ -201,10 +162,10 @@ footer {
 }
 
 .hero {
-  padding: clamp(1.25rem, 3.5vw, 2.5rem) 0 1.25rem;
+  padding: clamp(1rem, 2.6vw, 1.8rem) 0 1rem;
 }
 
-.eyebrow-row,
+.hero-topline,
 .section-heading,
 .dialog-header,
 .panel-actions {
@@ -212,6 +173,13 @@ footer {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.hero-topline > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.75rem;
 }
 
 .eyebrow,
@@ -229,9 +197,12 @@ footer {
 }
 
 .eyebrow {
+  max-width: 100%;
   padding: 0.2rem 0.7rem;
   color: var(--brand);
   background: var(--brand-soft);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .content-date {
@@ -247,8 +218,8 @@ p {
 
 h1 {
   max-width: none;
-  margin-block: 0.75rem 0.8rem;
-  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  margin-block: 0.65rem 0.1rem;
+  font-size: clamp(2.45rem, 6vw, 3.8rem);
   line-height: 0.98;
   letter-spacing: -0.055em;
 }
@@ -266,9 +237,17 @@ h3 {
   line-height: 1.25;
 }
 
+.hero-prompt {
+  margin-block: 0.15rem 0.35rem;
+  color: var(--brand);
+  font-size: clamp(1.25rem, 2.8vw, 1.75rem);
+  font-weight: 850;
+  letter-spacing: -0.025em;
+}
+
 .hero-copy {
   max-width: 42rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.9rem;
   color: var(--muted);
   font-size: clamp(1rem, 1.8vw, 1.2rem);
 }
@@ -632,6 +611,13 @@ h3 {
 .trust-section summary strong {
   display: block;
   font-size: clamp(1.1rem, 2vw, 1.35rem);
+  overflow-wrap: anywhere;
+}
+
+.trust-section summary > span:first-child,
+.trust-grid,
+.trust-grid article {
+  min-width: 0;
 }
 
 .trust-section .section-kicker {
@@ -644,15 +630,6 @@ h3 {
   color: var(--muted);
   font-size: 0.85rem;
   font-weight: 800;
-}
-
-.trust-section[open] .summary-hint {
-  font-size: 0;
-}
-
-.trust-section[open] .summary-hint::after {
-  content: "Ausblenden";
-  font-size: 0.85rem;
 }
 
 .trust-grid {
@@ -672,6 +649,7 @@ h3 {
 .trust-grid p {
   margin-bottom: 0;
   color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
 .trust-number {
@@ -683,30 +661,20 @@ h3 {
   letter-spacing: 0.1em;
 }
 
-footer {
+.meta-actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding-block: 2rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding-block: 1rem 0;
   border-top: 0.08rem solid var(--line);
   color: var(--muted);
   font-size: 0.88rem;
 }
 
-footer p {
-  margin: 0;
-}
-
-footer nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
 .regional-box a,
 .source-list a,
-footer nav a {
+.meta-actions a {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
@@ -825,10 +793,6 @@ dialog::backdrop {
       var(--canvas);
   }
 
-  .site-header {
-    min-height: 4.5rem;
-  }
-
   .header-button span:last-child {
     position: absolute;
     width: 1px;
@@ -843,7 +807,7 @@ dialog::backdrop {
     border-radius: 999px;
   }
 
-  .eyebrow-row {
+  .hero-topline {
     align-items: center;
     flex-wrap: wrap;
     gap: 0.4rem 0.75rem;
@@ -851,7 +815,11 @@ dialog::backdrop {
 
   h1 {
     max-width: none;
-    font-size: clamp(2.75rem, 13vw, 4rem);
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+
+  .hero {
+    padding-bottom: 0.35rem;
   }
 
   .search-control {
@@ -869,19 +837,23 @@ dialog::backdrop {
   }
 
   .quick-search {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 0.2rem;
-    scrollbar-width: thin;
+    flex-wrap: wrap;
+    overflow-x: visible;
   }
 
-  .quick-search > * {
-    flex: 0 0 auto;
+  .quick-search button:nth-of-type(n + 4) {
+    display: none;
   }
 
   .result-main,
   .trust-grid {
     grid-template-columns: 1fr;
+  }
+
+  .result-copy,
+  .result-route {
+    grid-column: 1 / -1;
+    min-width: 0;
   }
 
   .results-section .section-heading {
@@ -898,6 +870,11 @@ dialog::backdrop {
     white-space: nowrap;
   }
 
+  .trust-section summary {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
   .result-card.compact {
     grid-template-columns: 1fr;
     gap: 0.8rem;
@@ -909,6 +886,7 @@ dialog::backdrop {
 
   .result-route {
     order: -1;
+    width: 100%;
     padding: 1rem 1.1rem;
   }
 
@@ -939,23 +917,9 @@ dialog::backdrop {
     padding: 0 1.1rem 1rem;
   }
 
-  footer {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  footer nav {
-    flex-wrap: wrap;
-  }
 }
 
 @media (max-width: 25rem) {
-  .site-header,
-  main,
-  footer {
-    width: min(calc(100% - 1rem), var(--max-width));
-  }
-
   .hero {
     padding-top: 1rem;
   }
@@ -995,12 +959,11 @@ dialog::backdrop {
     font-size: 11pt;
   }
 
-  .site-header,
   .hero,
   .settings-dialog,
   .history-section,
   .trust-section,
-  footer,
+  .meta-actions,
   .result-actions,
   .offline-banner,
   .toast,

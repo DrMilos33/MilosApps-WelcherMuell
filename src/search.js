@@ -189,34 +189,47 @@ function scoreItem(item, normalizedQuery) {
 
 export function validateItemIntegrity(item, sourcesById, asOf = new Date()) {
   const issues = [];
+  const issueDetails = [];
   const asOfDate = new Date(`${asOf.toISOString().slice(0, 10)}T00:00:00Z`);
 
   if (!Array.isArray(item.sources) || item.sources.length === 0) {
     issues.push("Für diesen Eintrag fehlt eine Quelle.");
+    issueDetails.push({ code: "issueItemSourceMissing" });
   }
 
   for (const sourceId of item.sources ?? []) {
     const source = sourcesById.get(sourceId);
     if (!source) {
       issues.push(`Quelle ${sourceId} fehlt im Quellenkatalog.`);
+      issueDetails.push({ code: "issueSourceMissing", sourceId });
       continue;
     }
-    if (!source.scope) issues.push(`Quelle ${sourceId} hat kein Geltungsgebiet.`);
-    if (!source.verifiedAt) issues.push(`Quelle ${sourceId} hat kein Prüfdatum.`);
+    if (!source.scope) {
+      issues.push(`Quelle ${sourceId} hat kein Geltungsgebiet.`);
+      issueDetails.push({ code: "issueSourceScopeMissing", sourceId });
+    }
+    if (!source.verifiedAt) {
+      issues.push(`Quelle ${sourceId} hat kein Prüfdatum.`);
+      issueDetails.push({ code: "issueSourceVerifiedMissing", sourceId });
+    }
     if (source.reviewDue && new Date(`${source.reviewDue}T00:00:00Z`) < asOfDate) {
       issues.push(`Quelle ${sourceId} ist zur erneuten Prüfung fällig.`);
+      issueDetails.push({ code: "issueSourceReviewDue", sourceId });
     }
   }
 
   if (!item.reviewedAt || !item.reviewDue) {
     issues.push("Dem Eintrag fehlt ein redaktionelles Prüfdatum.");
+    issueDetails.push({ code: "issueItemReviewMissing" });
   } else if (new Date(`${item.reviewDue}T00:00:00Z`) < asOfDate) {
     issues.push("Der Eintrag ist zur erneuten redaktionellen Prüfung fällig.");
+    issueDetails.push({ code: "issueItemReviewDue" });
   }
 
   return {
     valid: issues.length === 0,
-    issues
+    issues,
+    issueDetails
   };
 }
 
@@ -235,7 +248,7 @@ export function searchItems(items, query, options = {}) {
         ...match,
         integrity: sourcesById.size > 0
           ? validateItemIntegrity(item, sourcesById, asOf)
-          : { valid: true, issues: [] }
+          : { valid: true, issues: [], issueDetails: [] }
       };
     })
     .filter((result) => result.score >= 55)

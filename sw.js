@@ -1,18 +1,24 @@
-const CACHE_NAME = "waste-guide-2026-07-30-r4";
+const CACHE_NAME = "waste-guide-2026-07-30-shell-v2-r1";
 const APP_SHELL = [
   "/MilosApps-WelcherMuell/",
   "/MilosApps-WelcherMuell/index.html",
   "/MilosApps-WelcherMuell/manifest.webmanifest",
   "/MilosApps-WelcherMuell/meta.json",
+  "/MilosApps-WelcherMuell/milos-app.json",
   "/MilosApps-WelcherMuell/assets/icon.svg",
   "/MilosApps-WelcherMuell/assets/preview.svg",
   "/MilosApps-WelcherMuell/src/styles.css",
   "/MilosApps-WelcherMuell/src/app.js",
+  "/MilosApps-WelcherMuell/src/i18n.js",
   "/MilosApps-WelcherMuell/src/search.js",
   "/MilosApps-WelcherMuell/src/storage.js",
+  "/MilosApps-WelcherMuell/vendor/milosapps-shell/v2/bootstrap.js",
+  "/MilosApps-WelcherMuell/vendor/milosapps-shell/v2/milos-app-shell.js",
+  "/MilosApps-WelcherMuell/vendor/milosapps-shell/v2/shell-lock.json",
   "/MilosApps-WelcherMuell/public/data/waste-items.v1.json",
   "/MilosApps-WelcherMuell/public/data/sources.v1.json",
-  "/MilosApps-WelcherMuell/public/data/regions.v1.json"
+  "/MilosApps-WelcherMuell/public/data/regions.v1.json",
+  "/MilosApps-WelcherMuell/public/data/locales/en.v1.json"
 ];
 
 self.addEventListener("install", (event) => {
