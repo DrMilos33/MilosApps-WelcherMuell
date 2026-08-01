@@ -13,7 +13,7 @@ Nutzerdatenbank sind nicht nötig.
 - belegte regionale Ergänzungen: Berlin, Hamburg und München
 - Plattformen: Web, Smartphone/PWA und Desktop
 - sichtbare Fachoberfläche: vollständig Deutsch und Englisch
-- öffentlicher App-Rahmen: lokal vendortes `public-app-shell/v2.0.2`
+- öffentlicher App-Rahmen: lokal vendortes `public-app-shell/v2.0.3`
 - Production: nicht freigegeben
 
 Der unabhängige öffentliche DEV-Stand ist ohne Portal und ohne Login erreichbar:

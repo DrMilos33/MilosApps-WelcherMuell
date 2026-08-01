@@ -166,6 +166,19 @@ try {
     const direct = await fetch(`${baseUrl}/?item=battery`);
     assert.equal(direct.status, 200);
     assert.match(await direct.text(), /Welcher Müll/);
+
+    const csp = direct.headers.get("content-security-policy");
+    assert.equal(
+      csp,
+      "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+    );
+    assert.doesNotMatch(csp, /unsafe-inline|sha256-|nonce-/);
+
+    for (const stylesheet of ["milos-app-shell.css", "milos-app-shell-theme.css"]) {
+      const response = await fetch(`${baseUrl}/vendor/milosapps-shell/v2/${stylesheet}`);
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get("content-type"), "text/css; charset=utf-8");
+    }
   });
 
   const desktop = await browser.newContext({
@@ -210,6 +223,35 @@ try {
     await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
     const shell = desktopPage.locator("milos-app-shell");
     await shell.waitFor();
+    const shellRuntime = await shell.evaluate((element) => {
+      const shadowStylesheet = element.shadowRoot.querySelector('link[rel="stylesheet"]');
+      const themeStylesheet = document.querySelector('link[data-milos-app-shell-theme="waste-guide"]');
+      const brand = element.shadowRoot.querySelector(".brand");
+      const control = element.shadowRoot.querySelector(".control");
+      const icon = element.shadowRoot.querySelector(".app-icon");
+      const controlRect = control.getBoundingClientRect();
+      return {
+        shadowStylesheet: shadowStylesheet?.href,
+        themeStylesheet: themeStylesheet?.href,
+        inlineShadowStyles: element.shadowRoot.querySelectorAll("style").length,
+        inlineHostStyle: element.hasAttribute("style"),
+        hostDisplay: getComputedStyle(element).display,
+        brandDisplay: getComputedStyle(brand).display,
+        controlWidth: Math.round(controlRect.width),
+        controlHeight: Math.round(controlRect.height),
+        iconWidth: Math.round(icon.getBoundingClientRect().width),
+        accent: getComputedStyle(element).getPropertyValue("--milos-shell-accent").trim()
+      };
+    });
+    assert.equal(shellRuntime.shadowStylesheet, `${baseUrl}/vendor/milosapps-shell/v2/milos-app-shell.css`);
+    assert.equal(shellRuntime.themeStylesheet, `${baseUrl}/vendor/milosapps-shell/v2/milos-app-shell-theme.css`);
+    assert.equal(shellRuntime.inlineShadowStyles, 0);
+    assert.equal(shellRuntime.inlineHostStyle, false);
+    assert.equal(shellRuntime.hostDisplay, "grid");
+    assert.equal(shellRuntime.brandDisplay, "flex");
+    assert.ok(shellRuntime.controlWidth >= 44 && shellRuntime.controlHeight >= 44, JSON.stringify(shellRuntime));
+    assert.equal(shellRuntime.iconWidth, 38);
+    assert.equal(shellRuntime.accent, "#d9ff56");
     assert.equal(await shell.getByText("MilosApps", { exact: true }).count(), 2);
     assert.equal(await shell.getByText("DEV", { exact: true }).count(), 1);
     assert.equal(await shell.getByRole("link", { name: /Alle Apps/ }).getAttribute("href"), "https://dev.milos-apps.de/apps");
@@ -583,6 +625,7 @@ try {
     await mobilePage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
     const geometry = await mobilePage.locator("milos-app-shell").evaluate((shell) => {
       const icon = shell.shadowRoot.querySelector(".app-icon").getBoundingClientRect();
+      const searchInput = document.querySelector(".search-control input").getBoundingClientRect();
       const controls = [...shell.shadowRoot.querySelectorAll(".control")].map((element) => {
         const rect = element.getBoundingClientRect();
         return { width: Math.round(rect.width), height: Math.round(rect.height) };
@@ -591,6 +634,7 @@ try {
         scrollWidth: document.documentElement.scrollWidth,
         clientWidth: document.documentElement.clientWidth,
         iconWidth: Math.round(icon.width),
+        searchInputWidth: Math.round(searchInput.width),
         controls,
         shellOffenders: [...shell.shadowRoot.querySelectorAll("*")]
           .map((element) => {
@@ -640,6 +684,7 @@ try {
     });
     assert.ok(geometry.scrollWidth <= geometry.clientWidth + 1, `200-%-Textzoom läuft horizontal über: ${JSON.stringify(geometry)}`);
     assert.equal(geometry.iconWidth, 38);
+    assert.ok(geometry.searchInputWidth >= 180, `Suchfeld bei 200 % nicht sinnvoll bedienbar: ${JSON.stringify(geometry)}`);
     assert.deepEqual(geometry.controls.filter(({ width, height }) => width < 44 || height < 44), []);
     await mobilePage.screenshot({
       path: fileURLToPath(new URL("phone-text-zoom-200.png", artifacts)),

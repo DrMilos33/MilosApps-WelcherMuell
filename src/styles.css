@@ -929,6 +929,16 @@ dialog::backdrop {
   }
 }
 
+@media (max-width: 23rem) {
+  .search-control {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .search-control button {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -34,8 +34,8 @@
   "sharedDependencies": [
     {
       "id": "public-app-shell/v2",
-      "version": "2.0.2",
-      "sharedCommit": "97f695be3bdfcfdc51ad286c6ed231c4b9585295",
+      "version": "2.0.3",
+      "sharedCommit": "ed898412306e22c6ae1b10ee8953df29f8acd627",
       "vendored": true,
       "runtimeImport": false
     }

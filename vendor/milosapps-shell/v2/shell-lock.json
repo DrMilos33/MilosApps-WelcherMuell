@@ -1,13 +1,15 @@
 {
   "contract": "public-app-shell/v2",
-  "version": "2.0.2",
-  "sharedCommit": "97f695be3bdfcfdc51ad286c6ed231c4b9585295",
+  "version": "2.0.3",
+  "sharedCommit": "ed898412306e22c6ae1b10ee8953df29f8acd627",
   "appKey": "waste-guide",
   "manifest": "milos-app.json",
   "vendorDirectory": "vendor/milosapps-shell/v2",
   "artifacts": {
-    "milos-app-shell.js": "sha256:78508eb1b5a29540656d1074dc2f72f629227ba8d185ac8b48b43f9f48353d65",
-    "bootstrap.js": "sha256:684e7287009b0c0aab7804b9a2aeb7681b078b3f7b1a906378793b4bc66586ac",
-    "verify.mjs": "sha256:7858069b65e4fe07b7d3e5e50d78d7b7d9d24f41b77864d4678948893aa066f6"
+    "milos-app-shell.js": "sha256:bff9c09ae64e453d186508a4372a1cacc17b4dcd30b770046c7f4efee53731b3",
+    "milos-app-shell.css": "sha256:662093d5dce4147b7e962a882b570b478a437a78c77d92242eb3c96191a019a9",
+    "bootstrap.js": "sha256:6f42d33f87a40790ea134c8f3b3d5f3f43688741096758b3489530ac2576d3f3",
+    "milos-app-shell-theme.css": "sha256:ce2f422a6e4d001691b106c55937c5d64fa1288da7e5c13ba18a45d89ad3de63",
+    "verify.mjs": "sha256:59dd5776bf9a71ac1e096fee9f2afce7627912bd3d8a134bb3ca91f82dd65126"
   }
 }

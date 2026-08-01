@@ -5,7 +5,7 @@
 Die App ist eine statische, frameworkfreie ES-Modul-Anwendung. Ein kleiner
 Node-HTTP-Server dient ausschließlich dem lokalen DEV-/E2E-Betrieb. Es gibt
 keine API, keine Datenbank, keine Anmeldung und keine Cookies. Der öffentliche
-App-Rahmen wird aus dem fest gepinnten Shared-Vertrag `public-app-shell/v2.0.2`
+App-Rahmen wird aus dem fest gepinnten Shared-Vertrag `public-app-shell/v2.0.3`
 lokal vendort; es gibt keinen CDN- oder Cross-Repository-Runtimeimport.
 
 ```text
@@ -23,9 +23,10 @@ index.html
 ```
 
 `milos-app.json` pinnt Vertrag, Version und Shared-Commit. `shell-lock.json`
-enthält SHA-256 für Komponente, Bootstrap und portablen Validator. Der lokale
-Server leitet die beiden nötigen CSP-Style-Hashes direkt aus der verifizierten
-Vendor-Datei ab; `unsafe-inline` ist nicht nötig.
+enthält SHA-256 für Komponente, Komponenten-CSS, Bootstrap, app-spezifische
+Theme-CSS und portablen Validator. Der lokale Server behält die strikte
+`style-src 'self'`-CSP bei; die Shell lädt beide Stylesheets ausschließlich
+vom app-eigenen Vendorpfad und braucht weder Hash noch `unsafe-inline`.
 
 Die Shell besitzt Header, Footer, DEV-Links und die Sprachpersistenz unter
 `milosapps.waste-guide.language`. Die Fachoberfläche initialisiert zusätzlich

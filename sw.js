@@ -1,4 +1,4 @@
-const CACHE_NAME = "waste-guide-2026-07-30-shell-v2-r1";
+const CACHE_NAME = "waste-guide-2026-07-30-shell-v2-r2";
 const APP_SHELL = [
   "/",
   "/index.html",
@@ -14,6 +14,8 @@ const APP_SHELL = [
   "/src/storage.js",
   "/vendor/milosapps-shell/v2/bootstrap.js",
   "/vendor/milosapps-shell/v2/milos-app-shell.js",
+  "/vendor/milosapps-shell/v2/milos-app-shell.css",
+  "/vendor/milosapps-shell/v2/milos-app-shell-theme.css",
   "/vendor/milosapps-shell/v2/shell-lock.json",
   "/public/data/waste-items.v1.json",
   "/public/data/sources.v1.json",

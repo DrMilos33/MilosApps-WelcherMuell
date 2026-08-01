@@ -48,6 +48,30 @@ assert.equal(metadata.healthcheck, healthUrl.toString());
 assert.equal(metadata.productionApproved, false);
 assert.equal(metadata.deployment?.sourceCommit, expectedSourceCommit);
 
+const manifestResponse = await fetch(new URL("milos-app.json", baseUrl), { redirect: "error" });
+assert.equal(manifestResponse.status, 200);
+const appManifest = await manifestResponse.json();
+assert.equal(appManifest.shellContract?.version, "2.0.3");
+assert.equal(appManifest.shellContract?.sharedCommit, "ed898412306e22c6ae1b10ee8953df29f8acd627");
+assert.equal(appManifest.environment, "dev");
+assert.equal(appManifest.productionApproved, false);
+
+const lockResponse = await fetch(new URL("vendor/milosapps-shell/v2/shell-lock.json", baseUrl), { redirect: "error" });
+assert.equal(lockResponse.status, 200);
+const shellLock = await lockResponse.json();
+assert.equal(shellLock.version, "2.0.3");
+assert.equal(shellLock.sharedCommit, appManifest.shellContract.sharedCommit);
+assert.deepEqual(
+  Object.keys(shellLock.artifacts).sort(),
+  ["bootstrap.js", "milos-app-shell-theme.css", "milos-app-shell.css", "milos-app-shell.js", "verify.mjs"]
+);
+
+for (const stylesheet of ["milos-app-shell.css", "milos-app-shell-theme.css"]) {
+  const response = await fetch(new URL(`vendor/milosapps-shell/v2/${stylesheet}`, baseUrl), { redirect: "error" });
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/css(?:;|$)/);
+}
+
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
@@ -82,6 +106,25 @@ try {
   assert.equal(await page.getByRole("search").count(), 1);
   assert.equal(await page.getByText(/Anmelden|Login|Milos-Konto/i).count(), 0);
   const shell = page.locator("milos-app-shell");
+  await shell.waitFor();
+  const shellRuntime = await shell.evaluate((element) => {
+    const shadowStylesheet = element.shadowRoot.querySelector('link[rel="stylesheet"]');
+    const themeStylesheet = document.querySelector('link[data-milos-app-shell-theme="waste-guide"]');
+    return {
+      shadowStylesheet: shadowStylesheet?.href,
+      themeStylesheet: themeStylesheet?.href,
+      inlineShadowStyles: element.shadowRoot.querySelectorAll("style").length,
+      inlineHostStyle: element.hasAttribute("style"),
+      hostDisplay: getComputedStyle(element).display,
+      accent: getComputedStyle(element).getPropertyValue("--milos-shell-accent").trim()
+    };
+  });
+  assert.equal(shellRuntime.shadowStylesheet, new URL("vendor/milosapps-shell/v2/milos-app-shell.css", baseUrl).toString());
+  assert.equal(shellRuntime.themeStylesheet, new URL("vendor/milosapps-shell/v2/milos-app-shell-theme.css", baseUrl).toString());
+  assert.equal(shellRuntime.inlineShadowStyles, 0);
+  assert.equal(shellRuntime.inlineHostStyle, false);
+  assert.equal(shellRuntime.hostDisplay, "grid");
+  assert.equal(shellRuntime.accent, "#d9ff56");
   assert.equal(await shell.getByText("DEV", { exact: true }).count(), 1);
   assert.equal(await shell.getByRole("link", { name: /Alle Apps/ }).getAttribute("href"), "https://dev.milos-apps.de/apps");
 
@@ -117,6 +160,26 @@ try {
   assert.ok(geometry.overflow <= 1, `horizontal overflow: ${JSON.stringify(geometry)}`);
   assert.ok(Math.abs(geometry.shellBottom - geometry.documentHeight) <= 2, `footer gap: ${JSON.stringify(geometry)}`);
 
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto(baseUrl.toString(), { waitUntil: "networkidle" });
+  await page.evaluate(() => {
+    document.documentElement.style.fontSize = "200%";
+  });
+  const zoomGeometry = await shell.evaluate((element) => {
+    const icon = element.shadowRoot.querySelector(".app-icon").getBoundingClientRect();
+    const undersized = [...element.shadowRoot.querySelectorAll(".control")]
+      .map((control) => control.getBoundingClientRect())
+      .filter(({ width, height }) => width < 44 || height < 44).length;
+    return {
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      iconWidth: Math.round(icon.width),
+      undersized
+    };
+  });
+  assert.ok(zoomGeometry.overflow <= 1, `200% text zoom overflow: ${JSON.stringify(zoomGeometry)}`);
+  assert.equal(zoomGeometry.iconWidth, 38);
+  assert.equal(zoomGeometry.undersized, 0);
+
   assert.deepEqual(consoleErrors, []);
   assert.deepEqual(failedResponses, []);
 } finally {
@@ -134,5 +197,7 @@ console.log(JSON.stringify({
   devUrl: baseUrl.toString(),
   healthUrl: healthUrl.toString(),
   directWithoutLogin: true,
-  portalIndependent: true
+  portalIndependent: true,
+  shellVersion: shellLock.version,
+  textZoom200: true
 }, null, 2));

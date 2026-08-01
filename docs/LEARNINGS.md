@@ -1,6 +1,6 @@
 # Welcher-Müll-Erkenntnisse
 
-## 01.08.2026 · public-app-shell/v2.0.2
+## 01.08.2026 · public-app-shell/v2.0.3
 
 ### Textzoom braucht intrinsische Breitentests, nicht nur Dokument-Overflow
 
@@ -16,6 +16,12 @@ Evidenz: explizite Regression 360 × 800 mit `font-size: 200%`, feste
 38-Pixel-Shell-Ikone, 44-Pixel-Ziele, Dokument- und Containerbreiten; 26/26
 Browser-E2E-Prüfungen bestanden.
 
+Die visuelle 200-%-Aufnahme zeigte zusätzlich, dass ein formal
+überlauffreies zweispaltiges Suchfeld vom vergrößerten Button fast vollständig
+zusammengedrückt werden konnte. Auf 360 Pixeln reflowt die Suche deshalb
+einspaltig; die Regression prüft neben der Dokumentbreite nun auch eine
+sinnvoll bedienbare Eingabebreite.
+
 Gültigkeitsgrenze: Der Test bildet Root-Textzoom reproduzierbar ab, aber keinen
 bestimmten Browser-Chrome-Zoomdialog oder eine reale Screenreader-Ausgabe.
 
@@ -30,17 +36,20 @@ Grid-Platzierung ist explizit einspaltig.
 Evidenz: Smartphone-Screenshot bei 390 × 844, anschließende geometrische
 Regression und vollständige Wiederholung der Matrix.
 
-### Vendorte Shadow-DOM-Styles brauchen einen CSP-Vertrag
+### Eine gemeinsame Shell muss unter der strengsten Verbraucher-CSP laufen
 
-Die Shell bringt zwei feste Style-Blöcke mit. Eine reine `style-src 'self'`-CSP
-blockierte sie und erzeugte ungestylte, aber semantisch vorhandene Bedienung.
-Der lokale DEV-Server berechnet die erlaubten SHA-256-Hashes aus der bereits
-gelockten Vendor-Datei. Damit bleiben CSP und bewusstes Shell-Update gekoppelt,
-ohne `unsafe-inline` oder einen Runtimeimport einzuführen.
+`public-app-shell/v2.0.2` fügte Shadow-DOM-Styles per `innerHTML` ein und setzte
+Theme-Tokens per `host.style.setProperty`. Unter `style-src 'self'` registrierte
+sich die Komponente semantisch, fiel visuell aber auf UA-Defaults zurück. Eine
+app-eigene Hashliste würde nur einen Verbraucher reparieren und den gemeinsamen
+Vertragsdefekt verdecken. Der lokale Server behält deshalb die strikte CSP; die
+Korrektur wurde in `public-app-shell/v2.0.3` als externe Same-Origin-Komponenten-
+und Theme-CSS veröffentlicht. Der App-Lock umfasst beide Stylesheets, Bootstrap,
+Komponente und Validator.
 
 Gültigkeitsgrenze: GitHub Pages liefert derzeit keine app-eigenen Response-CSP-
-Header. Der Hashvertrag sichert den lokalen DEV-/E2E-Server und dokumentiert
-die Integrationsanforderung für spätere Hosts.
+Header. Ein dort optisch gesunder Stand beweist daher nicht die CSP-Kompatibilität
+für spätere Hosts oder Portal-nahe Umgebungen.
 
 ## 30.07.2026 · Inhaltsversion 2026.07.30-2
 

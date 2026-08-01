@@ -22,12 +22,12 @@ const [itemsCatalog, sourcesCatalog, regionsCatalog, englishCatalog, appManifest
     ].map(async (path) => JSON.parse(await readFile(new URL(path, root), "utf8")))
   );
 
-test("public-app-shell/v2.0.2 ist lokal vendort und exakt gepinnt", () => {
+test("public-app-shell/v2.0.3 ist lokal vendort und exakt gepinnt", () => {
   assert.equal(appManifest.shellContract.id, "public-app-shell/v2");
-  assert.equal(appManifest.shellContract.version, "2.0.2");
+  assert.equal(appManifest.shellContract.version, "2.0.3");
   assert.equal(
     appManifest.shellContract.sharedCommit,
-    "97f695be3bdfcfdc51ad286c6ed231c4b9585295"
+    "ed898412306e22c6ae1b10ee8953df29f8acd627"
   );
   assert.equal(appManifest.appKey, "waste-guide");
   assert.equal(appManifest.public, true);
@@ -35,7 +35,7 @@ test("public-app-shell/v2.0.2 ist lokal vendort und exakt gepinnt", () => {
   assert.equal(appManifest.environment, "dev");
   assert.equal(appManifest.productionApproved, false);
   assert.equal(shellLock.contract, "public-app-shell/v2");
-  assert.equal(shellLock.version, "2.0.2");
+  assert.equal(shellLock.version, "2.0.3");
   assert.equal(shellLock.sharedCommit, appManifest.shellContract.sharedCommit);
   assert.equal(shellLock.appKey, "waste-guide");
 });

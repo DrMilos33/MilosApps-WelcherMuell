@@ -180,7 +180,7 @@ Layout.
 Diese Deploymentprüfung erneuert keine fachliche Quellenprüfung. Inhaltsversion
 und Reviewtermine bleiben unverändert.
 
-## QA-Erweiterung für public-app-shell/v2.0.2
+## QA-Zwischenstand für public-app-shell/v2.0.2
 
 Die Shell-Migration verändert Navigation, Sprache und Layout, aber nicht die
 redaktionellen Entsorgungsaussagen. Der Vertrag ist lokal auf Shared-Commit
@@ -195,7 +195,8 @@ redaktionellen Entsorgungsaussagen. Der Vertrag ist lokal auf Shared-Commit
   Dialoge, Teilen und Fehlerzustände;
 - Sprachwechsel und Reload-Persistenz sowie englische Suchnamen, Synonyme und
   Treffer als Regression ergänzt;
-- die lokale CSP eng auf die beiden gelockten Vendor-Style-Hashes abgestimmt.
+- ein zunächst lokaler CSP-Hashansatz als nicht appübergreifend tragfähig
+  verworfen, nachdem die strikte Verbraucher-CSP den gemeinsamen Defekt belegte.
 
 Der erste Browserlauf fand neben veralteten Testselektoren einen echten
 Dark-Mode-Kontrastfehler: Die feste Shell-Farbe wurde in die dunkle
@@ -232,3 +233,40 @@ Die Quellenprüfung bleibt getrennt: Der Online-Lauf bestätigt nur die
 technische Erreichbarkeit. Inhaltsversion `2026.07.30-2`, Geltungsgebiet,
 Lizenz, Attribution und bestehende Reviewtermine wurden durch die
 Shell-Migration nicht erneuert.
+
+## Finales CSP- und Reflow-Gate für public-app-shell/v2.0.3
+
+Der unveränderliche Shared-Commit
+`ed898412306e22c6ae1b10ee8953df29f8acd627` ersetzt den gestoppten
+v2.0.2-Zwischenstand. Vendor und Lock wurden atomar neu erzeugt. Der portable
+Validator prüft nun fünf Artefakte: Komponente, Komponenten-CSS, Bootstrap,
+app-spezifische Theme-CSS und Validator.
+
+Die Browserregression fordert exakt `style-src 'self'` ohne Hash, Nonce oder
+`unsafe-inline`, prüft beide Stylesheets mit `text/css`, fehlende Inline-Styles,
+das tatsächliche Grid-/Flexlayout, die Waste-Guide-Themefarbe, die feste
+38-Pixel-Ikone und mindestens 44 Pixel große Shell-Ziele. DE/EN samt Reload,
+Suche, Quellenlogik, lokale Speicherung, Tastatur, Fokus, Reduced Motion,
+Offline, Smartphone und Desktop blieben unverändert grün.
+
+Die visuelle Nachprüfung bei 360 × 800 und 200 % Textzoom fand trotz fehlendem
+Dokument-Overflow ein nahezu kollabiertes Sucheingabefeld. Unter 23 rem reflowt
+die Suchsteuerung nun einspaltig. Ein Regressionstest fordert mindestens
+180 Pixel nutzbare Eingabebreite und sichert weiterhin null horizontalen
+Überlauf sowie 44-Pixel-Ziele.
+
+Lokaler Abschluss:
+
+- portabler Shared-Validator und alle fünf SHA-256-Lockartefakte: PASS;
+- 65/65 Unit-, Inhalts-, Quellen-, Such-, Übersetzungs- und Speichertests;
+- 26/26 Browser-E2E-Prüfungen unter strikter CSP;
+- 20/20 amtliche oder kommunale Quellen im Wiederholungslauf technisch
+  erreichbar;
+- 1440 × 900, 390 × 844 sowie 360 × 800 bei 200 % Textzoom visuell geprüft;
+- keine Konsolen- oder CSP-Fehler.
+
+Der erste Quellen-URL-Lauf hatte ausschließlich für die UBA-Lampenseite einen
+transienten Fetch-Fehler; der unveränderte Wiederholungslauf erreichte alle 20
+Quellen mit HTTP 200. Das ist ein technischer Erreichbarkeitsnachweis und kein
+neuer redaktioneller Review. Inhaltsversion, Geltungsbereich, Lizenz,
+Attribution und Prüffristen bleiben unverändert.
