@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.07.30-2",
-  "verifiedAt": "2026-07-30",
+  "catalogVersion": "2026.08.01-1",
+  "verifiedAt": "2026-08-01",
   "editorialUse": "Die App übernimmt keinen externen Datensatz, keine Logos, Bilder oder längeren Textpassagen. Entsorgungstatsachen wurden aus amtlichen Seiten geprüft und eigenständig kurz formuliert. Jeder Hinweis verlinkt die Quelle.",
   "sources": [
     {
@@ -135,6 +135,18 @@
       "reviewDue": "2026-09-30",
       "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Es werden keine Inhalte kopiert; die Seite wird als amtlicher örtlicher Prüfschritt verlinkt.",
       "attribution": "Örtliche Auskunft: Stadtreinigung Hamburg."
+    },
+    {
+      "id": "hamburg-srh-info-2024",
+      "title": "INFO 2024 – Abfall- und Wertstoffsammlung",
+      "publisher": "Stadtreinigung Hamburg",
+      "url": "https://files.stadtreinigung.hamburg/srh-typo3/website/infobroschuere-epaper/2024/index.html",
+      "scope": "Hamburg; stoffgleiche Nichtverpackungen aus privaten Haushalten",
+      "sourceDate": "2024-01-01",
+      "verifiedAt": "2026-08-01",
+      "reviewDue": "2026-10-31",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Es werden keine Texte, Bilder oder Datensätze kopiert; die Annahmeregel ist eigenständig zusammengefasst und verlinkt.",
+      "attribution": "Quelle: Stadtreinigung Hamburg; eigenständige Zusammenfassung der Hamburger Wertstoffsammlung."
     },
     {
       "id": "munich-awm-overview",

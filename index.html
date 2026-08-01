@@ -26,10 +26,7 @@
 
         <section class="hero" aria-labelledby="hero-title">
           <div class="hero-topline">
-            <div>
-              <span class="eyebrow" data-i18n="heroKicker">Ohne Konto · ohne Standortpflicht</span>
-              <span class="content-date" id="content-date" data-i18n="contentLoading">Inhalte werden geladen …</span>
-            </div>
+            <span class="content-date" id="content-date" data-i18n="contentLoading">Inhalte werden geladen …</span>
             <button class="header-button" id="open-settings" type="button" aria-controls="settings-panel" aria-expanded="false">
               <svg aria-hidden="true" viewBox="0 0 24 24">
                 <path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M8 14v6" />
@@ -37,12 +34,16 @@
               <span data-i18n="settingsButton">Region &amp; Datenschutz</span>
             </button>
           </div>
-          <h1 id="hero-title" data-i18n="heroTitle">Welcher Müll?</h1>
-          <p class="hero-prompt" data-i18n="heroPrompt">Wohin damit?</p>
-          <p class="hero-copy" data-i18n="heroCopy">Gegenstand eingeben. Du bekommst den passenden Weg – oder einen sicheren nächsten Prüfschritt.</p>
+          <div class="hero-heading">
+            <h1 id="hero-title" data-i18n="heroTitle">Welcher Müll?</h1>
+            <p class="hero-prompt" data-i18n="heroPrompt">Wohin damit?</p>
+          </div>
+          <p class="hero-copy" data-i18n="heroCopy">Gegenstand eingeben – wir zeigen den passenden Weg oder einen sicheren Prüfschritt.</p>
+        </section>
 
+        <div class="search-dock">
           <form class="search-form" id="search-form" role="search" novalidate>
-            <label for="waste-query" data-i18n="searchLabel">Gegenstand oder Material</label>
+            <label class="sr-only" for="waste-query" data-i18n="searchLabel">Gegenstand oder Material</label>
             <div class="search-control">
               <input
                 id="waste-query"
@@ -58,9 +59,11 @@
               >
               <button type="submit" data-i18n="searchSubmit">Suchen</button>
             </div>
-            <p id="search-help" class="field-help" data-i18n="searchHelp">Auch Alltagssprache und kleine Tippfehler funktionieren.</p>
           </form>
+        </div>
 
+        <div class="search-support">
+          <p id="search-help" class="field-help" data-i18n="searchHelp">Auch Alltagssprache und kleine Tippfehler funktionieren.</p>
           <div class="quick-search" aria-label="Häufig gesucht" data-i18n-aria-label="quickSearchLabel">
             <span data-i18n="quickExamples">Beispiele:</span>
             <button type="button" data-query-key="quickRubber" data-query-de="Gummiband" data-query-en="rubber band">Gummiband</button>
@@ -69,7 +72,12 @@
             <button type="button" data-query-key="quickMedicine" data-query-de="Medikamente" data-query-en="medicine">Medikamente</button>
             <button type="button" data-query-key="quickGlass" data-query-de="Glas" data-query-en="glass">Glas</button>
           </div>
-        </section>
+
+          <section class="history-section" id="history-section" hidden aria-labelledby="history-title">
+            <h2 id="history-title" data-i18n="historyTitle">Zuletzt gesucht</h2>
+            <div id="history-list" class="history-list"></div>
+          </section>
+        </div>
 
         <dialog class="settings-dialog" id="settings-panel" aria-labelledby="settings-title">
           <div class="dialog-header settings-dialog-header">
@@ -98,7 +106,7 @@
           </div>
         </dialog>
 
-        <section class="results-section" id="results-section" aria-labelledby="results-title">
+        <section class="results-section" id="results-section" aria-labelledby="results-title" hidden>
           <div class="section-heading">
             <div>
               <p class="section-kicker" id="result-kicker" data-i18n="resultReady">Bereit</p>
@@ -112,14 +120,9 @@
           <div id="results" class="results-grid"></div>
         </section>
 
-        <section class="history-section" id="history-section" hidden aria-labelledby="history-title">
-          <div class="section-heading"><div><p class="section-kicker" data-i18n="historyKicker">Nur auf diesem Gerät</p><h2 id="history-title" data-i18n="historyTitle">Letzte Suchen</h2></div></div>
-          <div id="history-list" class="history-list"></div>
-        </section>
-
         <details class="trust-section">
           <summary>
-            <span><span class="section-kicker" data-i18n="trustKicker">So entstehen die Antworten</span><strong data-i18n="trustTitle">Warum du der Einordnung trauen kannst</strong></span>
+            <strong data-i18n="trustTitle">Quellen, Gültigkeit &amp; Datenschutz</strong>
             <span class="summary-hint" aria-hidden="true" data-i18n="trustShow">Anzeigen</span>
           </summary>
           <div class="trust-grid">
@@ -127,12 +130,11 @@
             <article><span class="trust-number" aria-hidden="true">02</span><h3 data-i18n="trustTwoTitle">Region sichtbar</h3><p data-i18n="trustTwoText">Örtliche Systeme werden nur gezeigt, wenn eine kommunale Quelle sie bestätigt.</p></article>
             <article><span class="trust-number" aria-hidden="true">03</span><h3 data-i18n="trustThreeTitle">Sicherheitsfälle zuerst</h3><p data-i18n="trustThreeText">Akkus, Elektrogeräte, Chemikalien und Medikamente bekommen klare Warnhinweise.</p></article>
           </div>
+          <div class="meta-actions">
+            <button class="text-button" id="show-about" type="button" data-i18n="aboutButton">Alle Quellen &amp; Datenschutz</button>
+            <a href="./meta.json" data-i18n="metadata">App-Metadaten</a>
+          </div>
         </details>
-
-        <div class="meta-actions">
-          <button class="text-button" id="show-about" type="button" data-i18n="aboutButton">Quellen &amp; Datenschutz</button>
-          <a href="./meta.json" data-i18n="metadata">App-Metadaten</a>
-        </div>
 
         <dialog id="about-dialog" aria-labelledby="about-title">
           <div class="dialog-header">

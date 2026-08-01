@@ -1,5 +1,38 @@
 # Welcher-Müll-Erkenntnisse
 
+## 01.08.2026 · Inhaltsversion 2026.08.01-1
+
+### Materialsuche braucht eine fachliche Verzweigung, nicht nur mehr Fuzzy
+
+`Plastikblume` war kein Rechtschreibproblem, sondern eine Datenlücke zwischen
+Verpackung und Kunststoffgegenstand. Ein aggressiveres unscharfes Ranking hätte
+den Begriff fälschlich zur Verpackung schicken können. Der Bestand führt nun
+einen vorsichtigen Nichtverpackungsfall, während `Plastik` selbst Verpackung und
+Gegenstand als Auswahl zeigt. Elektronik- und Batteriephrasen bleiben höher
+priorisiert.
+
+Evidenz: 74/74 Unit-/Inhalts-/Suchtests einschließlich Komposita,
+Pluralformen, DE/EN und Gefahrabgrenzungen; 26/26 Browserprüfungen.
+
+Gültigkeitsgrenze: Berlin und Hamburg sammeln viele Kunststoffgegenstände über
+die Wertstofftonne, München nennt für eine Kunststoff-Gießkanne den
+Wertstoffhof. Diese drei Belege ergeben keine bundesweite Tonnenregel.
+
+### Die Suche muss beim Ergebnislesen im Arbeitskontext bleiben
+
+Ein großer Hero und eine nur am Seitenanfang erreichbare Suche zwingen nach
+langen Ergebnissen zur Rücknavigation. Ein schmalerer Inhaltsrahmen, ein
+Sticky-Suchdock und ein direkt darunter liegender Verlauf halten die
+Hauptaufgabe im Vordergrund. Sekundäre Vertrauens-, Quellen- und Metadaten
+passen in eine einzige progressive Offenlegung.
+
+Evidenz: Browsergeometrie bei 1440 × 900, Scroll bis zum Seitenende, 390 × 844,
+360 × 800 bei 200 % Textzoom, Tastatur und visuelle Screenshots.
+
+Gültigkeitsgrenze: Sticky darf weder Inhalt überdecken noch den Druckpfad
+beeinflussen. Beide Grenzen sind eigene Regressionen; auf sehr schmalen
+Viewports reflowt die Suchsteuerung weiterhin einspaltig.
+
 ## 01.08.2026 · public-app-shell/v2.0.3
 
 ### Textzoom braucht intrinsische Breitentests, nicht nur Dokument-Overflow

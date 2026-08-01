@@ -7,8 +7,8 @@ Nutzerdatenbank sind nicht nötig.
 
 ## DEV-Stand
 
-- Inhaltsversion: `2026.07.30-2`, Stand 30.07.2026
-- 46 redaktionelle Einträge und 20 amtliche oder kommunale Quellen
+- Inhaltsversion: `2026.08.01-1`, Stand 01.08.2026
+- 47 redaktionelle Einträge und 21 amtliche oder kommunale Quellen
 - allgemeiner Geltungsbereich: private Haushalte in Deutschland
 - belegte regionale Ergänzungen: Berlin, Hamburg und München
 - Plattformen: Web, Smartphone/PWA und Desktop
@@ -98,8 +98,11 @@ immer optional.
 
 Die Suche deckt neben Materialbegriffen auch typische Alltagswörter und
 Zusammensetzungen ab, etwa `Gummi`, `Gummiband`, `Haargummi`, `Radiergummi`,
-`Staubsaugerbeutel`, `Katzenstreu` und `Kugelschreiber`. Sicherheitsrelevante
-Abgrenzungen wie Auto- und Motorradreifen bleiben eigene, vorsichtige Treffer.
+`Plastikblume`, `Kunstblumen`, `Plastikschüssel`, `Staubsaugerbeutel`,
+`Katzenstreu` und `Kugelschreiber`. Ein reiner Materialbegriff wie `Plastik`
+bleibt eine Auswahl zwischen Verpackung und Gegenstand. Sicherheitsrelevante
+Abgrenzungen wie Auto- und Motorradreifen sowie elektrische Spielsachen bleiben
+eigene, vorsichtige Treffer.
 
 ## Dokumentation
 

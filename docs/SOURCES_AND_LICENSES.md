@@ -2,9 +2,9 @@
 
 ## Inhaltsstand
 
-- Inhaltsversion: `2026.07.30-2`
-- redaktionell geprüft: 30.07.2026
-- Umfang: 46 Entsorgungseinträge, 20 Quellen
+- Inhaltsversion: `2026.08.01-1`
+- redaktionell erweitert: 01.08.2026
+- Umfang: 47 Entsorgungseinträge, 21 Quellen
 - früheste erneute Prüfung: 30.09.2026
 - allgemeine Geltung: private Haushalte in Deutschland
 - regionale Ergänzungen: Berlin, Hamburg und München
@@ -29,11 +29,18 @@ Fachliche Aussagen stammen ausschließlich von:
   gebrauchten Spritzen.
 
 UBA- und BMG-Rechteseiten sind zusätzlich als Lizenznachweis katalogisiert.
-Am 30.07.2026 beantworteten alle 20 URLs den automatisierten Live-Check mit
+Am 01.08.2026 beantworteten alle 21 URLs den automatisierten Live-Check mit
 HTTP 200. Für die Erweiterung um kleine Gummi- und Alltagsgegenstände wurden
 insbesondere das Abfalllexikon des Abfallwirtschaftsbetriebs München sowie die
 UBA-Hinweise zu Haushaltsabfällen geprüft. Autoreifen sind anhand der eigenen
 UBA-Fachseite ausdrücklich vom gewöhnlichen Haus- und Sperrmüllfall getrennt.
+
+Für Kunststoffgegenstände ohne Verpackungsfunktion belegen vier getrennte
+amtliche Quellen die Gültigkeitsgrenze: Das UBA ordnet Gelbe Tonne und Gelben
+Sack grundsätzlich Verpackungen zu; Berlin nennt Kunststoff-Haushaltsartikel
+in der Wertstofftonne; Hamburg beschreibt stoffgleiche Nichtverpackungen in der
+Wertstoffsammlung; der AWM München führt die Kunststoff-Gießkanne zum
+Wertstoffhof. Daraus wird bewusst keine bundesweit einheitliche Tonne abgeleitet.
 
 ## Lizenz und Attribution
 
@@ -64,6 +71,11 @@ Münchens Wertstoffinsel ist ausdrücklich als Systemstand 2026 dokumentiert und
 wird nicht auf andere Gemeinden übertragen. Für alle anderen Orte bleibt die
 Region optional; die App verweist bei Unsicherheit auf das amtliche Abfall-ABC
 der zuständigen Stadt oder des Landkreises.
+
+Die Route `non-packaging-plastic` wird nur in Berlin, Hamburg und München
+überschrieben. Ohne gewählte Region bleibt der sichere lokale Prüfschritt
+sichtbar. Elektronik, Batterien und Schadstoffanhaftungen haben Vorrang vor der
+Materialroute.
 
 Die Kölner Quelle zu Spritzen begründet ausschließlich vorsichtige
 Sicherheitsgrundsätze. Sie wird nicht als bundesweit einheitliche Tonnenregel

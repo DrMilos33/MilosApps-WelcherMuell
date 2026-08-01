@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.07.30-1",
+  "catalogVersion": "2026.08.01-1",
   "regions": [
     {
       "id": "de",
@@ -25,6 +25,11 @@
           "label": "Berliner Wertstofftonne",
           "note": "Für Verpackungen und weitere zugelassene Wertstoffe gilt in Berlin die örtliche Wertstofftonne.",
           "sourceId": "berlin-bsr-recyclables"
+        },
+        "non-packaging-plastic": {
+          "label": "Berliner Wertstofftonne",
+          "note": "Kunststoff-Haushaltsgegenstände wie Plastikschüsseln, Gießkannen und Spielzeug ohne Elektronik dürfen in die Berliner Wertstofftonne.",
+          "sourceId": "berlin-bsr-recyclables"
         }
       }
     },
@@ -41,6 +46,11 @@
           "label": "Hamburger Wertstofftonne",
           "note": "Hamburg sammelt Verpackungen und zugelassene Wertstoffe über die Hamburger Wertstofftonne.",
           "sourceId": "hamburg-srh-abc"
+        },
+        "non-packaging-plastic": {
+          "label": "Hamburger Wertstofftonne oder Wertstoffsack",
+          "note": "Hamburg nimmt stoffgleiche Nichtverpackungen an, wenn sie mindestens zur Hälfte aus Kunststoff oder Metall bestehen.",
+          "sourceId": "hamburg-srh-info-2024"
         }
       }
     },
@@ -62,6 +72,11 @@
           "label": "Wertstoffhof oder Giftmobil des AWM",
           "note": "Annahmebedingungen, Höchstmengen und Termine vorher beim AWM prüfen.",
           "sourceId": "munich-awm-giftmobile"
+        },
+        "non-packaging-plastic": {
+          "label": "AWM-Wertstoffhof",
+          "note": "Der AWM nennt für eine Kunststoff-Gießkanne den Wertstoffhof. Den konkreten Gegenstand im Abfalllexikon prüfen.",
+          "sourceId": "munich-awm-lexicon"
         }
       }
     }

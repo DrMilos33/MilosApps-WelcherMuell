@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 const host = "127.0.0.1";
 const port = 4318;
 const baseUrl = `http://${host}:${port}`;
-const expectedContentVersion = "2026.07.30-2";
+const expectedContentVersion = "2026.08.01-1";
 const artifacts = new URL("../../test-results/qa/", import.meta.url);
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -270,7 +270,8 @@ try {
     await desktopPage.getByRole("dialog", { name: "Region & local data" }).waitFor();
     assert.equal(await desktopPage.getByLabel("Broad region").locator("option").first().textContent(), "Germany — general guidance");
     await desktopPage.getByRole("button", { name: "Close settings" }).click();
-    await desktopPage.getByRole("button", { name: "Sources & privacy" }).click();
+    await desktopPage.locator(".trust-section > summary").click();
+    await desktopPage.getByRole("button", { name: "All sources & privacy" }).click();
     const englishAbout = desktopPage.getByRole("dialog", { name: "Sources, rights & privacy" });
     await englishAbout.getByRole("heading", { name: "License evidence for the main sources" }).waitFor();
     await desktopPage.getByRole("button", { name: "Close dialog" }).click();
@@ -286,21 +287,35 @@ try {
     const geometry = await desktopPage.evaluate(() => {
       const hero = document.querySelector(".hero").getBoundingClientRect();
       const search = document.querySelector(".search-control").getBoundingClientRect();
-      const results = document.querySelector(".results-section").getBoundingClientRect();
+      const mainContent = document.querySelector(".hero").getBoundingClientRect();
       const trust = document.querySelector(".trust-section");
       return {
         heroHeight: Math.round(hero.height),
         searchBottom: Math.round(search.bottom),
-        resultsGap: Math.round(results.top - hero.bottom),
+        contentWidth: Math.round(mainContent.width),
+        idleResultsHidden: document.querySelector(".results-section").hidden,
         trustCollapsed: trust instanceof HTMLDetailsElement && !trust.open,
         horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
       };
     });
-    assert.ok(geometry.heroHeight <= 540, `Hero zu hoch: ${JSON.stringify(geometry)}`);
-    assert.ok(geometry.searchBottom <= 600, `Suche zu spät sichtbar: ${JSON.stringify(geometry)}`);
-    assert.ok(geometry.resultsGap <= 48, `Treffer zu weit von Suche entfernt: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.heroHeight <= 180, `Hero zu hoch: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.searchBottom <= 300, `Suche zu spät sichtbar: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.contentWidth <= 960, `Inhalt zu breit: ${JSON.stringify(geometry)}`);
+    assert.equal(geometry.idleResultsHidden, true);
     assert.equal(geometry.trustCollapsed, true);
     assert.ok(geometry.horizontalOverflow <= 1, `horizontaler Überlauf: ${JSON.stringify(geometry)}`);
+
+    await submitSearch(desktopPage, "Plastikblume");
+    await desktopPage.getByRole("heading", { name: "Kunststoffgegenstand (keine Verpackung)", exact: true }).waitFor();
+    await desktopPage.screenshot({
+      path: fileURLToPath(new URL("desktop-plastic-flower.png", artifacts)),
+      fullPage: true
+    });
+    await desktopPage.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await desktopPage.waitForTimeout(100);
+    const stickyTop = await desktopPage.locator(".search-dock").evaluate((element) => Math.round(element.getBoundingClientRect().top));
+    assert.ok(stickyTop >= 0 && stickyTop <= 16, `Suche bleibt beim Ergebnislesen nicht erreichbar: ${stickyTop}px`);
+    await desktopPage.evaluate(() => window.scrollTo(0, 0));
   });
 
   await check("Desktop: Einstellungen sind ein kompakter runder Dialog", async () => {
@@ -328,7 +343,9 @@ try {
     const cases = [
       ["Joghurbecher", "Joghurtbecher"],
       ["Akkus", "Batterie oder Akku"],
+      ["Plastikschüssel", "Kunststoffgegenstand (keine Verpackung)"],
       ["elektrische Zahnbürste", "Elektrogerät"],
+      ["elektronisches Plastikspielzeug", "Elektrogerät"],
       ["aufgeblähter Handyakku", "Aufgeblähter oder beschädigter Akku"]
     ];
     for (const [query, heading] of cases) {
@@ -373,13 +390,13 @@ try {
     await assert.doesNotReject(() => desktopPage.getByText("Wertstoffinsel für Kunststoff und Metall").waitFor());
     await desktopPage.reload({ waitUntil: "networkidle" });
     assert.equal(await desktopPage.getByLabel("Grobe Region").inputValue(), "munich");
-    await assert.doesNotReject(() => desktopPage.getByRole("heading", { name: "Letzte Suchen" }).waitFor());
+    await assert.doesNotReject(() => desktopPage.getByRole("heading", { name: "Zuletzt gesucht" }).waitFor());
 
     await desktopPage.getByRole("button", { name: "Region & Datenschutz" }).click();
     await desktopPage.getByRole("button", { name: "Lokale Angaben löschen" }).click();
     assert.equal(await desktopPage.getByLabel("Grobe Region").inputValue(), "de");
     assert.equal(await desktopPage.getByLabel("Letzte Suchen merken").isChecked(), false);
-    assert.equal(await desktopPage.getByRole("heading", { name: "Letzte Suchen" }).count(), 0);
+    assert.equal(await desktopPage.getByRole("heading", { name: "Zuletzt gesucht" }).count(), 0);
     await desktopPage.getByRole("button", { name: "Einstellungen schließen" }).click();
   });
 
@@ -422,7 +439,8 @@ try {
     await desktopPage.keyboard.press("Enter");
     await desktopPage.getByRole("heading", { name: "Kassenzettel", exact: true }).waitFor();
 
-    await desktopPage.getByRole("button", { name: "Quellen & Datenschutz" }).click();
+    await desktopPage.locator(".trust-section > summary").click();
+    await desktopPage.getByRole("button", { name: "Alle Quellen & Datenschutz" }).click();
     const aboutDialog = desktopPage.getByRole("dialog");
     await aboutDialog.waitFor();
     const radius = await aboutDialog.evaluate((dialog) => Number.parseFloat(getComputedStyle(dialog).borderTopLeftRadius));

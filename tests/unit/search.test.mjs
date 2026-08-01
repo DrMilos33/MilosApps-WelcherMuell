@@ -21,7 +21,7 @@ before(async () => {
 function first(query) {
   return searchItems(items, query, {
     sourcesById,
-    asOf: new Date("2026-07-30T00:00:00Z")
+    asOf: new Date("2026-08-01T00:00:00Z")
   })[0]?.item.id;
 }
 
@@ -73,7 +73,15 @@ describe("Suchqualität", () => {
     ["Kugelschreiber", "writing-utensils", "Schreibartikel"],
     ["alte Fotos", "photos", "Fotomaterial"],
     ["Fußball", "sports-ball", "Sportartikel"],
-    ["Kontaktlinsen", "contact-lenses", "kleiner Hygieneartikel"]
+    ["Kontaktlinsen", "contact-lenses", "kleiner Hygieneartikel"],
+    ["Plastikblume", "plastic-household-item", "Kunststoffdeko ohne Verpackungsfunktion"],
+    ["Kunstblumen", "plastic-household-item", "gängiges Synonym im Plural"],
+    ["Plastik Blume", "plastic-household-item", "getrennte Komposita-Schreibweise"],
+    ["Plastikschüssel", "plastic-household-item", "Kunststoff-Haushaltsgegenstand"],
+    ["Kleiderbügel aus Plastik", "plastic-household-item", "weiterer Kunststoff-Haushaltsgegenstand"],
+    ["Plastikspielzeug", "plastic-household-item", "Spielzeug ohne Elektronik"],
+    ["elektronisches Plastikspielzeug", "electrical-device", "Elektronik schlägt Materialroute"],
+    ["Spielzeugauto mit Batterie", "electrical-device", "Batterie schlägt Materialroute"]
   ];
 
   for (const [query, expected, label] of cases) {
@@ -83,7 +91,7 @@ describe("Suchqualität", () => {
   test("mehrdeutiges Glas erzwingt eine Auswahl", () => {
     const results = searchItems(items, "Glas", {
       sourcesById,
-      asOf: new Date("2026-07-30T00:00:00Z")
+      asOf: new Date("2026-08-01T00:00:00Z")
     });
     const ids = results.map(({ item }) => item.id);
     assert.ok(ids.includes("glass-container"));
@@ -92,10 +100,21 @@ describe("Suchqualität", () => {
     assert.equal(isAmbiguous(results), true);
   });
 
+  test("der reine Materialbegriff Plastik trennt Verpackung und Gegenstand", () => {
+    const results = searchItems(items, "Plastik", {
+      sourcesById,
+      asOf: new Date("2026-08-01T00:00:00Z")
+    });
+    const ids = results.map(({ item }) => item.id);
+    assert.ok(ids.includes("plastic-packaging"));
+    assert.ok(ids.includes("plastic-household-item"));
+    assert.equal(isAmbiguous(results), true);
+  });
+
   test("generisches Keyword verdrängt keinen exakten Batterie-Treffer", () => {
     const results = searchItems(items, "Batterie", {
       sourcesById,
-      asOf: new Date("2026-07-30T00:00:00Z")
+      asOf: new Date("2026-08-01T00:00:00Z")
     });
     assert.equal(results[0].item.id, "battery");
     assert.equal(isAmbiguous(results), false);
@@ -104,7 +123,7 @@ describe("Suchqualität", () => {
   test("Autoreifen wird nie als gewöhnlicher Gummi-Restmülltreffer ausgegeben", () => {
     const results = searchItems(items, "alter Autoreifen", {
       sourcesById,
-      asOf: new Date("2026-07-30T00:00:00Z")
+      asOf: new Date("2026-08-01T00:00:00Z")
     });
     assert.equal(results[0].item.id, "car-tire");
     assert.notEqual(results[0].item.id, "rubber-household-item");
@@ -113,7 +132,7 @@ describe("Suchqualität", () => {
   test("Gummiband-Tippfehler bleibt trotz generischem Gummi-Keyword eindeutig", () => {
     const results = searchItems(items, "Gummibnad", {
       sourcesById,
-      asOf: new Date("2026-07-30T00:00:00Z")
+      asOf: new Date("2026-08-01T00:00:00Z")
     });
     assert.equal(results[0].item.id, "rubber-household-item");
     assert.equal(isAmbiguous(results), false);
@@ -131,13 +150,13 @@ describe("Suchqualität", () => {
 describe("Quellenintegrität", () => {
   test("vollständiger Eintrag bleibt sicher", () => {
     const item = items.find((candidate) => candidate.id === "battery");
-    const integrity = validateItemIntegrity(item, sourcesById, new Date("2026-07-30T00:00:00Z"));
+    const integrity = validateItemIntegrity(item, sourcesById, new Date("2026-08-01T00:00:00Z"));
     assert.equal(integrity.valid, true);
   });
 
   test("fehlende Quelle verhindert einen scheinbar sicheren Treffer", () => {
     const item = { ...items[0], sources: ["nicht-vorhanden"] };
-    const integrity = validateItemIntegrity(item, sourcesById, new Date("2026-07-30T00:00:00Z"));
+    const integrity = validateItemIntegrity(item, sourcesById, new Date("2026-08-01T00:00:00Z"));
     assert.equal(integrity.valid, false);
     assert.match(integrity.issues.join(" "), /fehlt/);
     assert.deepEqual(integrity.issueDetails, [
@@ -152,7 +171,7 @@ describe("Quellenintegrität", () => {
       reviewDue: "2026-01-01"
     });
     const item = items.find((candidate) => candidate.id === "paper");
-    const integrity = validateItemIntegrity(item, staleSources, new Date("2026-07-30T00:00:00Z"));
+    const integrity = validateItemIntegrity(item, staleSources, new Date("2026-08-01T00:00:00Z"));
     assert.equal(integrity.valid, false);
     assert.match(integrity.issues.join(" "), /erneuten Prüfung fällig/);
     assert.deepEqual(integrity.issueDetails, [

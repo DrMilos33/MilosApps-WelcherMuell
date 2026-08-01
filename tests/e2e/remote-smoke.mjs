@@ -6,7 +6,7 @@ const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT;
 if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_EXPECTED_SOURCE_COMMIT muss den vollständigen deployten Quellcommit enthalten.");
 }
-const expectedContentVersion = "2026.07.30-2";
+const expectedContentVersion = "2026.08.01-1";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
 if (!configuredUrl) throw new Error("WASTE_GUIDE_REMOTE_URL fehlt.");
 

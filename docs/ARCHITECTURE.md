@@ -47,6 +47,13 @@ verwendet Damerau-Levenshtein-Distanzen für kleine Tippfehler. Niedrige
 Trefferwerte werden verworfen. Nahe Treffer werden als Auswahl gezeigt, statt
 eine Tonne zu raten.
 
+Zusammengesetzte und getrennte Schreibweisen werden zusätzlich ohne Leerzeichen
+verglichen, sodass etwa `Plastikblume` und `Plastik Blume` denselben redaktionell
+geprüften Begriff treffen. Das erweitert nur die Schreibweise; neue fachliche
+Bedeutungen entstehen weiterhin ausschließlich über versionierte Synonyme und
+Einträge. Materialwörter wie `Plastik` bleiben mehrdeutig, wenn Verpackung und
+Nichtverpackung unterschiedliche Wege haben.
+
 Eine konkrete Ergebnis-URL enthält nur die stabile Item-ID, zum Beispiel
 `/?item=battery`. Kurze, unbekannte oder mehrdeutige Zustände entfernen eine
 vorherige Item-ID. Dadurch stimmen sichtbarer Zustand, Reload und
@@ -80,7 +87,7 @@ Port `4318` ist fest. Der Server meldet auf `/healthz`:
   "status": "ok",
   "appKey": "waste-guide",
   "environment": "DEV",
-  "contentVersion": "2026.07.30-2",
+  "contentVersion": "2026.08.01-1",
   "productionApproved": false
 }
 ```

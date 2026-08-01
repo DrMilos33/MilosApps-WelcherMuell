@@ -110,10 +110,12 @@ function fuzzyTokenMatch(queryToken, termToken) {
 
 function scoreItem(item, normalizedQuery) {
   const terms = itemTerms(item);
+  const compactQuery = normalizedQuery.replaceAll(" ", "");
   let best = 0;
   let reason = "";
 
   for (const term of terms) {
+    const compactTerm = term.value.replaceAll(" ", "");
     if (term.value === normalizedQuery) {
       const score = term.kind === "name" ? 140 : term.kind === "alias" ? 132 : 106;
       if (score > best) {
@@ -121,6 +123,14 @@ function scoreItem(item, normalizedQuery) {
         reason = term.kind === "keyword" ? "keyword" : "exact";
       }
       continue;
+    }
+
+    if (compactQuery.length >= 4 && compactTerm === compactQuery) {
+      const score = term.kind === "name" ? 136 : term.kind === "alias" ? 128 : 102;
+      if (score > best) {
+        best = score;
+        reason = "spacing";
+      }
     }
 
     const prefixScore = term.kind === "keyword" ? 88 : 112;

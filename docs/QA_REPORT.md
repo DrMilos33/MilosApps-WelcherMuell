@@ -295,3 +295,58 @@ bestätigte v2.0.3, Grid-/Flexlayout, DE/EN-Ziele von mindestens 44 Pixeln,
 fehlenden horizontalen Überlauf und null Konsolenfehler. Die entsprechende
 Productionroute blieb HTTP 404. Dieser Portalnachweis verändert weder das
 App-Artefakt noch Inhaltsversion oder Quellenreview.
+
+## QA-Erweiterung für Inhaltsversion 2026.08.01-1
+
+### Runde 1: Suchbreite und Informationshierarchie
+
+Der gemeldete Nulltreffer `Plastikblume` wurde zusammen mit Kunstblumen,
+getrennten Komposita, Kunststoffschüsseln, Spielzeug und weiteren typischen
+Haushaltsgegenständen reproduziert. Der neue Eintrag trennt Nichtverpackungen
+von Verpackungen und priorisiert Elektronik beziehungsweise Batterien. Der
+reine Materialbegriff `Plastik` bleibt absichtlich eine Auswahl.
+
+Die Startseite wurde auf 60 rem begrenzt. Die Kontolos-/Standort-Zeile und der
+redundante leere Ergebniszustand entfallen. Titel und Erklärung sind kürzer,
+die Suche bleibt beim Scrollen durch lange Ergebnisse als Sticky-Dock
+erreichbar, und der optionale Verlauf sitzt direkt unter Suche und Beispielen.
+Der bisher getrennte Vertrauens- und Metabereich ist in eine einzige
+eingeklappte Zeile überführt.
+
+Erste Regression:
+
+- 72/72 Unit-, Inhalts-, Such-, Übersetzungs- und Speichertests;
+- 21/21 amtliche oder kommunale URLs technisch erreichbar;
+- 26 Browserprüfungen, davon 14 grün und 12 Folgefehler nach einem veralteten
+  Interaktionsschritt im nun progressiv offengelegten Quellenbereich.
+
+Der erste Browserbericht zeigte keinen Laufzeitdefekt: Die englische Prüfung
+suchte den Quellenknopf im geschlossenen `details`-Element. Dadurch blieb die
+gemeinsam verwendete Desktopseite auf Englisch und erzeugte die folgenden
+Timeouts. Der Test öffnet den Bereich nun wie ein Nutzer. Zusätzlich wurde der
+bereits kompakte Hero noch einmal verkürzt.
+
+### Runde 2: vollständige Regression und visuelle Kontrolle
+
+- 74/74 Unit-, Inhalts-, Quellen-, Such-, DE/EN- und Speichertests;
+- 26/26 Browser-E2E-Prüfungen;
+- neue Suchfälle: `Plastikblume`, `Kunstblumen`, `Plastik Blume`,
+  `Plastikschüssel`, `Kleiderbügel aus Plastik`, `Plastikspielzeug`,
+  elektronisches Plastikspielzeug und Spielzeugauto mit Batterie;
+- 1440 × 900, 390 × 844, Querformat, 640-px-Reflow und 360 × 800 bei
+  200 % Textzoom ohne horizontalen Überlauf;
+- Sticky-Suche nach Scroll bis zum Seitenende weiterhin im Sichtfeld;
+- Tastatur, Fokus, Screenreader-Namen, Live-Status, 44-px-Ziele, Reduced
+  Motion, Dark Mode, Offline, Rücknavigation, Teilen und Drucken grün;
+- Dialoge sichtbar rund und kompakt; keine Konsolenfehler.
+
+Die visuelle Kontrolle der erzeugten Desktop-, Smartphone-, Dark-Mode- und
+200-%-Aufnahmen bestätigte die Informationshierarchie. Ein langes Wort im
+Entsorgungsweg erhielt zusätzlich kontrollierten Umbruch, obwohl die
+Dokumentbreitenmessung bereits grün war.
+
+Die Quellenprüfung bleibt getrennt: Der Online-Check beweist Erreichbarkeit.
+Nur der neue Kunststoff-Nichtverpackungsfall und seine regionalen Overrides
+wurden fachlich am 01.08.2026 anhand von UBA, BSR, Stadtreinigung Hamburg und
+AWM München redaktionell ergänzt. Bestehende Einträge behalten ihre eigenen
+Reviewtermine; die früheste erneute Prüfung bleibt 30.09.2026.

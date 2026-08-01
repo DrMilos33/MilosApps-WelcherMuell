@@ -24,6 +24,7 @@ const elements = {
   input: document.querySelector("#waste-query"),
   status: document.querySelector("#search-status"),
   results: document.querySelector("#results"),
+  resultsSection: document.querySelector("#results-section"),
   resultsTitle: document.querySelector("#results-title"),
   resultKicker: document.querySelector("#result-kicker"),
   reset: document.querySelector("#reset-search"),
@@ -178,11 +179,13 @@ function emptyState({ title, message, kicker, type = "idle", query = "" }) {
   state.currentItemId = null;
   state.view = { type, query };
   elements.resultKicker.textContent = kicker;
+  elements.resultKicker.hidden = false;
   elements.resultsTitle.textContent = title;
   elements.status.textContent = message;
   elements.status.hidden = false;
   elements.results.innerHTML = "";
   elements.reset.hidden = type === "idle";
+  elements.resultsSection.hidden = type === "idle";
 }
 
 function renderIdle() {
@@ -247,9 +250,11 @@ function renderOne(item, options = {}) {
   state.currentItemId = item.id;
   state.view = { type: "item", itemId: item.id };
   elements.resultKicker.textContent = t("resultKicker");
-  elements.resultsTitle.textContent = t("resultTitle", { name: item.name });
+  elements.resultKicker.hidden = true;
+  elements.resultsTitle.textContent = t("resultTitle");
   elements.status.hidden = true;
   elements.reset.hidden = false;
+  elements.resultsSection.hidden = false;
   elements.results.innerHTML = renderItem(item);
   if (options.updateHistory !== false) {
     state.history = addSearchToHistory(state.lastQuery || item.name);
@@ -263,10 +268,12 @@ function renderChoices(items, query) {
   state.currentItemId = null;
   state.view = { type: "choices", query, itemIds: items.map((item) => item.id) };
   elements.resultKicker.textContent = t("ambiguousKicker");
+  elements.resultKicker.hidden = false;
   elements.resultsTitle.textContent = t("ambiguousTitle", { query });
   elements.status.hidden = false;
   elements.status.textContent = t("ambiguousMessage");
   elements.reset.hidden = false;
+  elements.resultsSection.hidden = false;
   elements.results.innerHTML = items.slice(0, 6).map((item) => `<article class="result-card compact"><div><p class="section-kicker">${escapeHtml(item.category)}</p><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.answer)}</p></div><button class="secondary-button" type="button" data-select-item="${escapeHtml(item.id)}" aria-label="${escapeHtml(t("selectAria", { name: item.name }))}">${escapeHtml(t("select"))}</button></article>`).join("");
   state.history = addSearchToHistory(query);
   renderHistory();

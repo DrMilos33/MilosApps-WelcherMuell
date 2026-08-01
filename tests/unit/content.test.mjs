@@ -53,7 +53,8 @@ describe("redaktioneller Datenvertrag", () => {
       "writing-utensils",
       "photos",
       "sports-ball",
-      "contact-lenses"
+      "contact-lenses",
+      "plastic-household-item"
     ]) {
       assert.ok(ids.has(id), `${id} fehlt im Alltagsbestand`);
     }
@@ -123,6 +124,7 @@ describe("Quellen- und Lizenzkatalog", () => {
       "www.bundesgesundheitsministerium.de",
       "www.bsr.de",
       "www.stadtreinigung.hamburg",
+      "files.stadtreinigung.hamburg",
       "www.awm-muenchen.de",
       "www.gesetze-im-internet.de",
       "www.berlin.de",
