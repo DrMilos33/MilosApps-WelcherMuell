@@ -100,8 +100,8 @@ for (const stylesheet of ["milos-app-shell.css", "milos-app-shell-theme.css"]) {
 }
 
 for (const [file, mime] of [
-  ["bootstrap.js", /^text\/javascript(?:;|$)/],
-  ["milos-app-essentials.js", /^text\/javascript(?:;|$)/],
+  ["bootstrap.js", /^(?:text|application)\/javascript(?:;|$)/],
+  ["milos-app-essentials.js", /^(?:text|application)\/javascript(?:;|$)/],
   ["milos-app-essentials.css", /^text\/css(?:;|$)/],
   ["milos-app-essentials-theme.css", /^text\/css(?:;|$)/]
 ]) {

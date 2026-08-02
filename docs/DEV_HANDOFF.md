@@ -18,7 +18,7 @@
 | Portal-DEV-Route | `/apps/waste-guide`, cookie-los öffentlich validiert |
 | Vorschaubild | `/assets/preview.svg`, eigenes Werk dieses Repositorys |
 | Anmeldung | keine |
-| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` vendort; keine Laufzeitabhängigkeit |
+| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` und `public-app-essentials/v1.0.0` vendort; keine Laufzeitabhängigkeit |
 | Production | nicht freigegeben |
 
 Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
@@ -29,14 +29,16 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `373f1163293baf6aed285d82d13d8bf35b280cf5`
-- Quellbaum: `849a77d936c1dad085ac9b6b33ec7dd57b0f55cd`
+  `aedb04669a3ea53d7cae96f3cf3863fb55eb36e1`
+- Quellbaum: `035a5bf16942f990be011196507d75c5daad9e98`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `141231c66f0e6131bc068e2ea5a4d954d32fd32e`
-- GitHub-Pages-Build: Artefaktcommit `141231c`, Status `built`
+  `1387f040bb0d33fec5cbd1586772f403768550f6`
+- GitHub-Pages-Build `1128207700`: Artefaktcommit `1387f04`, Status `built`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
+- Essentials-Pin: `public-app-essentials/v1.0.0`, Shared-Commit
+  `b09e09008ff05fe87f05bc647a7c4964ff13e6f6`, eigener 5er-Lock verifiziert
 - Draft-PR für den Quellbranch:
   `https://github.com/DrMilos33/MilosApps-WelcherMuell/pull/1`
 
@@ -50,7 +52,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"373f1163293baf6aed285d82d13d8bf35b280cf5"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"aedb04669a3ea53d7cae96f3cf3863fb55eb36e1"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -77,6 +79,27 @@ Am 01.08.2026 wurden nach terminalem Pages-Status `built` geprüft:
   horizontaler Überlauf;
 - keine fehlgeschlagenen Ressourcen, Konsolenfehler oder Browserwarnungen.
 
+Nach dem Essentials-Publish wurde die Matrix am 02.08.2026 in einem neuen
+cookie- und speicherlosen Browserkontext für Source `aedb046` und Artefakt
+`1387f04` erneut ausgeführt. Zusätzlich bestätigt sind:
+
+- `public-app-essentials/v1.0.0` auf Shared-Commit `b09e090`, eigener
+  vollständiger 5er-Lock und tatsächliche Web-Component-Registrierung;
+- kompakter abgeschlossener Loader, wahrheitsgemäßer No-Cookies-Hinweis und
+  gemeinsamer Clipboard-Share-Fallback;
+- ein Medikamenten-Payload mit Ergebnis, Entsorgungsweg, amtlicher
+  Quellenattribution und ausschließlich dem kanonischen `?item=medicine`-Link,
+  ohne lokalen Verlauf;
+- genau zwei externe Essentials-CSS-Dateien, keine Inline-Styles oder
+  `data:`-Einbettung; CSS als `text/css` und JavaScript durch GitHub Pages als
+  gültiges `application/javascript` ausgeliefert;
+- No-Login, DE/EN samt Reload sowie 390 × 844 und 360 × 800 bei 200 Prozent
+  Textzoom ohne Überlauf, fehlgeschlagene Ressource oder Konsolenfehler.
+
+Native Freigabe, Clipboard-Fallback und Nutzerabbruch wurden im lokalen
+Browsergate getrennt geprüft. Das Build-Gate verlangt beide CSS-Dateien
+fail-closed als externe Same-Origin-Ressourcen.
+
 Der lokale Browserlauf prüfte dieselbe Runtime zusätzlich mit dem exakten
 Response-Header `style-src 'self'` und ohne Hash, Nonce oder `unsafe-inline`.
 GitHub Pages bietet keinen app-eigenen Response-CSP-Header; der externe Lauf
@@ -88,7 +111,7 @@ Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
-$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="373f1163293baf6aed285d82d13d8bf35b280cf5"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="aedb04669a3ea53d7cae96f3cf3863fb55eb36e1"
 pnpm test:remote:dev
 ```
 
@@ -138,8 +161,8 @@ Reviewtermine bestehender Einträge bleiben eigenständig; die früheste erneute
 Prüfung ist weiterhin am 30.09.2026. Details stehen in
 `SOURCES_AND_LICENSES.md`.
 
-Aktueller gesunder DEV-Artefaktcommit ist `141231c`; direkter Rollbackpunkt ist
-`2f1127f` mit Inhaltsversion `2026.07.30-2`. Der letzte gesunde
+Aktueller gesunder DEV-Artefaktcommit ist `1387f04`; direkter Rollbackpunkt ist
+`141231c` mit derselben Inhaltsversion ohne Essentials-Vertrag. Der letzte gesunde
 vor-v2-Rollbackpunkt bleibt `8e8dfe0`. Der gestoppte v2.0.2-Zwischenstand ist
 kein bezeichneter Rollbackpunkt.
 

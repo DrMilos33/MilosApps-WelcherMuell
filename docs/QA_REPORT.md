@@ -437,3 +437,38 @@ Lokaler Abschluss vor Veröffentlichung:
 Der Online-Quellencheck ist weiterhin nur ein technischer
 Erreichbarkeitsnachweis. Diese Shell-/Interaktionsmigration erneuert keinen
 fachlichen Quellenreview.
+
+GitHub Pages normalisiert die ausgelieferten `.js`-Dateien auf
+`application/javascript; charset=utf-8`; der lokale strikte DEV-Server liefert
+den Vertragswert `text/javascript; charset=utf-8`. Beide JavaScript-MIME-
+Essenzen werden vom Browser als Module ausgeführt. Der externe Smoke akzeptiert
+deshalb beide gültigen Providerformen, verlangt für beide CSS-Dateien weiterhin
+`text/css`, prüft die tatsächliche Modulregistrierung und hält am lokalen
+exakten MIME-Gate fest.
+
+### Externe DEV-Verifikation
+
+Der non-force Quellpush veröffentlichte exakt
+`aedb04669a3ea53d7cae96f3cf3863fb55eb36e1`. Das daraus gebaute
+32-Dateien-Artefakt mit Quellbaum
+`035a5bf16942f990be011196507d75c5daad9e98` wurde als
+`1387f040bb0d33fec5cbd1586772f403768550f6` auf `dev-pages`
+veröffentlicht. Vor dem Push wurden alle in `deployment.json` genannten
+SHA-256-Werte byteweise gegen den tatsächlichen Dateisatz geprüft. GitHub Pages
+Build `1128207700` endete mit Status `built`.
+
+Der frische externe Smoke bestand mit No-Login-Direktaufruf, Healthidentität,
+DE/EN samt Reload, Shell v2.0.3, Essentials v1.0.0, beiden 5er-Locks,
+No-Cookies-Hinweis, Share-Fallback mit Quellenattribution, fehlenden privaten
+Verlaufswerten sowie 390 × 844 und 360 × 800 bei 200 Prozent Textzoom. Es gab
+keine fehlgeschlagenen Ressourcen, Konsolenfehler, Inline-Styles oder
+horizontalen Überlauf.
+
+Die ausgelieferte Health-Antwort lautet:
+
+```json
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"aedb04669a3ea53d7cae96f3cf3863fb55eb36e1"}
+```
+
+Der technische Publish erneuert weder Inhaltsversion noch Reviewtermine,
+Gültigkeitsgebiet, Lizenz oder Attribution der redaktionellen Daten.
