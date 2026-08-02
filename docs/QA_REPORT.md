@@ -472,3 +472,21 @@ Die ausgelieferte Health-Antwort lautet:
 
 Der technische Publish erneuert weder Inhaltsversion noch Reviewtermine,
 Gültigkeitsgebiet, Lizenz oder Attribution der redaktionellen Daten.
+
+## Source-only LF-Regressionsschutz für Essentials
+
+Ein enger Attributvertrag unter `vendor/milosapps-essentials/v1/.gitattributes`
+erzwingt für den gesamten vendorten Essentials-Bestand `text eol=lf`. Der
+Essentials-Pin, die fünf gelockten Laufzeitartefakte, App-Code, Inhaltsversion
+und das veröffentlichte Pages-Artefakt bleiben unverändert.
+
+Der Sync wurde erneut aus exakt Shared-Commit
+`b09e09008ff05fe87f05bc647a7c4964ff13e6f6` ausgeführt. Der vendorte Prüfer
+bestätigte danach alle fünf SHA-256-Werte. Ein zusätzlicher Vertragstest prüft
+die enge `.gitattributes`-Datei und lehnt CRLF in jedem gelockten Artefakt ab.
+Abschließend wird der Commit in einen frischen Windows-Checkout mit aktivem
+`core.autocrlf=true` übernommen und dort erneut bytegenau verifiziert.
+
+Dieser Nachweis ist bewusst source-only: kein Pages-Deploy, keine
+Portalmutation und keine Productionänderung. Er erneuert insbesondere keinen
+redaktionellen Quellenreview.

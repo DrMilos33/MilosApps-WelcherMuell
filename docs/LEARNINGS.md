@@ -1,5 +1,21 @@
 # Welcher-Müll-Erkenntnisse
 
+## 02.08.2026 · bytegenaue Vendor-Locks unter Windows
+
+Ein korrekter SHA-256-Lock genügt nicht, wenn ein späterer Windows-Checkout
+Textdateien durch `core.autocrlf` verändert. Die Zeilenendenregel gehört deshalb
+direkt in das betroffene Vendorverzeichnis: `* text eol=lf` schützt alle
+aktuellen und später hinzukommenden Essentials-Artefakte, ohne das übrige
+Repository global umzuschreiben.
+
+Evidenz: erneuter Sync aus dem unveränderten Shared-Pin, portabler
+Essentials-Validator, Vertragstest für Policy und CRLF-Freiheit sowie frischer
+Windows-Recheckout mit aktivem `core.autocrlf=true`.
+
+Gültigkeitsgrenze: Die Regel schützt ausschließlich den lokal vendorten
+Essentials-v1-Bestand. Sie ändert weder Runtime noch Shared-Pin und ersetzt
+keinen fachlichen App-, Browser- oder Quellenreview.
+
 ## 02.08.2026 · public-app-essentials/v1.0.0
 
 ### Gemeinsame Loader müssen mit der Überschriftenstruktur des Verbrauchers komponieren

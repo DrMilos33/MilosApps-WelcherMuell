@@ -7,6 +7,15 @@ const manifest = JSON.parse(await readFile(new URL("milos-essentials.json", repo
 const indexHtml = await readFile(new URL("index.html", repositoryRoot), "utf8");
 const appSource = await readFile(new URL("src/app.js", repositoryRoot), "utf8");
 const buildSource = await readFile(new URL("scripts/build-github-pages-dev.mjs", repositoryRoot), "utf8");
+const vendorRoot = new URL("vendor/milosapps-essentials/v1/", repositoryRoot);
+const vendorAttributes = await readFile(new URL(".gitattributes", vendorRoot), "utf8");
+const lockedArtifacts = [
+  "bootstrap.js",
+  "milos-app-essentials.css",
+  "milos-app-essentials-theme.css",
+  "milos-app-essentials.js",
+  "verify.mjs"
+];
 
 describe("public-app-essentials/v1", () => {
   test("pinnt den unveränderlichen Shared-Release und die DEV-Grenze", () => {
@@ -60,5 +69,14 @@ describe("public-app-essentials/v1", () => {
     assert.match(buildSource, /missingEssentialsArtifacts/);
     assert.match(buildSource, /href=\["'\]data:text\\\/css/);
     assert.match(buildSource, /Gebautes HTML muss .* externe Same-Origin-Datei laden/);
+  });
+
+  test("erzwingt LF für alle bytegenau gelockten Vendor-Dateien", async () => {
+    assert.equal(vendorAttributes, "* text eol=lf\n");
+
+    for (const artifact of lockedArtifacts) {
+      const content = await readFile(new URL(artifact, vendorRoot), "utf8");
+      assert.doesNotMatch(content, /\r\n/, `${artifact} enthält CRLF statt LF`);
+    }
   });
 });
