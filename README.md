@@ -14,6 +14,9 @@ Nutzerdatenbank sind nicht nötig.
 - Plattformen: Web, Smartphone/PWA und Desktop
 - sichtbare Fachoberfläche: vollständig Deutsch und Englisch
 - öffentlicher App-Rahmen: lokal vendortes `public-app-shell/v2.0.3`
+- gemeinsame öffentliche Interaktionen: lokal vendortes
+  `public-app-essentials/v1.0.0` für kompakten Start, ehrlichen
+  Datenschutzhinweis und Teilen
 - Production: nicht freigegeben
 
 Der unabhängige öffentliche DEV-Stand ist ohne Portal und ohne Login erreichbar:
@@ -60,6 +63,7 @@ und einen app-spezifischen Healthcheck aus.
 ```powershell
 pnpm test
 pnpm test:shell
+pnpm test:essentials
 pnpm test:e2e
 pnpm test:sources:online
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
@@ -70,10 +74,12 @@ pnpm test:remote:dev
 pnpm test:all
 ```
 
-`test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler und lokale
-Speicherung. `test:shell` prüft Manifest, Vendor-Hashes und Lock mit dem
-portablen Shared-Validator. `test:e2e` nutzt ein lokal installiertes Chrome oder Edge auf Port
-4318. `test:sources:online` ruft alle katalogisierten amtlichen Quellen live ab.
+`test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler, lokale
+Speicherung und die app-spezifische Essentials-Konfiguration. `test:shell` und
+`test:essentials` prüfen Manifest, Vendor-Hashes und Lock mit den portablen
+Shared-Validatoren. `test:e2e` nutzt ein lokal installiertes Chrome oder Edge
+auf Port 4318. `test:sources:online` ruft alle katalogisierten amtlichen Quellen
+live ab.
 Screenshots aus E2E-Läufen landen ignoriert unter `test-results/qa/`.
 Der Remote-Smoke prüft die echte HTTPS-URL in einem frischen Browserkontext
 ohne Cookies, Portalzustand oder Milos-Login.
@@ -90,6 +96,8 @@ ohne Cookies, Portalzustand oder Milos-Login.
 - `src/storage.js`: datensparsame, optionale lokale Speicherung
 - `milos-app.json` und `vendor/milosapps-shell/v2/`: exakt gepinnter,
   lokal ausführbarer App-Rahmen ohne CDN oder Runtimeimport
+- `milos-essentials.json` und `vendor/milosapps-essentials/v1/`: exakt
+  gepinnte lokale Loader-, Datenschutz- und Teilen-Runtime mit 5er-Lock
 - `meta.json`: Portal- und DEV-Metadaten
 
 Fehlt eine Quelle oder ist ihre erneute Prüfung fällig, wird der betroffene

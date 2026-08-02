@@ -41,6 +41,15 @@ per `shell-lock.json` verifizierten Dateien. Der 5er-Lock umfasst Komponente,
 Komponenten-CSS, Bootstrap, app-spezifische Theme-CSS und Validator. Shared
 oder ein CDN werden zur Laufzeit nicht benötigt.
 
+Zusätzlich gehören `milos-essentials.json` und die lokal vendorten Dateien aus
+`vendor/milosapps-essentials/v1/` zum Artefakt. Deren eigener 5er-Lock umfasst
+Runtime, Runtime-CSS, Bootstrap, app-spezifische Theme-CSS und Validator. Der
+Builder bricht ab, wenn eines dieser Artefakte fehlt, wenn die beiden CSS-Links
+im gebauten HTML nicht jeweils genau einmal extern erhalten bleiben oder wenn
+eine `data:`-Einbettung auftaucht. Der feste Vertrag ist
+`public-app-essentials/v1.0.0` auf Shared-Commit
+`b09e09008ff05fe87f05bc647a7c4964ff13e6f6`.
+
 `dist/` bleibt ein ignoriertes Buildartefakt und wird nicht in den Quellbranch
 eingecheckt.
 

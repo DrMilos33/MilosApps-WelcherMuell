@@ -37,11 +37,23 @@ if (sourceCommit !== expectedSourceCommit) {
 
 const sourceTree = git(["show", "-s", "--format=%T", sourceCommit], { encoding: "utf8" }).trim();
 const deployablePrefixes = ["assets/", "public/", "src/", "vendor/"];
-const deployableRootFiles = new Set(["index.html", "manifest.webmanifest", "meta.json", "milos-app.json", "sw.js"]);
+const deployableRootFiles = new Set(["index.html", "manifest.webmanifest", "meta.json", "milos-app.json", "milos-essentials.json", "sw.js"]);
 const sourcePaths = git(["ls-tree", "-r", "--name-only", sourceCommit], { encoding: "utf8" })
   .split(/\r?\n/)
   .filter(Boolean)
   .filter((path) => deployableRootFiles.has(path) || deployablePrefixes.some((prefix) => path.startsWith(prefix)));
+const requiredEssentialsArtifacts = [
+  "milos-essentials.json",
+  "vendor/milosapps-essentials/v1/bootstrap.js",
+  "vendor/milosapps-essentials/v1/milos-app-essentials.js",
+  "vendor/milosapps-essentials/v1/milos-app-essentials.css",
+  "vendor/milosapps-essentials/v1/milos-app-essentials-theme.css",
+  "vendor/milosapps-essentials/v1/essentials-lock.json"
+];
+const missingEssentialsArtifacts = requiredEssentialsArtifacts.filter((path) => !sourcePaths.includes(path));
+if (missingEssentialsArtifacts.length > 0) {
+  throw new Error(`Essentials-Artefakte fehlen im Quellcommit: ${missingEssentialsArtifacts.join(", ")}`);
+}
 
 await rm(outputRoot, { recursive: true, force: true });
 await mkdir(outputRoot, { recursive: true });
@@ -63,6 +75,16 @@ for (const [from, to] of [
   ['src="/src/app.js"', `src="${basePath}/src/app.js"`]
 ]) {
   indexHtml = indexHtml.replaceAll(from, to);
+}
+for (const stylesheet of ["milos-app-essentials.css", "milos-app-essentials-theme.css"]) {
+  const expectedHref = `./vendor/milosapps-essentials/v1/${stylesheet}`;
+  const matches = indexHtml.match(new RegExp(`href=["']${expectedHref.replaceAll(".", "\\.")}["']`, "g")) ?? [];
+  if (matches.length !== 1) {
+    throw new Error(`Gebautes HTML muss ${stylesheet} exakt einmal als externe Same-Origin-Datei laden.`);
+  }
+}
+if (/href=["']data:text\/css/i.test(indexHtml) || /src=["']data:/i.test(indexHtml)) {
+  throw new Error("Gebautes HTML darf Essentials-Artefakte nicht als data:-URL einbetten.");
 }
 await writeFile(indexPath, indexHtml, "utf8");
 

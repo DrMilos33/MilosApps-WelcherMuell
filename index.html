@@ -8,10 +8,21 @@
     <meta name="color-scheme" content="light dark">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./vendor/milosapps-essentials/v1/milos-app-essentials.css">
+    <link rel="stylesheet" href="./vendor/milosapps-essentials/v1/milos-app-essentials-theme.css">
     <link rel="stylesheet" href="./src/styles.css">
     <title>Welcher Müll? – MilosApps</title>
   </head>
-  <body>
+  <body data-milos-essentials-loading>
+    <section data-milos-app-loading role="status" aria-live="polite">
+      <div data-milos-loading-card>
+        <img data-milos-loading-icon src="./assets/icon.svg" width="52" height="52" alt="">
+        <span data-milos-loading-brand>MilosApps</span>
+        <p data-milos-loading-title>Welcher Müll?</p>
+        <p data-milos-loading-message>Entsorgungshinweise werden vorbereitet …</p>
+        <span data-milos-loading-progress aria-hidden="true"></span>
+      </div>
+    </section>
     <milos-app-shell>
       <svg slot="app-icon" viewBox="0 0 48 48" role="img" aria-label="Welcher Müll?">
         <rect width="48" height="48" rx="14" fill="#163d36" />
@@ -150,6 +161,7 @@
         <noscript><div class="noscript" data-i18n="noscript">Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.</div></noscript>
       </main>
     </milos-app-shell>
+    <script type="module" src="./vendor/milosapps-essentials/v1/bootstrap.js"></script>
     <script type="module" src="./vendor/milosapps-shell/v2/bootstrap.js"></script>
     <script type="module" src="./src/app.js"></script>
   </body>

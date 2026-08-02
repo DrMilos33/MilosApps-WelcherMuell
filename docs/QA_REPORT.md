@@ -384,3 +384,56 @@ Portal & Identity bestätigte anschließend read-only am aktiven Portal-DEV-Stan
 der bestehenden Route lieferten HTTP 302 exakt auf die App-URL; App und Health
 lieferten HTTP 200 mit Inhaltsversion `2026.08.01-1` und Source `373f116`.
 Die Productionroute blieb HTTP 404. Es erfolgte keine Portalmutation.
+
+## QA-Erweiterung für public-app-essentials/v1.0.0
+
+Die Migration übernimmt ausschließlich den festen Shared-Commit
+`b09e09008ff05fe87f05bc647a7c4964ff13e6f6`. Loader,
+No-Cookies-Datenschutzhinweis und Teilen sind aktiv; Datum und allgemeine
+Ortssuche bleiben ausgeschaltet. Die optionale Entsorgungsregion, Inhaltsversion
+`2026.08.01-1`, Geltungsgebiet, Lizenzen und redaktionelle Reviewtermine wurden
+nicht verändert.
+
+### Verbesserungsrunde 1: Vertragskomposition und Interaktionspfade
+
+Der erste Shared-Validatorlauf fand eine zweite Dokumentüberschrift: Der
+Loader-Beispieltitel war als `h1` eingebunden, während der Shell-Vertrag genau
+eine Fach-`h1` verlangt. Da `data-milos-loading-title` tag-agnostisch ist,
+verwendet die App nun einen Absatz. Beide Validatoren sind damit gleichzeitig
+grün.
+
+Die vorhandene Browsermatrix erreichte zunächst 24 von 26 Prüfungen. Die beiden
+Fehler waren erwartbar veraltete Selektoren für den früheren app-eigenen
+„Hinweis teilen“-Knopf. Die Regression wurde auf den gemeinsamen
+`<milos-share-button>` umgestellt und um native Freigabe, Clipboard-Fallback,
+Nutzerabbruch, Quellenattribution und die private Verlaufsgrenze erweitert.
+
+### Verbesserungsrunde 2: lokale Löschwahrheit und visuelle QA
+
+Die zweite Produktprüfung fand eine Konsistenzlücke: „Lokale Angaben löschen“
+entfernte Region und Verlauf, aber noch nicht den lokalen Komfortwert für den
+geschlossenen Datenschutzhinweis. Dieser Schlüssel wird nun ebenfalls entfernt;
+beim nächsten Start erscheint der Hinweis wieder. Die Kernsuche bleibt auch bei
+gesperrtem Speicher unverändert nutzbar.
+
+Visuell geprüft wurden der 56-Pixel-Desktop- und 48-Pixel-Mobil-Loader, der
+kompakte gerundete Datenschutzhinweis, Dark Mode, Desktop 1440 × 900,
+Smartphone 390 × 844, Querformat und 360 × 800 bei 200 Prozent Textzoom. Der
+Loader endet ausschließlich mit `milosapps:ready`; beide CSS-Dateien bleiben
+externe Same-Origin-Ressourcen unter strikter `style-src 'self'`-CSP.
+
+Lokaler Abschluss vor Veröffentlichung:
+
+- public-app-shell- und public-app-essentials-Validator samt beiden 5er-Locks:
+  PASS;
+- 78/78 Unit-, Inhalts-, Quellen-, Such-, Übersetzungs-, Speicher- und
+  Essentials-Prüfungen;
+- 29/29 Browser-E2E-Prüfungen;
+- 21/21 amtliche oder kommunale Quellen technisch erreichbar;
+- DE/EN samt Reload, Tastatur, sichtbarer Fokus, 44-Pixel-Ziele, Reduced
+  Motion, Offline und No-Login grün;
+- null Browser-, Konsolen- oder CSP-Fehler und kein horizontaler Überlauf.
+
+Der Online-Quellencheck ist weiterhin nur ein technischer
+Erreichbarkeitsnachweis. Diese Shell-/Interaktionsmigration erneuert keinen
+fachlichen Quellenreview.

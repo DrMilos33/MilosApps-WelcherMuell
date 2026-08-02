@@ -179,6 +179,18 @@ try {
       assert.equal(response.status, 200);
       assert.equal(response.headers.get("content-type"), "text/css; charset=utf-8");
     }
+
+    for (const [file, mime] of [
+      ["bootstrap.js", "text/javascript; charset=utf-8"],
+      ["milos-app-essentials.js", "text/javascript; charset=utf-8"],
+      ["milos-app-essentials.css", "text/css; charset=utf-8"],
+      ["milos-app-essentials-theme.css", "text/css; charset=utf-8"],
+      ["essentials-lock.json", "application/json; charset=utf-8"]
+    ]) {
+      const response = await fetch(`${baseUrl}/vendor/milosapps-essentials/v1/${file}`);
+      assert.equal(response.status, 200, file);
+      assert.equal(response.headers.get("content-type"), mime, file);
+    }
   });
 
   const desktop = await browser.newContext({
@@ -217,6 +229,31 @@ try {
       path: fileURLToPath(new URL("desktop-result.png", artifacts)),
       fullPage: true
     });
+  });
+
+  await check("Desktop: wahrheitsgemäßer Datenschutzhinweis bleibt kompakt", async () => {
+    const notice = desktopPage.getByRole("region", { name: "Datenschutz & Cookies" });
+    await notice.waitFor();
+    await notice.getByText(/Keine Werbe- oder Tracking-Cookies/).waitFor();
+    assert.equal(await notice.getByRole("link", { name: "Datenschutz" }).getAttribute("href"), "https://dev.milos-apps.de/datenschutz");
+    const geometry = await notice.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      const dismiss = element.querySelector("[data-milos-privacy-dismiss]").getBoundingClientRect();
+      return {
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        radius: Number.parseFloat(getComputedStyle(element).borderTopLeftRadius),
+        dismissWidth: Math.round(dismiss.width),
+        dismissHeight: Math.round(dismiss.height)
+      };
+    });
+    assert.ok(geometry.width <= 736 && geometry.height <= 180, JSON.stringify(geometry));
+    assert.ok(geometry.radius >= 12, JSON.stringify(geometry));
+    assert.ok(geometry.dismissWidth >= 44 && geometry.dismissHeight >= 44, JSON.stringify(geometry));
+    assert.deepEqual(await desktop.cookies(), []);
+    await notice.getByRole("button", { name: "Verstanden" }).click();
+    await desktopPage.reload({ waitUntil: "networkidle" });
+    assert.equal(await desktopPage.locator("[data-milos-privacy-notice]").count(), 0);
   });
 
   await check("Desktop: v2-Shell, vollständiges Englisch und Reload-Persistenz", async () => {
@@ -260,12 +297,18 @@ try {
     const englishButton = shell.getByRole("button", { name: "EN", exact: true });
     await englishButton.click();
     await desktopPage.locator("html[lang='en']").waitFor();
+    await desktopPage.evaluate(() => localStorage.removeItem("milosapps.waste-guide.privacyNotice.v1"));
+    await desktopPage.reload({ waitUntil: "networkidle" });
+    const englishPrivacy = desktopPage.getByRole("region", { name: "Privacy & cookies" });
+    await englishPrivacy.getByText(/No advertising or tracking cookies/).waitFor();
+    await englishPrivacy.getByRole("button", { name: "Got it" }).click();
     await desktopPage.getByRole("heading", { name: "Waste guide", level: 1 }).waitFor();
     assert.equal(await desktopPage.getByLabel("Item or material").getAttribute("placeholder"), "e.g. rubber band, battery, pizza box");
     await submitSearch(desktopPage, "rubber band");
     await desktopPage.getByRole("heading", { name: "Rubber item", exact: true }).waitFor();
     await desktopPage.getByText("Small items: residual waste · large items and tires: check locally", { exact: true }).waitFor();
     await desktopPage.getByText(/Car and motorcycle tires do not belong/).waitFor();
+    assert.equal(await desktopPage.getByRole("button", { name: "Share", exact: true }).count(), 1);
     await desktopPage.getByRole("button", { name: "Region & privacy" }).click();
     await desktopPage.getByRole("dialog", { name: "Region & local data" }).waitFor();
     assert.equal(await desktopPage.getByLabel("Broad region").locator("option").first().textContent(), "Germany — general guidance");
@@ -398,6 +441,14 @@ try {
     assert.equal(await desktopPage.getByLabel("Letzte Suchen merken").isChecked(), false);
     assert.equal(await desktopPage.getByRole("heading", { name: "Zuletzt gesucht" }).count(), 0);
     await desktopPage.getByRole("button", { name: "Einstellungen schließen" }).click();
+    assert.equal(
+      await desktopPage.evaluate(() => localStorage.getItem("milosapps.waste-guide.privacyNotice.v1")),
+      null
+    );
+    await desktopPage.reload({ waitUntil: "networkidle" });
+    const resetPrivacy = desktopPage.getByRole("region", { name: "Datenschutz & Cookies" });
+    await resetPrivacy.waitFor();
+    await resetPrivacy.getByRole("button", { name: "Verstanden" }).click();
   });
 
   await check("Desktop: schnelle Rücknavigation stellt Ergebnisse wieder her", async () => {
@@ -411,15 +462,43 @@ try {
     await desktopPage.getByRole("heading", { name: "Alte Medikamente", exact: true }).waitFor();
   });
 
-  await check("Desktop: Teilen und Drucken enthalten keinen Suchverlauf", async () => {
-    await desktopPage.getByRole("button", { name: "Hinweis teilen" }).click();
-    await assert.doesNotReject(() => desktopPage.getByText("Hinweis und Link kopiert.").waitFor());
+  await check("Desktop: Teilen-Fallback und Drucken enthalten keinen Suchverlauf", async () => {
+    await desktopPage.getByRole("button", { name: "Teilen", exact: true }).click();
+    await assert.doesNotReject(() => desktopPage.getByText("Link kopiert", { exact: true }).waitFor());
     const copied = await desktopPage.evaluate(() => window.__copiedText);
     assert.match(copied, /Alte Medikamente/);
     assert.match(copied, /\?item=medicine/);
+    assert.match(copied, /Quelle:/);
     assert.doesNotMatch(copied, /Joghurtbecher/);
     await desktopPage.getByRole("button", { name: "Drucken" }).click();
     assert.equal(await desktopPage.evaluate(() => window.__printCalled), true);
+  });
+
+  await check("Desktop: natives Teilen und Abbruch bleiben sichere Nutzeraktionen", async () => {
+    await desktopPage.evaluate(() => {
+      Object.defineProperty(navigator, "share", {
+        value: async (payload) => { window.__sharedPayload = payload; },
+        configurable: true
+      });
+    });
+    await desktopPage.getByRole("button", { name: "Teilen", exact: true }).click();
+    await desktopPage.getByText("Geteilt", { exact: true }).waitFor();
+    const payload = await desktopPage.evaluate(() => window.__sharedPayload);
+    assert.match(payload.text, /Alte Medikamente/);
+    assert.match(payload.text, /Quelle:/);
+    assert.match(payload.url, /\?item=medicine$/);
+    assert.doesNotMatch(JSON.stringify(payload), /Joghurtbecher/);
+
+    await desktopPage.evaluate(() => {
+      Object.defineProperty(navigator, "share", {
+        value: async () => { throw new DOMException("Abgebrochen", "AbortError"); },
+        configurable: true
+      });
+    });
+    const button = desktopPage.getByRole("button", { name: "Teilen", exact: true });
+    await button.click();
+    assert.equal(await button.isEnabled(), true);
+    assert.equal(await desktopPage.locator("[data-milos-share-status]").textContent(), "");
   });
 
   await check("Desktop: Tastatur und Dialog-Fokus", async () => {
@@ -518,6 +597,44 @@ try {
   });
   const mobilePage = await mobile.newPage();
   const mobileErrors = collectPageErrors(mobilePage);
+
+  await check("Smartphone: Datenschutzhinweis reflowt und ist per Touch schließbar", async () => {
+    await mobilePage.route(`${baseUrl}/public/data/**`, async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      await route.continue();
+    });
+    await mobilePage.goto(baseUrl, { waitUntil: "domcontentloaded" });
+    const loader = mobilePage.locator("[data-milos-app-loading]");
+    const loadingIcon = await loader.locator("[data-milos-loading-icon]").boundingBox();
+    assert.ok(loadingIcon.width <= 48 && loadingIcon.height <= 48, JSON.stringify(loadingIcon));
+    await mobilePage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
+    await loader.waitFor({ state: "hidden" });
+    await mobilePage.unroute(`${baseUrl}/public/data/**`);
+    const notice = mobilePage.getByRole("region", { name: "Datenschutz & Cookies" });
+    await notice.waitFor();
+    const geometry = await notice.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      const button = element.querySelector("[data-milos-privacy-dismiss]").getBoundingClientRect();
+      return {
+        left: Math.round(rect.left),
+        right: Math.round(rect.right),
+        bottom: Math.round(rect.bottom),
+        viewportWidth: innerWidth,
+        viewportHeight: innerHeight,
+        buttonWidth: Math.round(button.width),
+        buttonHeight: Math.round(button.height),
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+      };
+    });
+    assert.ok(geometry.left >= 0 && geometry.right <= geometry.viewportWidth && geometry.bottom <= geometry.viewportHeight, JSON.stringify(geometry));
+    assert.ok(geometry.buttonWidth >= 44 && geometry.buttonHeight >= 44, JSON.stringify(geometry));
+    assert.ok(geometry.overflow <= 1, JSON.stringify(geometry));
+    await mobilePage.screenshot({
+      path: fileURLToPath(new URL("phone-privacy.png", artifacts)),
+      fullPage: true
+    });
+    await notice.getByRole("button", { name: "Verstanden" }).tap();
+  });
 
   await check("Smartphone: Einstellungen bleiben kompakt und schließen per Escape", async () => {
     await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
@@ -718,7 +835,7 @@ try {
     await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
     await submitSearch(mobilePage, "LED Lampe");
     await mobilePage.getByRole("heading", { name: "LED- oder Energiesparlampe", exact: true }).waitFor();
-    assert.ok(await mobilePage.getByRole("button", { name: "Hinweis teilen" }).isVisible());
+    assert.ok(await mobilePage.getByRole("button", { name: "Teilen", exact: true }).isVisible());
     const overflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     assert.ok(overflow <= 1, `Querformat-Überlauf: ${overflow}px`);
   });
@@ -768,14 +885,32 @@ try {
 
   const slow = await browser.newContext({ viewport: { width: 1024, height: 768 } });
   const slowPage = await slow.newPage();
-  await slowPage.route(`${baseUrl}/**`, async (route) => {
-    await new Promise((resolve) => setTimeout(resolve, 180));
+  await slowPage.route(`${baseUrl}/public/data/**`, async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 700));
     await route.continue();
   });
 
-  await check("Langsames Netz: Lade- und Suchzustand bleiben verständlich", async () => {
-    await slowPage.goto(baseUrl, { waitUntil: "networkidle" });
+  await check("Langsames Netz: kompakter Loader bleibt bis zur Fachbereitschaft sichtbar", async () => {
+    await slowPage.goto(baseUrl, { waitUntil: "domcontentloaded" });
+    const loader = slowPage.locator("[data-milos-app-loading]");
+    await loader.waitFor();
+    const geometry = await loader.evaluate((element) => {
+      const icon = element.querySelector("[data-milos-loading-icon]").getBoundingClientRect();
+      const card = element.querySelector("[data-milos-loading-card]").getBoundingClientRect();
+      return {
+        iconWidth: Math.round(icon.width),
+        iconHeight: Math.round(icon.height),
+        cardWidth: Math.round(card.width),
+        cardHeight: Math.round(card.height),
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
+      };
+    });
+    assert.ok(geometry.iconWidth <= 56 && geometry.iconHeight <= 56, JSON.stringify(geometry));
+    assert.ok(geometry.cardWidth <= 320 && geometry.cardHeight <= 220, JSON.stringify(geometry));
+    assert.ok(geometry.overflow <= 1, JSON.stringify(geometry));
+    await slowPage.screenshot({ path: fileURLToPath(new URL("startup-slow.png", artifacts)) });
     await slowPage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
+    await loader.waitFor({ state: "hidden" });
     await submitSearch(slowPage, "Spraydose");
     await slowPage.getByRole("heading", { name: "Spraydose", exact: true }).waitFor();
   });

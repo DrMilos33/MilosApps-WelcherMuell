@@ -66,10 +66,48 @@ assert.deepEqual(
   ["bootstrap.js", "milos-app-shell-theme.css", "milos-app-shell.css", "milos-app-shell.js", "verify.mjs"]
 );
 
+const essentialsManifestResponse = await fetch(new URL("milos-essentials.json", baseUrl), { redirect: "error" });
+assert.equal(essentialsManifestResponse.status, 200);
+const essentialsManifest = await essentialsManifestResponse.json();
+assert.equal(essentialsManifest.essentialsContract?.version, "1.0.0");
+assert.equal(essentialsManifest.essentialsContract?.sharedCommit, "b09e09008ff05fe87f05bc647a7c4964ff13e6f6");
+assert.deepEqual(essentialsManifest.features, {
+  startup: true,
+  privacyNotice: true,
+  share: true,
+  datePicker: false,
+  placeSearch: false
+});
+assert.equal(essentialsManifest.privacy?.mode, "no-cookies");
+assert.equal(essentialsManifest.privacy?.usesLocalStorage, true);
+assert.equal(essentialsManifest.privacy?.optionalTracking, false);
+assert.equal(essentialsManifest.productionApproved, false);
+
+const essentialsLockResponse = await fetch(new URL("vendor/milosapps-essentials/v1/essentials-lock.json", baseUrl), { redirect: "error" });
+assert.equal(essentialsLockResponse.status, 200);
+const essentialsLock = await essentialsLockResponse.json();
+assert.equal(essentialsLock.version, "1.0.0");
+assert.equal(essentialsLock.sharedCommit, essentialsManifest.essentialsContract.sharedCommit);
+assert.deepEqual(
+  Object.keys(essentialsLock.artifacts).sort(),
+  ["bootstrap.js", "milos-app-essentials-theme.css", "milos-app-essentials.css", "milos-app-essentials.js", "verify.mjs"]
+);
+
 for (const stylesheet of ["milos-app-shell.css", "milos-app-shell-theme.css"]) {
   const response = await fetch(new URL(`vendor/milosapps-shell/v2/${stylesheet}`, baseUrl), { redirect: "error" });
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/css(?:;|$)/);
+}
+
+for (const [file, mime] of [
+  ["bootstrap.js", /^text\/javascript(?:;|$)/],
+  ["milos-app-essentials.js", /^text\/javascript(?:;|$)/],
+  ["milos-app-essentials.css", /^text\/css(?:;|$)/],
+  ["milos-app-essentials-theme.css", /^text\/css(?:;|$)/]
+]) {
+  const response = await fetch(new URL(`vendor/milosapps-essentials/v1/${file}`, baseUrl), { redirect: "error" });
+  assert.equal(response.status, 200, file);
+  assert.match(response.headers.get("content-type") ?? "", mime, file);
 }
 
 const chromeCandidates = [
@@ -88,6 +126,17 @@ const context = await browser.newContext({
   hasTouch: true,
   storageState: { cookies: [], origins: [] }
 });
+await context.addInitScript(() => {
+  Object.defineProperty(navigator, "share", { value: undefined, configurable: true });
+  Object.defineProperty(navigator, "clipboard", {
+    value: {
+      async writeText(value) {
+        window.__copiedText = value;
+      }
+    },
+    configurable: true
+  });
+});
 const page = await context.newPage();
 const consoleErrors = [];
 const failedResponses = [];
@@ -105,6 +154,27 @@ try {
   await page.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
   assert.equal(await page.getByRole("search").count(), 1);
   assert.equal(await page.getByText(/Anmelden|Login|Milos-Konto/i).count(), 0);
+  assert.deepEqual(await context.cookies(), []);
+  const privacyNotice = page.getByRole("region", { name: "Datenschutz & Cookies" });
+  await privacyNotice.getByText(/Keine Werbe- oder Tracking-Cookies/).waitFor();
+  await privacyNotice.getByRole("button", { name: "Verstanden" }).click();
+  assert.equal(await page.locator("[data-milos-app-loading]").isHidden(), true);
+  assert.equal(await page.locator("milos-date-picker, milos-place-search").count(), 0);
+  const essentialsRuntime = await page.evaluate(() => ({
+    version: globalThis.milosAppEssentials?.version,
+    shareRegistered: Boolean(customElements.get("milos-share-button")),
+    cssHrefs: [...document.querySelectorAll('link[rel="stylesheet"]')]
+      .map((link) => link.href)
+      .filter((href) => href.includes("milosapps-essentials/v1/")),
+    inlineStyles: document.querySelectorAll('style, [style]').length
+  }));
+  assert.equal(essentialsRuntime.version, "1.0.0");
+  assert.equal(essentialsRuntime.shareRegistered, true);
+  assert.deepEqual(essentialsRuntime.cssHrefs.sort(), [
+    new URL("vendor/milosapps-essentials/v1/milos-app-essentials-theme.css", baseUrl).toString(),
+    new URL("vendor/milosapps-essentials/v1/milos-app-essentials.css", baseUrl).toString()
+  ].sort());
+  assert.equal(essentialsRuntime.inlineStyles, 0);
   const shell = page.locator("milos-app-shell");
   await shell.waitFor();
   const shellRuntime = await shell.evaluate((element) => {
@@ -136,6 +206,12 @@ try {
   await page.getByRole("button", { name: "Suchen" }).click();
   await page.getByRole("heading", { name: "Alte Medikamente", exact: true }).waitFor();
   await page.getByText("Örtlich prüfen").waitFor();
+  await page.getByRole("button", { name: "Teilen", exact: true }).click();
+  await page.getByText("Link kopiert", { exact: true }).waitFor();
+  const copied = await page.evaluate(() => window.__copiedText);
+  assert.match(copied, /Alte Medikamente/);
+  assert.match(copied, /Quelle:/);
+  assert.match(copied, /\?item=medicine/);
 
   await page.getByRole("button", { name: "Neue Suche" }).click();
   await page.getByLabel("Gegenstand oder Material").fill("GUmmiband");
@@ -199,5 +275,9 @@ console.log(JSON.stringify({
   directWithoutLogin: true,
   portalIndependent: true,
   shellVersion: shellLock.version,
+  essentialsVersion: essentialsLock.version,
+  essentialsSharedCommit: essentialsLock.sharedCommit,
+  privacyNotice: "no-cookies",
+  shareFallback: true,
   textZoom200: true
 }, null, 2));

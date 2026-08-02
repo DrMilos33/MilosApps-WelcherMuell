@@ -19,6 +19,14 @@
   --radius-sm: 0.8rem;
   --focus: #0078d4;
   --max-width: 60rem;
+  --milos-essential-accent: #163d36;
+  --milos-essential-accent-contrast: #ffffff;
+  --milos-essential-surface: #fffdf8;
+  --milos-essential-surface-soft: #f4f1e8;
+  --milos-essential-text: #112d29;
+  --milos-essential-muted: #596864;
+  --milos-essential-border: #c8cec9;
+  --milos-essential-focus: #0078d4;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -41,6 +49,14 @@
     --danger-ink: #ffc7b8;
     --shadow: 0 18px 50px rgb(0 0 0 / 25%);
     --focus: #7fc4ff;
+    --milos-essential-accent: #d9f781;
+    --milos-essential-accent-contrast: #10211d;
+    --milos-essential-surface: #112a26;
+    --milos-essential-surface-soft: #17332e;
+    --milos-essential-text: #f4f5e9;
+    --milos-essential-muted: #b8c8c2;
+    --milos-essential-border: #46615b;
+    --milos-essential-focus: #7fc4ff;
   }
 
   milos-app-shell {
@@ -646,6 +662,7 @@ h3 {
 
 .result-actions {
   display: flex;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 0.6rem;
   padding-top: 1rem;
@@ -653,6 +670,10 @@ h3 {
 
 .result-actions button {
   min-height: 3rem;
+}
+
+.result-actions milos-share-button {
+  min-width: 7rem;
 }
 
 .trust-section summary {

@@ -41,6 +41,13 @@
       "sharedCommit": "ed898412306e22c6ae1b10ee8953df29f8acd627",
       "vendored": true,
       "runtimeImport": false
+    },
+    {
+      "id": "public-app-essentials/v1",
+      "version": "1.0.0",
+      "sharedCommit": "b09e09008ff05fe87f05bc647a7c4964ff13e6f6",
+      "vendored": true,
+      "runtimeImport": false
     }
   ]
 }

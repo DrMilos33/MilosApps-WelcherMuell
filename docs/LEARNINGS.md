@@ -1,5 +1,53 @@
 # Welcher-Müll-Erkenntnisse
 
+## 02.08.2026 · public-app-essentials/v1.0.0
+
+### Gemeinsame Loader müssen mit der Überschriftenstruktur des Verbrauchers komponieren
+
+Der neue Loader war visuell korrekt, erzeugte mit einem beispielhaften `h1`
+aber eine zweite Dokumentüberschrift und fiel dadurch durch den bestehenden
+Shell-Validator. Der Datenmarker `data-milos-loading-title` ist tag-agnostisch;
+ein Absatz erhält dieselbe Darstellung, ohne die Fachhierarchie zu verändern.
+Ein Verbraucher-Build prüft deshalb beide Verträge gemeinsam und verlangt
+weiterhin exakt eine Dokument-`h1`.
+
+Evidenz: beide portable Shared-Validatoren PASS, 78/78 Unit-/Vertragstests und
+29/29 Browserprüfungen.
+
+Gültigkeitsgrenze: Das ist eine Integrationsregel für Apps, deren eigentliche
+Oberfläche bereits eine primäre Überschrift besitzt. Der Loader darf trotzdem
+einen zugänglichen Status und sichtbaren App-Namen behalten.
+
+### „Lokale Angaben löschen“ muss auch Komfortzustände gemeinsamer Bausteine kennen
+
+Ein Datenschutzhinweis erzeugt keine Einwilligung, speichert aber optional
+seinen geschlossenen Zustand. Wird dieser Wert bei einer app-eigenen
+„alles lokal löschen“-Aktion vergessen, ist die sichtbare Löschzusage falsch.
+Waste Guide entfernt deshalb Region, Verlauf und den app-namensräumigen
+Hinweiszustand gemeinsam; Sprachpräferenz und fachlicher Inhalt bleiben davon
+getrennte Verträge.
+
+Evidenz: E2E löscht die Werte, lädt neu und erwartet den No-Cookies-Hinweis
+erneut. Gesperrter `localStorage` bleibt durch bestehende Speichertests
+abgedeckt.
+
+Gültigkeitsgrenze: Der exakte Schlüsselsatz ist app- und vertragsversioniert;
+andere Verbraucher dürfen ihn nicht unbesehen kopieren.
+
+### Einheitliches Teilen braucht app-eigene Fachzusammenfassung
+
+Der gemeinsame Baustein vereinheitlicht nur Bedienung, native Freigabe,
+Clipboard-Fallback und Abbruch. Der App-Payload bleibt fachlich: Name,
+Entsorgungsweg, redaktioneller Stand, eine Quellenattribution und der kanonische
+`?item=`-Deep-Link. Lokaler Verlauf und Region werden nicht ungefragt geteilt.
+
+Evidenz: native, Clipboard- und Abort-Regressionspfade in der Browsermatrix;
+Payload-Prüfung gegen frühere Suchbegriffe.
+
+Gültigkeitsgrenze: Die erste verknüpfte Primärquelle ist eine knappe
+Attribution, keine vollständige Quellenliste. Vollständige Gültigkeit bleibt in
+der Ergebnisansicht und den redaktionellen Daten.
+
 ## 01.08.2026 · Inhaltsversion 2026.08.01-1
 
 ### Materialsuche braucht eine fachliche Verzweigung, nicht nur mehr Fuzzy

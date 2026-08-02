@@ -1,10 +1,11 @@
-const CACHE_NAME = "waste-guide-2026-08-01-search-ui-r1";
+const CACHE_NAME = "waste-guide-2026-08-01-essentials-r1";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/manifest.webmanifest",
   "/meta.json",
   "/milos-app.json",
+  "/milos-essentials.json",
   "/assets/icon.svg",
   "/assets/preview.svg",
   "/src/styles.css",
@@ -17,6 +18,11 @@ const APP_SHELL = [
   "/vendor/milosapps-shell/v2/milos-app-shell.css",
   "/vendor/milosapps-shell/v2/milos-app-shell-theme.css",
   "/vendor/milosapps-shell/v2/shell-lock.json",
+  "/vendor/milosapps-essentials/v1/bootstrap.js",
+  "/vendor/milosapps-essentials/v1/milos-app-essentials.js",
+  "/vendor/milosapps-essentials/v1/milos-app-essentials.css",
+  "/vendor/milosapps-essentials/v1/milos-app-essentials-theme.css",
+  "/vendor/milosapps-essentials/v1/essentials-lock.json",
   "/public/data/waste-items.v1.json",
   "/public/data/sources.v1.json",
   "/public/data/regions.v1.json",

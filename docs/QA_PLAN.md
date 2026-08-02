@@ -28,13 +28,17 @@ Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
    - app-spezifische Readiness auf dem festen Port 4318;
    - Desktop, Smartphone Hoch-/Querformat, Tastatur und semantische Namen;
    - v2-Shell, vollständiges DE/EN und Reload-Persistenz;
+   - kompakter CSS-first-Startzustand bis zur fachlichen Bereitschaft;
+   - wahrheitsgemäßer No-Cookies-Hinweis, Schließen und lokale Persistenz;
    - 360 × 800 bei echtem 200%-Textzoom, zusätzliches Reflow-Äquivalent,
      Dark Mode, langsames Netz und Konsolenfehler;
    - Reduced Motion, 44-px-Ziele und kein Leerraum unter dem Shell-Footer;
    - schnelle Rück-/Vorwärtsnavigation, Direkt-URL, Offline nach Erstaufruf;
-   - Teilen-Fallback und Druckaufruf ohne gespeicherten Suchverlauf.
+   - Teilen nativ, Clipboard-Fallback und Abbruch ohne gespeicherten
+     Suchverlauf; kanonischer Ergebnislink und Quellenattribution;
+   - Druckaufruf ohne gespeicherten Suchverlauf.
 5. Online-Quellencheck
-   - HTTPS-Erreichbarkeit aller 20 katalogisierten Primärquellen;
+   - HTTPS-Erreichbarkeit aller 21 katalogisierten Primärquellen;
    - ein Netzwerkfehler wird wiederholt und als externer Befund dokumentiert;
    - 4xx, dauerhafte Umleitung oder inhaltliche Änderung erzwingen eine
      redaktionelle Prüfung.
