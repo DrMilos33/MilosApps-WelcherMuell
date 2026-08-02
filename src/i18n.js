@@ -119,6 +119,7 @@ export const UI_MESSAGES = Object.freeze({
     unclear: "Unklar",
     shareText:
       "{{name}}: {{answer}} Empfohlener Weg: {{route}}. Stand {{date}}.",
+    shareSource: "Quelle: {{publisher}} – {{title}}.",
     shareTitle: "Welcher Müll? – {{name}}",
     shareOpened: "Teilen geöffnet.",
     shareCopied: "Hinweis und Link kopiert.",
@@ -261,6 +262,7 @@ export const UI_MESSAGES = Object.freeze({
     unclear: "Unclear",
     shareText:
       "{{name}}: {{answer}} Recommended route: {{route}}. Reviewed {{date}}.",
+    shareSource: "Source: {{publisher}} — {{title}}.",
     shareTitle: "Waste guide – {{name}}",
     shareOpened: "Share dialog opened.",
     shareCopied: "Guidance and link copied.",

@@ -19,6 +19,8 @@ const DATA_PATHS = {
   locale: new URL("../public/data/locales/en.v1.json", import.meta.url)
 };
 
+const PRIVACY_NOTICE_STORAGE_KEY = "milosapps.waste-guide.privacyNotice.v1";
+
 const elements = {
   form: document.querySelector("#search-form"),
   input: document.querySelector("#waste-query"),
@@ -139,6 +141,14 @@ function updateConnectivity() {
   elements.offline.hidden = navigator.onLine;
 }
 
+function clearPrivacyNoticeState() {
+  try {
+    localStorage.removeItem(PRIVACY_NOTICE_STORAGE_KEY);
+  } catch {
+    // Lokale Speicherung ist optional; die Kernfunktion bleibt nutzbar.
+  }
+}
+
 function setSettingsOpen(open) {
   if (open && !elements.settings.open) {
     elements.settings.showModal();
@@ -241,9 +251,38 @@ function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesB
       </div>
       <div class="result-details">
         <details><summary>${escapeHtml(t("sourcesAndValidity", { count: sources.length }))}</summary><ul class="source-list">${sources.map(renderSource).join("")}</ul><p><strong>${escapeHtml(t("editorialStatus", { reviewed: formatDate(item.reviewedAt), reviewDue: formatDate(item.reviewDue) }))}</strong></p></details>
-        <div class="result-actions"><button class="secondary-button" type="button" data-share="${escapeHtml(item.id)}">${escapeHtml(t("shareHint"))}</button><button class="secondary-button" type="button" data-print="${escapeHtml(item.id)}">${escapeHtml(t("print"))}</button></div>
+        <div class="result-actions"><milos-share-button data-share-item="${escapeHtml(item.id)}"></milos-share-button><button class="secondary-button" type="button" data-print="${escapeHtml(item.id)}">${escapeHtml(t("print"))}</button></div>
       </div>
     </article>`;
+}
+
+function sharePayload(item) {
+  const url = new URL(window.location.href);
+  url.search = "";
+  url.searchParams.set("item", item.id);
+  const route = effectiveRoute(item);
+  const source = sourceList(item, route)[0];
+  const summary = t("shareText", {
+    name: item.name,
+    answer: item.answer,
+    route: route.label,
+    date: formatDate(item.reviewedAt)
+  });
+  const attribution = source
+    ? t("shareSource", { publisher: source.publisher, title: source.title })
+    : "";
+  return {
+    title: t("shareTitle", { name: item.name }),
+    text: [summary, attribution].filter(Boolean).join(" "),
+    url: url.toString()
+  };
+}
+
+function configureShareButtons() {
+  elements.results.querySelectorAll("milos-share-button[data-share-item]").forEach((button) => {
+    const item = state.items.find((candidate) => candidate.id === button.dataset.shareItem);
+    if (item) button.setPayloadProvider(() => sharePayload(item));
+  });
 }
 
 function renderOne(item, options = {}) {
@@ -256,6 +295,7 @@ function renderOne(item, options = {}) {
   elements.reset.hidden = false;
   elements.resultsSection.hidden = false;
   elements.results.innerHTML = renderItem(item);
+  configureShareButtons();
   if (options.updateHistory !== false) {
     state.history = addSearchToHistory(state.lastQuery || item.name);
     renderHistory();
@@ -313,24 +353,6 @@ function resetSearch({ updateUrl: shouldUpdateUrl = true, focus = true } = {}) {
   renderIdle();
   if (shouldUpdateUrl) updateUrl(null);
   if (focus) elements.input.focus();
-}
-
-async function shareItem(item) {
-  const url = new URL(window.location.href);
-  url.search = "";
-  url.searchParams.set("item", item.id);
-  const text = t("shareText", { name: item.name, answer: item.answer, route: effectiveRoute(item).label, date: formatDate(item.reviewedAt) });
-  try {
-    if (navigator.share) {
-      await navigator.share({ title: t("shareTitle", { name: item.name }), text, url: url.toString() });
-      showToast(t("shareOpened"));
-      return;
-    }
-    await navigator.clipboard.writeText(`${text}\n${url}`);
-    showToast(t("shareCopied"));
-  } catch (error) {
-    if (error?.name !== "AbortError") showToast(t("shareUnavailable"));
-  }
 }
 
 function renderAbout() {
@@ -403,12 +425,6 @@ function bindEvents() {
       if (item) renderOne(item);
       return;
     }
-    const share = event.target.closest("[data-share]");
-    if (share) {
-      const item = state.items.find((candidate) => candidate.id === share.dataset.share);
-      if (item) void shareItem(item);
-      return;
-    }
     if (event.target.closest("[data-print]")) window.print();
   });
   elements.reset.addEventListener("click", () => resetSearch());
@@ -437,6 +453,7 @@ function bindEvents() {
   });
   elements.clearData.addEventListener("click", () => {
     clearLocalData();
+    clearPrivacyNoticeState();
     state.selectedRegion = "de";
     state.remember = false;
     state.history = [];
@@ -510,6 +527,8 @@ async function initialize() {
     console.error(error);
     emptyState({ title: t("dataErrorTitle"), message: t("dataErrorMessage"), kicker: t("dataErrorKicker"), type: "error" });
   }
+
+  document.dispatchEvent(new CustomEvent("milosapps:ready"));
 
   if ("serviceWorker" in navigator) {
     try {
