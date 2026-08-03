@@ -1,0 +1,84 @@
+{
+  "$schema": "https://milos-apps.de/schemas/app-change-handoff.schema.json",
+  "campaignId": "public-app-ux-refinement-2026-08",
+  "appKey": "waste-guide",
+  "repository": "DrMilos33/MilosApps-WelcherMuell",
+  "ownerTask": "MilosApps – Welcher Müll?",
+  "status": "dev-verified",
+  "sourceSha": "eab33ee0dd788d37394c63ccd8a40d45c13dcdbb",
+  "contract": {
+    "id": "public-app-essentials/v1",
+    "version": "1.1.2",
+    "sharedCommit": "b14aac6107b75f03ff49e74160af7e7e30c29e59",
+    "lockVerified": true
+  },
+  "tests": {
+    "commands": [
+      "pnpm test:shell",
+      "pnpm test:essentials",
+      "node --test tests/unit/*.test.mjs (79/79)",
+      "node tests/e2e/run.mjs (29/29)",
+      "node scripts/check-sources.mjs (21/21 technisch erreichbar)",
+      "core.autocrlf=true fresh worktree + vendored verify.mjs",
+      "node tests/e2e/remote-smoke.mjs (extern PASS)"
+    ],
+    "shellValidator": true,
+    "desktop": true,
+    "mobile": true,
+    "zoom200": true,
+    "deEnPersistence": true,
+    "accessibility": true
+  },
+  "dev": {
+    "url": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
+    "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
+    "artifactSha": "83de25132465053d177f43698ff32302fe77618c",
+    "externalQa": true
+  },
+  "portal": {
+    "route": "/apps/waste-guide",
+    "integrationRequested": true
+  },
+  "iterationEvidence": [
+    {
+      "round": 1,
+      "findings": [
+        "Der permanente Datenschutzlink lag zunächst im eingeklappten Vertrauensbereich.",
+        "Der optionale Verlaufs- und Regionszustand war für seinen Nutzen zu prominent und nicht notwendig."
+      ],
+      "changes": [
+        "Datenschutz und App-Metadaten wurden als kompakte, immer erreichbare Zeile platziert.",
+        "Verlauf wurde entfernt, Region auf die Sitzung begrenzt und Sprache in die sichtbare URL verlegt."
+      ],
+      "tests": [
+        "79/79 Unit-/Vertragstests",
+        "27/29 Browserfälle vor Korrektur, danach Regression ergänzt"
+      ],
+      "outcome": "Der Datenschutzweg blieb dauerhaft sichtbar und die optionale Oberfläche wurde deutlich kompakter."
+    },
+    {
+      "round": 2,
+      "findings": [
+        "Ein zu breiter Shell-Locator behandelte zwei korrekte Datenschutzlinks als Duplikat.",
+        "Die Shell-Registrierung konnte ohne explizite Importkante bei Top-Level-Await hängen."
+      ],
+      "changes": [
+        "Die Regression wurde semantisch auf den Shell-Footer begrenzt.",
+        "Der Shell-Bootstrap wurde zur expliziten Modulabhängigkeit und der URL-Sprachadapter race-sicher verbunden."
+      ],
+      "tests": [
+        "29/29 lokale Browser-E2E",
+        "externer No-Login-/Storage-/Reflow-Smoke PASS"
+      ],
+      "outcome": "Genau eine Shell und H1, stabiler Loaderabschluss, keine Storage-Aufrufe und keine Browserfehler."
+    }
+  ],
+  "rollback": "Source eab33ee durch aedb04669a3ea53d7cae96f3cf3863fb55eb36e1 und dev-pages 83de251 durch den letzten gesunden Artefaktcommit 1387f040bb0d33fec5cbd1586772f403768550f6 ersetzen; danach Pages built, Health und Remote-Smoke erneut prüfen.",
+  "learnings": [
+    "Eine Sofortantwort muss Gegenstand und Entsorgungsweg vor Begründung, Grenzen und Quellen zeigen.",
+    "Dokumentreihenfolge ersetzt bei Top-Level-Await keine explizite Modulabhängigkeit.",
+    "Physischer Assetpfad und öffentliche Runtime-URL brauchen getrennte Felder sowie HTTP-MIME- und Hashnachweis.",
+    "Technischer Quellen-Erreichbarkeitscheck ist kein redaktioneller Review."
+  ],
+  "productionApproved": false
+}

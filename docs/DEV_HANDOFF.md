@@ -18,7 +18,7 @@
 | Portal-DEV-Route | `/apps/waste-guide`, cookie-los öffentlich validiert |
 | Vorschaubild | `/assets/preview.svg`, eigenes Werk dieses Repositorys |
 | Anmeldung | keine |
-| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` und `public-app-essentials/v1.0.0` vendort; keine Laufzeitabhängigkeit |
+| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` und `public-app-essentials/v1.1.2` vendort; keine Laufzeitabhängigkeit |
 | Production | nicht freigegeben |
 
 Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
@@ -29,16 +29,16 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `aedb04669a3ea53d7cae96f3cf3863fb55eb36e1`
-- Quellbaum: `035a5bf16942f990be011196507d75c5daad9e98`
+  `eab33ee0dd788d37394c63ccd8a40d45c13dcdbb`
+- Quellbaum: `9486db220f480564dbf66522d422e819fffddfd0`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `1387f040bb0d33fec5cbd1586772f403768550f6`
-- GitHub-Pages-Build `1128207700`: Artefaktcommit `1387f04`, Status `built`
+  `83de25132465053d177f43698ff32302fe77618c`
+- GitHub-Pages-Build `1129388909`: Artefaktcommit `83de251`, Status `built`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
-- Essentials-Pin: `public-app-essentials/v1.0.0`, Shared-Commit
-  `b09e09008ff05fe87f05bc647a7c4964ff13e6f6`, eigener 5er-Lock verifiziert
+- Essentials-Pin: `public-app-essentials/v1.1.2`, Shared-Commit
+  `b14aac6107b75f03ff49e74160af7e7e30c29e59`, eigener 6er-Lock verifiziert
 - Draft-PR für den Quellbranch:
   `https://github.com/DrMilos33/MilosApps-WelcherMuell/pull/1`
 
@@ -52,7 +52,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"aedb04669a3ea53d7cae96f3cf3863fb55eb36e1"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"eab33ee0dd788d37394c63ccd8a40d45c13dcdbb"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -107,11 +107,24 @@ prüfte deshalb die CSP-sichere Distributionsform, beide CSS-URLs, fehlende
 Inline-Styles und das tatsächlich berechnete Layout. Deployment-Evidenz und
 redaktioneller Quellenreview bleiben getrennt.
 
+Am 03.08.2026 wurde der aktuelle Sofortantwort-/Datenschutzstand aus Source
+`eab33ee0dd788d37394c63ccd8a40d45c13dcdbb` und Artefakt
+`83de25132465053d177f43698ff32302fe77618c` erneut extern geprüft. Bestätigt
+sind `public-app-essentials/v1.1.2` mit Shared-Pin `b14aac6`, der vollständige
+6er-Lock, ein dauerhaft sichtbarer Datenschutzlink ohne Banner, null
+Web-Storage-Aufrufe, explizites Offline, DE/EN über die URL sowie die direkt
+sichtbare Gummiband-Antwort. Das Loader-Icon antwortete mit HTTP 200 und
+`image/svg+xml`; sein SHA-256-Wert
+`d315cb0fd21d4c98aac50cefd7857e231aa30f7d5f1d01ce76cfab5834e709d1`
+war identisch zur Source. 390 × 844 und 360 × 800 bei 200 Prozent Textzoom
+blieben ohne horizontalen Überlauf, fehlgeschlagene Ressource oder
+Konsolenfehler.
+
 Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
-$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="aedb04669a3ea53d7cae96f3cf3863fb55eb36e1"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="eab33ee0dd788d37394c63ccd8a40d45c13dcdbb"
 pnpm test:remote:dev
 ```
 
@@ -161,8 +174,8 @@ Reviewtermine bestehender Einträge bleiben eigenständig; die früheste erneute
 Prüfung ist weiterhin am 30.09.2026. Details stehen in
 `SOURCES_AND_LICENSES.md`.
 
-Aktueller gesunder DEV-Artefaktcommit ist `1387f04`; direkter Rollbackpunkt ist
-`141231c` mit derselben Inhaltsversion ohne Essentials-Vertrag. Der letzte gesunde
+Aktueller gesunder DEV-Artefaktcommit ist `83de251`; direkter Rollbackpunkt ist
+`1387f04` mit derselben Inhaltsversion und dem vorherigen Essentials-Vertrag. Der letzte gesunde
 vor-v2-Rollbackpunkt bleibt `8e8dfe0`. Der gestoppte v2.0.2-Zwischenstand ist
 kein bezeichneter Rollbackpunkt.
 

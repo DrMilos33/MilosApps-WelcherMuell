@@ -6,11 +6,12 @@ Der DEV-Stand wurde nach dem ersten lauffähigen Meilenstein in zwei getrennten
 Miteinander-Product-QA-Runden geprüft und verbessert. Der abschließende Stand
 erreichte:
 
-- 61 von 61 Unit-, Inhalts-, Quellen-, Such- und Speichertests;
-- 22 von 22 Browser-E2E-Prüfungen;
-- 20 von 20 erreichbare amtliche Quellen;
+- 79 von 79 Unit-, Inhalts-, Quellen-, Such-, Speicher- und Vertragstests;
+- 29 von 29 Browser-E2E-Prüfungen;
+- 21 von 21 technisch erreichbare amtliche oder kommunale Quellen;
 - keine Konsolenfehler in Desktop- und Smartphone-Kontexten;
-- keinen horizontalen Überlauf bei 390 px, 640 px und 1440 px Breite.
+- keinen horizontalen Überlauf bei 390 px, 640 px und 1440 px Breite sowie
+  360 × 800 bei 200 Prozent Textzoom.
 
 ## Ausgangslage
 
@@ -574,3 +575,30 @@ genau eine Shell, genau eine H1, den ausgeblendeten Loader und null Logs.
 Inhaltsversion, Quellenbestand und redaktionelle Reviewtermine bleiben
 unverändert; diese Matrix bestätigt die technische Migration und den
 Produktzustand, nicht einen neuen Quellenreview.
+
+### Externe DEV-Verifikation
+
+Der non-force Quellpush veröffentlichte exakt
+`eab33ee0dd788d37394c63ccd8a40d45c13dcdbb`. Das daraus gebaute Artefakt mit
+Quellbaum `9486db220f480564dbf66522d422e819fffddfd0` wurde als
+`83de25132465053d177f43698ff32302fe77618c` auf `dev-pages` veröffentlicht.
+GitHub Pages Build `1129388909` endete am 03.08.2026 mit Status `built`.
+
+Der frische externe Browserlauf bestand mit leerem Cookie-/Storagezustand,
+No-Login-Direktaufruf, exakter Healthidentität, Gummiband-Sofortantwort,
+Medikamenten-Sicherheitsfall, Teilen mit Quelle, DE/EN samt URL-Reload,
+explizitem Offline, 390 × 844 sowie 360 × 800 bei 200 Prozent Textzoom. Das
+Loader-Icon antwortete mit HTTP 200 und `image/svg+xml`; sein SHA-256-Wert
+`d315cb0fd21d4c98aac50cefd7857e231aa30f7d5f1d01ce76cfab5834e709d1`
+stimmte bytegenau mit der Quelle überein. Beide Essentials-CSS-Dateien und
+alle Module kamen extern von derselben Origin. Es gab keine Inline-Styles,
+fehlgeschlagenen Ressourcen, Konsolenfehler oder horizontalen Überläufe.
+
+Die ausgelieferte Health-Antwort lautet:
+
+```json
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"eab33ee0dd788d37394c63ccd8a40d45c13dcdbb"}
+```
+
+Dieser technische Publish erneuert weder die Inhaltsversion noch Quellen-
+Reviewtermine, Gültigkeitsgebiet, Lizenz oder Attribution.

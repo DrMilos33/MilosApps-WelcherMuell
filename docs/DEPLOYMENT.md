@@ -7,13 +7,13 @@
 - URL: `https://drmilos33.github.io/MilosApps-WelcherMuell/`
 - Health: `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz`
 - Repository: `DrMilos33/MilosApps-WelcherMuell`
-- Quellcommit: `aedb04669a3ea53d7cae96f3cf3863fb55eb36e1`
+- Quellcommit: `eab33ee0dd788d37394c63ccd8a40d45c13dcdbb`
 - Inhaltsversion: `2026.08.01-1`
 - Artefaktbranch: `dev-pages`
 - gesunder Artefaktcommit:
-  `1387f040bb0d33fec5cbd1586772f403768550f6`
-- Pages-Build: `1128207700`, Artefaktcommit `1387f04`, Status `built` am
-  02.08.2026
+  `83de25132465053d177f43698ff32302fe77618c`
+- Pages-Build: `1129388909`, Artefaktcommit `83de251`, Status `built` am
+  03.08.2026
 - Shell: vendortes `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`
 - Production-Freigabe: `false`
@@ -74,8 +74,8 @@ Vor einer Aktualisierung gelten zwingend:
 ## Rollback
 
 Aktuelle gesunde DEV-Revision ist
-`1387f040bb0d33fec5cbd1586772f403768550f6`. Der direkte vorherige gesunde
-Rollbackpunkt ist `141231c66f0e6131bc068e2ea5a4d954d32fd32e`; der letzte gesunde vor-v2-Punkt ist
+`83de25132465053d177f43698ff32302fe77618c`. Der direkte vorherige gesunde
+Rollbackpunkt ist `1387f040bb0d33fec5cbd1586772f403768550f6`; der letzte gesunde vor-v2-Punkt ist
 `8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`.
 
 Rollback bedeutet ausschließlich, den Remote-Ref `dev-pages` auf einen zuvor
