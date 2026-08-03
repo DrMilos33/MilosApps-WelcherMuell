@@ -5,7 +5,7 @@
   "repository": "DrMilos33/MilosApps-WelcherMuell",
   "ownerTask": "MilosApps – Welcher Müll?",
   "status": "dev-verified",
-  "sourceSha": "eab33ee0dd788d37394c63ccd8a40d45c13dcdbb",
+  "sourceSha": "f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5",
   "contract": {
     "id": "public-app-essentials/v1",
     "version": "1.1.2",
@@ -32,7 +32,7 @@
   "dev": {
     "url": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
     "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-    "artifactSha": "83de25132465053d177f43698ff32302fe77618c",
+    "artifactSha": "6075041b44acbd734530ea665a0c51d9961bfa40",
     "externalQa": true
   },
   "portal": {
@@ -71,11 +71,28 @@
         "externer No-Login-/Storage-/Reflow-Smoke PASS"
       ],
       "outcome": "Genau eine Shell und H1, stabiler Loaderabschluss, keine Storage-Aufrufe und keine Browserfehler."
+    },
+    {
+      "round": 3,
+      "findings": [
+        "Der Gummiband-Kopf wiederholte örtlich prüfen als eigene Statuszeile.",
+        "Eine erste Hervorhebung markierte bei örtliche Wertstoffsammlung nur das einzelne Adjektiv."
+      ],
+      "changes": [
+        "Hilfslabels und doppelte Statuszeile wurden entfernt; der Geltungssatz steht bei den Details.",
+        "Vollständige wichtige Entsorgungswege werden DE/EN textgeführt hervorgehoben."
+      ],
+      "tests": [
+        "79/79 lokale Unit-/Fachtests und 29/29 Browser-E2E",
+        "externer Gummiband-/No-Login-/DE-EN-/Reflow-Smoke PASS"
+      ],
+      "outcome": "Die Sofortantwort ist ruhiger und zeigt Restmüll sowie örtlich prüfen rechts deutlich, ohne Sicherheitsinformation zu verlieren."
     }
   ],
-  "rollback": "Source eab33ee durch aedb04669a3ea53d7cae96f3cf3863fb55eb36e1 und dev-pages 83de251 durch den letzten gesunden Artefaktcommit 1387f040bb0d33fec5cbd1586772f403768550f6 ersetzen; danach Pages built, Health und Remote-Smoke erneut prüfen.",
+  "rollback": "Source f6837bb durch eab33ee0dd788d37394c63ccd8a40d45c13dcdbb und dev-pages 6075041 durch den letzten gesunden Artefaktcommit 83de25132465053d177f43698ff32302fe77618c ersetzen; danach Pages built, Health und Remote-Smoke erneut prüfen.",
   "learnings": [
     "Eine Sofortantwort muss Gegenstand und Entsorgungsweg vor Begründung, Grenzen und Quellen zeigen.",
+    "Ein Entsorgungsweg darf einen bereits enthaltenen lokalen Prüfhinweis nicht als separates Badge wiederholen.",
     "Dokumentreihenfolge ersetzt bei Top-Level-Await keine explizite Modulabhängigkeit.",
     "Physischer Assetpfad und öffentliche Runtime-URL brauchen getrennte Felder sowie HTTP-MIME- und Hashnachweis.",
     "Technischer Quellen-Erreichbarkeitscheck ist kein redaktioneller Review."

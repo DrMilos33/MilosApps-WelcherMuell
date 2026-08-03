@@ -29,12 +29,12 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `eab33ee0dd788d37394c63ccd8a40d45c13dcdbb`
-- Quellbaum: `9486db220f480564dbf66522d422e819fffddfd0`
+  `f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5`
+- Quellbaum: `0dc6d0e2b2b29c8a4ace95bc6081d9ceea074755`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `83de25132465053d177f43698ff32302fe77618c`
-- GitHub-Pages-Build `1129388909`: Artefaktcommit `83de251`, Status `built`
+  `6075041b44acbd734530ea665a0c51d9961bfa40`
+- GitHub-Pages-Build `1129645835`: Artefaktcommit `6075041`, Status `built`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
 - Essentials-Pin: `public-app-essentials/v1.1.2`, Shared-Commit
@@ -52,7 +52,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"eab33ee0dd788d37394c63ccd8a40d45c13dcdbb"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -120,11 +120,20 @@ war identisch zur Source. 390 × 844 und 360 × 800 bei 200 Prozent Textzoom
 blieben ohne horizontalen Überlauf, fehlgeschlagene Ressource oder
 Konsolenfehler.
 
+Der anschließende Ergebnis-Kopf-Patch wurde aus Source `f6837bb` als
+`6075041` veröffentlicht. Der externe Browser bestätigte rechts am Gummiband
+exakt die zwei hervorgehobenen Begriffe `Restmüll` und `örtlich prüfen`, keine
+doppelte Hilfs- oder Statuszeile sowie weiterhin vollständiges DE/EN,
+No-Login, speicherfreien Start, explizites Offline und 360 × 800 bei
+200 Prozent Textzoom. GitHub Pages Build `1129645835` und Actions-Run
+`30793628420` waren erfolgreich. Fachinhalte und Inhaltsversion blieben
+unverändert.
+
 Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
-$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="eab33ee0dd788d37394c63ccd8a40d45c13dcdbb"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5"
 pnpm test:remote:dev
 ```
 
@@ -174,8 +183,8 @@ Reviewtermine bestehender Einträge bleiben eigenständig; die früheste erneute
 Prüfung ist weiterhin am 30.09.2026. Details stehen in
 `SOURCES_AND_LICENSES.md`.
 
-Aktueller gesunder DEV-Artefaktcommit ist `83de251`; direkter Rollbackpunkt ist
-`1387f04` mit derselben Inhaltsversion und dem vorherigen Essentials-Vertrag. Der letzte gesunde
+Aktueller gesunder DEV-Artefaktcommit ist `6075041`; direkter Rollbackpunkt ist
+`83de251` mit derselben Inhaltsversion und dem vorherigen Ergebnis-Kopf. Der letzte gesunde
 vor-v2-Rollbackpunkt bleibt `8e8dfe0`. Der gestoppte v2.0.2-Zwischenstand ist
 kein bezeichneter Rollbackpunkt.
 

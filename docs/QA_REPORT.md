@@ -637,3 +637,15 @@ DE/EN, Offline, Tastatur, Fokus, Touchziele und null Konsolenfehler blieben
 grün. Der explizite Offline-Cache erhielt eine neue technische Kennung, damit
 kein alter Ergebnis-Kopf weiter ausgeliefert wird. Inhaltsversion
 `2026.08.01-1`, Daten, Quellen, Lizenzen und Reviewtermine bleiben unverändert.
+
+### Externe DEV-Verifikation
+
+Source `f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5` wurde als Artefakt
+`6075041b44acbd734530ea665a0c51d9961bfa40` veröffentlicht. GitHub Pages
+Build `1129645835` endete mit `built`; Actions-Run `30793628420` war
+erfolgreich. Ein frischer Browserkontext ohne Cookies oder Web Storage
+bestätigte die kompakte Gummiband-Sofortantwort mit exakt den zwei
+hervorgehobenen Begriffen `Restmüll` und `örtlich prüfen`, null doppelten
+Hilfs-/Statuszeilen, vollständiges DE/EN, explizites Offline und 200-Prozent-
+Reflow. Health antwortete mit HTTP 200 und exakt dem neuen Source-SHA; es gab
+keine fehlgeschlagenen Ressourcen, Konsolenfehler oder Überläufe.

@@ -254,7 +254,11 @@ try {
   await page.getByLabel("Gegenstand oder Material").fill("GUmmiband");
   await page.getByRole("button", { name: "Suchen" }).click();
   await page.getByRole("heading", { name: "Gummiband", exact: true }).waitFor();
-  await page.getByText("Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen", { exact: true }).waitFor();
+  const rubberDestination = page.locator(".result-destination");
+  await rubberDestination.waitFor();
+  assert.match((await rubberDestination.textContent()) ?? "", /Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen/);
+  assert.equal(await page.locator(".result-immediate .result-label, .result-immediate .result-certainty").count(), 0);
+  assert.deepEqual(await rubberDestination.locator(".route-keyword").allTextContents(), ["Restmüll", "örtlich prüfen"]);
 
   await shell.getByRole("button", { name: "EN", exact: true }).click();
   await page.locator("html[lang='en']").waitFor();
@@ -329,5 +333,6 @@ console.log(JSON.stringify({
   webStorage: false,
   offlineOptIn: true,
   shareFallback: true,
+  compactResultHeader: true,
   textZoom200: true
 }, null, 2));
