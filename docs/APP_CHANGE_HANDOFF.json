@@ -5,11 +5,11 @@
   "repository": "DrMilos33/MilosApps-WelcherMuell",
   "ownerTask": "MilosApps – Welcher Müll?",
   "status": "dev-verified",
-  "sourceSha": "be6b4c95e7d612441b85d2a59c3553300a04ed01",
+  "sourceSha": "c7af103d60141fc7335ccb52771d1f4f9f14f8e8",
   "contract": {
     "id": "public-app-essentials/v1",
-    "version": "1.1.2",
-    "sharedCommit": "b14aac6107b75f03ff49e74160af7e7e30c29e59",
+    "version": "1.1.3",
+    "sharedCommit": "babe74a0e62e1a7f9095648195e54b322a837726",
     "lockVerified": true
   },
   "tests": {
@@ -21,7 +21,9 @@
       "node scripts/check-sources.mjs (22/22 technisch erreichbar)",
       "core.autocrlf=true fresh worktree + vendored verify.mjs",
       "node tests/e2e/remote-smoke.mjs (extern PASS)",
-      "gezielter externer Suchlauf für Ölgemälde, Ölgemäde, Kinderriegel, Schokolade, Plastik, Karten und unbekannte Eingabe (PASS)"
+      "gezielter externer Suchlauf für Ölgemälde, Ölgemäde, Kinderriegel, Schokolade, Plastik, Karten und unbekannte Eingabe (PASS)",
+      "langsamer externer 390-x-844-Start: Loader sichtbar exakt 32 x 32 px, clientWidth=scrollWidth=390, null Cookies und Konsolenfehler",
+      "externer Plastik-Ergebniszustand bei 360 x 800 und 200 Prozent: clientWidth=scrollWidth=360, Loader computed/max 32 px"
     ],
     "shellValidator": true,
     "desktop": true,
@@ -33,7 +35,7 @@
   "dev": {
     "url": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
     "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-    "artifactSha": "163dec7620b04b4f5b861b2c4c548f1f1630f65b",
+    "artifactSha": "9c4959ad259c7374ffcfda7c97a9a74229584d06",
     "externalQa": true
   },
   "portal": {
@@ -104,9 +106,26 @@
         "externer No-Login-Suchlauf mit allen Nutzerbeispielen sowie 390 px und 360 × 800 bei 200 Prozent: clientWidth=scrollWidth, null Clipping und null Konsolenfehler"
       ],
       "outcome": "Die Nutzerbeispiele liefern fachlich sinnvolle Ergebnisse, unsichere freie Eingaben einen sicheren Eingrenzungsweg und der vollständige Ergebniszustand reflowt."
+    },
+    {
+      "round": 5,
+      "findings": [
+        "Der gemeinsame Loadervertrag verlangte appübergreifend ein exakt 32 x 32 Pixel großes Symbol; der bisherige gesunde DEV-Stand war noch auf Essentials v1.1.2 gepinnt.",
+        "Ein echter Windows-Recheckout wandelte die älteren Shell-Vendorartefakte ohne enge Verzeichnisregel um und ließ dadurch den bytegenauen Shell-Lock scheitern."
+      ],
+      "changes": [
+        "Essentials wurde atomar auf v1.1.3 am unveränderlichen Shared-Commit babe74a0 migriert; HTML-Fallback, gemeinsames CSS, Manifest, sechs Artefakte und Lock wurden gemeinsam übernommen.",
+        "Auch der bereits gepinnte Shell-Vendorordner erhielt die enge LF-Policy; Runtime und Shell-Pin blieben unverändert."
+      ],
+      "tests": [
+        "91/91 Unit-/Fachtests und 31/31 lokale Browser-E2E",
+        "beide vendorten Validatoren und echter Windows-Recheckout mit core.autocrlf=true PASS",
+        "externer langsamer 390-px-Start und 360-x-800-/200-Prozent-Ergebniszustand mit exakt 32 px und ohne Überlauf PASS"
+      ],
+      "outcome": "Das Ladesymbol bleibt auf allen geprüften Geräten kompakt und exakt 32 x 32 Pixel; Suchfunktion, Datenschutz-, Share-, Offline- und Productiongrenzen blieben unverändert."
     }
   ],
-  "rollback": "Den Such-/Reflow-Stand per normalem Revert auf Source f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5 zurückführen und dev-pages koordiniert auf den letzten vollständig gesunden Artefaktcommit 6075041b44acbd734530ea665a0c51d9961bfa40 setzen; danach Pages built, Health und Remote-Smoke erneut prüfen. Der Zwischenstand 6bd8b1c ist wegen des belegten Zoomfehlers kein Rollbackpunkt.",
+  "rollback": "Die Loader-Migration per normalem Revert auf den weiterhin gesunden Source be6b4c95e7d612441b85d2a59c3553300a04ed01 zurückführen und dev-pages koordiniert auf Artefaktcommit 163dec7620b04b4f5b861b2c4c548f1f1630f65b setzen; danach Pages built, Health und Remote-Smoke erneut prüfen. Der Zwischenstand 6bd8b1c ist wegen des belegten Zoomfehlers kein Rollbackpunkt.",
   "learnings": [
     "Eine Sofortantwort muss Gegenstand und Entsorgungsweg vor Begründung, Grenzen und Quellen zeigen.",
     "Ein Entsorgungsweg darf einen bereits enthaltenen lokalen Prüfhinweis nicht als separates Badge wiederholen.",
@@ -114,6 +133,7 @@
     "Physischer Assetpfad und öffentliche Runtime-URL brauchen getrennte Felder sowie HTTP-MIME- und Hashnachweis.",
     "Suchnamen und Aliasse dürfen tippfehlertolerant sein; generische Keywords brauchen strengere Grenzen und kuratierte Material-/Funktionsabsichten.",
     "Eine 200-Prozent-Reflowprüfung muss einen langen produktiven Ergebniszustand öffnen und darf nicht bei der Startseite enden.",
+    "Bytegenaue vendorte Textlocks brauchen pro Vendorverzeichnis eine enge LF-Regel und einen echten Windows-Recheckout als Gate.",
     "Technischer Quellen-Erreichbarkeitscheck ist kein redaktioneller Review."
   ],
   "productionApproved": false

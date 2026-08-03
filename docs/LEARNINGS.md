@@ -436,6 +436,23 @@ Gültigkeitsgrenze: Diese Regel betrifft Layoutzustände. Sie verbessert weder
 Suchranking noch fachliche Richtigkeit und ersetzt keine separate Inhalts- und
 Quellenprüfung.
 
+### Byte-Locks brauchen eine enge LF-Policy und einen echten Windows-Checkout
+
+Ein im aktuellen Arbeitsbaum grüner SHA-256-Lock beweist noch nicht, dass ein
+vendortes Textartefakt nach einem Windows-Checkout bytegleich bleibt. Jedes
+Vendorverzeichnis mit bytegenauen Textlocks führt deshalb eine enge
+`.gitattributes`-Regel `* text eol=lf`; beide Validatoren laufen zusätzlich in
+einem frischen Worktree mit `core.autocrlf=true`.
+
+Evidenz: Der erste v1.1.3-Recheckout ließ ausschließlich den älteren
+Shell-Lock durch Zeilenendenumwandlung scheitern. Nach der app-lokalen
+Shell-Vendorregel bestanden Shell- und Essentials-Validator, 91/91 Tests und
+alle `i/lf w/lf`-Prüfungen auf Source `c7af103d`.
+
+Gültigkeitsgrenze: Die LF-Regel schützt Reproduzierbarkeit und
+Artefaktintegrität; sie ändert weder den gepinnten Vertrag noch Fachinhalt oder
+Laufzeitverhalten.
+
 ## Weitergabe
 
 Die allgemein relevanten Punkte zu dreistufiger Quellenpflege, Suchgewichtung,

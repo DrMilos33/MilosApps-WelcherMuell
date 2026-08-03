@@ -49,6 +49,32 @@ Querformat, langsames Netz, Offline, Teilen/Drucken, direkte URL und strikte
 CSP. Produktionsfreigabe und der separate Shared-Loader-Hold wurden nicht
 verändert.
 
+## QA-Erweiterung für public-app-essentials/v1.1.3
+
+Nach Aufhebung des zentralen Loader-Holds wurde ausschließlich die vendorte
+Essentials-Runtime atomar auf Shared-Commit `babe74a0` angehoben. Das
+HTML-vor-CSS-Fallback, die berechnete CSS-Größe, alle sechs Lockartefakte und
+der unveränderte lokale SVG-Pfad sichern 32 × 32 Pixel; Suchdaten,
+Inhaltsversion, Privacy, Share, Offline und Quellenreview blieben unverändert.
+
+Der erste echte Windows-Recheckout zeigte einen app-lokalen Lockfehler im
+älteren Shell-Vendorordner: Ohne enge `.gitattributes` wandelte
+`core.autocrlf=true` dessen Textartefakte um. Eine auf genau diesen
+Vendorordner begrenzte LF-Regel behebt die Reproduzierbarkeit, ohne Shell-Pin
+oder Runtime zu ändern. Der zweite frische Recheckout bestand beide portablen
+Validatoren, 91/91 Unit-/Fachtests, den reproduzierbaren Build und alle
+Byte-Locks.
+
+Die vollständige lokale Matrix bestand erneut 31/31 Browser-E2E. Im
+öffentlichen DEV bestätigte der app-spezifische Remote-Smoke Source
+`c7af103d`, Inhaltsversion `2026.08.03-1`, Essentials v1.1.3, sechs Locks,
+No-Login, null Web-Storage-Aufrufe und `productionApproved=false`. Beim um
+900 ms verzögerten 390-×-844-Start war der Loader sichtbar, exakt 32 × 32 Pixel
+groß, die Karte 320 × 191 Pixel und `clientWidth=scrollWidth=390`. Der
+geöffnete Plastik-Ergebniszustand maß bei 360 × 800 und 200 Prozent Textzoom
+`clientWidth=scrollWidth=360`; alle neuen Suchfälle blieben grün und es gab
+keine Konsolenfehler.
+
 ## Ausgangslage
 
 `main` enthielt mit Commit `bb0973e` nur Produkt- und QA-Dokumentation. Der erste

@@ -18,7 +18,7 @@
 | Portal-DEV-Route | `/apps/waste-guide`, cookie-los öffentlich validiert |
 | Vorschaubild | `/assets/preview.svg`, eigenes Werk dieses Repositorys |
 | Anmeldung | keine |
-| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` und `public-app-essentials/v1.1.2` vendort; keine Laufzeitabhängigkeit |
+| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` und `public-app-essentials/v1.1.3` vendort; keine Laufzeitabhängigkeit |
 | Production | nicht freigegeben |
 
 Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
@@ -29,17 +29,17 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `be6b4c95e7d612441b85d2a59c3553300a04ed01`
-- Quellbaum: `f2dd813e2297abf14593780f524e2d29c4d6419b`
+  `c7af103d60141fc7335ccb52771d1f4f9f14f8e8`
+- Quellbaum: `68d94c093f38de267579c1af1d60d47c87e59957`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `163dec7620b04b4f5b861b2c4c548f1f1630f65b`
-- GitHub-Pages-Build `1129765751`, Actions-Run `30799681176`:
-  Artefaktcommit `163dec7`, Status `built`/`success`
+  `9c4959ad259c7374ffcfda7c97a9a74229584d06`
+- GitHub-Pages-Build `1129793087`, Actions-Run `30801330326`:
+  Artefaktcommit `9c4959a`, Status `built`/`success`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
-- Essentials-Pin: `public-app-essentials/v1.1.2`, Shared-Commit
-  `b14aac6107b75f03ff49e74160af7e7e30c29e59`, eigener 6er-Lock verifiziert
+- Essentials-Pin: `public-app-essentials/v1.1.3`, Shared-Commit
+  `babe74a0e62e1a7f9095648195e54b322a837726`, eigener 6er-Lock verifiziert
 - Draft-PR für den Quellbranch:
   `https://github.com/DrMilos33/MilosApps-WelcherMuell/pull/1`
 
@@ -53,7 +53,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-1","productionApproved":false,"sourceCommit":"be6b4c95e7d612441b85d2a59c3553300a04ed01"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-1","productionApproved":false,"sourceCommit":"c7af103d60141fc7335ccb52771d1f4f9f14f8e8"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -142,11 +142,26 @@ Eingrenzungsaktionen, ohne eine Tonne zu erfinden. Bei 390 Pixeln sowie
 jeweils identisch; es gab null Clipping, Cookies, Web-Storage-Aufrufe,
 fehlgeschlagene Ressourcen oder Konsolenfehler.
 
+Die anschließende atomare Loader-Migration wurde aus Source `c7af103d` als
+Artefakt `9c4959a` veröffentlicht. Pages-Build `1129793087` und Actions-Run
+`30801330326` endeten erfolgreich. `public-app-essentials/v1.1.3` ist exakt
+auf Shared-Commit `babe74a0` gepinnt; alle sechs Verbraucherartefakte und die
+enge LF-Policy wurden auch in einem frischen Windows-Checkout mit
+`core.autocrlf=true` verifiziert. Ein frischer externer 390-×-844-Lauf mit um
+900 ms verzögerten Fachdaten maß das sichtbare Loader-Icon einschließlich
+Maximalgröße exakt mit 32 × 32 Pixeln, die kompakte Karte mit 320 × 191 Pixeln
+und `clientWidth=scrollWidth=390`. Bei 360 × 800 und 200 Prozent Textzoom blieb
+auch der geöffnete Plastik-Ergebniszustand bei `clientWidth=scrollWidth=360`.
+No-Login, null Cookies, null Web-Storage-Aufrufe, externe Same-Origin-Runtimes,
+CSP-Verteilung und null Konsolenfehler blieben erhalten. Die Suchfälle
+`Ölgemälde`, `Ölgemäde`, `Kinderriegel`, `Schokolade`, `Plastik` und `Karten`
+wurden gegen diesen endgültigen Live-Stand erneut bestätigt.
+
 Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
-$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="be6b4c95e7d612441b85d2a59c3553300a04ed01"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="c7af103d60141fc7335ccb52771d1f4f9f14f8e8"
 pnpm test:remote:dev
 ```
 
@@ -197,9 +212,10 @@ bestehender Einträge bleiben eigenständig; die früheste erneute Prüfung ist
 weiterhin am 30.09.2026. Details stehen in
 `SOURCES_AND_LICENSES.md`.
 
-Aktueller gesunder DEV-Artefaktcommit ist `163dec7`; bezeichneter
-Rollbackpunkt vor der Suchänderung ist `6075041`. Der Zwischenstand `6bd8b1c`
-ist wegen des erst extern gefundenen Ergebnis-Zoomfehlers kein Rollbackpunkt.
+Aktueller gesunder DEV-Artefaktcommit ist `9c4959a`; bezeichneter
+Rollbackpunkt vor der Loader-Migration ist `163dec7` auf Source `be6b4c95`.
+Der Zwischenstand `6bd8b1c` ist wegen des erst extern gefundenen
+Ergebnis-Zoomfehlers kein Rollbackpunkt.
 Der letzte gesunde vor-v2-Punkt bleibt `8e8dfe0`. Der gestoppte
 v2.0.2-Zwischenstand ist ebenfalls kein bezeichneter Rollbackpunkt.
 
