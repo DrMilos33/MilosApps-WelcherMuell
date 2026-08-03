@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "2026.08.03-2",
+  "contentVersion": "2026.08.03-3",
   "contentDate": "2026-08-03",
   "defaultScope": "Private Haushalte in Deutschland",
   "items": [
@@ -186,9 +186,14 @@
         "Essensrest",
         "Essensreste",
         "Süßigkeiten",
-        "Essen"
+        "Essen",
+        "Toast",
+        "Toastbrot",
+        "Brot",
+        "Brotrest",
+        "altes Brot"
       ],
-      "keywords": ["Lebensmittel", "Biomüll", "Verpackung", "Riegel", "Süßwaren"],
+      "keywords": ["Lebensmittel", "Biomüll", "Verpackung", "Riegel", "Süßwaren", "Backware"],
       "searchIntents": [
         {
           "all": [["Schokolad", "Schoko", "Kinderriegel", "Riegel", "Süßig", "Bonbon", "Lebensmittel", "Essensrest", "chocolat", "snackbar", "candy", "foodleftover"]],

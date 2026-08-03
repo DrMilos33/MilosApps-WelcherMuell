@@ -1,8 +1,10 @@
 import "../vendor/milosapps-shell/v2/bootstrap.js";
 import {
   isAmbiguous,
+  isDirectSearchMatch,
   normalizeText,
   searchItems,
+  suggestCorrections,
   suggestedAlternatives,
   validateItemIntegrity
 } from "./search.js";
@@ -246,10 +248,11 @@ function renderSource(source) {
 function recognizedSubject(item) {
   const normalizedQuery = normalizeText(state.lastQuery);
   const compactQuery = normalizedQuery.replaceAll(" ", "");
-  if (item.id === "rubber-household-item" && /^(gummiband|gummibaender|gummibnad|rubberband|elasticband)$/.test(compactQuery)) {
+  if (item.id === "rubber-household-item" && /^(gummiband|gummibaender|rubberband|rubberbands|elasticband|elasticbands)$/.test(compactQuery)) {
     return t("recognizedRubberBand");
   }
-  if (item.id === "plastic-household-item") {
+  const mayUseExactLabel = new Set(["plastic-household-item", "food-and-wrapper", "poster"]);
+  if (mayUseExactLabel.has(item.id) || (item.id === "electrical-device" && normalizedQuery === "toaster")) {
     const exactLabel = [item.name, ...(item.aliases ?? [])]
       .find((label) => normalizeText(label) === normalizedQuery);
     if (exactLabel) return exactLabel;
@@ -462,6 +465,34 @@ function renderChoices(items, query) {
   elements.resultsTitle.focus();
 }
 
+function renderCorrections(corrections, query) {
+  const single = corrections.length === 1;
+  state.currentItemId = null;
+  state.view = { type: "corrections", query };
+  elements.resultKicker.textContent = t("correctionKicker");
+  elements.resultKicker.hidden = false;
+  elements.resultsTitle.textContent = single
+    ? t("correctionTitleSingle", { term: corrections[0].term })
+    : t("correctionTitleMultiple");
+  elements.status.hidden = false;
+  elements.status.textContent = t("correctionMessage");
+  elements.reset.hidden = false;
+  elements.resultsSection.hidden = false;
+  elements.resultsSection.dataset.view = "corrections";
+  elements.results.innerHTML = corrections.map((correction) => `
+    <article class="result-card compact correction-card">
+      <div>
+        <p class="section-kicker">${escapeHtml(t("correctionSuggestion"))}</p>
+        <h3>${escapeHtml(correction.term)}</h3>
+        <p>${escapeHtml(correction.item.category)}</p>
+      </div>
+      <button class="secondary-button" type="button" data-correction-query="${escapeHtml(correction.term)}">
+        ${escapeHtml(t("correctionSelect", { term: correction.term }))}
+      </button>
+    </article>`).join("");
+  elements.resultsTitle.focus();
+}
+
 function runSearch(rawQuery, options = {}) {
   const query = String(rawQuery ?? "").trim().slice(0, 120);
   elements.input.value = query;
@@ -473,18 +504,25 @@ function runSearch(rawQuery, options = {}) {
     return;
   }
   const results = searchItems(state.items, query, { sourcesById: state.sourcesById, asOf: new Date(), limit: 8 });
-  if (results.length === 0) {
+  const directResults = results.filter(isDirectSearchMatch);
+  if (directResults.length === 0) {
+    const corrections = suggestCorrections(state.items, query, { limit: 4 });
+    if (corrections.length > 0) {
+      renderCorrections(corrections, query);
+      updateUrlForNonSpecificResult(options);
+      return;
+    }
     emptyState({ title: t("noMatchTitle", { query }), message: t("noMatchMessage"), kicker: t("unclear"), type: "no-match", query });
     updateUrlForNonSpecificResult(options);
     elements.resultsTitle.focus();
     return;
   }
-  if (isAmbiguous(results)) {
-    renderChoices(results.map(({ item }) => item), query);
+  if (isAmbiguous(directResults)) {
+    renderChoices(directResults.map(({ item }) => item), query);
     updateUrlForNonSpecificResult(options);
     return;
   }
-  const primaryItem = results[0].item;
+  const primaryItem = directResults[0].item;
   renderOne(primaryItem, {
     ...options,
     query,
@@ -534,6 +572,11 @@ function rerenderView() {
     renderChoices(items, state.view.query);
     return;
   }
+  if (state.view.type === "corrections") {
+    const corrections = suggestCorrections(state.items, state.view.query, { limit: 4 });
+    if (corrections.length > 0) renderCorrections(corrections, state.view.query);
+    return;
+  }
   if (state.view.type === "short") {
     emptyState({ title: t("shortTitle"), message: t("shortMessage"), kicker: t("shortKicker"), type: "short", query: state.view.query });
     return;
@@ -572,6 +615,11 @@ function bindEvents() {
     button.addEventListener("click", () => runSearch(button.dataset[state.language === "en" ? "queryEn" : "queryDe"]));
   });
   elements.results.addEventListener("click", (event) => {
+    const correction = event.target.closest("[data-correction-query]");
+    if (correction) {
+      runSearch(correction.dataset.correctionQuery);
+      return;
+    }
     const fallback = event.target.closest("[data-fallback-query-de]");
     if (fallback) {
       runSearch(fallback.dataset[state.language === "en" ? "fallbackQueryEn" : "fallbackQueryDe"]);

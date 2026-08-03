@@ -11,7 +11,7 @@
     "desktop"
   ],
   "authentication": "none",
-  "contentVersion": "2026.08.03-2",
+  "contentVersion": "2026.08.03-3",
   "contentDate": "2026-08-03",
   "validity": "Allgemeine Hinweise für private Haushalte in Deutschland; belegte regionale Ergänzungen für Berlin, Hamburg und München.",
   "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
@@ -27,8 +27,8 @@
   "deployment": {
     "provider": "GitHub Pages",
     "environment": "DEV",
-    "sourceCommit": "3541de9dcdd63471f6ad78a12b6895b943821c8e",
-    "sourceTree": "4642b2bd6d24abc21ab2a0e9821eca6195ebce4a",
+    "sourceCommit": "2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8",
+    "sourceTree": "8382794be198d581ce35fe4e6ccc9d37b98370c3",
     "branch": "dev-pages",
     "productionApproved": false
   },

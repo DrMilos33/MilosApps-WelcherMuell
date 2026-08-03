@@ -86,7 +86,7 @@ function itemTerms(item) {
     ...(item.aliases ?? []).map((value) => ({ value, kind: "alias" })),
     ...(item.keywords ?? []).map((value) => ({ value, kind: "keyword" }))
   ]
-    .map((term) => ({ ...term, value: normalizeText(term.value) }))
+    .map((term) => ({ ...term, label: String(term.value), value: normalizeText(term.value) }))
     .filter((term) => Boolean(term.value));
 }
 
@@ -165,30 +165,31 @@ function scoreItem(item, normalizedQuery) {
   const compactQuery = normalizedQuery.replaceAll(" ", "");
   let best = 0;
   let reason = "";
+  let matchedTerm = "";
+
+  const useMatch = (score, nextReason, term = null) => {
+    if (score <= best) return;
+    best = score;
+    reason = nextReason;
+    matchedTerm = term?.label ?? item.name;
+  };
 
   for (const term of terms) {
     const compactTerm = term.value.replaceAll(" ", "");
     if (term.value === normalizedQuery) {
       const score = term.kind === "name" ? 140 : term.kind === "alias" ? 132 : 106;
-      if (score > best) {
-        best = score;
-        reason = term.kind === "keyword" ? "keyword" : "exact";
-      }
+      useMatch(score, term.kind === "keyword" ? "keyword" : "exact", term);
       continue;
     }
 
     if (compactQuery.length >= 4 && compactTerm === compactQuery) {
       const score = term.kind === "name" ? 136 : term.kind === "alias" ? 128 : 102;
-      if (score > best) {
-        best = score;
-        reason = "spacing";
-      }
+      useMatch(score, "spacing", term);
     }
 
     const prefixScore = term.kind === "keyword" ? 84 : 112;
     if (isUsefulPrefix(normalizedQuery, term.value) && prefixScore > best) {
-      best = prefixScore;
-      reason = "prefix";
+      useMatch(prefixScore, "prefix", term);
     }
 
     const containsScore = term.kind === "keyword" ? 76 : 96;
@@ -199,14 +200,12 @@ function scoreItem(item, normalizedQuery) {
       containsRatio >= 0.58 &&
       containsScore > best
     ) {
-      best = containsScore;
-      reason = "contains";
+      useMatch(containsScore, "contains", term);
     }
 
     const questionScore = term.kind === "keyword" ? 72 : 88;
     if (term.value.length >= 3 && includesWholePhrase(normalizedQuery, term.value) && questionScore > best) {
-      best = questionScore;
-      reason = "question";
+      useMatch(questionScore, "question", term);
     }
 
     const longest = Math.max(term.value.length, normalizedQuery.length);
@@ -220,18 +219,14 @@ function scoreItem(item, normalizedQuery) {
       const allowed = longest >= 10 ? 3 : longest >= 6 ? 2 : 1;
       if (distance <= allowed && hasStableFuzzyAnchor(normalizedQuery, term.value, distance)) {
         const score = 105 - distance * 9;
-        if (score > best) {
-          best = score;
-          reason = "typo";
-        }
+        useMatch(score, "typo", term);
       }
     }
   }
 
   const intentScore = scoreSearchIntent(item, normalizedQuery);
   if (intentScore > best) {
-    best = intentScore;
-    reason = "intent";
+    useMatch(intentScore, "intent");
   }
 
   const queryTokens = significantTokens(normalizedQuery);
@@ -250,20 +245,14 @@ function scoreItem(item, normalizedQuery) {
 
     if (matched === queryTokens.length) {
       const score = 72 + average * 27;
-      if (score > best) {
-        best = score;
-        reason = "tokens";
-      }
+      useMatch(score, "tokens");
     } else if (matched >= Math.ceil(queryTokens.length / 2)) {
       const score = 45 + average * 25;
-      if (score > best) {
-        best = score;
-        reason = "partial";
-      }
+      useMatch(score, "partial");
     }
   }
 
-  return { score: Math.round(best * 10) / 10, reason };
+  return { score: Math.round(best * 10) / 10, reason, matchedTerm };
 }
 
 export function validateItemIntegrity(item, sourcesById, asOf = new Date()) {
@@ -319,7 +308,7 @@ export function searchItems(items, query, options = {}) {
   const sourcesById = options.sourcesById ?? new Map();
   const asOf = options.asOf ?? new Date();
 
-  return items
+  const ranked = items
     .map((item) => {
       const match = scoreItem(item, normalizedQuery);
       return {
@@ -334,8 +323,125 @@ export function searchItems(items, query, options = {}) {
     .sort((left, right) => {
       if (right.score !== left.score) return right.score - left.score;
       return left.item.name.localeCompare(right.item.name, "de");
-    })
-    .slice(0, options.limit ?? 8);
+    });
+  const direct = ranked.filter(isDirectSearchMatch);
+  return (direct.length > 0 ? direct : ranked).slice(0, options.limit ?? 8);
+}
+
+const DIRECT_MATCH_REASONS = new Set(["exact", "spacing", "keyword", "question", "intent"]);
+
+export function isDirectSearchMatch(result) {
+  return DIRECT_MATCH_REASONS.has(result?.reason);
+}
+
+function sharedPrefixLength(left, right) {
+  const length = Math.min(left.length, right.length);
+  let index = 0;
+  while (index < length && left[index] === right[index]) index += 1;
+  return index;
+}
+
+function insertedCharacter(longer, shorter) {
+  if (longer.length !== shorter.length + 1) return null;
+  let index = 0;
+  while (index < shorter.length && longer[index] === shorter[index]) index += 1;
+  return {
+    value: longer[index],
+    previous: longer[index - 1] ?? "",
+    next: longer[index + 1] ?? ""
+  };
+}
+
+function isPlausibleCorrectionPair(query, term, distance) {
+  const prefix = sharedPrefixLength(query, term);
+  if (distance === 1 && query.length === term.length) {
+    return prefix >= 2 || isAdjacentTransposition(query, term);
+  }
+  if (distance === 1 && query.length === term.length + 1) {
+    const inserted = insertedCharacter(query, term);
+    return prefix >= 1 && Boolean(inserted) && (
+      /[aeiou]/.test(inserted.value) ||
+      inserted.value === inserted.previous ||
+      inserted.value === inserted.next
+    );
+  }
+  if (distance === 1 && term.length === query.length + 1) return prefix >= 2;
+  if (distance === 2 && term.length === query.length + 1) return prefix >= 3;
+  return distance > 1 && query.length === term.length && prefix >= 3;
+}
+
+export function suggestCorrections(items, query, options = {}) {
+  const normalizedQuery = normalizeText(query).slice(0, 120);
+  if (normalizedQuery.length < 3) return [];
+
+  const termsByItem = items.map((item) => ({
+    item,
+    terms: itemTerms(item).filter((term) => term.kind !== "keyword")
+  }));
+  const hasExactTerm = termsByItem.some(({ terms }) => terms.some((term) => (
+    term.value === normalizedQuery ||
+    (normalizedQuery.length >= 4 && term.value.replaceAll(" ", "") === normalizedQuery.replaceAll(" ", ""))
+  )));
+  if (hasExactTerm) return [];
+
+  const candidates = [];
+  const addCandidate = (item, term, distance, score, reason) => {
+    if (!term?.label || normalizeText(term.label) === normalizedQuery) return;
+    candidates.push({ item, term: term.label, distance, score, reason });
+  };
+
+  const uncertainMatches = searchItems(items, normalizedQuery, { limit: 20 })
+    .filter((result) => !isDirectSearchMatch(result) && result.matchedTerm);
+  for (const result of uncertainMatches) {
+    const term = itemTerms(result.item).find((candidate) => candidate.label === result.matchedTerm);
+    if (!term || term.kind === "keyword") continue;
+    const compactQuery = normalizedQuery.replaceAll(" ", "");
+    const compactTerm = term.value.replaceAll(" ", "");
+    const distance = damerauLevenshtein(compactQuery, compactTerm);
+    if (result.reason !== "prefix" && !isPlausibleCorrectionPair(compactQuery, compactTerm, distance)) continue;
+    addCandidate(result.item, term, distance, result.score, result.reason);
+  }
+
+  for (const { item, terms } of termsByItem) {
+    for (const term of terms) {
+      const compactTerm = term.value.replaceAll(" ", "");
+      const compactQuery = normalizedQuery.replaceAll(" ", "");
+      const longest = Math.max(compactTerm.length, compactQuery.length);
+      const shortest = Math.min(compactTerm.length, compactQuery.length);
+      if (longest < 4 || shortest / longest < 0.68) continue;
+
+      if (compactTerm.startsWith(compactQuery) && compactQuery.length >= 3) {
+        const prefixScore = 78 + Math.round((compactQuery.length / compactTerm.length) * 12);
+        addCandidate(item, term, compactTerm.length - compactQuery.length, prefixScore, "prefix");
+        continue;
+      }
+
+      const distance = damerauLevenshtein(compactQuery, compactTerm);
+      const allowed = longest >= 12 ? 3 : longest >= 7 ? 2 : 1;
+      if (
+        distance === 0 ||
+        distance > allowed ||
+        !isPlausibleCorrectionPair(compactQuery, compactTerm, distance)
+      ) continue;
+      const prefix = sharedPrefixLength(compactQuery, compactTerm);
+      const score = 120 - distance * 16 - Math.abs(compactQuery.length - compactTerm.length) * 2 + Math.min(prefix, 4);
+      addCandidate(item, term, distance, score, "typo");
+    }
+  }
+
+  const bestByItem = new Map();
+  for (const candidate of candidates) {
+    const current = bestByItem.get(candidate.item.id);
+    if (!current || candidate.score > current.score || (
+      candidate.score === current.score && candidate.term.length < current.term.length
+    )) {
+      bestByItem.set(candidate.item.id, candidate);
+    }
+  }
+
+  return [...bestByItem.values()]
+    .sort((left, right) => right.score - left.score || left.term.localeCompare(right.term, "de"))
+    .slice(0, options.limit ?? 4);
 }
 
 export function suggestedAlternatives(items, primaryItem, query) {
