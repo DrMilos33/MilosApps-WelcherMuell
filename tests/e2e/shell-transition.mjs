@@ -38,9 +38,12 @@ async function inspectExistingServer() {
   const timeout = setTimeout(() => controller.abort(), 1500);
   try {
     const response = await fetch(`${baseUrl}/healthz`, { signal: controller.signal });
-    const health = response.headers.get("content-type")?.includes("application/json")
-      ? await response.json()
-      : null;
+    let health = null;
+    try {
+      health = JSON.parse(await response.text());
+    } catch {
+      // Identity remains invalid when the readiness body is not JSON.
+    }
     if (response.ok && isExpectedIdentity(health)) return true;
     throw new Error(
       `Port ${port} ist durch einen fremden oder ungültigen Dienst belegt ` +
@@ -76,19 +79,25 @@ if (!externalRun && !(await inspectExistingServer())) {
 
 async function waitForServer() {
   const deadline = Date.now() + 15000;
+  let lastReadiness = "keine Antwort";
   while (Date.now() < deadline) {
     try {
       const response = await fetch(`${baseUrl}/healthz`);
-      const health = response.headers.get("content-type")?.includes("application/json")
-        ? await response.json()
-        : null;
+      const body = await response.text();
+      let health = null;
+      try {
+        health = JSON.parse(body);
+      } catch {
+        // Identity remains invalid when the readiness body is not JSON.
+      }
+      lastReadiness = `HTTP ${response.status}, appKey=${health?.appKey ?? "fehlt"}, sourceCommit=${health?.sourceCommit ?? "fehlt"}`;
       if (response.ok && isExpectedIdentity(health)) return;
-    } catch {
-      // The app may still be starting.
+    } catch (error) {
+      lastReadiness = error?.message ?? String(error);
     }
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
-  throw new Error(`App-spezifische Readiness für waste-guide fehlgeschlagen. ${serverOutput}`);
+  throw new Error(`App-spezifische Readiness für waste-guide fehlgeschlagen (${lastReadiness}). ${serverOutput}`);
 }
 
 function createGate() {
