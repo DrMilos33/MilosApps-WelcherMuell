@@ -96,7 +96,17 @@ describe("Suchqualität", () => {
     ["Poster", "poster", "eigener Materialcheck statt Elektro-Fehlkorrektur"],
     ["Plakat", "poster", "Alltagsbegriff mit Materialgrenze"],
     ["Postre", "poster", "Tippfehler im Poster"],
-    ["Psoter", "poster", "Buchstabendreher am Wortanfang"]
+    ["Psoter", "poster", "Buchstabendreher am Wortanfang"],
+    ["Eisen", "metal-household-item", "allgemeiner Metallbegriff"],
+    ["rostige Eisenstange", "metal-household-item", "Material plus Form und Zustand"],
+    ["Kupferrohr", "metal-household-item", "Buntmetall als zusammengesetztes Wort"],
+    ["Metallverpackung", "metal-packaging", "Material plus Verpackungsfunktion"],
+    ["Holzbrett", "wood-household-item", "allgemeiner Holzgegenstand"],
+    ["Bauschutt", "mineral-construction-waste", "mineralischer Bauabfall"],
+    ["Lederreste", "leather-household-item", "allgemeines Leder"],
+    ["Flaschenkorken", "cork-household-item", "allgemeiner Kork"],
+    ["Kerzenwachs", "wax-household-item", "allgemeines Wachs"],
+    ["Mischmaterial", "composite-household-item", "unbekanntes Verbundmaterial"]
   ];
 
   for (const [query, expected, label] of cases) {
@@ -171,6 +181,49 @@ describe("Suchqualität", () => {
     assert.equal(results[0].item.id, "food-and-wrapper");
     assert.ok(!results.some(({ item }) => item.id === "electrical-device"));
     assert.deepEqual(suggestCorrections(items, "Toast"), []);
+  });
+
+  test("Sicherheitsmerkmale schlagen eine allgemeine Materialroute", () => {
+    const cases = [
+      ["elektrisches Metallspielzeug", "electrical-device"],
+      ["Holzspielzeug mit Batterie", "electrical-device"]
+    ];
+    for (const [query, expected] of cases) {
+      const results = searchItems(items, query);
+      assert.equal(results[0]?.item.id, expected, query);
+      assert.ok(!results.some(({ item }) => item.id === "metal-household-item"), query);
+      assert.ok(!results.some(({ item }) => item.id === "wood-household-item"), query);
+    }
+    for (const query of ["Gasflasche aus Stahl", "flüssige Farbe in Metalldose", "Tinte in Metalldose", "Öl in Plastikflasche"]) {
+      const results = searchItems(items, query);
+      assert.ok(!results.some(({ item }) => item.id === "metal-household-item"), query);
+      assert.ok(!results.some(({ item }) => ["metal-packaging", "tin-can", "plastic-packaging"].includes(item.id)), query);
+    }
+    assert.equal(searchItems(items, "flüssige Farbe in Metalldose")[0]?.item.id, "household-chemicals");
+  });
+
+  test("Materialstämme werden nur am Wortanfang und nicht mitten in fremden Wörtern erkannt", () => {
+    const carbon = searchItems(items, "unbekannte Carbonplatte");
+    assert.equal(carbon[0]?.item.id, "composite-household-item");
+    assert.ok(!carbon.some(({ item }) => item.id === "wood-household-item"));
+    assert.ok(!searchItems(items, "Asbestplatte").some(({ item }) => item.id === "wood-household-item"));
+  });
+
+  test("Material-Tippfehler bleiben bestätigbare Vorschläge", () => {
+    for (const [query, expectedId] of [["Eissen", "metal-household-item"], ["Metalll", "metal-household-item"], ["Holtz", "wood-household-item"]]) {
+      assert.ok(searchItems(items, query).every((result) => !isDirectSearchMatch(result)), query);
+      assert.ok(suggestCorrections(items, query).some(({ item }) => item.id === expectedId), query);
+    }
+  });
+
+  test("reine Materialbegriffe öffnen den allgemeinen Leitfaden mit belegten Alternativen", () => {
+    const results = searchItems(items, "Metall");
+    assert.equal(results[0]?.item.id, "metal-household-item");
+    assert.equal(isAmbiguous(results), false);
+    assert.deepEqual(
+      suggestedAlternatives(items, results[0].item, "Metall").map((item) => item.id),
+      ["metal-packaging", "electrical-device"]
+    );
   });
 
   test("unsichere Schreibweisen werden als bestätigbare Korrektur statt als Entsorgungsweg angeboten", () => {

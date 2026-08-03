@@ -62,9 +62,27 @@ describe("redaktioneller Datenvertrag", () => {
       "plastic-household-item",
       "food-and-wrapper",
       "painting",
-      "poster"
+      "poster",
+      "metal-household-item",
+      "metal-packaging",
+      "wood-household-item",
+      "mineral-construction-waste",
+      "leather-household-item",
+      "cork-household-item",
+      "wax-household-item",
+      "composite-household-item"
     ]) {
       assert.ok(ids.has(id), `${id} fehlt im Alltagsbestand`);
+    }
+  });
+
+  test("allgemeine Materialleitfäden bleiben als eigene redaktionelle Schicht erkennbar", () => {
+    const materialGuides = catalogs.items.items.filter((item) => item.knowledgeType === "material-guide");
+    assert.ok(materialGuides.length >= 8, `nur ${materialGuides.length} Materialleitfäden`);
+    for (const item of materialGuides) {
+      assert.equal(item.certainty, "check-local", `${item.id}: allgemeine Materialroute muss örtlich begrenzt sein`);
+      assert.ok(item.searchIntents?.length > 0, `${item.id}: regelbasierte Materialerkennung fehlt`);
+      assert.ok(item.warning, `${item.id}: Ausnahmehinweis fehlt`);
     }
   });
 

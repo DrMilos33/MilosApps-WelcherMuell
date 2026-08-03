@@ -82,6 +82,16 @@ Bedeutungen entstehen weiterhin ausschließlich über versionierte Synonyme und
 Einträge. Materialwörter wie `Plastik` bleiben mehrdeutig, wenn Verpackung und
 Nichtverpackung unterschiedliche Wege haben.
 
+Allgemeine Materialleitfäden bilden eine eigene redaktionelle Schicht. Sie
+erkennen unter anderem Eisen/Metall, Holz, mineralischen Bauschutt, Leder,
+Kork, Wachs und Verbundmaterial, nennen aber ohne belegte Ortsregel keine
+pauschale Deutschland-Tonne. Kuratierte `searchIntents` beschreiben positive
+Materialstämme und sicherheitsrelevante Ausschlüsse. Diese Ausschlüsse gelten
+für jeden Rankingpfad, also auch für Alias-, Schlagwort-, Teilwort- und
+Tippfehlerkandidaten, damit etwa eine Stahl-Gasflasche nie als normaler
+Metallschrott ausgegeben wird. Funktions- und Sicherheitsmerkmale haben Vorrang
+vor dem Material; Tippfehler bleiben vor einer Antwort bestätigbar.
+
 Die Korrekturkandidaten verwenden neben Distanz und Längenverhältnis einen
 sprachlichen Anker: stabile Präfixe, echte Nachbarvertauschungen und eng
 begrenzte Einfüge-/Auslassmuster. Ein bestätigter Korrekturbutton startet danach
@@ -133,7 +143,7 @@ Port `4318` ist fest. Der Server meldet auf `/healthz`:
   "status": "ok",
   "appKey": "waste-guide",
   "environment": "DEV",
-  "contentVersion": "2026.08.03-3",
+  "contentVersion": "2026.08.03-4",
   "productionApproved": false
 }
 ```

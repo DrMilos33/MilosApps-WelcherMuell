@@ -43,7 +43,7 @@ Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
      Suchverlauf; kanonischer Ergebnislink und Quellenattribution;
    - Druckaufruf ohne gespeicherten Suchverlauf.
 5. Online-Quellencheck
-   - HTTPS-Erreichbarkeit aller 21 katalogisierten Primärquellen;
+   - HTTPS-Erreichbarkeit aller 28 katalogisierten Primärquellen;
    - ein Netzwerkfehler wird wiederholt und als externer Befund dokumentiert;
    - 4xx, dauerhafte Umleitung oder inhaltliche Änderung erzwingen eine
      redaktionelle Prüfung.

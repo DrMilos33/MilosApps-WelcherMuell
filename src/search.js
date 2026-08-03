@@ -160,6 +160,23 @@ function scoreSearchIntent(item, normalizedQuery) {
   return best;
 }
 
+function isExcludedQuery(item, normalizedQuery) {
+  const isExactCatalogTerm = itemTerms(item).some((term) =>
+    term.kind !== "keyword" && term.value === normalizedQuery
+  );
+  const exclusions = [
+    ...(item.queryExclusions ?? []),
+    ...(item.knowledgeType === "material-guide" && !isExactCatalogTerm
+      ? (item.searchIntents ?? []).flatMap((rule) => rule.exclude ?? [])
+      : [])
+  ];
+  const compactQuery = normalizedQuery.replaceAll(" ", "");
+  return exclusions.some((root) => {
+    const compactRoot = normalizeText(root).replaceAll(" ", "");
+    return compactRoot.length >= 3 && compactQuery.includes(compactRoot);
+  });
+}
+
 function scoreItem(item, normalizedQuery) {
   const terms = itemTerms(item);
   const compactQuery = normalizedQuery.replaceAll(" ", "");
@@ -225,7 +242,7 @@ function scoreItem(item, normalizedQuery) {
   }
 
   const intentScore = scoreSearchIntent(item, normalizedQuery);
-  if (intentScore > best) {
+  if (intentScore > best && reason !== "typo") {
     useMatch(intentScore, "intent");
   }
 
@@ -309,6 +326,7 @@ export function searchItems(items, query, options = {}) {
   const asOf = options.asOf ?? new Date();
 
   const ranked = items
+    .filter((item) => !isExcludedQuery(item, normalizedQuery))
     .map((item) => {
       const match = scoreItem(item, normalizedQuery);
       return {
@@ -360,6 +378,7 @@ function isPlausibleCorrectionPair(query, term, distance) {
   if (distance === 1 && query.length === term.length + 1) {
     const inserted = insertedCharacter(query, term);
     return prefix >= 1 && Boolean(inserted) && (
+      prefix >= 3 ||
       /[aeiou]/.test(inserted.value) ||
       inserted.value === inserted.previous ||
       inserted.value === inserted.next
@@ -386,6 +405,7 @@ export function suggestCorrections(items, query, options = {}) {
 
   const candidates = [];
   const addCandidate = (item, term, distance, score, reason) => {
+    if (isExcludedQuery(item, normalizedQuery)) return;
     if (!term?.label || normalizeText(term.label) === normalizedQuery) return;
     candidates.push({ item, term: term.label, distance, score, reason });
   };

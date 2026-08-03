@@ -879,3 +879,31 @@ No-Login, Inhaltsversion `2026.08.03-3`, App-Identität, DE/EN, Share,
 Offline-Opt-in, 200-Prozent-Reflow und `productionApproved=false`. Cookie-lose
 `GET`- und `HEAD`-Aufrufe der unveränderten Portalroute blieben 302 auf die
 App-URL; die Productionroute blieb HTTP 404.
+
+## Allgemeine Materialsuche · Inhaltsversion 2026.08.03-4
+
+Der unveränderte Ausgangsstand bestand 100/100 Unit-/Fachtests und 33/33
+Browserprüfungen, konnte allgemeine Eingaben wie `Eisen`, `Kupferrohr`,
+`Holzbrett` oder `Bauschutt` aber nicht sinnvoll beantworten. Ein roter
+Vertragstest ergänzte 14 positive und negative Material-/Sicherheitsfälle.
+
+Die neue redaktionelle Schicht umfasst Metallverpackung sowie allgemeine
+Leitfäden für Eisen/Metall, Holz, mineralischen Bauschutt, Leder, Kork, Wachs
+und Verbundmaterial. Fünf neue amtliche Kommunalquellen dokumentieren die
+Gültigkeitsgrenzen; der Katalog umfasst nun 58 Einträge und 28 Quellen.
+Gefahr-, Elektro-/Batterie- und Verpackungsmerkmale haben Vorrang. Ein
+Materialausschluss sperrt den Kandidaten über alle Scorepfade hinweg.
+
+Runde 1 fand nach der fachlichen Implementierung einen horizontalen Überlauf
+der erweiterten Materialauswahl bei 360 × 800 und 200 Prozent Textzoom. Die
+Chipbeschriftung besitzt nun eine eigene umbruchfähige Flexbox, alle Container
+haben eine begrenzte Mindestbreite und lange Ergebnisüberschriften dürfen
+umbrechen. Der erneute Browserlauf war 34/34 grün.
+
+Runde 2 prüfte zusätzlich `Eissen`, `Metalll`, `Holtz`, `Carbonplatte`,
+Stahl-Gasflasche, Batteriemerkmale, Asbest und exakte Alltagswörter. Dabei wurde
+die Teilwortkollision `Latte` in `Carbonplatte` gefunden und beseitigt; ein
+bereits erkannter Tippfehler darf nicht mehr durch einen allgemeinen Intent zur
+direkten Antwort werden. Abschluss: 115/115 Unit-/Inhalts-/Such-/DE-EN- und
+Speichertests, Shell- und Essentials-Verifier PASS, 34/34 Browser-E2E sowie
+28/28 amtliche Quellen mit HTTP 200. Production blieb gesperrt.

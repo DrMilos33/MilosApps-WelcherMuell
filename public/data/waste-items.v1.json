@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "2026.08.03-3",
+  "contentVersion": "2026.08.03-4",
   "contentDate": "2026-08-03",
   "defaultScope": "Private Haushalte in Deutschland",
   "items": [
@@ -26,6 +26,7 @@
       "name": "Konservendose",
       "aliases": ["Dose", "Blechdose", "Metalldose", "leere Konservendosen", "Dosen"],
       "keywords": ["Verpackung", "Metall", "Weißblech", "Aluminium"],
+      "queryExclusions": ["Gasflasche", "Druckgas", "Restinhalt", "nicht leer", "gefüllt", "Farbe", "Lack", "Öl", "Chem", "Tinte", "gas cylinder", "pressurized", "not empty", "filled", "paint", "oil", "chemical", "ink"],
       "category": "Verpackung",
       "route": {"type": "light-packaging", "label": "Gelbe Tonne, Gelber Sack oder örtliche Wertstoffsammlung"},
       "certainty": "confirmed",
@@ -60,6 +61,7 @@
       "name": "Kunststoffverpackung",
       "aliases": ["Plastikverpackung", "Plastikfolie", "Verpackungsfolie", "Shampooflasche", "Spülmittelflasche"],
       "keywords": ["Verpackung", "Kunststoff", "Folie", "Flasche"],
+      "queryExclusions": ["Restinhalt", "nicht leer", "gefüllt", "Farbe", "Lack", "Öl", "Chem", "Tinte", "Gas", "Druck", "not empty", "filled", "paint", "oil", "chemical", "ink", "gas", "pressurized"],
       "searchIntents": [
         {
           "all": [
@@ -84,6 +86,7 @@
     },
     {
       "id": "plastic-household-item",
+      "knowledgeType": "material-guide",
       "name": "Kunststoffgegenstand (keine Verpackung)",
       "aliases": [
         "Plastik",
@@ -577,6 +580,11 @@
           "all": [["Elekt", "Elektronik", "Batteriespielzeug", "Akkuspielzeug", "electric", "electronic", "batterytoy"]],
           "exclude": [],
           "score": 122
+        },
+        {
+          "all": [["mit Batterie", "mit Akku", "batteriebetrieben", "akkubetrieben", "battery powered"]],
+          "exclude": ["lose Batterie", "loser Akku", "Altbatterie", "Ersatzbatterie"],
+          "score": 125
         }
       ],
       "category": "Elektro",
@@ -736,7 +744,7 @@
     {
       "id": "household-chemicals",
       "name": "Haushaltschemikalien",
-      "aliases": ["Chemikalien", "Lösemittel", "Pflanzenschutzmittel", "Schädlingsbekämpfungsmittel", "Klebstoff", "Reinigerreste", "Säure", "Lauge"],
+      "aliases": ["Chemikalien", "Lösemittel", "Pflanzenschutzmittel", "Schädlingsbekämpfungsmittel", "Klebstoff", "Reinigerreste", "Säure", "Lauge", "flüssige Farbe", "flüssige Farbreste", "Lackreste", "Tinte"],
       "keywords": ["Problemstoff", "Schadstoff", "Gift", "Gefahrstoff"],
       "category": "Problemstoff",
       "route": {"type": "problem-waste", "label": "Wertstoffhof oder Schadstoffmobil"},
@@ -803,9 +811,22 @@
     },
     {
       "id": "rubber-household-item",
+      "knowledgeType": "material-guide",
       "name": "Gummi-Gegenstand",
       "aliases": ["Gummi", "Gummis", "Gummiband", "Gummibänder", "Haushaltsgummi", "Einweckgummi", "Gummiring", "Gummiringe", "Haargummi", "Haargummis", "Radiergummi", "Radiergummis", "Gummihandschuh", "Gummihandschuhe", "Latexhandschuh", "Latexhandschuhe", "Gummistiefel", "Gummimatte", "Luftballon", "Fahrradreifen", "Fahrradschlauch"],
       "keywords": ["Kautschuk", "Latex", "Elastikband", "Restmüll", "Gummikleinteil"],
+      "searchIntents": [
+        {
+          "all": [["Kautschuk", "Latex", "rubber", "latex"]],
+          "exclude": ["Auto", "Motorrad", "Fahrzeugreifen", "Elekt", "Batter", "Akku", "Chem", "Öl", "car tyre", "car tire", "motorcycle", "electric", "battery", "chemical", "oil"],
+          "score": 110
+        },
+        {
+          "all": [["Gummi"], ["Teil", "Gegenstand", "Schlauch", "Dichtung", "Stopfen", "Figur", "Spielzeug", "Profil"]],
+          "exclude": ["Auto", "Motorrad", "Fahrzeugreifen", "Elekt", "Batter", "Akku", "Chem", "Öl", "car tyre", "car tire", "motorcycle", "electric", "battery", "chemical", "oil"],
+          "score": 110
+        }
+      ],
       "category": "Gummi / Verbundmaterial",
       "route": {"type": "local-check", "label": "Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen"},
       "certainty": "check-local",
@@ -987,6 +1008,212 @@
       "sources": ["munich-awm-lexicon"],
       "reviewedAt": "2026-07-30",
       "reviewDue": "2026-09-30"
+    },
+    {
+      "id": "metal-packaging",
+      "name": "Metallverpackung",
+      "aliases": ["Metallverpackungen", "Eisenverpackung", "Stahlverpackung", "Aluverpackung", "Aluminiumverpackung", "Metallhülle", "Metallbehälter als Verpackung"],
+      "keywords": ["Verpackung", "Metall", "Weißblech", "Aluminium"],
+      "queryExclusions": ["Gasflasche", "Druckgas", "Restinhalt", "nicht leer", "gefüllt", "Farbe", "Lack", "Öl", "Chem", "Tinte", "gas cylinder", "pressurized", "not empty", "filled", "paint", "oil", "chemical", "ink"],
+      "searchIntents": [
+        {
+          "all": [["Eisen", "Stahl", "Metall", "Aluminium", "Kupfer", "Messing", "Bronze", "Blech", "Zinn", "iron", "steel", "aluminum", "copper", "brass", "bronze"], ["Verpack", "Hülle", "Behälter", "Dose", "Folie", "packaging", "wrapper", "container", "foil"]],
+          "exclude": ["Elekt", "Batter", "Akku", "Gasflasche", "Druckgas", "Farbe", "Lack", "Öl", "Chem", "electric", "battery", "gas cylinder", "paint", "chemical"],
+          "score": 124
+        }
+      ],
+      "category": "Metallverpackung",
+      "route": {"type": "light-packaging", "label": "Restentleert: Gelbe Tonne, Gelber Sack oder örtliche Verpackungssammlung"},
+      "certainty": "confirmed",
+      "answer": "Ist der Metallgegenstand eine restentleerte Verkaufsverpackung, gehört er in die örtliche Sammlung für Leichtverpackungen.",
+      "reason": "Verpackungen aus Metall werden bundesweit getrennt gesammelt. Das gilt nicht automatisch für Metallprodukte ohne Verpackungsfunktion.",
+      "steps": ["Verpackung normal leeren; Ausspülen ist nicht nötig.", "Leicht trennbare Teile voneinander lösen.", "In Gelbe Tonne, Gelben Sack oder die örtlich benannte Verpackungssammlung geben."],
+      "warning": "Druckbehälter, Gasflaschen, nicht restentleerte Farb- oder Chemikaliengebinde sowie Elektrogeräte benötigen einen anderen Weg.",
+      "localVariation": "Die Sammlung kann Gelbe Tonne, Gelber Sack, Wertstofftonne oder Wertstoffinsel heißen. Metallgegenstände ohne Verpackungsfunktion werden kommunal unterschiedlich gesammelt.",
+      "sources": ["uba-separation-2026", "uba-packaging"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
+    },
+    {
+      "id": "metal-household-item",
+      "knowledgeType": "material-guide",
+      "name": "Eisen oder Metall",
+      "aliases": ["Eisen", "Metall", "Metalle", "Stahl", "Edelstahl", "Aluminium", "Alu", "Kupfer", "Messing", "Bronze", "Zinn", "Gusseisen", "Eisenstange", "Metallstange", "Stahlblech", "Blech", "Blechstück", "Eisenstück", "Metallstück", "Metallteil", "Metallschrott", "Aluminiumteil", "Aluteil", "Kupferrohr", "Kupferdraht", "Metalltopf", "Metallpfanne", "Metallbesteck", "Metallwerkzeug", "Schraube", "Schrauben", "Nagel", "Nägel", "Draht", "Beschlag", "Metallbügel", "Fahrradfelge"],
+      "keywords": ["Altmetall", "Schrott", "Wertstoff", "Nichtverpackung"],
+      "guidedAlternatives": [
+        {
+          "queries": ["Eisen", "Metall", "Metalle", "Stahl", "Edelstahl", "Aluminium", "Alu", "Kupfer", "Messing", "Bronze", "Blech", "iron", "metal", "steel", "aluminium", "aluminum", "copper", "brass", "bronze"],
+          "itemIds": ["metal-packaging", "electrical-device"]
+        }
+      ],
+      "searchIntents": [
+        {
+          "all": [["Eisen", "Stahl", "Edelstahl", "Metall", "Aluminium", "Kupfer", "Messing", "Bronze", "Blech", "Zinn", "Gusseisen", "iron", "steel", "stainless", "aluminum", "copper", "brass", "bronze", "cast iron"]],
+          "exclude": ["Verpack", "Dose", "Folie", "Elekt", "Elektronik", "Batter", "Akku", "Kabel", "Stecker", "Gasflasche", "Druckgas", "Spray", "Farbe", "Lack", "Öl", "Chem", "Munition", "packaging", "can", "foil", "electric", "battery", "cable", "plug", "gas cylinder", "paint", "chemical", "ammunition"],
+          "score": 112
+        }
+      ],
+      "category": "Metall-Nichtverpackung",
+      "route": {"type": "local-check", "label": "Klein: örtliche Wertstofftonne, falls zugelassen · sonst oder groß: Wertstoffhof"},
+      "certainty": "check-local",
+      "answer": "Bei Eisen oder Metall zuerst Verpackungsfunktion, Größe und mögliche Elektronik prüfen. Metallprodukte ohne Verpackungsfunktion gehören nur bei ausdrücklicher örtlicher Freigabe in eine Wertstofftonne, sonst zum Wertstoffhof.",
+      "reason": "Gelbe Tonne und Gelber Sack sammeln bundesweit Metallverpackungen. Nichtverpackungen aus Metall werden kommunal verschieden erfasst; Wertstofftonne und Wertstoffhof sind nicht überall gleich geregelt.",
+      "steps": ["Gut erhaltene Metallgegenstände weiterverwenden oder weitergeben.", "Prüfen, ob es eine restentleerte Verpackung, ein Elektrogerät oder ein Gegenstand mit Batterie ist.", "Kleine ungefährliche Metallgegenstände nur bei örtlicher Freigabe in die Wertstofftonne geben.", "Große, schwere oder nicht zugelassene Metallteile beim Wertstoffhof beziehungsweise der kommunalen Schrottannahme abgeben."],
+      "warning": "Gas- und Druckbehälter, Batterien, Elektrogeräte, Munition, scharfe Teile sowie öl-, farb- oder chemikalienbelastetes Metall nicht als normalen Metallschrott behandeln.",
+      "localVariation": "Hamburg nimmt viele haushaltsübliche Metallgegenstände in der gelben Wertstofftonne an. München nennt Eisen-, Metall- und Buntmetallteile als Wertstoffhof-Fälle. Ohne Ortsangabe bleibt deshalb die örtliche Prüfung Pflicht.",
+      "sources": ["uba-separation-2026", "uba-packaging", "hamburg-srh-metals", "munich-awm-lexicon"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
+    },
+    {
+      "id": "wood-household-item",
+      "knowledgeType": "material-guide",
+      "name": "Holzgegenstand",
+      "aliases": ["Holz", "Holzbrett", "Holzbretter", "Brett", "Bretter", "Latte", "Holzlatte", "Holzlatten", "Holzkiste", "Holzkisten", "Holzstück", "Holzreste", "Sperrholz", "Spanplatte", "Möbelholz", "Holztür", "Parkett", "Holzregal"],
+      "keywords": ["Altholz", "Bauholz", "Möbelteil", "Wertstoffhof"],
+      "searchIntents": [
+        {
+          "all": [["Holz", "Brett", "Sperrholz", "Spanplatte", "Parkett", "wood", "timber", "plank", "plywood", "chipboard", "parquet"]],
+          "exclude": ["Elekt", "Batter", "Akku", "Holzschutzmittel", "Chem", "Asbest", "electric", "battery", "wood preservative", "chemical", "asbestos"],
+          "score": 112
+        }
+      ],
+      "category": "Holz / Altholz",
+      "route": {"type": "local-check", "label": "Weitergeben oder örtlichen Altholz-/Wertstoffhofweg prüfen"},
+      "certainty": "check-local",
+      "answer": "Holz möglichst weiterverwenden. Für Bretter, Kisten, Möbelteile und größere Holzstücke den örtlichen Wertstoffhof- oder Sperrmüllweg nutzen.",
+      "reason": "Holzannahme, Mengen und die Trennung nach unbehandeltem, lackiertem oder mit Holzschutzmitteln behandeltem Holz werden kommunal geregelt.",
+      "steps": ["Beschläge, Glas und andere leicht lösbare Fremdteile entfernen.", "Größe, Menge und Behandlung des Holzes feststellen.", "Örtliches Abfall-ABC nach Altholz, Holz oder Sperrmüll prüfen."],
+      "warning": "Mit Holzschutzmitteln behandeltes Bau- oder Gartenholz, verbranntes Holz und schadstoffbelastete Teile können besondere Annahmestellen benötigen. Nicht selbst verbrennen.",
+      "localVariation": "München nimmt viele Holzarten am Wertstoffhof an und trennt behandeltes Außenholz besonders. Andere Kommunen können Kleinteile, Sperrmüll und Altholz anders abgrenzen.",
+      "sources": ["uba-household-waste", "munich-awm-wood", "hamburg-srh-abc"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
+    },
+    {
+      "id": "mineral-construction-waste",
+      "knowledgeType": "material-guide",
+      "name": "Stein oder Bauschutt",
+      "aliases": ["Bauschutt", "Stein", "Steine", "Beton", "Betonstück", "Ziegel", "Ziegelstein", "Fliese", "Fliesen", "Mörtel", "Zement", "Gips", "Kies", "Sand", "Putz", "Ytong", "Gasbeton", "Waschbecken", "Toilettenschüssel"],
+      "keywords": ["mineralisch", "Bauabfall", "Wertstoffhof", "Bauschuttcontainer"],
+      "searchIntents": [
+        {
+          "all": [["Bauschutt", "Beton", "Ziegel", "Stein", "Fliese", "Mörtel", "Zement", "Gips", "Kies", "Gasbeton", "Ytong", "rubble", "concrete", "brick", "stone", "tile", "mortar", "cement", "gypsum", "gravel"]],
+          "exclude": ["Asbest", "Mineralwolle", "Dämm", "Teer", "Ruß", "kontaminiert", "flüssig", "asbestos", "mineral wool", "insulation", "tar", "soot", "contaminated", "liquid"],
+          "score": 114
+        }
+      ],
+      "category": "Mineralischer Bauabfall",
+      "route": {"type": "local-check", "label": "Sortenrein und in zulässiger Menge zum örtlichen Wertstoffhof"},
+      "certainty": "check-local",
+      "answer": "Reinen mineralischen Bauschutt getrennt halten und Annahme, Menge und mögliche Gebühren beim örtlichen Wertstoffhof prüfen.",
+      "reason": "Steine, Beton, Ziegel, Fliesen und ähnliche mineralische Abfälle benötigen eine getrennte Annahme. Kommunen begrenzen Mengen und unterscheiden sauberen Bauschutt von Gemischen.",
+      "steps": ["Holz, Metall, Kunststoff, Kabel und andere Fremdstoffe aussortieren.", "Material nicht mit unbekanntem oder schadstoffverdächtigem Abfall mischen.", "Vor dem Transport Annahmebedingungen und Höchstmenge erfragen."],
+      "warning": "Asbest, Mineralwolle, teerhaltige Stoffe, rußbelastete Steine und kontaminierter Boden sind keine normalen Bauschuttfälle. Nicht zerbrechen oder ohne fachliche Auskunft transportieren.",
+      "localVariation": "München nimmt sortenreinen Bauschutt aus Privathaushalten nur in begrenzten Mengen am Wertstoffhof an. Mengen, Gebühren und ausgeschlossene Stoffe unterscheiden sich kommunal.",
+      "sources": ["munich-awm-construction", "hamburg-srh-recycling-centres", "berlin-bsr-abc"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
+    },
+    {
+      "id": "leather-household-item",
+      "knowledgeType": "material-guide",
+      "name": "Ledergegenstand",
+      "aliases": ["Leder", "Lederreste", "Lederstück", "Ledergürtel", "Ledertasche", "Lederjacke", "Lederschuhe", "Lederhandschuhe", "Kunstleder"],
+      "keywords": ["Bekleidung", "Materialrest", "Weitergabe", "Restmüll"],
+      "searchIntents": [
+        {
+          "all": [["Leder", "Kunstleder", "leather", "faux leather"]],
+          "exclude": ["Elekt", "Batter", "Akku", "Chem", "Farbe", "Öl", "electric", "battery", "chemical", "paint", "oil"],
+          "score": 112
+        }
+      ],
+      "category": "Leder / Bekleidung",
+      "route": {"type": "local-check", "label": "Brauchbar: weitergeben · unbrauchbar: örtlichen Rest-/Textilweg prüfen"},
+      "certainty": "check-local",
+      "answer": "Brauchbare Lederwaren weitergeben. Kleine unbrauchbare Lederreste können örtlich Restmüll sein; bei Kleidung und größeren Teilen die kommunale Textil- oder Wertstoffregel prüfen.",
+      "reason": "Wiederverwendung ist sinnvoller als Entsorgung. Kommunale Sammlungen unterscheiden bei tragbarer Kleidung, Materialresten, Kunstleder und großen Gegenständen.",
+      "steps": ["Prüfen, ob Tasche, Schuhe, Gürtel oder Kleidung noch nutzbar sind.", "Nur saubere und trockene tragbare Stücke in eine dafür zugelassene Sammlung geben.", "Unbrauchbare oder große Lederteile im örtlichen Abfall-ABC nachschlagen."],
+      "warning": "Öl-, lösemittel- oder chemikalienbelastetes Leder nicht als normalen Materialrest behandeln.",
+      "localVariation": "München nennt Lederreste als Restmüll und brauchbare Lederbekleidung für die kommunale Altkleidersammlung. Andere Kommunen können abweichen.",
+      "sources": ["munich-awm-leather", "uba-separation-2026"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
+    },
+    {
+      "id": "cork-household-item",
+      "knowledgeType": "material-guide",
+      "name": "Kork",
+      "aliases": ["Kork", "Korken", "Flaschenkorken", "Weinkorken", "Korkplatte", "Korkboden", "Korkreste", "Naturkork"],
+      "keywords": ["Flaschenverschluss", "Bodenbelag", "Naturmaterial", "Wertstoffhof"],
+      "searchIntents": [
+        {
+          "all": [["Kork", "cork"]],
+          "exclude": ["Kunststoffkork", "Elekt", "Batter", "Akku", "Chem", "plastic cork", "electric", "battery", "chemical"],
+          "score": 112
+        }
+      ],
+      "category": "Kork",
+      "route": {"type": "local-check", "label": "Örtliche Korksammlung oder Wertstoffhof prüfen"},
+      "certainty": "check-local",
+      "answer": "Naturkork möglichst getrennt sammeln und eine örtliche Korkannahme oder den Wertstoffhof nutzen. Für Bodenbeläge und Verbundkork gelten andere Mengen- und Materialregeln.",
+      "reason": "Kork kann getrennt verwertet werden, doch Sammelstellen und die Annahme von Korkboden oder beschichteten Platten sind nicht bundesweit einheitlich.",
+      "steps": ["Kunststoffverschlüsse und stark beschichtete Teile getrennt halten.", "Zwischen Flaschenkorken und Boden- beziehungsweise Baukork unterscheiden.", "Örtliches Abfall-ABC nach Kork oder Korken prüfen."],
+      "warning": "Korkboden, Dämmkork und verklebte Platten nicht ohne örtliche Prüfung wie lose Flaschenkorken behandeln.",
+      "localVariation": "Hamburg und München nennen Recyclinghöfe für Kork beziehungsweise Korken; andere Kommunen bieten eigene Sammelstellen oder andere Wege.",
+      "sources": ["hamburg-srh-abc", "munich-awm-lexicon"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
+    },
+    {
+      "id": "wax-household-item",
+      "knowledgeType": "material-guide",
+      "name": "Wachs oder Kerzenrest",
+      "aliases": ["Wachs", "Kerze", "Kerzen", "Kerzenrest", "Kerzenreste", "Kerzenwachs", "Wachsreste", "Teelichtwachs"],
+      "keywords": ["Kerzenstummel", "Paraffin", "Stearin", "Restmüll"],
+      "searchIntents": [
+        {
+          "all": [["Wachs", "Kerze", "Paraffin", "Stearin", "wax", "candle", "paraffin", "stearin"]],
+          "exclude": ["Verpack", "Elekt", "Batter", "Akku", "Chem", "packaging", "electric", "battery", "chemical"],
+          "score": 112
+        }
+      ],
+      "category": "Wachs",
+      "route": {"type": "local-check", "label": "Weiterverwenden · kleine Reste meist Restmüll, örtliche Sammlung möglich"},
+      "certainty": "check-local",
+      "answer": "Saubere Wachsreste nach Möglichkeit für neue Kerzen weiterverwenden. Kleine unbrauchbare Reste können örtlich in den Restmüll; vorhandene kommunale Wachssammlungen haben Vorrang.",
+      "reason": "Wachs ist kein Bioabfall und wird nicht über eine Verpackungssammlung erfasst. Freiwillige oder kommunale Sammelwege sind örtlich verschieden.",
+      "steps": ["Docht, Glas, Metallhülle und Dekoration nach Material trennen.", "Saubere Reste weiterverwenden oder einer vorhandenen Sammlung geben.", "Ohne Sammlung kleine Mengen nach örtlicher Regel entsorgen."],
+      "warning": "Kerzenglas gehört nicht automatisch ins Altglas. Metallhüllen und elektrische LED-Kerzen getrennt nach ihrer Funktion behandeln.",
+      "localVariation": "München nennt für Wachs und Kerzen Wertstoffhof oder Restmüll. Andere Kommunen können eigene Sammelaktionen anbieten.",
+      "sources": ["munich-awm-lexicon", "uba-household-waste"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
+    },
+    {
+      "id": "composite-household-item",
+      "knowledgeType": "material-guide",
+      "name": "Verbund- oder Mischmaterial",
+      "aliases": ["Verbundmaterial", "Verbundstoff", "Mischmaterial", "Materialmix", "Mehrschichtmaterial", "Glasfaser", "GFK", "Carbonteil", "Kunstharzteil", "beschichtetes Material"],
+      "keywords": ["Materialmix", "nicht trennbar", "Nichtverpackung", "örtlich prüfen"],
+      "searchIntents": [
+        {
+          "all": [["Verbundmaterial", "Verbundstoff", "Mischmaterial", "Materialmix", "Glasfaser", "GFK", "Carbon", "Kunstharz", "composite", "mixed material", "fiberglass", "fibreglass", "carbon fibre", "resin"]],
+          "exclude": ["Verpack", "Getränkekarton", "Elekt", "Batter", "Akku", "Chem", "flüssig", "packaging", "beverage carton", "electric", "battery", "chemical", "liquid"],
+          "score": 108
+        }
+      ],
+      "category": "Verbundmaterial",
+      "route": {"type": "local-check", "label": "Funktion, Größe und Hauptmaterial bestimmen · örtlich prüfen"},
+      "certainty": "check-local",
+      "answer": "Bei nicht trennbaren Materialgemischen entscheidet der konkrete Gegenstand. Verpackung, Elektrogerät, Bauabfall und kleiner Haushaltsgegenstand können völlig verschiedene Wege haben.",
+      "reason": "Für Verbundmaterialien gibt es ohne Produktfunktion und örtliches Sammelsystem keine belastbare allgemeine Tonne.",
+      "steps": ["Prüfen, ob der Gegenstand eine Verpackung, Elektronik oder Bauabfall ist.", "Leicht lösbare Bestandteile nur gefahrlos trennen.", "Größe, Hauptmaterial und konkreten Gegenstand im örtlichen Abfall-ABC nachschlagen."],
+      "warning": "Faserstaub, unbekannte Kunstharze, Flüssigkeiten und beschädigte Bauteile nicht bearbeiten. Bei möglicher Gesundheitsgefahr fachliche Auskunft einholen.",
+      "localVariation": "Kommunen unterscheiden nach Gegenstand, Größe und Annahmetechnik. Die App nennt deshalb bewusst keine pauschale Deutschland-Tonne.",
+      "sources": ["uba-packaging", "uba-household-waste", "berlin-bsr-abc", "hamburg-srh-abc", "munich-awm-lexicon"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
     },
     {
       "id": "needle",

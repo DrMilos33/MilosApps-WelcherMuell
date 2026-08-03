@@ -8,7 +8,7 @@ const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT;
 if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_EXPECTED_SOURCE_COMMIT muss den vollständigen deployten Quellcommit enthalten.");
 }
-const expectedContentVersion = "2026.08.03-3";
+const expectedContentVersion = "2026.08.03-4";
 const expectedEssentialsVersion = "1.1.5";
 const expectedEssentialsCommit = "2942132ad3bf6cf39edc9f52ed918de6a230be23";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;

@@ -7,8 +7,8 @@ Nutzerdatenbank sind nicht nötig.
 
 ## DEV-Stand
 
-- Inhaltsversion: `2026.08.03-3`, Stand 03.08.2026
-- 50 redaktionelle Einträge und 23 amtliche oder kommunale Quellen
+- Inhaltsversion: `2026.08.03-4`, Stand 03.08.2026
+- 58 redaktionelle Einträge und 28 amtliche oder kommunale Quellen
 - allgemeiner Geltungsbereich: private Haushalte in Deutschland
 - belegte regionale Ergänzungen: Berlin, Hamburg und München
 - Plattformen: Web, Smartphone/PWA und Desktop
@@ -119,10 +119,13 @@ Tonne nur bei einem tatsächlichen Restmüllweg.
 Die Suche deckt neben Materialbegriffen auch typische Alltagswörter und
 Zusammensetzungen ab, etwa `Gummi`, `Gummiband`, `Haargummi`, `Radiergummi`,
 `Plastikblume`, `Kunstblumen`, `Plastikschüssel`, `Staubsaugerbeutel`,
-`Katzenstreu` und `Kugelschreiber`. Ein reiner Materialbegriff wie `Plastik`
-bleibt eine Auswahl zwischen Verpackung und Gegenstand. Sicherheitsrelevante
-Abgrenzungen wie Auto- und Motorradreifen sowie elektrische Spielsachen bleiben
-eigene, vorsichtige Treffer.
+`Katzenstreu` und `Kugelschreiber`. Allgemeine Leitfäden für Eisen/Metall,
+Holz, mineralischen Bauschutt, Leder, Kork, Wachs und Verbundmaterial liefern
+auch dann einen sicheren nächsten Schritt, wenn der genaue Gegenstand fehlt.
+Ein reiner Materialbegriff wie `Plastik` oder `Metall` trennt sichtbar zwischen
+Verpackung und Gegenstand. Elektro-/Batteriemerkmale, Gas- und Druckbehälter,
+Farbe, Chemikalien und andere Sicherheitsausnahmen sperren eine allgemeine
+Materialroute vollständig.
 
 Exakte und redaktionell modellierte Begriffe verdrängen schwächere Präfix-,
 Teil- und Fuzzy-Kandidaten vollständig. Ein unscharfer Kandidat zeigt nur einen

@@ -2,9 +2,9 @@
 
 ## Inhaltsstand
 
-- Inhaltsversion: `2026.08.03-3`
+- Inhaltsversion: `2026.08.03-4`
 - redaktionell erweitert: 03.08.2026
-- Umfang: 50 Entsorgungseinträge, 23 Quellen
+- Umfang: 58 Entsorgungseinträge, 28 Quellen
 - früheste erneute Prüfung: 30.09.2026
 - allgemeine Geltung: private Haushalte in Deutschland
 - regionale Ergänzungen: Berlin, Hamburg und München
@@ -29,7 +29,7 @@ Fachliche Aussagen stammen ausschließlich von:
   gebrauchten Spritzen.
 
 UBA- und BMG-Rechteseiten sind zusätzlich als Lizenznachweis katalogisiert.
-Am 03.08.2026 beantworteten alle 23 URLs den automatisierten Live-Check mit
+Am 03.08.2026 beantworteten alle 28 URLs den automatisierten Live-Check mit
 HTTP 200. Für die Erweiterung um kleine Gummi- und Alltagsgegenstände wurden
 insbesondere das Abfalllexikon des Abfallwirtschaftsbetriebs München sowie die
 UBA-Hinweise zu Haushaltsabfällen geprüft. Autoreifen sind anhand der eigenen
@@ -63,6 +63,17 @@ Sack grundsätzlich Verpackungen zu; Berlin nennt Kunststoff-Haushaltsartikel
 in der Wertstofftonne; Hamburg beschreibt stoffgleiche Nichtverpackungen in der
 Wertstoffsammlung; der AWM München führt die Kunststoff-Gießkanne zum
 Wertstoffhof. Daraus wird bewusst keine bundesweit einheitliche Tonne abgeleitet.
+
+Mit Inhaltsversion `2026.08.03-4` wurde dieselbe Trennung als allgemeine
+Materialschicht erweitert. Das UBA belegt Metallverpackungen in der
+Leichtverpackungssammlung und begrenzt Nichtverpackungen auf Kommunen mit
+Wertstofftonne. Hamburg bestätigt eine breite kommunale Annahme vieler
+Metall-Nichtverpackungen; München verweist Metallteile auf den Wertstoffhof.
+Eigene AWM-Detailseiten belegen außerdem eng die örtlichen Grenzen für Holz,
+Bauschutt und Leder; Hamburgs Recyclinghofseite ergänzt kommunale Annahme- und
+Mengenhinweise. Kork, Wachs und Verbundmaterial bleiben mangels bundesweit
+einheitlicher Sammlung bewusst beim belegten örtlichen Prüfschritt. Aus keinem
+dieser kommunalen Beispiele wird eine Deutschland-Tonne abgeleitet.
 
 ## Lizenz und Attribution
 

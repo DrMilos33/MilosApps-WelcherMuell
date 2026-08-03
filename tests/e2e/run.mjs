@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 const host = "127.0.0.1";
 const port = 4318;
 const baseUrl = `http://${host}:${port}`;
-const expectedContentVersion = "2026.08.03-3";
+const expectedContentVersion = "2026.08.03-4";
 const artifacts = new URL("../../test-results/qa/", import.meta.url);
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -320,6 +320,9 @@ try {
     await desktopPage.getByText("Small items: residual waste · large items and tires: check locally", { exact: true }).waitFor();
     await desktopPage.getByText(/Car and motorcycle tires do not belong/).waitFor();
     assert.equal(await desktopPage.getByRole("button", { name: "Share", exact: true }).count(), 1);
+    await submitSearch(desktopPage, "iron bar");
+    await desktopPage.getByRole("heading", { name: "Iron or metal", exact: true }).waitFor();
+    await desktopPage.locator(".result-destination").getByText(/local recycling bin/).waitFor();
     await desktopPage.getByRole("button", { name: "Region", exact: true }).click();
     await desktopPage.getByRole("dialog", { name: "Region", exact: true }).waitFor();
     assert.equal(await desktopPage.getByLabel("Broad region").locator("option").first().textContent(), "Germany — general guidance");
@@ -462,6 +465,48 @@ try {
     await desktopPage.getByRole("heading", { name: "Karton", exact: true }).waitFor();
   });
 
+  await check("Desktop: allgemeine Materialien liefern Regeln statt Zufallstreffer", async () => {
+    for (const query of ["Eisen", "rostige Eisenstange", "Kupferrohr"]) {
+      await submitSearch(desktopPage, query);
+      await desktopPage.getByRole("heading", { name: "Eisen oder Metall", exact: true }).waitFor();
+      assert.equal(await desktopPage.locator('[data-item-id="metal-household-item"]').count(), 1, query);
+    }
+    const metalKeywords = await desktopPage.locator(".result-destination .route-keyword").allTextContents();
+    assert.ok(metalKeywords.includes("Wertstofftonne"), JSON.stringify(metalKeywords));
+    assert.ok(metalKeywords.includes("Wertstoffhof"), JSON.stringify(metalKeywords));
+
+    await submitSearch(desktopPage, "Metall");
+    await desktopPage.getByRole("heading", { name: "Meintest du etwas anderes?", exact: true }).waitFor();
+    assert.equal(await desktopPage.getByRole("button", { name: "Metallverpackung auswählen" }).count(), 1);
+    assert.equal(await desktopPage.getByRole("button", { name: "Elektrogerät auswählen" }).count(), 1);
+
+    await submitSearch(desktopPage, "Metallverpackung");
+    await desktopPage.getByRole("heading", { name: "Metallverpackung", exact: true }).waitFor();
+    await desktopPage.locator(".result-destination").getByText(/Gelbe Tonne, Gelber Sack/).waitFor();
+
+    await submitSearch(desktopPage, "Holzspielzeug mit Batterie");
+    await desktopPage.getByRole("heading", { name: "Elektrogerät", exact: true }).waitFor();
+    assert.equal(await desktopPage.locator('[data-item-id="wood-household-item"]').count(), 0);
+
+    await submitSearch(desktopPage, "Gasflasche aus Stahl");
+    await desktopPage.getByRole("heading", { name: /Kein sicherer Treffer/ }).waitFor();
+    assert.equal(await desktopPage.locator('[data-item-id="metal-household-item"]').count(), 0);
+
+    await submitSearch(desktopPage, "flüssige Farbe in Metalldose");
+    await desktopPage.getByRole("heading", { name: "Haushaltschemikalien", exact: true }).waitFor();
+    assert.equal(await desktopPage.locator('[data-item-id="metal-packaging"]').count(), 0);
+    assert.equal(await desktopPage.locator('[data-item-id="tin-can"]').count(), 0);
+
+    await submitSearch(desktopPage, "unbekannte Carbonplatte");
+    await desktopPage.getByRole("heading", { name: "Verbund- oder Mischmaterial", exact: true }).waitFor();
+    assert.equal(await desktopPage.locator('[data-item-id="wood-household-item"]').count(), 0);
+
+    await submitSearch(desktopPage, "Eissen");
+    await desktopPage.getByRole("heading", { name: "Meintest du einen dieser Begriffe?", exact: true }).waitFor();
+    assert.equal(await desktopPage.getByRole("button", { name: "Eisen suchen", exact: true }).count(), 1);
+    assert.equal(await desktopPage.locator(".result-immediate").count(), 0);
+  });
+
   await check("Desktop: Mehrdeutigkeit wird nicht geraten", async () => {
     await submitSearch(desktopPage, "Glas");
     await desktopPage.getByRole("heading", { name: /Was meinst du mit „Glas“/ }).waitFor();
@@ -494,6 +539,11 @@ try {
     await desktopPage.getByRole("button", { name: /Plastikgegenstand/ }).click();
     await desktopPage.getByRole("heading", { name: "Plastik", exact: true }).waitFor();
     await assert.doesNotReject(() => desktopPage.getByText(/nicht automatisch in Gelbe Tonne/i).waitFor());
+
+    await submitSearch(desktopPage, "mysteriöser schwerer Fund");
+    await desktopPage.getByRole("button", { name: /Eisen oder Metall/ }).click();
+    await desktopPage.getByRole("heading", { name: "Eisen oder Metall", exact: true }).waitFor();
+    await desktopPage.getByText(/Verpackungsfunktion, Größe/).waitFor();
   });
 
   await check("Desktop: regionale Korrektur bleibt auf die geöffnete Seite begrenzt", async () => {
@@ -930,6 +980,44 @@ try {
     }));
     assert.ok(correctionGeometry.buttonHeight >= 44, `Korrekturziel zu klein: ${JSON.stringify(correctionGeometry)}`);
     assert.ok(correctionGeometry.scrollWidth <= correctionGeometry.clientWidth + 1, `Korrektur läuft bei 200 % über: ${JSON.stringify(correctionGeometry)}`);
+    await submitSearch(mobilePage, "unbekannter gegenstand xyz");
+    await mobilePage.getByRole("heading", { name: "Was trifft am ehesten zu?", exact: true }).waitFor();
+    const fallbackGeometry = await mobilePage.locator(".fallback-options").evaluate((options) => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+      buttons: [...options.querySelectorAll("button")].map((button) => {
+        const rect = button.getBoundingClientRect();
+        return { width: Math.round(rect.width), height: Math.round(rect.height), right: Math.round(rect.right) };
+      }),
+      offenders: [...document.querySelectorAll("body *")].map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          element: `${element.tagName.toLowerCase()}#${element.id}.${element.className || ""}`,
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          width: Math.round(rect.width),
+          scrollWidth: element.scrollWidth
+        };
+      }).filter(({ left, right, width }) => width > 0 && (left < -1 || right > innerWidth + 1)).slice(0, 12),
+      scrollContainers: [document.documentElement, document.body, ...document.querySelectorAll("body *")]
+        .filter((element) => element.scrollWidth > element.clientWidth + 1)
+        .map((element) => ({
+          element: `${element.tagName.toLowerCase()}#${element.id}.${element.className || ""}`,
+          clientWidth: element.clientWidth,
+          scrollWidth: element.scrollWidth,
+          overflowX: getComputedStyle(element).overflowX
+        })).slice(0, 16),
+      shellScrollContainers: [...document.querySelector("milos-app-shell").shadowRoot.querySelectorAll("*")]
+        .filter((element) => element.scrollWidth > element.clientWidth + 1)
+        .map((element) => ({
+          element: `${element.tagName.toLowerCase()}.${element.className || ""}`,
+          clientWidth: element.clientWidth,
+          scrollWidth: element.scrollWidth,
+          overflowX: getComputedStyle(element).overflowX
+        })).slice(0, 16)
+    }));
+    assert.ok(fallbackGeometry.scrollWidth <= fallbackGeometry.clientWidth + 1, `Materialauswahl läuft bei 200 % über: ${JSON.stringify(fallbackGeometry)}`);
+    assert.deepEqual(fallbackGeometry.buttons.filter(({ height, right }) => height < 44 || right > fallbackGeometry.clientWidth + 1), []);
     await mobilePage.evaluate(() => {
       document.documentElement.style.fontSize = "";
     });

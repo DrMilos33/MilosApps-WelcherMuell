@@ -510,6 +510,34 @@ Vorschlag erkennen oder übersehen. Der entscheidende Sicherheitsgewinn ist,
 dass solche unscharfen Kandidaten niemals stillschweigend zur fachlichen
 Antwort werden. Neue tatsächliche Gegenstände bleiben redaktionelle Datenarbeit.
 
+### Allgemeine Suche braucht eine fachliche Hierarchie statt mehr Schlagwörter
+
+Ein großer Synonymkatalog allein beantwortet neue Eingaben nicht verlässlich.
+Die belastbare Reihenfolge ist: konkreter Gegenstand und Funktion, Gefahr- und
+Elektromerkmale, Verpackungsfunktion, Materialleitfaden, regionale Regel.
+Allgemeine Materialien dürfen eine vorsichtige Antwort liefern, aber nie eine
+Gefahr- oder Funktionsregel überstimmen. Ausschlüsse müssen deshalb für jeden
+Rankingpfad gelten und nicht nur für den Intent-Score.
+
+Evidenz: Vor dem neuen Gate konnte `Gasflasche aus Stahl` trotz ausgeschlossener
+Metall-Absicht über einen schwächeren Materialpfad wieder auftauchen. Danach
+bleiben Stahl-Gasflasche, flüssige Farbe in Metalldose und Asbestplatte ohne
+allgemeine Materialroute; `Holzspielzeug mit Batterie` wird Elektro. Eisen,
+Kupferrohr, Holz, Bauschutt, Leder, Kork, Wachs und Mischmaterial erhalten
+dagegen einen belegten allgemeinen Prüfschritt.
+
+Kurze Stämme brauchen zusätzlich Kollisionsregressionen: `Latte` kam mitten in
+`Carbonplatte` vor und erzeugte zunächst einen Holztreffer. Der allgemeine
+Intent verwendet deshalb nur kollisionsarme Materialstämme; kurze konkrete
+Wörter bleiben exakte Synonyme. Ebenso darf ein semantischer Intent einen
+bereits erkannten Tippfehler nicht zu einer stillen Antwort aufwerten:
+`Eissen`, `Metalll` und `Holtz` bleiben bestätigbare Vorschläge.
+
+Gültigkeitsgrenze: Die Hierarchie erhöht Abdeckung und verhindert bekannte
+Fehlklassifikationen. Sie ersetzt weder einen redaktionellen Eintrag noch eine
+kommunale Quelle. Ist Funktion, Gefahr oder Ortsregel unklar, bleibt der sichere
+nächste Prüfschritt richtiger als eine erfundene Tonne.
+
 ## Weitergabe
 
 Die allgemein relevanten Punkte zu dreistufiger Quellenpflege, Suchgewichtung,
