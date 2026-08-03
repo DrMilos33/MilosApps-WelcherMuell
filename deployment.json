@@ -5,8 +5,8 @@
   "provider": "GitHub Pages",
   "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
   "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-  "sourceCommit": "e285950b8efe5037b06912cd348931c2927bca0f",
-  "sourceTree": "1bfbf52fd29a98414ed857b91c88ce11325a924d",
+  "sourceCommit": "be6b4c95e7d612441b85d2a59c3553300a04ed01",
+  "sourceTree": "f2dd813e2297abf14593780f524e2d29c4d6419b",
   "contentVersion": "2026.08.03-1",
   "productionApproved": false,
   "files": [
@@ -24,7 +24,7 @@
     },
     {
       "path": "healthz",
-      "sha256": "c6740b041fd5e71ca9919b9e3ac13b7a7265ec2dc7a8fde5dda4a0f9e4dd8ccb"
+      "sha256": "e679991fc5d9b34eac8006769e6103f2996935190d304f8977903f2c4c30385c"
     },
     {
       "path": "index.html",
@@ -36,7 +36,7 @@
     },
     {
       "path": "meta.json",
-      "sha256": "f476de3516c07f02a7132936b4d0fe1d8bc7ddfce7edd98faabdd68809946a85"
+      "sha256": "b88054d77e72eaa42718f7b8b1faeed63d1206d17098a5845eced1d7a3fd1728"
     },
     {
       "path": "milos-app.json",
@@ -84,7 +84,7 @@
     },
     {
       "path": "src/styles.css",
-      "sha256": "eda562e3fc70420bbf52665d03baa501f34511de634c151014099cf7c3d7c3a1"
+      "sha256": "c66148c46e07e23b858f9f0b7eaea8051abdc5dbf8806df0d2c5562a53da0333"
     },
     {
       "path": "sw.js",

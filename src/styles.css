@@ -129,7 +129,7 @@ main {
 }
 
 #main > :where(.hero, .search-dock, .search-support, .results-section, .trust-section, .app-meta-links) {
-  width: min(calc(100% - 2rem), var(--max-width));
+  width: min(calc(100% - 32px), var(--max-width));
   margin-inline: auto;
 }
 
@@ -209,7 +209,16 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-width: 0;
   gap: 1rem;
+}
+
+.section-heading {
+  flex-wrap: wrap;
+}
+
+.section-heading > * {
+  min-width: 0;
 }
 
 .content-date,
@@ -502,8 +511,8 @@ h3 {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 0.8rem 1rem;
-  padding: clamp(0.9rem, 2.2vw, 1.2rem);
+  gap: 13px 16px;
+  padding: clamp(14px, 2.2vw, 19px);
   color: #fff;
   background: #163d36;
 }
@@ -511,16 +520,16 @@ h3 {
 .result-symbol {
   display: grid;
   place-items: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  border: 0.1rem solid #d9ff56;
-  border-radius: 1rem;
+  width: 52px;
+  height: 52px;
+  border: 2px solid #d9ff56;
+  border-radius: 16px;
   color: #d9ff56;
 }
 
 .route-icon {
-  width: 1.85rem;
-  height: 1.85rem;
+  width: 30px;
+  height: 30px;
   fill: none;
   stroke: currentcolor;
   stroke-width: 1.8;
@@ -532,7 +541,7 @@ h3 {
   display: grid;
   grid-template-columns: minmax(8rem, 0.7fr) auto minmax(14rem, 1.3fr);
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .result-path-part {
@@ -544,6 +553,7 @@ h3 {
   color: #c8e0da;
   font-size: 0.82rem;
   font-weight: 750;
+  overflow-wrap: anywhere;
 }
 
 .result-subject {
@@ -569,6 +579,7 @@ h3 {
 
 .route-keyword {
   display: inline-block;
+  max-width: 100%;
   margin: 0.08rem 0.12rem;
   padding: 0.16rem 0.44rem;
   border-radius: 0.65rem;
@@ -576,7 +587,7 @@ h3 {
   background: #d9ff56;
   font-size: 0.92em;
   font-weight: 850;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .route-keyword.local {
@@ -685,9 +696,16 @@ h3 {
 }
 
 .source-list li {
+  min-width: 0;
   padding: 0.85rem;
   border-radius: var(--radius-sm);
   background: var(--canvas);
+}
+
+.source-list a,
+.source-list small {
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .source-list small {
@@ -730,6 +748,7 @@ h3 {
 
 .related-intro h3 {
   font-size: 1.05rem;
+  overflow-wrap: anywhere;
 }
 
 .related-intro p:last-child {
@@ -762,6 +781,11 @@ h3 {
   display: block;
 }
 
+.related-choice > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .related-choice small {
   margin-top: 0.08rem;
   color: var(--muted);
@@ -769,6 +793,7 @@ h3 {
 }
 
 .related-choice > span:last-child {
+  flex: 0 0 auto;
   color: var(--accent-ink);
   font-size: 1.2rem;
   font-weight: 900;
@@ -1124,6 +1149,7 @@ dialog::backdrop {
 
   .results-section .section-heading .text-button {
     flex: 0 0 auto;
+    max-width: 100%;
     white-space: nowrap;
   }
 
@@ -1153,7 +1179,7 @@ dialog::backdrop {
 
   .result-path {
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.55rem;
+    gap: 9px;
   }
 
   .result-arrow {
