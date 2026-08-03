@@ -490,3 +490,87 @@ Abschließend wird der Commit in einen frischen Windows-Checkout mit aktivem
 Dieser Nachweis ist bewusst source-only: kein Pages-Deploy, keine
 Portalmutation und keine Productionänderung. Er erneuert insbesondere keinen
 redaktionellen Quellenreview.
+
+## UX-Verfeinerung 03.08.2026: Sofortantwort und Datenschutzwahrheit
+
+### Produktänderung
+
+Die bestehende Such- und Quellenlogik bleibt unverändert. Neu ist ausschließlich
+die Priorisierung im Ergebnisfeld: erkannter Gegenstand beziehungsweise
+Material und der konkrete Entsorgungsweg bilden die erste zusammenhängende,
+icon- und textgeführte Antwort. Grund, Schritte, regionale Grenzen,
+Sicherheitsausnahmen, Gültigkeit und Quellen folgen in dieser Reihenfolge.
+`Gummibnad` wird weiterhin fehlertolerant als `Gummiband` erkannt und zeigt
+sofort „Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen“.
+
+Parallel wurde die optionale Persistenz entfernt: Region gilt nur bis Reload,
+Verlauf ist ausgeschaltet und Sprache bleibt über den sichtbaren URL-Parameter
+`lang=en` erhalten. Es gibt keine Web-Storage-Zugriffe und keinen
+Schein-Einwilligungsbanner. Datenschutz bleibt permanent verlinkt. Offline-
+Caching beginnt erst nach „Offline aktivieren“; die frühere automatische
+Workerregistrierung wird bereinigt.
+
+Inhaltsversion `2026.08.01-1`, fachliche Daten, Quellen, Geltungsgebiet,
+Lizenzen und redaktionelle Reviewtermine wurden nicht angehoben. Der technische
+21/21-Erreichbarkeitscheck der offiziellen Quellen ist kein neuer
+redaktioneller Review.
+
+### Verbesserungsrunde 1
+
+Ein fehlschlagender Vertragstest verlangte zuerst den noch fehlenden
+speicherfreien Shell-Adapter, das Endgeräteinventar und die neue semantische
+Ergebnisreihenfolge. Nach der Implementierung bestand die Fach-/Unit-Schicht
+mit 79/79 Prüfungen.
+
+Der erste vollständige Browserlauf bestand 27/29 Fälle. Beide Fehler hatten
+dieselbe Produktursache: Der mit `data-milos-privacy-info` markierte Link lag im
+eingeklappten Vertrauensbereich und war damit nicht dauerhaft sichtbar. Der
+Link und die App-Metadaten wurden als kompakte, immer erreichbare Zeile aus der
+Offenlegung herausgezogen.
+
+### Verbesserungsrunde 2
+
+Der zweite Lauf bestand 28/29 Fälle. Die App hatte nun richtigerweise zwei
+sichtbare Datenschutzwege – app-eigener Informationslink und Shell-Footer –,
+der Shell-Test verwendete aber einen zu breiten Locator. Die Regression wurde
+auf den Footer begrenzt, ohne einen der beiden sinnvollen Links zu entfernen.
+
+Der anschließende vollständige Lauf bestand 29/29. Nach der Trennung des
+früher automatisch registrierten Workers von der neuen expliziten Offline-
+Aktivierung wurde die gesamte Matrix nochmals ausgeführt und blieb 29/29 grün.
+
+### Lokale Abschlussmatrix mit public-app-essentials/v1.1.2
+
+- Shell-Verifier: PASS;
+- Essentials-Verifier und 6er-Lock: PASS für
+  `public-app-essentials/v1.1.2` aus Shared-Commit
+  `b14aac6107b75f03ff49e74160af7e7e30c29e59`;
+- 79/79 Unit-, Inhalts-, Quellen-, Such-, Übersetzungs- und Vertragstests;
+- 29/29 Browser-E2E-Prüfungen;
+- 21/21 amtliche oder kommunale Quell-URLs technisch HTTP 200 nach einem
+  erfolgreichen Wiederholungslauf; ein voriger Transportfehler beim
+  Umweltbundesamt war transient;
+- Desktop 1440 × 900, Smartphone 390 × 844, Querformat und
+  360 × 800 bei 200 Prozent Textzoom ohne horizontalen Überlauf;
+- vollständiges DE/EN samt URL-Reload, Tastatur, Fokus, 44-Pixel-Ziele,
+  Reduced Motion, Screenreader-Nähe, langsamer Start, Share nativ/Fallback/
+  Abbruch, Druck und explizites Offline grün;
+- null Browser-, Konsolen- oder CSP-Fehler.
+
+Der Loader verwendet `assets/icon.svg` als physische Quelle und
+`./assets/icon.svg` als öffentliche Same-Origin-URL. Lokaler HTTP- und
+Artefakttest prüfen `200 image/svg+xml` sowie einen identischen SHA-256-Wert.
+Alle sechs Verbraucherartefakte einschließlich des vendorten Schemas sind
+bytegenau gelockt und durch die enge LF-Regel geschützt.
+
+Ein Browser-Hänger legte außerdem eine echte Modulabhängigkeit offen:
+Dokumentreihenfolge allein garantiert bei einem Bootstrap mit Top-Level-Await
+nicht, dass die Shell vor dem Verbraucher registriert ist. `app.js` importiert
+den Shell-Bootstrap deshalb explizit. Die statische, verifierkonforme Shell
+wird vor der Registrierung kurz getrennt, anschließend mit dem speicherfreien
+URL-Sprachadapter aktualisiert und wieder verbunden. Der Regressionstest prüft
+genau eine Shell, genau eine H1, den ausgeblendeten Loader und null Logs.
+
+Inhaltsversion, Quellenbestand und redaktionelle Reviewtermine bleiben
+unverändert; diese Matrix bestätigt die technische Migration und den
+Produktzustand, nicht einen neuen Quellenreview.

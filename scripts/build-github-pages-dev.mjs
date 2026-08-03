@@ -37,7 +37,7 @@ if (sourceCommit !== expectedSourceCommit) {
 
 const sourceTree = git(["show", "-s", "--format=%T", sourceCommit], { encoding: "utf8" }).trim();
 const deployablePrefixes = ["assets/", "public/", "src/", "vendor/"];
-const deployableRootFiles = new Set(["index.html", "manifest.webmanifest", "meta.json", "milos-app.json", "milos-essentials.json", "sw.js"]);
+const deployableRootFiles = new Set(["index.html", "manifest.webmanifest", "meta.json", "milos-app.json", "milos-essentials.json", "sw.js", "offline-sw.js"]);
 const sourcePaths = git(["ls-tree", "-r", "--name-only", sourceCommit], { encoding: "utf8" })
   .split(/\r?\n/)
   .filter(Boolean)
@@ -48,11 +48,18 @@ const requiredEssentialsArtifacts = [
   "vendor/milosapps-essentials/v1/milos-app-essentials.js",
   "vendor/milosapps-essentials/v1/milos-app-essentials.css",
   "vendor/milosapps-essentials/v1/milos-app-essentials-theme.css",
+  "vendor/milosapps-essentials/v1/verify.mjs",
+  "vendor/milosapps-essentials/v1/essentials-manifest.schema.json",
   "vendor/milosapps-essentials/v1/essentials-lock.json"
 ];
 const missingEssentialsArtifacts = requiredEssentialsArtifacts.filter((path) => !sourcePaths.includes(path));
 if (missingEssentialsArtifacts.length > 0) {
   throw new Error(`Essentials-Artefakte fehlen im Quellcommit: ${missingEssentialsArtifacts.join(", ")}`);
+}
+const requiredAppArtifacts = ["sw.js", "offline-sw.js", "src/shell-session.js"];
+const missingAppArtifacts = requiredAppArtifacts.filter((path) => !sourcePaths.includes(path));
+if (missingAppArtifacts.length > 0) {
+  throw new Error(`App-Laufzeitartefakte fehlen im Quellcommit: ${missingAppArtifacts.join(", ")}`);
 }
 
 await rm(outputRoot, { recursive: true, force: true });
@@ -91,14 +98,15 @@ await writeFile(indexPath, indexHtml, "utf8");
 const appPath = resolve(outputRoot, "src", "app.js");
 let appJs = await readFile(appPath, "utf8");
 appJs = appJs
-  .replaceAll('"/public/data/', `"${basePath}/public/data/`)
-  .replace('register("/sw.js")', `register("${basePath}/sw.js")`);
+  .replaceAll('"/public/data/', `"${basePath}/public/data/`);
 await writeFile(appPath, appJs, "utf8");
 
-const serviceWorkerPath = resolve(outputRoot, "sw.js");
-let serviceWorker = await readFile(serviceWorkerPath, "utf8");
-serviceWorker = serviceWorker.replaceAll('"/', `"${basePath}/`);
-await writeFile(serviceWorkerPath, serviceWorker, "utf8");
+for (const serviceWorkerFile of ["sw.js", "offline-sw.js"]) {
+  const serviceWorkerPath = resolve(outputRoot, serviceWorkerFile);
+  let serviceWorker = await readFile(serviceWorkerPath, "utf8");
+  serviceWorker = serviceWorker.replaceAll('"/', `"${basePath}/`);
+  await writeFile(serviceWorkerPath, serviceWorker, "utf8");
+}
 
 const manifestPath = resolve(outputRoot, "manifest.webmanifest");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));

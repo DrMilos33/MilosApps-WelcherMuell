@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { chromium } from "playwright";
 
 const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT;
@@ -7,6 +9,8 @@ if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_EXPECTED_SOURCE_COMMIT muss den vollständigen deployten Quellcommit enthalten.");
 }
 const expectedContentVersion = "2026.08.01-1";
+const expectedEssentialsVersion = "1.1.2";
+const expectedEssentialsCommit = "b14aac6107b75f03ff49e74160af7e7e30c29e59";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
 if (!configuredUrl) throw new Error("WASTE_GUIDE_REMOTE_URL fehlt.");
 
@@ -46,6 +50,7 @@ assert.equal(metadata.appKey, "waste-guide");
 assert.equal(metadata.devUrl, baseUrl.toString());
 assert.equal(metadata.healthcheck, healthUrl.toString());
 assert.equal(metadata.productionApproved, false);
+assert.equal(metadata.contentDate, "2026-08-01");
 assert.equal(metadata.deployment?.sourceCommit, expectedSourceCommit);
 
 const manifestResponse = await fetch(new URL("milos-app.json", baseUrl), { redirect: "error" });
@@ -69,29 +74,49 @@ assert.deepEqual(
 const essentialsManifestResponse = await fetch(new URL("milos-essentials.json", baseUrl), { redirect: "error" });
 assert.equal(essentialsManifestResponse.status, 200);
 const essentialsManifest = await essentialsManifestResponse.json();
-assert.equal(essentialsManifest.essentialsContract?.version, "1.0.0");
-assert.equal(essentialsManifest.essentialsContract?.sharedCommit, "b09e09008ff05fe87f05bc647a7c4964ff13e6f6");
+assert.equal(essentialsManifest.essentialsContract?.version, expectedEssentialsVersion);
+assert.equal(essentialsManifest.essentialsContract?.sharedCommit, expectedEssentialsCommit);
+assert.equal(essentialsManifest.essentialsContract?.runtimeBasePath, "vendor/milosapps-essentials/v1");
+assert.equal(essentialsManifest.$schema, "./vendor/milosapps-essentials/v1/essentials-manifest.schema.json");
+assert.deepEqual(essentialsManifest.consumerEntryModule, { sourceFile: "src/app.js", runtimePath: "src/app.js" });
+assert.equal(essentialsManifest.loading?.iconPath, "assets/icon.svg");
+assert.equal(essentialsManifest.loading?.iconRuntimePath, "./assets/icon.svg");
 assert.deepEqual(essentialsManifest.features, {
   startup: true,
-  privacyNotice: true,
+  privacyNotice: false,
   share: true,
   datePicker: false,
-  placeSearch: false
+  placeSearch: false,
+  placeSuggestions: {
+    enabled: false,
+    minChars: 3,
+    debounceMs: 350,
+    providerCapability: "submit-only",
+    evidenceFile: null
+  }
 });
 assert.equal(essentialsManifest.privacy?.mode, "no-cookies");
-assert.equal(essentialsManifest.privacy?.usesLocalStorage, true);
+assert.equal(essentialsManifest.privacy?.usesLocalStorage, false);
+assert.deepEqual(essentialsManifest.privacy?.storagePurposes, []);
 assert.equal(essentialsManifest.privacy?.optionalTracking, false);
 assert.equal(essentialsManifest.productionApproved, false);
 
 const essentialsLockResponse = await fetch(new URL("vendor/milosapps-essentials/v1/essentials-lock.json", baseUrl), { redirect: "error" });
 assert.equal(essentialsLockResponse.status, 200);
 const essentialsLock = await essentialsLockResponse.json();
-assert.equal(essentialsLock.version, "1.0.0");
+assert.equal(essentialsLock.version, expectedEssentialsVersion);
 assert.equal(essentialsLock.sharedCommit, essentialsManifest.essentialsContract.sharedCommit);
 assert.deepEqual(
   Object.keys(essentialsLock.artifacts).sort(),
-  ["bootstrap.js", "milos-app-essentials-theme.css", "milos-app-essentials.css", "milos-app-essentials.js", "verify.mjs"]
+  ["bootstrap.js", "essentials-manifest.schema.json", "milos-app-essentials-theme.css", "milos-app-essentials.css", "milos-app-essentials.js", "verify.mjs"]
 );
+
+const iconResponse = await fetch(new URL("assets/icon.svg", baseUrl), { redirect: "error" });
+assert.equal(iconResponse.status, 200);
+assert.match(iconResponse.headers.get("content-type") ?? "", /^image\/svg\+xml(?:;|$)/);
+const remoteIcon = Buffer.from(await iconResponse.arrayBuffer());
+const sourceIcon = await readFile(new URL("../../assets/icon.svg", import.meta.url));
+assert.equal(createHash("sha256").update(remoteIcon).digest("hex"), createHash("sha256").update(sourceIcon).digest("hex"));
 
 for (const stylesheet of ["milos-app-shell.css", "milos-app-shell-theme.css"]) {
   const response = await fetch(new URL(`vendor/milosapps-shell/v2/${stylesheet}`, baseUrl), { redirect: "error" });
@@ -127,6 +152,17 @@ const context = await browser.newContext({
   storageState: { cookies: [], origins: [] }
 });
 await context.addInitScript(() => {
+  window.__storageCalls = [];
+  for (const method of ["getItem", "setItem", "removeItem", "clear"]) {
+    const original = Storage.prototype[method];
+    Object.defineProperty(Storage.prototype, method, {
+      configurable: true,
+      value(...args) {
+        window.__storageCalls.push({ method, args });
+        return original.apply(this, args);
+      }
+    });
+  }
   Object.defineProperty(navigator, "share", { value: undefined, configurable: true });
   Object.defineProperty(navigator, "clipboard", {
     value: {
@@ -155,9 +191,10 @@ try {
   assert.equal(await page.getByRole("search").count(), 1);
   assert.equal(await page.getByText(/Anmelden|Login|Milos-Konto/i).count(), 0);
   assert.deepEqual(await context.cookies(), []);
-  const privacyNotice = page.getByRole("region", { name: "Datenschutz & Cookies" });
-  await privacyNotice.getByText(/Keine Werbe- oder Tracking-Cookies/).waitFor();
-  await privacyNotice.getByRole("button", { name: "Verstanden" }).click();
+  assert.equal(await page.locator("[data-milos-privacy-notice]").count(), 0);
+  assert.equal(await page.locator("[data-milos-privacy-info]").getAttribute("href"), "https://dev.milos-apps.de/datenschutz");
+  assert.deepEqual(await page.evaluate(() => window.__storageCalls), []);
+  assert.equal(await page.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).length), 0);
   assert.equal(await page.locator("[data-milos-app-loading]").isHidden(), true);
   assert.equal(await page.locator("milos-date-picker, milos-place-search").count(), 0);
   const essentialsRuntime = await page.evaluate(() => ({
@@ -168,7 +205,7 @@ try {
       .filter((href) => href.includes("milosapps-essentials/v1/")),
     inlineStyles: document.querySelectorAll('style, [style]').length
   }));
-  assert.equal(essentialsRuntime.version, "1.0.0");
+  assert.equal(essentialsRuntime.version, expectedEssentialsVersion);
   assert.equal(essentialsRuntime.shareRegistered, true);
   assert.deepEqual(essentialsRuntime.cssHrefs.sort(), [
     new URL("vendor/milosapps-essentials/v1/milos-app-essentials-theme.css", baseUrl).toString(),
@@ -216,7 +253,7 @@ try {
   await page.getByRole("button", { name: "Neue Suche" }).click();
   await page.getByLabel("Gegenstand oder Material").fill("GUmmiband");
   await page.getByRole("button", { name: "Suchen" }).click();
-  await page.getByRole("heading", { name: "Gummi-Gegenstand", exact: true }).waitFor();
+  await page.getByRole("heading", { name: "Gummiband", exact: true }).waitFor();
   await page.getByText("Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen", { exact: true }).waitFor();
 
   await shell.getByRole("button", { name: "EN", exact: true }).click();
@@ -226,7 +263,18 @@ try {
   await page.getByRole("heading", { name: "Old medicine", exact: true }).waitFor();
   await page.reload({ waitUntil: "networkidle" });
   assert.equal(await page.locator("html").getAttribute("lang"), "en");
+  assert.match(page.url(), /[?&]lang=en(?:&|$)/);
   assert.equal(await page.getByText(/Sign in|Login|Milos account/i).count(), 0);
+  assert.deepEqual(await page.evaluate(() => window.__storageCalls), []);
+
+  await page.getByRole("button", { name: "Region", exact: true }).click();
+  await page.getByRole("button", { name: "Enable offline use" }).click();
+  await page.getByText("The app files are now available on this device.", { exact: false }).waitFor();
+  assert.deepEqual(
+    await page.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).map((registration) => registration.active?.scriptURL)),
+    [new URL("offline-sw.js", baseUrl).toString()]
+  );
+  await page.getByRole("button", { name: "Close settings" }).click();
 
   const geometry = await shell.evaluate((element) => ({
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -277,7 +325,9 @@ console.log(JSON.stringify({
   shellVersion: shellLock.version,
   essentialsVersion: essentialsLock.version,
   essentialsSharedCommit: essentialsLock.sharedCommit,
-  privacyNotice: "no-cookies",
+  privacyNotice: "none-no-cookies",
+  webStorage: false,
+  offlineOptIn: true,
   shareFallback: true,
   textZoom200: true
 }, null, 2));

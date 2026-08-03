@@ -1,76 +1,43 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
-import {
-  STORAGE_KEYS,
-  addSearchToHistory,
-  clearLocalData,
-  loadLocalState,
-  saveRegion,
-  setRememberSearches
-} from "../../src/storage.js";
+import { languageFromUrl, updateLanguageUrl } from "../../src/shell-session.js";
 
-class MemoryStorage {
-  #values = new Map();
-
-  getItem(key) {
-    return this.#values.has(key) ? this.#values.get(key) : null;
-  }
-
-  setItem(key, value) {
-    this.#values.set(key, String(value));
-  }
-
-  removeItem(key) {
-    this.#values.delete(key);
-  }
+function fakeBrowser(href) {
+  const calls = [];
+  return {
+    location: { href },
+    history: {
+      state: { itemId: "rubber-household-item" },
+      replaceState(state, title, url) {
+        calls.push({ state, title, url });
+      }
+    },
+    calls
+  };
 }
 
-describe("lokale, optionale Daten", () => {
-  test("speichert standardmäßig keinen Suchverlauf", () => {
-    const storage = new MemoryStorage();
-    assert.deepEqual(addSearchToHistory("Batterie", storage), []);
-    assert.equal(storage.getItem(STORAGE_KEYS.history), null);
+describe("flüchtige App-Einstellungen", () => {
+  test("liest nur die unterstützte Sprache aus der URL", () => {
+    assert.equal(languageFromUrl("https://example.test/?lang=en"), "en");
+    assert.equal(languageFromUrl("https://example.test/?lang=fr"), "de");
+    assert.equal(languageFromUrl("https://example.test/"), "de");
   });
 
-  test("merkt auf Wunsch höchstens fünf eindeutige Begriffe", () => {
-    const storage = new MemoryStorage();
-    setRememberSearches(true, storage);
-    for (const query of ["Batterie", "Glas", "Papier", "Akku", "Lampe", "Batterie", "Dose"]) {
-      addSearchToHistory(query, storage);
-    }
-    const state = loadLocalState(storage);
-    assert.equal(state.history.length, 5);
-    assert.equal(state.history[0], "Dose");
-    assert.equal(state.history.filter((query) => query === "Batterie").length, 1);
+  test("schreibt Englisch in die URL und erhält Ergebnis sowie Fragment", () => {
+    const browser = fakeBrowser("https://example.test/?item=rubber-household-item#source");
+    assert.equal(updateLanguageUrl("en", browser), "en");
+    assert.deepEqual(browser.calls, [{
+      state: { itemId: "rubber-household-item" },
+      title: "",
+      url: "/?item=rubber-household-item&lang=en#source"
+    }]);
   });
 
-  test("Ausschalten löscht vorhandenen Verlauf sofort", () => {
-    const storage = new MemoryStorage();
-    setRememberSearches(true, storage);
-    addSearchToHistory("Akku", storage);
-    setRememberSearches(false, storage);
-    assert.equal(storage.getItem(STORAGE_KEYS.history), null);
-    assert.deepEqual(loadLocalState(storage).history, []);
-  });
-
-  test("Region ist grob und vollständig löschbar", () => {
-    const storage = new MemoryStorage();
-    saveRegion("munich", storage);
-    setRememberSearches(true, storage);
-    addSearchToHistory("Pizzakarton", storage);
-    assert.equal(loadLocalState(storage).region, "munich");
-    assert.equal(clearLocalData(storage), true);
-    assert.deepEqual(loadLocalState(storage), { region: "de", remember: false, history: [] });
-  });
-
-  test("gesperrter Browserspeicher lässt die App datensparsam weiterlaufen", () => {
-    const denied = {
-      getItem() { throw new Error("denied"); },
-      setItem() { throw new Error("denied"); },
-      removeItem() { throw new Error("denied"); }
-    };
-    assert.deepEqual(loadLocalState(denied), { region: "de", remember: false, history: [] });
-    assert.equal(saveRegion("berlin", denied), false);
-    assert.equal(setRememberSearches(true, denied), false);
+  test("entfernt den Sprachparameter für Deutsch ohne anderen Zustand zu speichern", () => {
+    const browser = fakeBrowser("https://example.test/?lang=en&item=battery#result");
+    assert.equal(updateLanguageUrl("de", browser), "de");
+    assert.equal(browser.calls[0].url, "/?item=battery#result");
+    assert.equal(Object.hasOwn(browser, "localStorage"), false);
+    assert.equal(Object.hasOwn(browser, "sessionStorage"), false);
   });
 });

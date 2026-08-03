@@ -1,5 +1,59 @@
 # Welcher-Müll-Erkenntnisse
 
+## 03.08.2026 · answer-first Ergebnis und flüchtige Komfortzustände
+
+### Eine Trefferkarte muss die Entscheidung vor der Erklärung liefern
+
+Ein fachlich vollständiger Text ist noch keine schnelle Antwort. Auf dem
+Smartphone lag der konkrete Weg zwar oben, erkannter Gegenstand, Einordnung und
+Route waren aber visuell getrennt. Die Ergebnisoberkante bildet nun eine
+zusammenhängende, screenreadertaugliche Aussage: sichtbares Symbol plus
+„Erkannt“, Gegenstand, Pfeil plus „Entsorgungsweg“ und konkrete Route. Danach
+folgen erst Grund, Schritte, regionale Grenze, Ausnahmen und Quellen. Beim
+Tippfehler `Gummibnad` steht dadurch sofort „Gummiband → Kleine Teile:
+Restmüll · große Teile und Reifen örtlich prüfen“.
+
+Ein Symbol darf den Fachweg nicht verfälschen: Das Tonnen-Symbol erscheint nur
+bei echtem Restmüll. Papier, Bio, Glas, Verpackung, örtliche Prüfung und
+Rücknahmestellen besitzen getrennte Umrisse; Text und Sicherheitskennzeichnung
+bleiben immer vorhanden. Farbe allein trägt keine Bedeutung.
+
+Evidenz: positive Suchregressionen für Gummi, Plastikblume, Tippfehler,
+Gefahrfälle und Mehrdeutigkeit; DOM-Reihenfolge; 390 × 844, 1440 × 900 und
+360 × 800 bei 200 Prozent; sichtbare Screenshots und vollständige E2E-Matrix.
+
+Gültigkeitsgrenze: Die Oberfläche darf nur bereits redaktionell belegte Wege
+verdichten. Das Redesign erneuert weder Inhaltsversion noch `reviewedAt`,
+`reviewDue`, Lizenz oder Geltungsgebiet.
+
+### Weniger optionale Persistenz ist oft verständlicher als mehr Consent-UI
+
+Region, Verlauf und Sprache waren Komfortfunktionen, erzeugten aber einen
+großen Einstellungsblock und mehrere optionale Gerätezustände. Die Region lebt
+nun nur bis Reload, Verlauf ist deaktiviert und Englisch steht sichtbar als
+`?lang=en` in der URL. Die Shell wird dafür aus einem inerten Template mit
+einem app-eigenen, speicherfreien Sprachadapter montiert. Es gibt keine
+Web-Storage-Zugriffe und deshalb keinen Schein-Einwilligungsbanner; ein
+permanenter Datenschutzlink und ein maschinenlesbares Endgeräteinventar bleiben
+erhalten.
+
+Offline-Nutzung bleibt eine bewusst angeforderte Fachfunktion: Erst
+„Offline aktivieren“ registriert den Worker und cached öffentliche App-Dateien.
+Die frühere automatische Workerregistrierung wird separat entfernt. Alte
+Web-Storage-Werte werden nicht mehr gelesen oder geschrieben und bleiben über
+die Website-Daten des Browsers entfernbar.
+
+Evidenz: instrumentierte Browserregression meldet null Web-Storage-Zugriffe;
+Region fällt nach Reload auf Deutschland zurück; DE/EN überlebt Reload nur
+über die URL; vor der Offline-Aktion existiert keine Registrierung, danach
+exakt `offline-sw.js`; No-Cookies-Banner fehlt, Datenschutzlink ist dauerhaft
+sichtbar.
+
+Gültigkeitsgrenze: Service Worker, CacheStorage, Web Share und Clipboard sind
+weiterhin Endgerätezugriffe. Sie sind mit Zweck, Trigger und Laufzeit
+dokumentiert und werden nur für die ausdrücklich ausgelöste Funktion genutzt.
+Das ist eine technische Produktgrenze und keine Rechtsberatung.
+
 ## 02.08.2026 · bytegenaue Vendor-Locks unter Windows
 
 Ein korrekter SHA-256-Lock genügt nicht, wenn ein späterer Windows-Checkout
@@ -294,6 +348,30 @@ Quellenlinks und Footer-Navigation.
 
 Evidenz: visuelle In-App-Browser-Prüfung und Touch-Regression in Commit
 `38c03e3`.
+
+### Browser-Module brauchen bei Top-Level-Await eine echte Importkante
+
+Die Reihenfolge mehrerer `type="module"`-Skripte im Dokument ist keine
+ausreichende Bereitschaftsgarantie, sobald ein Bootstrap selbst mit
+Top-Level-Await weitere Ressourcen lädt. Der Verbraucher importiert den
+Shell-Bootstrap deshalb zusätzlich explizit. Eine statische, vom Verifier
+prüfbare Shell kann vor der Registrierung getrennt und anschließend per
+`customElements.upgrade()` mit einem instanzbezogenen, speicherfreien Adapter
+wieder verbunden werden.
+
+Evidenz: reproduzierter Browser-Hänger ohne Importkante; danach 29/29 E2E mit
+genau einer Shell, genau einer H1, ausgeblendetem Loader und null Logs.
+
+### Physischer Assetpfad und öffentliche Laufzeit-URL sind zwei Verträge
+
+Ein lokaler Quellpfad belegt noch nicht, unter welcher URL ein Build dasselbe
+Asset ausliefert. Das Essentials-Manifest führt deshalb `iconPath` und
+`iconRuntimePath` getrennt. Der Build- und Remote-Smoke prüfen Status,
+`image/svg+xml` und SHA-256-Gleichheit, statt allein auf die Existenz der
+Quelldatei zu vertrauen.
+
+Gültigkeitsgrenze: Der Hashnachweis schützt das Loader-Asset und die
+Deploymenttreue; er bewertet nicht die redaktionelle Entsorgungsinformation.
 
 ## Weitergabe
 

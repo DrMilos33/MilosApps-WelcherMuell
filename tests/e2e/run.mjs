@@ -191,6 +191,12 @@ try {
       assert.equal(response.status, 200, file);
       assert.equal(response.headers.get("content-type"), mime, file);
     }
+    const icon = await fetch(`${baseUrl}/assets/icon.svg`);
+    assert.equal(icon.status, 200);
+    assert.equal(icon.headers.get("content-type"), "image/svg+xml");
+    const offlineWorker = await fetch(`${baseUrl}/offline-sw.js`);
+    assert.equal(offlineWorker.status, 200);
+    assert.equal(offlineWorker.headers.get("content-type"), "text/javascript; charset=utf-8");
   });
 
   const desktop = await browser.newContext({
@@ -199,6 +205,17 @@ try {
     serviceWorkers: "allow"
   });
   await desktop.addInitScript(() => {
+    window.__storageCalls = [];
+    for (const method of ["getItem", "setItem", "removeItem", "clear"]) {
+      const original = Storage.prototype[method];
+      Object.defineProperty(Storage.prototype, method, {
+        configurable: true,
+        value(...args) {
+          window.__storageCalls.push({ method, args });
+          return original.apply(this, args);
+        }
+      });
+    }
     Object.defineProperty(navigator, "share", { value: undefined, configurable: true });
     Object.defineProperty(navigator, "clipboard", {
       value: {
@@ -231,29 +248,14 @@ try {
     });
   });
 
-  await check("Desktop: wahrheitsgemäßer Datenschutzhinweis bleibt kompakt", async () => {
-    const notice = desktopPage.getByRole("region", { name: "Datenschutz & Cookies" });
-    await notice.waitFor();
-    await notice.getByText(/Keine Werbe- oder Tracking-Cookies/).waitFor();
-    assert.equal(await notice.getByRole("link", { name: "Datenschutz" }).getAttribute("href"), "https://dev.milos-apps.de/datenschutz");
-    const geometry = await notice.evaluate((element) => {
-      const rect = element.getBoundingClientRect();
-      const dismiss = element.querySelector("[data-milos-privacy-dismiss]").getBoundingClientRect();
-      return {
-        width: Math.round(rect.width),
-        height: Math.round(rect.height),
-        radius: Number.parseFloat(getComputedStyle(element).borderTopLeftRadius),
-        dismissWidth: Math.round(dismiss.width),
-        dismissHeight: Math.round(dismiss.height)
-      };
-    });
-    assert.ok(geometry.width <= 736 && geometry.height <= 180, JSON.stringify(geometry));
-    assert.ok(geometry.radius >= 12, JSON.stringify(geometry));
-    assert.ok(geometry.dismissWidth >= 44 && geometry.dismissHeight >= 44, JSON.stringify(geometry));
-    assert.deepEqual(await desktop.cookies(), []);
-    await notice.getByRole("button", { name: "Verstanden" }).click();
-    await desktopPage.reload({ waitUntil: "networkidle" });
+  await check("Desktop: kein Scheinbanner und kein optionaler Browserspeicher", async () => {
     assert.equal(await desktopPage.locator("[data-milos-privacy-notice]").count(), 0);
+    const privacyLink = desktopPage.locator("[data-milos-privacy-info]");
+    await privacyLink.waitFor();
+    assert.equal(await privacyLink.getAttribute("href"), "https://dev.milos-apps.de/datenschutz");
+    assert.deepEqual(await desktop.cookies(), []);
+    assert.deepEqual(await desktopPage.evaluate(() => window.__storageCalls), []);
+    assert.deepEqual(await desktopPage.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length })), { local: 0, session: 0 });
   });
 
   await check("Desktop: v2-Shell, vollständiges Englisch und Reload-Persistenz", async () => {
@@ -293,24 +295,21 @@ try {
     assert.equal(await shell.getByText("DEV", { exact: true }).count(), 1);
     assert.equal(await shell.getByRole("link", { name: /Alle Apps/ }).getAttribute("href"), "https://dev.milos-apps.de/apps");
     assert.equal(await shell.getByRole("link", { name: "Impressum" }).getAttribute("href"), "https://dev.milos-apps.de/impressum");
-    assert.equal(await shell.getByRole("link", { name: "Datenschutz" }).getAttribute("href"), "https://dev.milos-apps.de/datenschutz");
+    assert.equal(await shell.locator("footer").getByRole("link", { name: "Datenschutz" }).getAttribute("href"), "https://dev.milos-apps.de/datenschutz");
     const englishButton = shell.getByRole("button", { name: "EN", exact: true });
     await englishButton.click();
     await desktopPage.locator("html[lang='en']").waitFor();
-    await desktopPage.evaluate(() => localStorage.removeItem("milosapps.waste-guide.privacyNotice.v1"));
+    assert.match(desktopPage.url(), /[?&]lang=en(?:&|$)/);
     await desktopPage.reload({ waitUntil: "networkidle" });
-    const englishPrivacy = desktopPage.getByRole("region", { name: "Privacy & cookies" });
-    await englishPrivacy.getByText(/No advertising or tracking cookies/).waitFor();
-    await englishPrivacy.getByRole("button", { name: "Got it" }).click();
     await desktopPage.getByRole("heading", { name: "Waste guide", level: 1 }).waitFor();
     assert.equal(await desktopPage.getByLabel("Item or material").getAttribute("placeholder"), "e.g. rubber band, battery, pizza box");
     await submitSearch(desktopPage, "rubber band");
-    await desktopPage.getByRole("heading", { name: "Rubber item", exact: true }).waitFor();
+    await desktopPage.getByRole("heading", { name: "Rubber band", exact: true }).waitFor();
     await desktopPage.getByText("Small items: residual waste · large items and tires: check locally", { exact: true }).waitFor();
     await desktopPage.getByText(/Car and motorcycle tires do not belong/).waitFor();
     assert.equal(await desktopPage.getByRole("button", { name: "Share", exact: true }).count(), 1);
-    await desktopPage.getByRole("button", { name: "Region & privacy" }).click();
-    await desktopPage.getByRole("dialog", { name: "Region & local data" }).waitFor();
+    await desktopPage.getByRole("button", { name: "Region", exact: true }).click();
+    await desktopPage.getByRole("dialog", { name: "Region", exact: true }).waitFor();
     assert.equal(await desktopPage.getByLabel("Broad region").locator("option").first().textContent(), "Germany — general guidance");
     await desktopPage.getByRole("button", { name: "Close settings" }).click();
     await desktopPage.locator(".trust-section > summary").click();
@@ -323,6 +322,8 @@ try {
     await desktopPage.getByRole("heading", { name: "Waste guide", level: 1 }).waitFor();
     await shell.getByRole("button", { name: "DE", exact: true }).click();
     await desktopPage.locator("html[lang='de']").waitFor();
+    assert.doesNotMatch(desktopPage.url(), /[?&]lang=/);
+    assert.deepEqual(await desktopPage.evaluate(() => window.__storageCalls), []);
   });
 
   await check("Desktop: Suche dominiert und Zusatzinfos bleiben kompakt", async () => {
@@ -349,7 +350,7 @@ try {
     assert.ok(geometry.horizontalOverflow <= 1, `horizontaler Überlauf: ${JSON.stringify(geometry)}`);
 
     await submitSearch(desktopPage, "Plastikblume");
-    await desktopPage.getByRole("heading", { name: "Kunststoffgegenstand (keine Verpackung)", exact: true }).waitFor();
+    await desktopPage.getByRole("heading", { name: "Plastikblume", exact: true }).waitFor();
     await desktopPage.screenshot({
       path: fileURLToPath(new URL("desktop-plastic-flower.png", artifacts)),
       fullPage: true
@@ -362,8 +363,8 @@ try {
   });
 
   await check("Desktop: Einstellungen sind ein kompakter runder Dialog", async () => {
-    await desktopPage.getByRole("button", { name: "Region & Datenschutz" }).click();
-    const settingsDialog = desktopPage.getByRole("dialog", { name: "Region & lokale Daten" });
+    await desktopPage.getByRole("button", { name: "Region", exact: true }).click();
+    const settingsDialog = desktopPage.getByRole("dialog", { name: "Region", exact: true });
     await settingsDialog.waitFor();
     const geometry = await settingsDialog.evaluate((dialog) => {
       const rect = dialog.getBoundingClientRect();
@@ -374,8 +375,9 @@ try {
       };
     });
     assert.ok(geometry.width <= 640, `Einstellungsdialog zu breit: ${JSON.stringify(geometry)}`);
-    assert.ok(geometry.height <= 620, `Einstellungsdialog zu hoch: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.height <= 500, `Einstellungsdialog zu hoch: ${JSON.stringify(geometry)}`);
     assert.ok(geometry.radius >= 24, `Einstellungsdialog zu eckig: ${JSON.stringify(geometry)}`);
+    assert.equal(await settingsDialog.getByText(/Letzte Suchen merken|Lokale Angaben löschen/).count(), 0);
     await desktopPage.screenshot({
       path: fileURLToPath(new URL("settings-dialog.png", artifacts))
     });
@@ -386,7 +388,7 @@ try {
     const cases = [
       ["Joghurbecher", "Joghurtbecher"],
       ["Akkus", "Batterie oder Akku"],
-      ["Plastikschüssel", "Kunststoffgegenstand (keine Verpackung)"],
+      ["Plastikschüssel", "Plastikschüssel"],
       ["elektrische Zahnbürste", "Elektrogerät"],
       ["elektronisches Plastikspielzeug", "Elektrogerät"],
       ["aufgeblähter Handyakku", "Aufgeblähter oder beschädigter Akku"]
@@ -424,31 +426,17 @@ try {
     assert.doesNotMatch(desktopPage.url(), /\?item=/);
   });
 
-  await check("Desktop: regionale Korrektur München und lokale Löschung", async () => {
-    await desktopPage.getByRole("button", { name: "Region & Datenschutz" }).click();
+  await check("Desktop: regionale Korrektur bleibt auf die geöffnete Seite begrenzt", async () => {
+    await desktopPage.getByRole("button", { name: "Region", exact: true }).click();
     await desktopPage.getByLabel("Grobe Region").selectOption("munich");
-    await desktopPage.getByLabel("Letzte Suchen merken").check();
     await desktopPage.getByRole("button", { name: "Einstellungen schließen" }).click();
     await submitSearch(desktopPage, "Joghurtbecher");
     await assert.doesNotReject(() => desktopPage.getByText("Wertstoffinsel für Kunststoff und Metall").waitFor());
+    assert.deepEqual(await desktopPage.evaluate(() => window.__storageCalls), []);
     await desktopPage.reload({ waitUntil: "networkidle" });
-    assert.equal(await desktopPage.getByLabel("Grobe Region").inputValue(), "munich");
-    await assert.doesNotReject(() => desktopPage.getByRole("heading", { name: "Zuletzt gesucht" }).waitFor());
-
-    await desktopPage.getByRole("button", { name: "Region & Datenschutz" }).click();
-    await desktopPage.getByRole("button", { name: "Lokale Angaben löschen" }).click();
+    await desktopPage.getByRole("button", { name: "Region", exact: true }).click();
     assert.equal(await desktopPage.getByLabel("Grobe Region").inputValue(), "de");
-    assert.equal(await desktopPage.getByLabel("Letzte Suchen merken").isChecked(), false);
-    assert.equal(await desktopPage.getByRole("heading", { name: "Zuletzt gesucht" }).count(), 0);
     await desktopPage.getByRole("button", { name: "Einstellungen schließen" }).click();
-    assert.equal(
-      await desktopPage.evaluate(() => localStorage.getItem("milosapps.waste-guide.privacyNotice.v1")),
-      null
-    );
-    await desktopPage.reload({ waitUntil: "networkidle" });
-    const resetPrivacy = desktopPage.getByRole("region", { name: "Datenschutz & Cookies" });
-    await resetPrivacy.waitFor();
-    await resetPrivacy.getByRole("button", { name: "Verstanden" }).click();
   });
 
   await check("Desktop: schnelle Rücknavigation stellt Ergebnisse wieder her", async () => {
@@ -481,13 +469,17 @@ try {
         configurable: true
       });
     });
-    await desktopPage.getByRole("button", { name: "Teilen", exact: true }).click();
-    await desktopPage.getByText("Geteilt", { exact: true }).waitFor();
+    const shareButton = desktopPage.getByRole("button", { name: "Teilen", exact: true });
+    const beforeShare = await shareButton.boundingBox();
+    await shareButton.click();
+    await desktopPage.waitForTimeout(80);
     const payload = await desktopPage.evaluate(() => window.__sharedPayload);
     assert.match(payload.text, /Alte Medikamente/);
     assert.match(payload.text, /Quelle:/);
     assert.match(payload.url, /\?item=medicine$/);
     assert.doesNotMatch(JSON.stringify(payload), /Joghurtbecher/);
+    assert.equal(await desktopPage.locator("[data-milos-share-status]").textContent(), "");
+    assert.deepEqual(await shareButton.boundingBox(), beforeShare);
 
     await desktopPage.evaluate(() => {
       Object.defineProperty(navigator, "share", {
@@ -495,10 +487,10 @@ try {
         configurable: true
       });
     });
-    const button = desktopPage.getByRole("button", { name: "Teilen", exact: true });
-    await button.click();
-    assert.equal(await button.isEnabled(), true);
+    await shareButton.click();
+    assert.equal(await shareButton.isEnabled(), true);
     assert.equal(await desktopPage.locator("[data-milos-share-status]").textContent(), "");
+    assert.deepEqual(await shareButton.boundingBox(), beforeShare);
   });
 
   await check("Desktop: Tastatur und Dialog-Fokus", async () => {
@@ -568,8 +560,17 @@ try {
     await desktopPage.emulateMedia({ reducedMotion: "no-preference" });
   });
 
-  await check("Desktop: Offline-Nutzung nach Erstaufruf", async () => {
+  await check("Desktop: Offline-Nutzung erst nach ausdrücklicher Aktivierung", async () => {
     await desktopPage.goto(baseUrl, { waitUntil: "networkidle" });
+    assert.equal(await desktopPage.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).length), 0);
+    await desktopPage.getByRole("button", { name: "Region", exact: true }).click();
+    await desktopPage.getByRole("button", { name: "Offline aktivieren" }).click();
+    await desktopPage.getByText("Die App-Dateien sind jetzt auf diesem Gerät verfügbar.", { exact: false }).waitFor();
+    const offlineRegistrations = await desktopPage.evaluate(async () =>
+      (await navigator.serviceWorker.getRegistrations()).map((registration) => registration.active?.scriptURL)
+    );
+    assert.deepEqual(offlineRegistrations, [`${baseUrl}/offline-sw.js`]);
+    await desktopPage.getByRole("button", { name: "Einstellungen schließen" }).click();
     await desktopPage.evaluate(async () => {
       await navigator.serviceWorker.ready;
     });
@@ -598,7 +599,7 @@ try {
   const mobilePage = await mobile.newPage();
   const mobileErrors = collectPageErrors(mobilePage);
 
-  await check("Smartphone: Datenschutzhinweis reflowt und ist per Touch schließbar", async () => {
+  await check("Smartphone: Loader reflowt und Datenschutz bleibt ohne Scheinbanner erreichbar", async () => {
     await mobilePage.route(`${baseUrl}/public/data/**`, async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
       await route.continue();
@@ -610,36 +611,22 @@ try {
     await mobilePage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
     await loader.waitFor({ state: "hidden" });
     await mobilePage.unroute(`${baseUrl}/public/data/**`);
-    const notice = mobilePage.getByRole("region", { name: "Datenschutz & Cookies" });
-    await notice.waitFor();
-    const geometry = await notice.evaluate((element) => {
-      const rect = element.getBoundingClientRect();
-      const button = element.querySelector("[data-milos-privacy-dismiss]").getBoundingClientRect();
-      return {
-        left: Math.round(rect.left),
-        right: Math.round(rect.right),
-        bottom: Math.round(rect.bottom),
-        viewportWidth: innerWidth,
-        viewportHeight: innerHeight,
-        buttonWidth: Math.round(button.width),
-        buttonHeight: Math.round(button.height),
-        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
-      };
-    });
-    assert.ok(geometry.left >= 0 && geometry.right <= geometry.viewportWidth && geometry.bottom <= geometry.viewportHeight, JSON.stringify(geometry));
-    assert.ok(geometry.buttonWidth >= 44 && geometry.buttonHeight >= 44, JSON.stringify(geometry));
-    assert.ok(geometry.overflow <= 1, JSON.stringify(geometry));
+    assert.equal(await mobilePage.locator("[data-milos-privacy-notice]").count(), 0);
+    const privacyLink = mobilePage.locator("[data-milos-privacy-info]");
+    await privacyLink.waitFor();
+    assert.equal(await privacyLink.getAttribute("href"), "https://dev.milos-apps.de/datenschutz");
+    const overflow = await mobilePage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    assert.ok(overflow <= 1, `${overflow}px horizontaler Überlauf`);
     await mobilePage.screenshot({
-      path: fileURLToPath(new URL("phone-privacy.png", artifacts)),
+      path: fileURLToPath(new URL("phone-start.png", artifacts)),
       fullPage: true
     });
-    await notice.getByRole("button", { name: "Verstanden" }).tap();
   });
 
   await check("Smartphone: Einstellungen bleiben kompakt und schließen per Escape", async () => {
     await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
-    await mobilePage.getByRole("button", { name: "Region & Datenschutz" }).tap();
-    const dialog = mobilePage.getByRole("dialog", { name: "Region & lokale Daten" });
+    await mobilePage.getByRole("button", { name: "Region", exact: true }).tap();
+    const dialog = mobilePage.getByRole("dialog", { name: "Region", exact: true });
     await dialog.waitFor();
     const geometry = await dialog.evaluate((element) => {
       const rect = element.getBoundingClientRect();
@@ -654,10 +641,10 @@ try {
     });
     assert.ok(geometry.top >= 0 && geometry.bottom <= geometry.viewportHeight, `Dialog außerhalb des Sichtfelds: ${JSON.stringify(geometry)}`);
     assert.ok(geometry.width <= geometry.viewportWidth - 8, `Dialog zu breit: ${JSON.stringify(geometry)}`);
-    assert.ok(geometry.height <= 720, `Dialog zu hoch: ${JSON.stringify(geometry)}`);
+    assert.ok(geometry.height <= 620, `Dialog zu hoch: ${JSON.stringify(geometry)}`);
     await mobilePage.keyboard.press("Escape");
     assert.equal(await dialog.isVisible(), false);
-    assert.equal(await mobilePage.getByRole("button", { name: "Region & Datenschutz" }).getAttribute("aria-expanded"), "false");
+    assert.equal(await mobilePage.getByRole("button", { name: "Region", exact: true }).getAttribute("aria-expanded"), "false");
   });
 
   await check("Smartphone: Touch, Dark Mode und lange Eingabe", async () => {
@@ -709,11 +696,14 @@ try {
     await mobilePage.setViewportSize({ width: 390, height: 844 });
     await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
     await submitSearch(mobilePage, "Gummibnad");
-    await mobilePage.getByRole("heading", { name: "Gummi-Gegenstand", exact: true }).waitFor();
+    await mobilePage.getByRole("heading", { name: "Gummiband", exact: true }).waitFor();
     await mobilePage.getByText("Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen", { exact: true }).waitFor();
     const resultGeometry = await mobilePage.evaluate(() => {
       const card = document.querySelector(".result-card").getBoundingClientRect();
-      const route = document.querySelector(".result-route").getBoundingClientRect();
+      const route = document.querySelector(".result-immediate").getBoundingClientRect();
+      const subject = document.querySelector(".result-subject").textContent.trim();
+      const destination = document.querySelector(".result-destination").textContent.trim();
+      const icon = document.querySelector("[data-result-icon]");
       const resetSearch = document.querySelector("#reset-search");
       return {
         top: Math.round(route.top),
@@ -721,12 +711,18 @@ try {
         routeWidth: Math.round(route.width),
         cardWidth: Math.round(card.width),
         viewport: innerHeight,
-        resetWhiteSpace: getComputedStyle(resetSearch).whiteSpace
+        resetWhiteSpace: getComputedStyle(resetSearch).whiteSpace,
+        subject,
+        destination,
+        iconDecorative: icon.getAttribute("aria-hidden") === "true"
       };
     });
     assert.ok(resultGeometry.top < resultGeometry.viewport, `Entsorgungsweg nicht sofort sichtbar: ${JSON.stringify(resultGeometry)}`);
     assert.ok(resultGeometry.routeWidth >= resultGeometry.cardWidth - 2, `Entsorgungsweg kollabiert: ${JSON.stringify(resultGeometry)}`);
     assert.equal(resultGeometry.resetWhiteSpace, "nowrap");
+    assert.equal(resultGeometry.subject, "Gummiband");
+    assert.match(resultGeometry.destination, /Kleine Teile: Restmüll/);
+    assert.equal(resultGeometry.iconDecorative, true);
     await mobilePage.screenshot({
       path: fileURLToPath(new URL("phone-rubber-result.png", artifacts)),
       fullPage: true

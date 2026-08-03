@@ -1,12 +1,15 @@
 import assert from "node:assert/strict";
 import { before, describe, test } from "node:test";
+import { readFile } from "node:fs/promises";
 import { validateItemIntegrity } from "../../src/search.js";
 import { loadCatalogs } from "./fixtures.mjs";
 
 let catalogs;
+let metadata;
 
 before(async () => {
   catalogs = await loadCatalogs();
+  metadata = JSON.parse(await readFile(new URL("../../meta.json", import.meta.url), "utf8"));
 });
 
 describe("redaktioneller Datenvertrag", () => {
@@ -14,6 +17,8 @@ describe("redaktioneller Datenvertrag", () => {
     assert.match(catalogs.items.contentVersion, /^\d{4}\.\d{2}\.\d{2}-\d+$/);
     assert.match(catalogs.items.contentDate, /^\d{4}-\d{2}-\d{2}$/);
     assert.equal(catalogs.items.schemaVersion, 1);
+    assert.equal(metadata.contentVersion, catalogs.items.contentVersion);
+    assert.equal(metadata.contentDate, catalogs.items.contentDate);
   });
 
   test("IDs sind eindeutig und Pflichtfelder vollständig", () => {

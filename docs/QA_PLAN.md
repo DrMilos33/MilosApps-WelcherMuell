@@ -19,21 +19,26 @@ Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
    - Umlaute, `ß`, Bindestriche und häufige Tippfehler;
    - kurze, lange, unbekannte und mehrdeutige Eingaben;
    - Gefahrfälle verdrängen keine passenden sicheren Treffer und umgekehrt.
-3. Lokale Speicherung
-   - Suchverlauf standardmäßig aus;
-   - höchstens fünf lokale Begriffe bei ausdrücklicher Aktivierung;
-   - Ausschalten und „Lokale Angaben löschen“ entfernen die Daten;
-   - gesperrter Browserspeicher beeinträchtigt die Kernfunktion nicht.
+3. Endgerätezugriff und Löschmigration
+   - kein Cookie, kein neuer Region-/Suchverlauf-/Sprachwert in Web Storage;
+   - fünf frühere optionale Schlüssel werden weder gelesen noch geschrieben
+     und bleiben über die Website-Daten des Browsers entfernbar;
+   - Region lebt nur bis Reload, Sprache bleibt sichtbar über `?lang=en`;
+   - Offline-Registrierung und Cache entstehen erst nach ausdrücklicher Aktion;
+   - frühere automatische Registrierung und zugehörige App-Caches werden
+     entfernt; gesperrter Speicher beeinträchtigt die Kernfunktion nicht.
 4. Browser-E2E
    - app-spezifische Readiness auf dem festen Port 4318;
    - Desktop, Smartphone Hoch-/Querformat, Tastatur und semantische Namen;
    - v2-Shell, vollständiges DE/EN und Reload-Persistenz;
    - kompakter CSS-first-Startzustand bis zur fachlichen Bereitschaft;
-   - wahrheitsgemäßer No-Cookies-Hinweis, Schließen und lokale Persistenz;
+   - kein Scheinbanner bei No-Cookies, dauerhafter Datenschutzlink und
+     maschinenlesbares Zweck-/Laufzeitinventar;
    - 360 × 800 bei echtem 200%-Textzoom, zusätzliches Reflow-Äquivalent,
      Dark Mode, langsames Netz und Konsolenfehler;
    - Reduced Motion, 44-px-Ziele und kein Leerraum unter dem Shell-Footer;
-   - schnelle Rück-/Vorwärtsnavigation, Direkt-URL, Offline nach Erstaufruf;
+   - schnelle Rück-/Vorwärtsnavigation, Direkt-URL, Offline erst nach
+     ausdrücklicher Aktivierung;
    - Teilen nativ, Clipboard-Fallback und Abbruch ohne gespeicherten
      Suchverlauf; kanonischer Ergebnislink und Quellenattribution;
    - Druckaufruf ohne gespeicherten Suchverlauf.
@@ -49,15 +54,15 @@ Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
 | --- | --- |
 | Smartphone | 390 × 844, Touch, Dark Mode, lange Eingabe, 44-px-Ziele |
 | Smartphone quer | 844 × 390, Ergebnis und Aktionen bedienbar |
-| Desktop | 1440 × 900, Maus, Direkt-URLs, Verlauf, Dialog, DE/EN |
+| Desktop | 1440 × 900, Maus, Direkt-URLs, Zurück/Vor, Dialog, DE/EN |
 | 200 Prozent | 360 × 800 mit 200 % Root-Textzoom sowie 640 CSS-Pixel als Reflow-Äquivalent |
 | Tastatur | Tab-Reihenfolge, Enter-Suche, Dialog schließen, Fokus nach Ergebnis |
 | Screenreader-Nähe | Landmarken, Überschriften, Live-Status, eindeutige Namen |
 | Suchstress | 1 Zeichen, 120 Zeichen, unbekannt, mehrdeutig, Umlaut, Plural |
 | Sicherheitsfälle | Batterie, beschädigter Akku, Elektro, Medikamente, Gefahrstoff |
 | Quellenfehler | fehlende und überfällige Quelle, live nicht erreichbare Quelle |
-| Zustandswechsel | schnelle neue Suche, Zurück/Vor, Löschen, Reload, Direktaufruf |
-| Offline | warmer Service-Worker-Cache, verständlicher Offlinehinweis, Suche |
+| Zustandswechsel | schnelle neue Suche, Zurück/Vor, flüchtige Region, Reload, Direktaufruf |
+| Offline | kein Auto-Worker, explizite Aktivierung, warmer Cache, Offlinehinweis, Suche |
 | Ausgabe | Teilen-Fallback, kanonischer Deep-Link, Druckaufruf und Print-CSS |
 
 ## Verbesserungsrunden

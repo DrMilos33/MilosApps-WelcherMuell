@@ -12,10 +12,13 @@ lokal vendort; es gibt keinen CDN- oder Cross-Repository-Runtimeimport.
 index.html
   ├─ vendor/milosapps-shell/v2/ ── geprüfte lokale Shell-Kopie mit Hash-Lock
   ├─ vendor/milosapps-essentials/v1/ ── Loader, Datenschutz und Teilen mit Hash-Lock
-  ├─ src/app.js ───── UI, DE/EN, URL-/Historienzustand, Offline- und Dialoglogik
+  ├─ src/app.js ───── UI, DE/EN, URL-Zustand, Offline- und Dialoglogik
   ├─ src/i18n.js ──── vollständige sichtbare Fachübersetzung
   ├─ src/search.js ── Normalisierung, Ranking, Integritätsprüfung
-  ├─ src/storage.js ─ optionale lokale Region und Suchhistorie
+  ├─ src/shell-session.js ─ Sprachzustand in der sichtbaren URL, ohne Persistenz
+  ├─ offline-sw.js ── nur nach ausdrücklicher Offline-Aktivierung
+  ├─ sw.js ────────── eng begrenzte Bereinigung der früheren Auto-Registrierung
+  ├─ docs/DEVICE_STORAGE_INVENTORY.json ─ Zweck-/Laufzeitinventar
   └─ public/data/
        ├─ waste-items.v1.json
        ├─ sources.v1.json
@@ -29,17 +32,19 @@ Theme-CSS und portablen Validator. Der lokale Server behält die strikte
 `style-src 'self'`-CSP bei; die Shell lädt beide Stylesheets ausschließlich
 vom app-eigenen Vendorpfad und braucht weder Hash noch `unsafe-inline`.
 
-Die Shell besitzt Header, Footer, DEV-Links und die Sprachpersistenz unter
-`milosapps.waste-guide.language`. Die Fachoberfläche initialisiert zusätzlich
-aus `document.documentElement.lang` und hört auf
-`milosapps:localechange`. Deutsch und Englisch verwenden denselben
-redaktionellen Inhaltsstand; die Übersetzung hebt weder Inhaltsversion noch
-Quellenreview an.
+Die Shell besitzt Header, Footer und DEV-Links. `src/shell-session.js` trennt
+das statische Shell-Element vor dessen Registrierung kurz vom Dokument,
+konfiguriert ausschließlich den app-eigenen Sprachadapter und verbindet es
+wieder. Englisch steht als `?lang=en` in der sichtbaren URL, Deutsch ohne
+Parameter. Dadurch überlebt die Wahl einen Reload, ohne `localStorage`. Die
+Fachoberfläche hört auf `milosapps:localechange`. Deutsch
+und Englisch verwenden denselben redaktionellen Inhaltsstand; die Übersetzung
+hebt weder Inhaltsversion noch Quellenreview an.
 
-`milos-essentials.json` pinnt zusätzlich `public-app-essentials/v1.0.0` auf
-Shared-Commit `b09e09008ff05fe87f05bc647a7c4964ff13e6f6`. Die fünf lokal
-vendorten Artefakte liefern einen CSS-first-Loader, einen wahrheitsgemäßen
-No-Cookies-Hinweis und `<milos-share-button>`. Datum und Ort sind für diese App
+`milos-essentials.json` pinnt zusätzlich `public-app-essentials/v1.1.2` auf
+Shared-Commit `b14aac6107b75f03ff49e74160af7e7e30c29e59`. Die sechs lokal
+vendorten Artefakte liefern einen CSS-first-Loader, Datenschutzlogik und
+`<milos-share-button>`. Datum und Ort sind für diese App
 ausgeschaltet; die grobe Entsorgungsregion bleibt der vorhandene fachliche
 Selector. Beide Essentials-CSS-Dateien bleiben externe Same-Origin-Dateien
 und werden weder als `data:`-URL eingebettet noch aus dem Shared-Repository zur
@@ -48,13 +53,16 @@ Laufzeit importiert.
 Der Loader besitzt bewusst keine zweite Überschrift: Sein tag-agnostischer
 Titelmarker steht auf einem Absatz, während die Fachoberfläche genau eine
 `h1` behält. Erst nach geladenen redaktionellen Katalogen oder einem sichtbar
-gerenderten Fehlerzustand sendet die App `milosapps:ready`. Ein Timer täuscht
-keine Bereitschaft vor.
+gerenderten Fehlerzustand ruft die App
+`globalThis.milosAppEssentials.ready()` auf. Ein Timer täuscht keine
+Bereitschaft vor.
 
-Der Service Worker speichert App-Shell und redaktionelle JSON-Dateien für die
-Nutzung nach einem vollständigen Erstaufruf. Dazu gehören beide gepinnten
+`offline-sw.js` speichert App-Shell und redaktionelle JSON-Dateien erst nach
+der ausdrücklichen Aktion „Offline aktivieren“. Dazu gehören beide gepinnten
 Shared-Runtimes samt Manifesten und Locks. Inhalt und Shell werden gemeinsam
-über einen expliziten Cache-Namen aktualisiert.
+über einen expliziten Cache-Namen aktualisiert. `sw.js` enthält nur den
+Migrationspfad, der eine frühere automatische Registrierung und deren
+öffentliche App-Caches entfernt.
 
 ## Suche
 
@@ -89,18 +97,22 @@ nächster Prüfschritt sichtbar.
 
 ## Lokale Daten
 
-Standardmäßig wird kein Suchverlauf gespeichert. Nach Aktivierung werden
-höchstens fünf eindeutige Suchbegriffe und die freiwillig gewählte grobe Region
-in `localStorage` gehalten. Die App läuft bei gesperrtem Speicher weiter. Eine
-Schaltfläche löscht Region und Suchverlauf. Die getrennte Sprachpräferenz wird
-vom öffentlichen App-Rahmen als reine Oberflächeneinstellung gehalten.
+Die aktuelle App schreibt weder Region, Suchverlauf noch Sprache in Web
+Storage. Region lebt nur im Speicher der geöffneten Seite, Verlauf ist
+deaktiviert und Sprache steht in der URL. Fünf namentlich aufgeführte Altwerte
+werden weder gelesen noch geschrieben und bleiben über die Website-Daten des
+Browsers entfernbar. Das maschinenlesbare Inventar dokumentiert
+außerdem Service Worker, CacheStorage, Web Share und Clipboard mit Zweck,
+Trigger, Laufzeit und Personenbezug.
 
-Der einmalige Datenschutzhinweis setzt kein Cookie. Sein geschlossener Zustand
-ist ein lokaler Komfortwert unter der App-Namensdomäne und wird zusammen mit
-Region und Verlauf durch „Lokale Angaben löschen“ entfernt. Der gemeinsame
-Teilen-Baustein erhält ausschließlich den aktuellen kanonischen `?item=`-Link,
-Entsorgungsweg und eine Quellenattribution; Suchverlauf und Regionseinstellung
-werden nicht ungefragt geteilt.
+Da es keine Cookies und keine optionale Persistenz gibt, erscheint kein
+Schein-Einwilligungsbanner. Datenschutz bleibt über einen dauerhaften Link und
+den Transparenzdialog erreichbar. Der gemeinsame Teilen-Baustein erhält
+ausschließlich den aktuellen kanonischen `?item=`-Link, Entsorgungsweg und eine
+Quellenattribution; frühere oder aktuelle Suchen und Regionseinstellungen
+werden nicht ungefragt geteilt. Native Freigabe und Nutzerabbruch bleiben
+statusstill; nur Clipboard- oder Fehlerfeedback erscheint als überlagerter
+Toast ohne Layoutsprung.
 
 ## DEV-Sicherheitsgrenze
 

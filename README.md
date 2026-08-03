@@ -15,7 +15,7 @@ Nutzerdatenbank sind nicht nötig.
 - sichtbare Fachoberfläche: vollständig Deutsch und Englisch
 - öffentlicher App-Rahmen: lokal vendortes `public-app-shell/v2.0.3`
 - gemeinsame öffentliche Interaktionen: lokal vendortes
-  `public-app-essentials/v1.0.0` für kompakten Start, ehrlichen
+  `public-app-essentials/v1.1.2` für kompakten Start, ehrlichen
   Datenschutzhinweis und Teilen
 - Production: nicht freigegeben
 
@@ -74,8 +74,9 @@ pnpm test:remote:dev
 pnpm test:all
 ```
 
-`test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler, lokale
-Speicherung und die app-spezifische Essentials-Konfiguration. `test:shell` und
+`test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler,
+flüchtige Einstellungen, Endgeräteinventar und die app-spezifische
+Essentials-Konfiguration. `test:shell` und
 `test:essentials` prüfen Manifest, Vendor-Hashes und Lock mit den portablen
 Shared-Validatoren. `test:e2e` nutzt ein lokal installiertes Chrome oder Edge
 auf Port 4318. `test:sources:online` ruft alle katalogisierten amtlichen Quellen
@@ -93,16 +94,27 @@ ohne Cookies, Portalzustand oder Milos-Login.
 - `src/search.js`: deutsche Normalisierung, gewichtete Suche und
   Tippfehlertoleranz
 - `src/i18n.js`: sichtbare DE/EN-Oberfläche und lokalisierte Kataloge
-- `src/storage.js`: datensparsame, optionale lokale Speicherung
+- `src/shell-session.js`: DE/EN-Reloadzustand über die sichtbare URL, ohne
+  Web Storage
+- `offline-sw.js`: Offline-Cache erst nach ausdrücklicher Aktivierung;
+  `sw.js` entfernt die frühere automatische Registrierung
+- `docs/DEVICE_STORAGE_INVENTORY.json`: Zweck, Trigger und Laufzeit aller
+  Endgerätezugriffe
 - `milos-app.json` und `vendor/milosapps-shell/v2/`: exakt gepinnter,
   lokal ausführbarer App-Rahmen ohne CDN oder Runtimeimport
 - `milos-essentials.json` und `vendor/milosapps-essentials/v1/`: exakt
-  gepinnte lokale Loader-, Datenschutz- und Teilen-Runtime mit 5er-Lock
+  gepinnte lokale Loader-, Datenschutz- und Teilen-Runtime mit 6er-Lock
 - `meta.json`: Portal- und DEV-Metadaten
 
 Fehlt eine Quelle oder ist ihre erneute Prüfung fällig, wird der betroffene
 Hinweis nicht als scheinbar sichere Tonnenregel ausgegeben. Standort bleibt
 immer optional.
+
+Jede Trefferkarte beginnt mit einer kompakten Sofortantwort: erkannter
+Gegenstand beziehungsweise Material, sichtbares Symbol und konkreter
+Entsorgungsweg. Grund, Schritte, regionale Grenze, Ausnahmen und Quellen folgen
+danach. Symbole tragen nie allein die Bedeutung; insbesondere erscheint eine
+Tonne nur bei einem tatsächlichen Restmüllweg.
 
 Die Suche deckt neben Materialbegriffen auch typische Alltagswörter und
 Zusammensetzungen ab, etwa `Gummi`, `Gummiband`, `Haargummi`, `Radiergummi`,

@@ -1,5 +1,5 @@
 {
-  "$schema": "../MilosApps-Shared/contracts/public-app-essentials/v1/essentials-manifest.schema.json",
+  "$schema": "./vendor/milosapps-essentials/v1/essentials-manifest.schema.json",
   "appKey": "waste-guide",
   "ownerTask": "MilosApps – Welcher Müll?",
   "public": true,
@@ -7,10 +7,15 @@
   "environment": "dev",
   "productionApproved": false,
   "entryHtml": "index.html",
-  "integrationFiles": ["index.html", "src/app.js"],
+  "consumerEntryModule": {
+    "sourceFile": "src/app.js",
+    "runtimePath": "src/app.js"
+  },
+  "integrationFiles": ["index.html", "src/app.js", "src/shell-session.js"],
   "loading": {
     "appName": "Welcher Müll?",
     "iconPath": "assets/icon.svg",
+    "iconRuntimePath": "./assets/icon.svg",
     "message": {
       "de": "Entsorgungshinweise werden vorbereitet …",
       "en": "Preparing disposal guidance …"
@@ -18,16 +23,24 @@
   },
   "privacy": {
     "mode": "no-cookies",
-    "usesLocalStorage": true,
+    "usesLocalStorage": false,
     "optionalTracking": false,
-    "privacyUrl": "https://dev.milos-apps.de/datenschutz"
+    "privacyUrl": "https://dev.milos-apps.de/datenschutz",
+    "storagePurposes": []
   },
   "features": {
     "startup": true,
-    "privacyNotice": true,
+    "privacyNotice": false,
     "share": true,
     "datePicker": false,
-    "placeSearch": false
+    "placeSearch": false,
+    "placeSuggestions": {
+      "enabled": false,
+      "minChars": 3,
+      "debounceMs": 350,
+      "providerCapability": "submit-only",
+      "evidenceFile": null
+    }
   },
   "theme": {
     "accent": "#163d36",
@@ -41,8 +54,9 @@
   },
   "essentialsContract": {
     "id": "public-app-essentials/v1",
-    "version": "1.0.0",
-    "sharedCommit": "b09e09008ff05fe87f05bc647a7c4964ff13e6f6",
-    "vendorDirectory": "vendor/milosapps-essentials/v1"
+    "version": "1.1.2",
+    "sharedCommit": "b14aac6107b75f03ff49e74160af7e7e30c29e59",
+    "vendorDirectory": "vendor/milosapps-essentials/v1",
+    "runtimeBasePath": "vendor/milosapps-essentials/v1"
   }
 }
