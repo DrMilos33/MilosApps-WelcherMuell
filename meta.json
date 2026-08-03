@@ -27,8 +27,8 @@
   "deployment": {
     "provider": "GitHub Pages",
     "environment": "DEV",
-    "sourceCommit": "be6b4c95e7d612441b85d2a59c3553300a04ed01",
-    "sourceTree": "f2dd813e2297abf14593780f524e2d29c4d6419b",
+    "sourceCommit": "c7af103d60141fc7335ccb52771d1f4f9f14f8e8",
+    "sourceTree": "68d94c093f38de267579c1af1d60d47c87e59957",
     "branch": "dev-pages",
     "productionApproved": false
   },
@@ -42,8 +42,8 @@
     },
     {
       "id": "public-app-essentials/v1",
-      "version": "1.1.2",
-      "sharedCommit": "b14aac6107b75f03ff49e74160af7e7e30c29e59",
+      "version": "1.1.3",
+      "sharedCommit": "babe74a0e62e1a7f9095648195e54b322a837726",
       "vendored": true,
       "runtimeImport": false
     }
