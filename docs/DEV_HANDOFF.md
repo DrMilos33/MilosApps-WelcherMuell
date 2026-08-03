@@ -10,7 +10,7 @@
 | Sprache | `de-DE/en` |
 | Status | DEV, öffentlich, ohne Anmeldung |
 | Plattformen | Web, mobile/PWA, Desktop |
-| Inhaltsstand | `2026.08.03-2`, 03.08.2026 |
+| Inhaltsstand | `2026.08.03-3`, 03.08.2026 |
 | Gültigkeit | Private Haushalte in Deutschland; belegte Ergänzungen für Berlin, Hamburg und München |
 | öffentliche DEV-URL | `https://drmilos33.github.io/MilosApps-WelcherMuell/` |
 | Healthcheck | `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz` |
@@ -29,12 +29,12 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `3541de9dcdd63471f6ad78a12b6895b943821c8e`
-- Quellbaum: `4642b2bd6d24abc21ab2a0e9821eca6195ebce4a`
+  `2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8`
+- Quellbaum: `8382794be198d581ce35fe4e6ccc9d37b98370c3`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `864243c99c361993e66d83978eae937b83dea013`
-- GitHub-Pages-Actions-Run `30820395425`: Artefaktcommit `864243c`,
+  `d6c9deea4eb87899106b0eeb4a94d0a3a6c37822`
+- GitHub-Pages-Actions-Run `30823264583`: Artefaktcommit `d6c9dee`,
   Status `built`/`success`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
@@ -53,7 +53,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-2","productionApproved":false,"sourceCommit":"3541de9dcdd63471f6ad78a12b6895b943821c8e"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-3","productionApproved":false,"sourceCommit":"2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -161,7 +161,7 @@ Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
-$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="3541de9dcdd63471f6ad78a12b6895b943821c8e"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8"
 pnpm test:remote:dev
 ```
 
@@ -173,6 +173,15 @@ No-Login, DE/EN, Teilen, explizites Offline, 200-Prozent-Reflow und
 `productionApproved=false` blieben grün. Cookie-lose `GET`- und `HEAD`-Aufrufe
 der unveränderten Portalroute antworteten weiterhin mit 302 auf die App-URL;
 die Productionroute blieb HTTP 404.
+
+Der bestätigbare Tippfehlerstand wurde anschließend aus Source `2d5957b` als
+Artefakt `d6c9dee` veröffentlicht; GitHub-Pages-Run `30823264583` endete
+erfolgreich. Der externe Browser bestätigte `Toiaster` zunächst ausschließlich
+als „Meintest du Toaster?“ ohne Item-ID und Entsorgungsweg und öffnete erst
+nach Auswahl die exakte Toaster-Antwort. `TOast` blieb dagegen ein Lebensmittel
+mit Biotonne-Hinweis und ohne Elektrotext. Health meldete Inhaltsversion
+`2026.08.03-3` und `productionApproved=false`; No-Login, DE/EN, Share,
+Offline-Opt-in sowie 360 × 800 bei 200 Prozent Textzoom blieben grün.
 
 ## Portalstatus
 
@@ -221,7 +230,8 @@ bestehender Einträge bleiben eigenständig; die früheste erneute Prüfung ist
 weiterhin am 30.09.2026. Details stehen in
 `SOURCES_AND_LICENSES.md`.
 
-Aktueller gesunder DEV-Artefaktcommit ist `864243c`; direkter Rollback vor der
+Aktueller gesunder DEV-Artefaktcommit ist `d6c9dee`; direkter Rollback vor der
+bestätigbaren Tippfehlerkorrektur ist `864243c`. Der Rollback vor der
 Poster-Suchkorrektur ist `f90ecb3`. Bezeichneter Rollbackpunkt vor der
 Loader-Migration ist `163dec7` auf Source `be6b4c95`.
 Der Zwischenstand `6bd8b1c` ist wegen des erst extern gefundenen

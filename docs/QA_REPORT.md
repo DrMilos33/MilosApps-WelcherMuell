@@ -870,3 +870,12 @@ Speichervertragstests, 33/33 Browser-E2E sowie 23/23 amtliche Quellen mit HTTP
 Bestätigung null Entsorgungsweg, `TOast` als Lebensmittel ohne Elektrotext,
 keine Korrektur für `Polster`, 44-Pixel-Korrekturziel und überlauffreien
 360-×-800-Zustand bei 200 Prozent Textzoom. Production bleibt gesperrt.
+
+Extern veröffentlicht: Source
+`2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8`, Pages-Artefakt
+`d6c9deea4eb87899106b0eeb4a94d0a3a6c37822`, Actions-Run `30823264583`
+erfolgreich. Der frische Remote-Smoke bestätigte denselben Toiaster-/Toast-Fluss,
+No-Login, Inhaltsversion `2026.08.03-3`, App-Identität, DE/EN, Share,
+Offline-Opt-in, 200-Prozent-Reflow und `productionApproved=false`. Cookie-lose
+`GET`- und `HEAD`-Aufrufe der unveränderten Portalroute blieben 302 auf die
+App-URL; die Productionroute blieb HTTP 404.
