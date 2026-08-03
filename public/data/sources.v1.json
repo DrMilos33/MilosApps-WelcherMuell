@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.08.03-1",
+  "catalogVersion": "2026.08.03-2",
   "verifiedAt": "2026-08-03",
   "editorialUse": "Die App übernimmt keinen externen Datensatz, keine Logos, Bilder oder längeren Textpassagen. Entsorgungstatsachen wurden aus amtlichen Seiten geprüft und eigenständig kurz formuliert. Jeder Hinweis verlinkt die Quelle.",
   "sources": [
@@ -243,6 +243,18 @@
       "reviewDue": "2026-11-03",
       "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Es werden keine Texte, Bilder oder Datensätze kopiert; die materialspezifische örtliche Auskunft ist eigenständig zusammengefasst und verlinkt.",
       "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München; eigenständige Zusammenfassung."
+    },
+    {
+      "id": "uba-paper-guide",
+      "title": "Papier – Wald und Klima schützen",
+      "publisher": "Umweltbundesamt",
+      "url": "https://www.umweltbundesamt.de/system/files/medien/378/publikationen/papier_-_wald_und_klima_schuetzen-reichart_1.pdf",
+      "scope": "Deutschland; Eignung von Papierprodukten für die Altpapiersammlung, einschließlich beschichteter und nassfester Papiere",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-03",
+      "reviewDue": "2026-11-03",
+      "license": "UBA-Inhalte grundsätzlich CC BY-NC-ND 4.0, sofern nicht anders gekennzeichnet; Daten nach § 12a EGovG nutzbar. Keine Text-, Bild- oder Layoutübernahme; die Materialgrenze ist eigenständig zusammengefasst.",
+      "attribution": "Quelle: Umweltbundesamt; Papier- und Beschichtungsgrenze eigenständig zusammengefasst."
     },
     {
       "id": "uba-rights-2026",

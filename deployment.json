@@ -5,9 +5,9 @@
   "provider": "GitHub Pages",
   "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
   "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-  "sourceCommit": "2c60635b12c09b2c7549aab95228806b566a2a08",
-  "sourceTree": "66fe80b04355f7a4dd8a72f7bd24893213bcc462",
-  "contentVersion": "2026.08.03-1",
+  "sourceCommit": "3541de9dcdd63471f6ad78a12b6895b943821c8e",
+  "sourceTree": "4642b2bd6d24abc21ab2a0e9821eca6195ebce4a",
+  "contentVersion": "2026.08.03-2",
   "productionApproved": false,
   "files": [
     {
@@ -24,7 +24,7 @@
     },
     {
       "path": "healthz",
-      "sha256": "a5d8f9e33d5473d76c24ddc8e34baa9dc65a8544d10938b339d3f9cc2eaa1390"
+      "sha256": "c9ad74df23fe460418bd3f77e4758ef46903788233ac695d4fad261084349385"
     },
     {
       "path": "index.html",
@@ -36,7 +36,7 @@
     },
     {
       "path": "meta.json",
-      "sha256": "39de7681cc470b44fd88e56a42b7df79b261c3f9fa648e209315af8cc7934f7a"
+      "sha256": "04dca34410ae670d131bd0a9e6d595f956c95fbe6104ca1a1eb1df95037a87dd"
     },
     {
       "path": "milos-app.json",
@@ -48,23 +48,23 @@
     },
     {
       "path": "offline-sw.js",
-      "sha256": "abcd62f443a0fd3a1ed72ac4f047692a79b207805453920b01b211349b63d28f"
+      "sha256": "b754b891bc4f70debce42dd338d257bddad0f160c75fa8510afbdb474a5dbc82"
     },
     {
       "path": "public/data/locales/en.v1.json",
-      "sha256": "1b4ac9fe0f3fbd532a0c98256b9224ff9b603930996d70c2bca5a90c0c534a3c"
+      "sha256": "3abe583f0aa323f78c6fa2e1f893163abb3fe6659a2481431b08dc955ce47191"
     },
     {
       "path": "public/data/regions.v1.json",
-      "sha256": "27405b5ed3d8b2d11515304a3c83fa160f8976448184a148d38df2ba4cbfb414"
+      "sha256": "c96fedea9c58b17ea6700594a7bb6892db6e352dfcd422e130d61d0dfa2e8baf"
     },
     {
       "path": "public/data/sources.v1.json",
-      "sha256": "1b435833846df590249ee441e0c70e2b337c5ef1d748dfbc8fd2a43093d6d09d"
+      "sha256": "35417a59cb42b7c40d31086dd33dacb0e35aa8f59f9f64ba102239b3f0577f90"
     },
     {
       "path": "public/data/waste-items.v1.json",
-      "sha256": "b8dad8a2270c4507c46e2676dedcf750f7dc62f08f2d2035fbdbb0a381186aba"
+      "sha256": "a5f1e0f72812c927497230f4319c06779e432d525a5d4b01232e9f154608336d"
     },
     {
       "path": "src/app.js",
@@ -76,7 +76,7 @@
     },
     {
       "path": "src/search.js",
-      "sha256": "05eaa8e69a82726b9c0b8a203d159e5158a9be2fe21114117f47f6498645ccd0"
+      "sha256": "909413e44d04aae9ea4894e8f777dd9b5fa6384b18712deb8bb6c3ecc7f4eb1c"
     },
     {
       "path": "src/shell-session.js",

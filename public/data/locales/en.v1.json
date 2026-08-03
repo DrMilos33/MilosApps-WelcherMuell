@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "language": "en",
-  "contentVersion": "2026.08.03-1",
+  "contentVersion": "2026.08.03-2",
   "contentDate": "2026-08-03",
   "editorialUse": "The app does not reproduce an external dataset, logos, images or lengthy passages. Disposal facts were checked against official pages and rewritten as concise original summaries. Every recommendation links to its source.",
   "items": {
@@ -179,6 +179,24 @@
         "Keep thermal paper, photos and heavily soiled paper out."
       ],
       "localVariation": "Bin colour and collection method may differ locally."
+    },
+    "poster": {
+      "name": "Poster or placard",
+      "aliases": ["poster", "placard", "paper poster", "wall poster", "advertising poster", "poster print"],
+      "keywords": ["printed paper", "outdoor poster", "wet-strength paper", "laminated", "coated"],
+      "category": "Paper / composite material",
+      "route": {
+        "label": "Uncoated paper: waste paper · coated, laminated or wet-strength: residual waste or check locally"
+      },
+      "answer": "Check the material: a clean poster made from ordinary paper can go with waste paper. Laminated, coated, self-adhesive or wet-strength posters do not belong in the paper bin.",
+      "reason": "Paper recycling requires usable paper fibres to be kept separate from plastic layers, adhesive films and wet-strength speciality papers.",
+      "steps": [
+        "Where practical, separate frames, rails, metal eyelets and large films.",
+        "Use a tear test: if the material tears like paper and shows paper fibres, place it clean and dry with waste paper.",
+        "Place a small household quantity of plastic film, laminated, self-adhesive or wet-strength outdoor material in residual waste; check large or unknown formats locally."
+      ],
+      "warning": "Illuminated, flashing or electronically equipped advertising signs are electrical devices, not paper posters.",
+      "localVariation": "Large formats, PVC banners, composite boards and commercial quantities may require a recycling-centre or special local route."
     },
     "cardboard": {
       "name": "Cardboard",
@@ -1020,6 +1038,12 @@
       "publisher": "Munich municipal waste management (AWM)",
       "scope": "City of Munich; reuse and disposal routes for picture frames by material and size",
       "attribution": "Local information: Munich municipal waste management; original summary."
+    },
+    "uba-paper-guide": {
+      "title": "Paper — protecting forests and the climate",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; suitability of paper products for waste-paper collection, including coated and wet-strength papers",
+      "attribution": "Source: German Environment Agency; paper and coating boundary independently summarised."
     },
     "uba-rights-2026": {
       "title": "Privacy, liability and copyright",
