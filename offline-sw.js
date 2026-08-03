@@ -1,4 +1,4 @@
-const CACHE_NAME = "waste-guide-2026-08-01-essentials-v1-1-2";
+const CACHE_NAME = "waste-guide-2026-08-03-result-header-v2";
 const APP_SHELL = [
   "/MilosApps-WelcherMuell/",
   "/MilosApps-WelcherMuell/index.html",
