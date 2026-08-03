@@ -7,12 +7,12 @@
 - URL: `https://drmilos33.github.io/MilosApps-WelcherMuell/`
 - Health: `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz`
 - Repository: `DrMilos33/MilosApps-WelcherMuell`
-- Quellcommit: `2c60635b12c09b2c7549aab95228806b566a2a08`
-- Inhaltsversion: `2026.08.03-1`
+- Quellcommit: `3541de9dcdd63471f6ad78a12b6895b943821c8e`
+- Inhaltsversion: `2026.08.03-2`
 - Artefaktbranch: `dev-pages`
 - gesunder Artefaktcommit:
-  `f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1`
-- Pages-Actions-Run `30816179048`, Artefaktcommit `f90ecb3`, Status
+  `864243c99c361993e66d83978eae937b83dea013`
+- Pages-Actions-Run `30820395425`, Artefaktcommit `864243c`, Status
   `built`/`success` am 03.08.2026
 - Shell: vendortes `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`
@@ -74,8 +74,9 @@ Vor einer Aktualisierung gelten zwingend:
 ## Rollback
 
 Aktuelle gesunde DEV-Revision ist
-`f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1`. Der direkte bezeichnende
-Rollbackpunkt vor Essentials v1.1.5 ist
+`864243c99c361993e66d83978eae937b83dea013`. Direkter Rollback vor der
+Poster-Suchkorrektur ist `f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1`; der
+bezeichnende Rollbackpunkt vor Essentials v1.1.5 ist
 `cefdd80d2d3a33b205ff1b15cea5be3f57213302`; der letzte gesunde vor-v2-Punkt ist
 `8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`.
 

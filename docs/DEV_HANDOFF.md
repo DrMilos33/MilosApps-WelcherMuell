@@ -10,7 +10,7 @@
 | Sprache | `de-DE/en` |
 | Status | DEV, öffentlich, ohne Anmeldung |
 | Plattformen | Web, mobile/PWA, Desktop |
-| Inhaltsstand | `2026.08.03-1`, 03.08.2026 |
+| Inhaltsstand | `2026.08.03-2`, 03.08.2026 |
 | Gültigkeit | Private Haushalte in Deutschland; belegte Ergänzungen für Berlin, Hamburg und München |
 | öffentliche DEV-URL | `https://drmilos33.github.io/MilosApps-WelcherMuell/` |
 | Healthcheck | `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz` |
@@ -29,12 +29,12 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `2c60635b12c09b2c7549aab95228806b566a2a08`
-- Quellbaum: `66fe80b04355f7a4dd8a72f7bd24893213bcc462`
+  `3541de9dcdd63471f6ad78a12b6895b943821c8e`
+- Quellbaum: `4642b2bd6d24abc21ab2a0e9821eca6195ebce4a`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1`
-- GitHub-Pages-Actions-Run `30816179048`: Artefaktcommit `f90ecb3`,
+  `864243c99c361993e66d83978eae937b83dea013`
+- GitHub-Pages-Actions-Run `30820395425`: Artefaktcommit `864243c`,
   Status `built`/`success`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
@@ -53,7 +53,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-1","productionApproved":false,"sourceCommit":"2c60635b12c09b2c7549aab95228806b566a2a08"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-2","productionApproved":false,"sourceCommit":"3541de9dcdd63471f6ad78a12b6895b943821c8e"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -161,9 +161,18 @@ Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
-$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="c7af103d60141fc7335ccb52771d1f4f9f14f8e8"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="3541de9dcdd63471f6ad78a12b6895b943821c8e"
 pnpm test:remote:dev
 ```
+
+Der Poster-Suchstand wurde am 03.08.2026 aus Source `3541de9` als Artefakt
+`864243c` veröffentlicht; GitHub-Pages-Run `30820395425` endete erfolgreich.
+Ein frischer Browserkontext bestätigte `Poster oder Plakat` ohne
+Elektroergebnis sowie für `Polster` den sicheren unbekannten Zustand. Health,
+No-Login, DE/EN, Teilen, explizites Offline, 200-Prozent-Reflow und
+`productionApproved=false` blieben grün. Cookie-lose `GET`- und `HEAD`-Aufrufe
+der unveränderten Portalroute antworteten weiterhin mit 302 auf die App-URL;
+die Productionroute blieb HTTP 404.
 
 ## Portalstatus
 
@@ -212,8 +221,9 @@ bestehender Einträge bleiben eigenständig; die früheste erneute Prüfung ist
 weiterhin am 30.09.2026. Details stehen in
 `SOURCES_AND_LICENSES.md`.
 
-Aktueller gesunder DEV-Artefaktcommit ist `9c4959a`; bezeichneter
-Rollbackpunkt vor der Loader-Migration ist `163dec7` auf Source `be6b4c95`.
+Aktueller gesunder DEV-Artefaktcommit ist `864243c`; direkter Rollback vor der
+Poster-Suchkorrektur ist `f90ecb3`. Bezeichneter Rollbackpunkt vor der
+Loader-Migration ist `163dec7` auf Source `be6b4c95`.
 Der Zwischenstand `6bd8b1c` ist wegen des erst extern gefundenen
 Ergebnis-Zoomfehlers kein Rollbackpunkt.
 Der letzte gesunde vor-v2-Punkt bleibt `8e8dfe0`. Der gestoppte

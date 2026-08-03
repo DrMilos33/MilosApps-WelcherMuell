@@ -838,3 +838,11 @@ Abschluss lokal: 96/96 Unit-, Inhalts-, Quellen-, Such- und DE/EN-Tests,
 32/32 Browser-E2E sowie 23/23 amtliche Quellen mit HTTP 200. Browser-E2E
 bestätigt `Poster oder Plakat` als Haupttreffer ohne Elektroergebnis und für
 `Polster` den sicheren unbekannten Zustand. Production bleibt gesperrt.
+
+Extern veröffentlicht: Source
+`3541de9dcdd63471f6ad78a12b6895b943821c8e`, Pages-Artefakt
+`864243c99c361993e66d83978eae937b83dea013`, Actions-Run `30820395425`
+erfolgreich. Der frische Remote-Smoke bestätigte denselben Poster-/Polster-Fluss,
+No-Login, Inhaltsversion `2026.08.03-2`, App-Identität und
+`productionApproved=false`; die unveränderte Portal-DEV-Route blieb für `GET`
+und `HEAD` ein 302 auf die App-URL, Production blieb HTTP 404.

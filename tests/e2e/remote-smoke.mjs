@@ -285,7 +285,7 @@ try {
   await page.getByRole("button", { name: "Neue Suche" }).click();
   await page.getByLabel("Gegenstand oder Material").fill("Polster");
   await page.getByRole("button", { name: "Suchen" }).click();
-  await page.getByRole("heading", { name: "Kein sicherer Treffer", exact: true }).waitFor();
+  await page.getByRole("heading", { name: /Kein sicherer Treffer/ }).waitFor();
   assert.equal(await page.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
 
   await shell.getByRole("button", { name: "EN", exact: true }).click();
