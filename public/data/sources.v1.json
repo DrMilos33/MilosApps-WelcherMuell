@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.08.01-1",
-  "verifiedAt": "2026-08-01",
+  "catalogVersion": "2026.08.03-1",
+  "verifiedAt": "2026-08-03",
   "editorialUse": "Die App übernimmt keinen externen Datensatz, keine Logos, Bilder oder längeren Textpassagen. Entsorgungstatsachen wurden aus amtlichen Seiten geprüft und eigenständig kurz formuliert. Jeder Hinweis verlinkt die Quelle.",
   "sources": [
     {
@@ -231,6 +231,18 @@
       "reviewDue": "2026-09-30",
       "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Es werden keine Texte oder Datensätze kopiert; einzelne Entsorgungstatsachen sind eigenständig formuliert und als örtliche Evidenz gekennzeichnet.",
       "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München."
+    },
+    {
+      "id": "munich-awm-picture-frame",
+      "title": "Bilderrahmen – Abfalllexikon",
+      "publisher": "Abfallwirtschaftsbetrieb München (AWM)",
+      "url": "https://www.awm-muenchen.de/abfall-entsorgen/abfalllexikon/detailansicht-lexikoneintrag/bilderrahmen",
+      "scope": "Stadt München; Weiterverwendung sowie Entsorgungswege für Bilderrahmen nach Material und Größe",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-03",
+      "reviewDue": "2026-11-03",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Es werden keine Texte, Bilder oder Datensätze kopiert; die materialspezifische örtliche Auskunft ist eigenständig zusammengefasst und verlinkt.",
+      "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München; eigenständige Zusammenfassung."
     },
     {
       "id": "uba-rights-2026",

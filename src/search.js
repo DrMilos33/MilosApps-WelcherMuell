@@ -108,6 +108,33 @@ function fuzzyTokenMatch(queryToken, termToken) {
   return distance <= allowed ? 0.72 - (distance - 1) * 0.12 : 0;
 }
 
+function isUsefulPrefix(shorter, longer) {
+  if (shorter.length < 3 || !longer.startsWith(shorter)) return false;
+  const remainder = longer.slice(shorter.length);
+  const ratio = shorter.length / longer.length;
+  return ratio >= 0.58 || /^(e|en|er|es|n|s)$/.test(remainder);
+}
+
+function includesWholePhrase(value, phrase) {
+  return ` ${value} `.includes(` ${phrase} `);
+}
+
+function scoreSearchIntent(item, normalizedQuery) {
+  const compactQuery = normalizedQuery.replaceAll(" ", "");
+  let best = 0;
+  for (const rule of item.searchIntents ?? []) {
+    const groups = rule.all ?? [];
+    const matchesGroups = groups.length > 0 && groups.every((roots) =>
+      roots.some((root) => compactQuery.includes(normalizeText(root).replaceAll(" ", "")))
+    );
+    const excluded = (rule.exclude ?? []).some((root) =>
+      compactQuery.includes(normalizeText(root).replaceAll(" ", ""))
+    );
+    if (matchesGroups && !excluded) best = Math.max(best, Number(rule.score) || 0);
+  }
+  return best;
+}
+
 function scoreItem(item, normalizedQuery) {
   const terms = itemTerms(item);
   const compactQuery = normalizedQuery.replaceAll(" ", "");
@@ -133,20 +160,26 @@ function scoreItem(item, normalizedQuery) {
       }
     }
 
-    const prefixScore = term.kind === "keyword" ? 88 : 112;
-    if (normalizedQuery.length >= 2 && term.value.startsWith(normalizedQuery) && prefixScore > best) {
+    const prefixScore = term.kind === "keyword" ? 84 : 112;
+    if (isUsefulPrefix(normalizedQuery, term.value) && prefixScore > best) {
       best = prefixScore;
       reason = "prefix";
     }
 
-    const containsScore = term.kind === "keyword" ? 80 : 96;
-    if (normalizedQuery.length >= 3 && term.value.includes(normalizedQuery) && containsScore > best) {
+    const containsScore = term.kind === "keyword" ? 76 : 96;
+    const containsRatio = normalizedQuery.length / term.value.length;
+    if (
+      normalizedQuery.length >= 3 &&
+      term.value.includes(normalizedQuery) &&
+      containsRatio >= 0.58 &&
+      containsScore > best
+    ) {
       best = containsScore;
       reason = "contains";
     }
 
     const questionScore = term.kind === "keyword" ? 72 : 88;
-    if (term.value.length >= 3 && normalizedQuery.includes(term.value) && questionScore > best) {
+    if (term.value.length >= 3 && includesWholePhrase(normalizedQuery, term.value) && questionScore > best) {
       best = questionScore;
       reason = "question";
     }
@@ -170,11 +203,22 @@ function scoreItem(item, normalizedQuery) {
     }
   }
 
+  const intentScore = scoreSearchIntent(item, normalizedQuery);
+  if (intentScore > best) {
+    best = intentScore;
+    reason = "intent";
+  }
+
   const queryTokens = significantTokens(normalizedQuery);
-  if (queryTokens.length > 0) {
-    const termTokens = [...new Set(terms.flatMap((term) => term.value.split(" ")))];
+  if (queryTokens.length > 1) {
+    const termTokens = terms.flatMap((term) =>
+      term.value.split(" ").map((value) => ({ value, kind: term.kind }))
+    );
     const tokenQuality = queryTokens.map((queryToken) => {
-      return Math.max(0, ...termTokens.map((termToken) => fuzzyTokenMatch(queryToken, termToken)));
+      return Math.max(0, ...termTokens.map((termToken) => {
+        if (termToken.kind === "keyword") return queryToken === termToken.value ? 0.82 : 0;
+        return fuzzyTokenMatch(queryToken, termToken.value);
+      }));
     });
     const matched = tokenQuality.filter((quality) => quality > 0).length;
     const average = tokenQuality.reduce((sum, quality) => sum + quality, 0) / queryTokens.length;
@@ -261,12 +305,21 @@ export function searchItems(items, query, options = {}) {
           : { valid: true, issues: [], issueDetails: [] }
       };
     })
-    .filter((result) => result.score >= 55)
+    .filter((result) => result.score >= 68)
     .sort((left, right) => {
       if (right.score !== left.score) return right.score - left.score;
       return left.item.name.localeCompare(right.item.name, "de");
     })
     .slice(0, options.limit ?? 8);
+}
+
+export function suggestedAlternatives(items, primaryItem, query) {
+  const normalizedQuery = normalizeText(query);
+  const itemIds = (primaryItem.guidedAlternatives ?? [])
+    .filter((entry) => (entry.queries ?? []).some((candidate) => normalizeText(candidate) === normalizedQuery))
+    .flatMap((entry) => entry.itemIds ?? []);
+  const byId = new Map(items.map((item) => [item.id, item]));
+  return [...new Set(itemIds)].map((id) => byId.get(id)).filter(Boolean);
 }
 
 export function isAmbiguous(results) {
