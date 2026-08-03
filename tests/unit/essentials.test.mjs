@@ -41,8 +41,8 @@ describe("public-app-essentials/v1", () => {
     assert.equal(manifest.productionApproved, false);
     assert.deepEqual(manifest.essentialsContract, {
       id: "public-app-essentials/v1",
-      version: "1.1.3",
-      sharedCommit: "babe74a0e62e1a7f9095648195e54b322a837726",
+      version: "1.1.5",
+      sharedCommit: "2942132ad3bf6cf39edc9f52ed918de6a230be23",
       vendorDirectory: "vendor/milosapps-essentials/v1",
       runtimeBasePath: "vendor/milosapps-essentials/v1"
     });
@@ -114,7 +114,7 @@ describe("public-app-essentials/v1", () => {
     assert.doesNotMatch(appSource, /register\(new URL\("\.\.\/sw\.js"/);
     assert.match(legacyWorkerSource, /self\.registration\.unregister\(\)/);
     assert.match(legacyWorkerSource, /name\.startsWith\("waste-guide-"\)/);
-    assert.match(offlineWorkerSource, /waste-guide-2026-08-03-search-v3/);
+    assert.match(offlineWorkerSource, /waste-guide-2026-08-03-essentials-v1-1-5/);
   });
 
   test("stellt den erkannten Gegenstand und Entsorgungsweg vor Details", () => {

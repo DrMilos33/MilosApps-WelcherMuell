@@ -15,7 +15,7 @@ Nutzerdatenbank sind nicht nötig.
 - sichtbare Fachoberfläche: vollständig Deutsch und Englisch
 - öffentlicher App-Rahmen: lokal vendortes `public-app-shell/v2.0.3`
 - gemeinsame öffentliche Interaktionen: lokal vendortes
-  `public-app-essentials/v1.1.3` für kompakten Start, ehrlichen
+  `public-app-essentials/v1.1.5` für kompakten Start, ehrlichen
   Datenschutzhinweis und Teilen
 - Production: nicht freigegeben
 

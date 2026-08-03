@@ -18,7 +18,7 @@
 | Portal-DEV-Route | `/apps/waste-guide`, cookie-los öffentlich validiert |
 | Vorschaubild | `/assets/preview.svg`, eigenes Werk dieses Repositorys |
 | Anmeldung | keine |
-| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` und `public-app-essentials/v1.1.3` vendort; keine Laufzeitabhängigkeit |
+| Shared-Abhängigkeiten | `public-app-shell/v2.0.3` und `public-app-essentials/v1.1.5` vendort; keine Laufzeitabhängigkeit |
 | Production | nicht freigegeben |
 
 Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
@@ -38,8 +38,8 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   Artefaktcommit `9c4959a`, Status `built`/`success`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
-- Essentials-Pin: `public-app-essentials/v1.1.3`, Shared-Commit
-  `babe74a0e62e1a7f9095648195e54b322a837726`, eigener 6er-Lock verifiziert
+- Essentials-Pin: `public-app-essentials/v1.1.5`, Shared-Commit
+  `2942132ad3bf6cf39edc9f52ed918de6a230be23`, eigener 6er-Lock verifiziert
 - Draft-PR für den Quellbranch:
   `https://github.com/DrMilos33/MilosApps-WelcherMuell/pull/1`
 

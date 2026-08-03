@@ -5,8 +5,13 @@ import { chromium } from "playwright";
 
 const host = "127.0.0.1";
 const port = 4318;
-const baseUrl = `http://${host}:${port}`;
+const configuredBaseUrl = process.env.WASTE_GUIDE_TRANSITION_URL?.trim();
+const externalRun = Boolean(configuredBaseUrl);
+const baseUrl = configuredBaseUrl
+  ? configuredBaseUrl.replace(/\/$/, "")
+  : `http://${host}:${port}`;
 const expectedContentVersion = "2026.08.03-1";
+const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT?.trim() || null;
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
@@ -23,7 +28,8 @@ function isExpectedIdentity(health) {
     health?.appKey === "waste-guide" &&
     health?.environment === "DEV" &&
     health?.contentVersion === expectedContentVersion &&
-    health?.productionApproved === false
+    health?.productionApproved === false &&
+    (!expectedSourceCommit || health?.sourceCommit === expectedSourceCommit)
   );
 }
 
@@ -54,7 +60,7 @@ async function inspectExistingServer() {
 let server = null;
 let serverOutput = "";
 
-if (!(await inspectExistingServer())) {
+if (!externalRun && !(await inspectExistingServer())) {
   server = spawn(process.execPath, ["scripts/dev-server.mjs"], {
     cwd: new URL("../../", import.meta.url),
     env: {
@@ -103,6 +109,7 @@ async function readGeometry(page) {
 }
 
 function installTransitionCapture() {
+  const marker = "__WASTE_SHELL_TRANSITION__";
   const capture = () => {
     const shell = document.querySelector("milos-app-shell");
     const shellIcon = shell?.querySelector(':scope > [slot="app-icon"]');
@@ -127,6 +134,9 @@ function installTransitionCapture() {
 
     return {
       defined: Boolean(customElements.get("milos-app-shell")),
+      essentialsCssLoaded: [...document.querySelectorAll('link[rel="stylesheet"]')].some(
+        (link) => link.href.includes("/vendor/milosapps-essentials/v1/milos-app-essentials.css") && Boolean(link.sheet)
+      ),
       componentCssLoaded: Boolean(shell?.shadowRoot?.querySelector('link[data-milos-app-shell-component]')?.sheet),
       shellIcon: {
         widthAttribute: shellIcon?.getAttribute("width"),
@@ -153,17 +163,26 @@ function installTransitionCapture() {
   };
 
   window.__captureShellTransitionGeometry = capture;
-  window.__shellBeforeUpgrade = null;
-  const observer = new MutationObserver(() => {
-    if (
-      !window.__shellBeforeUpgrade &&
-      document.querySelector('milos-app-shell > [slot="app-icon"]') &&
-      !customElements.get("milos-app-shell")
-    ) {
-      window.__shellBeforeUpgrade = capture();
+  const reported = new Set();
+  const report = (phase, state) => {
+    if (reported.has(phase)) return;
+    reported.add(phase);
+    console.info(`${marker}${JSON.stringify({ phase, state })}`);
+  };
+  const inspect = () => {
+    const state = capture();
+    if (state.essentialsCssLoaded && !state.defined && state.shellIcon.widthAttribute === "38") {
+      report("before", state);
     }
-  });
-  observer.observe(document, { childList: true, subtree: true });
+    if (state.defined && !state.componentCssLoaded && state.loader.hidden) {
+      report("pending", state);
+    }
+    if (state.defined && state.componentCssLoaded && state.loader.hidden) {
+      report("after", state);
+    }
+    requestAnimationFrame(inspect);
+  };
+  requestAnimationFrame(inspect);
 }
 
 function assertShellIconBounded(state, phase) {
@@ -192,45 +211,75 @@ try {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, colorScheme: "dark" });
   const page = await context.newPage();
   const errors = [];
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  const stateGates = {
+    before: createGate(),
+    pending: createGate(),
+    after: createGate()
+  };
+  page.on("console", (message) => {
+    const text = message.text();
+    if (text.startsWith("__WASTE_SHELL_TRANSITION__")) {
+      const report = JSON.parse(text.slice("__WASTE_SHELL_TRANSITION__".length));
+      stateGates[report.phase]?.release(report.state);
+    }
+    if (message.type() === "error") errors.push(text);
+  });
   page.on("pageerror", (error) => errors.push(error.message));
 
+  const bootstrapGate = createGate();
+  const bootstrapRequestedGate = createGate();
   const cssGate = createGate();
   const cssRequestedGate = createGate();
 
   await page.addInitScript(installTransitionCapture);
+  await page.route("**/vendor/milosapps-shell/v2/bootstrap.js", async (route) => {
+    bootstrapRequestedGate.release();
+    await bootstrapGate.promise;
+    await route.continue();
+  });
   await page.route("**/vendor/milosapps-shell/v2/milos-app-shell.css", async (route) => {
     cssRequestedGate.release();
     await cssGate.promise;
     await route.continue();
   });
 
-  await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
+  let navigationError = null;
+  const navigation = page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 30000 })
+    .catch((error) => { navigationError = error; });
+  await withTimeout(bootstrapRequestedGate.promise, "Shell-Bootstrap");
+  const beforeUpgrade = await withTimeout(
+    stateGates.before.promise,
+    "Essentials-CSS bei undefinierter Shell"
+  );
+  bootstrapGate.release();
   await withTimeout(cssRequestedGate.promise, "Shell-Komponenten-CSS");
-  await page.waitForFunction(() => Boolean(customElements.get("milos-app-shell")));
-  await page.locator("[data-milos-app-loading]").waitFor({ state: "hidden" });
-  const beforeUpgrade = await page.evaluate(() => window.__shellBeforeUpgrade);
-  assert.ok(beforeUpgrade, "Der undefinierte Shell-Slot wurde vor dem Upgrade nicht aufgezeichnet.");
-  const whileCssPending = await readGeometry(page);
+  const whileCssPending = await withTimeout(
+    stateGates.pending.promise,
+    "Shell-Upgrade bei verzögertem Komponenten-CSS"
+  );
 
   cssGate.release();
-  await page.waitForFunction(() => Boolean(
-    document.querySelector("milos-app-shell")?.shadowRoot?.querySelector('link[data-milos-app-shell-component]')?.sheet
-  ));
-  const afterCss = await readGeometry(page);
+  const afterCss = await withTimeout(stateGates.after.promise, "fertiger Shell-CSS-Zustand");
+  await navigation;
+  if (navigationError) throw navigationError;
 
+  assert.equal(beforeUpgrade.essentialsCssLoaded, true, JSON.stringify(beforeUpgrade));
   assert.equal(beforeUpgrade.defined, false, JSON.stringify(beforeUpgrade));
+  assert.equal(beforeUpgrade.shellIcon.visibility, "hidden", JSON.stringify(beforeUpgrade));
   assert.equal(whileCssPending.defined, true, JSON.stringify(whileCssPending));
   assert.equal(whileCssPending.componentCssLoaded, false, JSON.stringify(whileCssPending));
+  assert.notEqual(whileCssPending.shellIcon.visibility, "hidden", JSON.stringify(whileCssPending));
   assert.equal(afterCss.componentCssLoaded, true, JSON.stringify(afterCss));
   assertShellIconBounded(beforeUpgrade, "vor Upgrade");
   assertShellIconBounded(whileCssPending, "während Komponenten-CSS lädt");
   assertShellIconBounded(afterCss, "nach Komponenten-CSS");
-  assertLoaderContract(beforeUpgrade, "vor Upgrade", { requireMax: false });
+  assertLoaderContract(beforeUpgrade, "vor Upgrade");
   assertLoaderContract(whileCssPending, "während Komponenten-CSS lädt");
   assertLoaderContract(afterCss, "nach Komponenten-CSS");
   assert.equal(beforeUpgrade.loader.hidden, false, JSON.stringify(beforeUpgrade));
   assert.equal(whileCssPending.loader.hidden, true, JSON.stringify(whileCssPending));
+  assert.equal(afterCss.shellIcon.width, 38, JSON.stringify(afterCss));
+  assert.equal(afterCss.shellIcon.height, 38, JSON.stringify(afterCss));
   assert.deepEqual(errors, []);
   await context.close();
 
@@ -247,6 +296,8 @@ try {
 
   console.log(JSON.stringify({
     status: "PASS",
+    mode: externalRun ? "external" : "local",
+    url: baseUrl,
     beforeUpgrade,
     whileCssPending,
     afterCss,
