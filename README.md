@@ -28,8 +28,8 @@ Repository:  https://github.com/DrMilos33/MilosApps-WelcherMuell
 ```
 
 Deploymentquelle ist
-`2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8`; der getrennte
-Pages-Artefaktcommit ist `d6c9deea4eb87899106b0eeb4a94d0a3a6c37822`.
+`5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c`; der getrennte
+Pages-Artefaktcommit ist `3e7d427eb9d4159791d741933d57e75e4e88ad8b`.
 GitHub Pages ist ausschließlich der DEV-Host. Production bleibt nicht
 freigegeben.
 

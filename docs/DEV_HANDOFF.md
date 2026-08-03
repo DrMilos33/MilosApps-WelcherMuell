@@ -10,7 +10,7 @@
 | Sprache | `de-DE/en` |
 | Status | DEV, öffentlich, ohne Anmeldung |
 | Plattformen | Web, mobile/PWA, Desktop |
-| Inhaltsstand | `2026.08.03-3`, 03.08.2026 |
+| Inhaltsstand | `2026.08.03-4`, 03.08.2026 |
 | Gültigkeit | Private Haushalte in Deutschland; belegte Ergänzungen für Berlin, Hamburg und München |
 | öffentliche DEV-URL | `https://drmilos33.github.io/MilosApps-WelcherMuell/` |
 | Healthcheck | `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz` |
@@ -29,12 +29,12 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8`
-- Quellbaum: `8382794be198d581ce35fe4e6ccc9d37b98370c3`
+  `5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c`
+- Quellbaum: `c62df9e6e2bc8bc842007564dbf13dc15e164f33`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `d6c9deea4eb87899106b0eeb4a94d0a3a6c37822`
-- GitHub-Pages-Actions-Run `30823264583`: Artefaktcommit `d6c9dee`,
+  `3e7d427eb9d4159791d741933d57e75e4e88ad8b`
+- GitHub-Pages-Actions-Run `30827853767`: Artefaktcommit `3e7d427`,
   Status `built`/`success`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
@@ -53,7 +53,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-3","productionApproved":false,"sourceCommit":"2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-4","productionApproved":false,"sourceCommit":"5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -161,7 +161,7 @@ Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
-$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="2d5957b2ec2d8a3afeffc79b0a41eeb38d80cfe8"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c"
 pnpm test:remote:dev
 ```
 
@@ -182,6 +182,18 @@ nach Auswahl die exakte Toaster-Antwort. `TOast` blieb dagegen ein Lebensmittel
 mit Biotonne-Hinweis und ohne Elektrotext. Health meldete Inhaltsversion
 `2026.08.03-3` und `productionApproved=false`; No-Login, DE/EN, Share,
 Offline-Opt-in sowie 360 × 800 bei 200 Prozent Textzoom blieben grün.
+
+Die allgemeine Materialsuche wurde danach aus Source `5a5a0e2` als Artefakt
+`3e7d427` veröffentlicht; GitHub-Pages-Run `30827853767` endete erfolgreich.
+Der frische cookie-lose Browserlauf bestätigte `Eisen`, die hervorgehobenen
+Wege `Wertstofftonne` und `Wertstoffhof`, `iron bar` auf Englisch sowie die
+sicheren Abgrenzungen für Stahl-Gasflasche, flüssige Farbe in Metalldose und
+Carbonplatte. Bei 360 × 800 und 200 Prozent Textzoom maß die Materialauswahl
+`clientWidth=scrollWidth=360`; alle Schaltflächen blieben mindestens 44 Pixel
+hoch und die Konsole fehlerfrei. Health meldete Inhaltsversion `2026.08.03-4`,
+Source `5a5a0e2` und `productionApproved=false`. Die unveränderte Portalroute
+antwortete cookie-los für `GET` und `HEAD` mit 302 auf die App-URL; Production
+blieb HTTP 404.
 
 ## Portalstatus
 

@@ -907,3 +907,14 @@ bereits erkannter Tippfehler darf nicht mehr durch einen allgemeinen Intent zur
 direkten Antwort werden. Abschluss: 115/115 Unit-/Inhalts-/Such-/DE-EN- und
 Speichertests, Shell- und Essentials-Verifier PASS, 34/34 Browser-E2E sowie
 28/28 amtliche Quellen mit HTTP 200. Production blieb gesperrt.
+
+Extern veröffentlicht: Source
+`5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c`, Pages-Artefakt
+`3e7d427eb9d4159791d741933d57e75e4e88ad8b`, Actions-Run `30827853767`
+erfolgreich. Der frische Remote-Smoke und ein zusätzlicher leerer Browserkontext
+bestätigten Inhaltsversion `2026.08.03-4`, No-Login/null Cookies, `Eisen`,
+`iron bar`, Stahl-Gasflasche ohne Metallroute, flüssige Farbe in Metalldose als
+Gefahrstoff, Carbonplatte ohne Holzroute sowie 360 × 800 bei 200 Prozent mit
+`clientWidth=scrollWidth=360`, mindestens 44-Pixel-Materialzielen und null
+Konsolenfehlern. Portal-DEV blieb für `GET` und `HEAD` ein 302 auf die
+unabhängige App-URL; Production blieb HTTP 404.
