@@ -471,6 +471,25 @@ Gültigkeitsgrenze: Dieses Gate schützt nur den visuellen Übergang von
 CSS-first-Loader zu Web Component. Es bewertet weder Fachinhalt noch
 Suchqualität oder redaktionelle Aktualität.
 
+### Tippfehlertoleranz braucht einen sprachlichen Anker
+
+Editierdistanz allein verwechselt kurze, häufige Wörter leicht mit fachlich
+gefährlichen Kategorien. `Poster` und `Toaster` liegen nur zwei Änderungen
+auseinander; eine großzügige Distanzschwelle machte daraus fälschlich ein
+Elektrogerät. Fuzzy-Korrekturen werden deshalb nur noch akzeptiert, wenn die
+ersten drei normalisierten Zeichen stabil bleiben; zusätzlich ist ein einzelner
+echter benachbarter Buchstabendreher erlaubt. Kuratierte Alltagsnamen schließen
+bekannte Fälle.
+
+Evidenz: Vor der Korrektur erhielten `Poster`, `Polster`, `Raster` und `Koster`
+den Elektro-Score 87. Danach führen `Poster`, `Plakat`, `Postre` und `Psoter`
+zum eigenen Materialcheck, während die drei unverwandten Wörter keinen Treffer
+erzeugen; alle bestehenden Tippfehlerregressionen bleiben grün.
+
+Gültigkeitsgrenze: Der Präfixanker reduziert semantisch falsche Fuzzy-Treffer,
+ersetzt aber keinen redaktionellen Eintrag für einen tatsächlich häufigen
+Gegenstand und keine Material- oder Sicherheitsprüfung.
+
 ## Weitergabe
 
 Die allgemein relevanten Punkte zu dreistufiger Quellenpflege, Suchgewichtung,

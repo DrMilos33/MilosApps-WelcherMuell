@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "2026.08.03-1",
+  "contentVersion": "2026.08.03-2",
   "contentDate": "2026-08-03",
   "defaultScope": "Private Haushalte in Deutschland",
   "items": [
@@ -248,6 +248,30 @@
       "sources": ["uba-separation-2026"],
       "reviewedAt": "2026-07-30",
       "reviewDue": "2026-10-30"
+    },
+    {
+      "id": "poster",
+      "name": "Poster oder Plakat",
+      "aliases": ["Poster", "Plakat", "Papierposter", "Wandposter", "Werbeplakat", "Posterdruck"],
+      "keywords": ["bedrucktes Papier", "Außenplakat", "nassfest", "laminiert", "beschichtet"],
+      "category": "Papier / Verbundmaterial",
+      "route": {
+        "type": "poster-conditional",
+        "label": "Unbeschichtetes Papier: Altpapier · beschichtet, laminiert oder nassfest: Restmüll beziehungsweise örtlich prüfen"
+      },
+      "certainty": "check-local",
+      "answer": "Material prüfen: Ein sauberes Poster aus normalem Papier kann ins Altpapier. Laminierte, beschichtete, selbstklebende oder nassfeste Plakate gehören nicht in die Papiertonne.",
+      "reason": "Für das Papierrecycling müssen verwertbare Papierfasern von Kunststoffschichten, Klebefolien und nassfesten Spezialpapieren getrennt bleiben.",
+      "steps": [
+        "Rahmen, Leisten, Metallösen und große Folien nach Möglichkeit getrennt entfernen.",
+        "Reißprobe: Reißt das Material wie Papier und zeigt Papierfasern, sauber und trocken zum Altpapier geben.",
+        "Bei Kunststofffolie, Laminierung, selbstklebender Rückseite oder nassfestem Außenmaterial eine kleine Haushaltsmenge zum Restmüll geben; große oder unbekannte Formate örtlich prüfen."
+      ],
+      "warning": "Leuchtende, blinkende oder elektronisch ausgestattete Werbeschilder sind Elektrogeräte und kein Papierposter.",
+      "localVariation": "Großformate, PVC-Banner, Verbundplatten und gewerbliche Mengen können kommunal einen Wertstoffhof- oder besonderen Annahmeweg haben.",
+      "sources": ["uba-paper-guide", "uba-household-waste"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
     },
     {
       "id": "cardboard",

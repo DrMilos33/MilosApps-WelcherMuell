@@ -90,7 +90,11 @@ describe("Suchqualität", () => {
     ["Ölgemäde", "painting", "Tippfehler im Gemälde"],
     ["Kinderriegel", "food-and-wrapper", "Alltagsname eines Schokoriegels"],
     ["Schokolade", "food-and-wrapper", "Lebensmittel und Hülle getrennt betrachten"],
-    ["leere Schokoriegelverpackung", "food-and-wrapper", "zusammengesetzter Produkt- und Verpackungsbegriff"]
+    ["leere Schokoriegelverpackung", "food-and-wrapper", "zusammengesetzter Produkt- und Verpackungsbegriff"],
+    ["Poster", "poster", "eigener Materialcheck statt Elektro-Fehlkorrektur"],
+    ["Plakat", "poster", "Alltagsbegriff mit Materialgrenze"],
+    ["Postre", "poster", "Tippfehler im Poster"],
+    ["Psoter", "poster", "Buchstabendreher am Wortanfang"]
   ];
 
   for (const [query, expected, label] of cases) {
@@ -144,6 +148,17 @@ describe("Suchqualität", () => {
     assert.equal(ids[0], "plastic-packaging");
     assert.ok(!ids.includes("glass-container"));
     assert.ok(!ids.includes("cold-ash"));
+  });
+
+  test("ähnlich klingende Alltagswörter erzeugen keine erfundenen Tippfehler-Treffer", () => {
+    for (const query of ["Polster", "Raster", "Koster"]) {
+      const ids = searchItems(items, query, {
+        sourcesById,
+        asOf: new Date("2026-08-03T00:00:00Z")
+      }).map(({ item }) => item.id);
+      assert.deepEqual(ids, [], `${query}: ${ids.join(", ")}`);
+    }
+    assert.ok(!searchItems(items, "Poster").some(({ item }) => item.id === "electrical-device"));
   });
 
   test("generisches Keyword verdrängt keinen exakten Batterie-Treffer", () => {

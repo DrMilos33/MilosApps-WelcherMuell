@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 const host = "127.0.0.1";
 const port = 4318;
 const baseUrl = `http://${host}:${port}`;
-const expectedContentVersion = "2026.08.03-1";
+const expectedContentVersion = "2026.08.03-2";
 const artifacts = new URL("../../test-results/qa/", import.meta.url);
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -396,6 +396,8 @@ try {
       ["Ölgemäde", "Gemälde oder Leinwandbild"],
       ["Kinderriegel", "Schokolade oder Riegel"],
       ["schokolade", "Schokolade oder Riegel"],
+      ["Poster", "Poster oder Plakat"],
+      ["Plakat", "Poster oder Plakat"],
       ["elektrische Zahnbürste", "Elektrogerät"],
       ["elektronisches Plastikspielzeug", "Elektrogerät"],
       ["aufgeblähter Handyakku", "Aufgeblähter oder beschädigter Akku"]
@@ -405,6 +407,16 @@ try {
       await desktopPage.getByRole("heading", { name: heading, exact: true }).waitFor();
     }
     await assert.doesNotReject(() => desktopPage.getByText(/Bei Rauch, Zischen/).waitFor());
+  });
+
+  await check("Desktop: Poster erhält den Materialcheck und ähnliche Wörter werden nicht geraten", async () => {
+    await submitSearch(desktopPage, "Poster");
+    await desktopPage.getByRole("heading", { name: "Poster oder Plakat", exact: true }).waitFor();
+    assert.equal(await desktopPage.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
+
+    await submitSearch(desktopPage, "Polster");
+    await desktopPage.getByRole("heading", { name: /Kein sicherer Treffer/ }).waitFor();
+    assert.equal(await desktopPage.getByText("Elektrogerät", { exact: true }).count(), 0);
   });
 
   await check("Desktop: Plastik erhält einen sinnvollen Haupttreffer statt Elektro-Raten", async () => {

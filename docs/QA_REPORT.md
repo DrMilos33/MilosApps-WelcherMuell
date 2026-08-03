@@ -811,3 +811,30 @@ Deployte Evidenz: Source
 `f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1`, Actions-Run `30816179048`
 erfolgreich. Der technische Vertrag änderte weder Fachinhalt, Inhaltsversion,
 Quellenreview, Datenschutz-/Share-Funktion noch Portalroute oder Production.
+
+## Poster-Suche und sichere Tippfehlergrenze · Inhaltsversion 2026.08.03-2
+
+Der Rotlauf zeigte die systemische Ursache des Nutzerbefunds: `Poster` lag im
+Damerau-Levenshtein-Abstand 2 zum Elektro-Alias `Toaster`. Die frühere
+Tippfehlertoleranz akzeptierte solche Mehrzeichenkorrekturen ohne stabilen
+Wortanfang und gab deshalb auch `Polster`, `Raster` oder `Koster` als
+Elektrogerät aus.
+
+Fuzzy-Treffer brauchen nun dieselben drei Anfangszeichen; ein einzelner echter
+benachbarter Buchstabendreher ist zusätzlich erlaubt. Die bestehenden
+produktiven Tippfehler `Baterie`, `Ölgemäde`, `Gummibnad`, `Joghurbecher`,
+`Karten`, `Postre` und auch `Psoter` bleiben grün; unverwandte ähnlich
+klingende Eingaben erzeugen keinen geratenen Treffer.
+
+`Poster`, `Plakat` und passende Synonyme besitzen einen eigenen redaktionellen
+Eintrag. Der amtliche UBA-Papierleitfaden belegt die sichtbare Materialgrenze:
+sauberes normales Papier kann ins Altpapier, beschichtete, laminierte,
+selbstklebende oder nassfeste Ausführungen nicht. Große oder unbekannte
+Verbundformate bleiben ein örtlicher Prüffall. Die neue Quelle dokumentiert
+Geltungsgebiet, Prüfung, Lizenz und Attribution; ihr Review ist am 03.11.2026
+fällig.
+
+Abschluss lokal: 96/96 Unit-, Inhalts-, Quellen-, Such- und DE/EN-Tests,
+32/32 Browser-E2E sowie 23/23 amtliche Quellen mit HTTP 200. Browser-E2E
+bestätigt `Poster oder Plakat` als Haupttreffer ohne Elektroergebnis und für
+`Polster` den sicheren unbekannten Zustand. Production bleibt gesperrt.

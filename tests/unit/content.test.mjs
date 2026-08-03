@@ -61,7 +61,8 @@ describe("redaktioneller Datenvertrag", () => {
       "contact-lenses",
       "plastic-household-item",
       "food-and-wrapper",
-      "painting"
+      "painting",
+      "poster"
     ]) {
       assert.ok(ids.has(id), `${id} fehlt im Alltagsbestand`);
     }

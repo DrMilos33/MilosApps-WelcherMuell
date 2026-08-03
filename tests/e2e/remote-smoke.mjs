@@ -8,7 +8,7 @@ const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT;
 if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_EXPECTED_SOURCE_COMMIT muss den vollständigen deployten Quellcommit enthalten.");
 }
-const expectedContentVersion = "2026.08.03-1";
+const expectedContentVersion = "2026.08.03-2";
 const expectedEssentialsVersion = "1.1.5";
 const expectedEssentialsCommit = "2942132ad3bf6cf39edc9f52ed918de6a230be23";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
@@ -275,6 +275,18 @@ try {
   assert.match((await rubberDestination.textContent()) ?? "", /Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen/);
   assert.equal(await page.locator(".result-immediate .result-label, .result-immediate .result-certainty").count(), 0);
   assert.deepEqual(await rubberDestination.locator(".route-keyword").allTextContents(), ["Restmüll", "örtlich prüfen"]);
+
+  await page.getByRole("button", { name: "Neue Suche" }).click();
+  await page.getByLabel("Gegenstand oder Material").fill("Poster");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Poster oder Plakat", exact: true }).waitFor();
+  assert.equal(await page.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
+
+  await page.getByRole("button", { name: "Neue Suche" }).click();
+  await page.getByLabel("Gegenstand oder Material").fill("Polster");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Kein sicherer Treffer", exact: true }).waitFor();
+  assert.equal(await page.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
 
   await shell.getByRole("button", { name: "EN", exact: true }).click();
   await page.locator("html[lang='en']").waitFor();

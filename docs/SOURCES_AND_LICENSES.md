@@ -2,9 +2,9 @@
 
 ## Inhaltsstand
 
-- Inhaltsversion: `2026.08.03-1`
+- Inhaltsversion: `2026.08.03-2`
 - redaktionell erweitert: 03.08.2026
-- Umfang: 49 Entsorgungseinträge, 22 Quellen
+- Umfang: 50 Entsorgungseinträge, 23 Quellen
 - früheste erneute Prüfung: 30.09.2026
 - allgemeine Geltung: private Haushalte in Deutschland
 - regionale Ergänzungen: Berlin, Hamburg und München
@@ -29,11 +29,18 @@ Fachliche Aussagen stammen ausschließlich von:
   gebrauchten Spritzen.
 
 UBA- und BMG-Rechteseiten sind zusätzlich als Lizenznachweis katalogisiert.
-Am 03.08.2026 beantworteten alle 22 URLs den automatisierten Live-Check mit
+Am 03.08.2026 beantworteten alle 23 URLs den automatisierten Live-Check mit
 HTTP 200. Für die Erweiterung um kleine Gummi- und Alltagsgegenstände wurden
 insbesondere das Abfalllexikon des Abfallwirtschaftsbetriebs München sowie die
 UBA-Hinweise zu Haushaltsabfällen geprüft. Autoreifen sind anhand der eigenen
 UBA-Fachseite ausdrücklich vom gewöhnlichen Haus- und Sperrmüllfall getrennt.
+
+Für Poster und Plakate trennt der UBA-Papierleitfaden normales, verwertbares
+Papier von beschichteten und nassfesten Papieren. Die App macht daraus keinen
+pauschalen Tonnenrat: Ein sauberes Papierposter folgt dem Altpapierweg;
+Laminierung, Folie, selbstklebende Rückseite oder nassfestes Außenmaterial
+führen zum Restmüll beziehungsweise bei großen oder unbekannten Formaten zum
+örtlichen Prüfschritt.
 
 Für Schokolade, Riegel und andere Lebensmittelreste werden die UBA-Regeln zu
 Bioabfall und restentleerten Verpackungen gemeinsam ausgewertet: Inhalt und

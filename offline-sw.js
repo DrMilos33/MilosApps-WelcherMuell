@@ -1,4 +1,4 @@
-const CACHE_NAME = "waste-guide-2026-08-03-essentials-v1-1-5";
+const CACHE_NAME = "waste-guide-2026-08-03-search-v4";
 const APP_SHELL = [
   "/",
   "/index.html",

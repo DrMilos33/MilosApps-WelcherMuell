@@ -119,6 +119,31 @@ function includesWholePhrase(value, phrase) {
   return ` ${value} `.includes(` ${phrase} `);
 }
 
+function isAdjacentTransposition(left, right) {
+  if (left.length !== right.length) return false;
+  const mismatches = [];
+  for (let index = 0; index < left.length; index += 1) {
+    if (left[index] !== right[index]) mismatches.push(index);
+  }
+  return (
+    mismatches.length === 2 &&
+    mismatches[1] === mismatches[0] + 1 &&
+    left[mismatches[0]] === right[mismatches[1]] &&
+    left[mismatches[1]] === right[mismatches[0]]
+  );
+}
+
+function hasStableFuzzyAnchor(query, term, distance) {
+  if (distance === 0) return true;
+  const anchorLength = 3;
+  const hasSharedPrefix = (
+    query.length >= anchorLength &&
+    term.length >= anchorLength &&
+    query.slice(0, anchorLength) === term.slice(0, anchorLength)
+  );
+  return hasSharedPrefix || (distance === 1 && isAdjacentTransposition(query, term));
+}
+
 function scoreSearchIntent(item, normalizedQuery) {
   const compactQuery = normalizedQuery.replaceAll(" ", "");
   let best = 0;
@@ -193,7 +218,7 @@ function scoreItem(item, normalizedQuery) {
     ) {
       const distance = damerauLevenshtein(normalizedQuery, term.value);
       const allowed = longest >= 10 ? 3 : longest >= 6 ? 2 : 1;
-      if (distance <= allowed) {
+      if (distance <= allowed && hasStableFuzzyAnchor(normalizedQuery, term.value, distance)) {
         const score = 105 - distance * 9;
         if (score > best) {
           best = score;
