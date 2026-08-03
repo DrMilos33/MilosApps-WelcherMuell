@@ -42,7 +42,7 @@
               <svg aria-hidden="true" viewBox="0 0 24 24">
                 <path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M8 14v6" />
               </svg>
-              <span data-i18n="settingsButton">Region &amp; Datenschutz</span>
+              <span data-i18n="settingsButton">Region</span>
             </button>
           </div>
           <div class="hero-heading">
@@ -84,36 +84,33 @@
             <button type="button" data-query-key="quickGlass" data-query-de="Glas" data-query-en="glass">Glas</button>
           </div>
 
-          <section class="history-section" id="history-section" hidden aria-labelledby="history-title">
-            <h2 id="history-title" data-i18n="historyTitle">Zuletzt gesucht</h2>
-            <div id="history-list" class="history-list"></div>
-          </section>
         </div>
 
         <dialog class="settings-dialog" id="settings-panel" aria-labelledby="settings-title">
           <div class="dialog-header settings-dialog-header">
             <div>
               <p class="section-kicker" data-i18n="optional">Optional</p>
-              <h2 id="settings-title" data-i18n="settingsTitle">Region &amp; lokale Daten</h2>
+              <h2 id="settings-title" data-i18n="settingsTitle">Region</h2>
             </div>
             <button class="icon-button" id="close-settings" type="button" aria-label="Einstellungen schließen" data-i18n-aria-label="settingsClose">
               <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
             </button>
           </div>
           <div class="settings-content">
-            <p class="settings-note" data-i18n="settingsNote">Kein Standortzugriff: Die grobe Region und optional bis zu fünf Suchen bleiben nur auf diesem Gerät.</p>
+            <p class="settings-note" data-i18n="settingsNote">Kein Standortzugriff: Die grobe Region gilt nur für diese geöffnete Seite und wird nicht gespeichert.</p>
             <div class="field-group">
               <label for="region-select" data-i18n="regionLabel">Grobe Region</label>
               <select id="region-select"><option value="de">Deutschland – allgemeine Hinweise</option></select>
-              <p class="field-help" data-i18n="regionHelp">Ergänzt belegte örtliche Abweichungen.</p>
+              <p class="field-help" data-i18n="regionHelp">Ergänzt belegte örtliche Abweichungen bis zum Neuladen der Seite.</p>
             </div>
-            <label class="check-row" for="remember-searches">
-              <input id="remember-searches" type="checkbox">
-              <span><strong data-i18n="rememberTitle">Letzte Suchen merken</strong><small data-i18n="rememberHelp">Maximal fünf Suchbegriffe, nur lokal auf diesem Gerät.</small></span>
-            </label>
-            <div class="panel-actions">
-              <button class="text-button danger-text" id="clear-local-data" type="button" data-i18n="clearLocalData">Lokale Angaben löschen</button>
+            <div class="offline-setting">
+              <div>
+                <strong data-i18n="offlineTitle">Offline-Nutzung</strong>
+                <small data-i18n="offlineHelp">Nur nach deiner Auswahl werden öffentliche App-Dateien zwischengespeichert – nie Suchen oder Region. Entfernen geht über die Website-Daten des Browsers.</small>
+              </div>
+              <button class="secondary-button" id="enable-offline" type="button" data-i18n="offlineEnable">Offline aktivieren</button>
             </div>
+            <p class="field-help" id="offline-setting-status" role="status" aria-live="polite" hidden></p>
           </div>
         </dialog>
 
@@ -143,10 +140,12 @@
           </div>
           <div class="meta-actions">
             <button class="text-button" id="show-about" type="button" data-i18n="aboutButton">Alle Quellen &amp; Datenschutz</button>
-            <a href="./meta.json" data-i18n="metadata">App-Metadaten</a>
           </div>
         </details>
-
+        <nav class="app-meta-links" id="app-meta-links" aria-label="Datenschutz und App-Informationen" data-i18n-aria-label="metaNav">
+          <a data-milos-privacy-info href="https://dev.milos-apps.de/datenschutz" data-i18n="privacyInfo">Datenschutz &amp; Speicher</a>
+          <a href="./meta.json" data-i18n="metadata">App-Metadaten</a>
+        </nav>
         <dialog id="about-dialog" aria-labelledby="about-title">
           <div class="dialog-header">
             <div><p class="section-kicker" data-i18n="transparency">Transparenz</p><h2 id="about-title" data-i18n="aboutTitle">Quellen, Rechte &amp; Datenschutz</h2></div>
@@ -158,10 +157,11 @@
         </dialog>
 
         <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-        <noscript><div class="noscript" data-i18n="noscript">Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.</div></noscript>
       </main>
     </milos-app-shell>
+    <noscript><div class="noscript">Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.</div></noscript>
     <script type="module" src="./vendor/milosapps-essentials/v1/bootstrap.js"></script>
+    <script type="module" src="./src/shell-session.js"></script>
     <script type="module" src="./vendor/milosapps-shell/v2/bootstrap.js"></script>
     <script type="module" src="./src/app.js"></script>
   </body>

@@ -1,16 +1,13 @@
-import { isAmbiguous, searchItems, validateItemIntegrity } from "./search.js";
+import "../vendor/milosapps-shell/v2/bootstrap.js";
+import { isAmbiguous, normalizeText, searchItems, validateItemIntegrity } from "./search.js";
 import {
   localizeCatalogs,
   normalizeLanguage,
   translate
 } from "./i18n.js";
-import {
-  addSearchToHistory,
-  clearLocalData,
-  loadLocalState,
-  saveRegion,
-  setRememberSearches
-} from "./storage.js";
+import { mountSessionOnlyShell } from "./shell-session.js";
+
+mountSessionOnlyShell();
 
 const DATA_PATHS = {
   items: new URL("../public/data/waste-items.v1.json", import.meta.url),
@@ -18,8 +15,6 @@ const DATA_PATHS = {
   regions: new URL("../public/data/regions.v1.json", import.meta.url),
   locale: new URL("../public/data/locales/en.v1.json", import.meta.url)
 };
-
-const PRIVACY_NOTICE_STORAGE_KEY = "milosapps.waste-guide.privacyNotice.v1";
 
 const elements = {
   form: document.querySelector("#search-form"),
@@ -34,10 +29,8 @@ const elements = {
   openSettings: document.querySelector("#open-settings"),
   closeSettings: document.querySelector("#close-settings"),
   region: document.querySelector("#region-select"),
-  remember: document.querySelector("#remember-searches"),
-  clearData: document.querySelector("#clear-local-data"),
-  historySection: document.querySelector("#history-section"),
-  historyList: document.querySelector("#history-list"),
+  enableOffline: document.querySelector("#enable-offline"),
+  offlineSettingStatus: document.querySelector("#offline-setting-status"),
   offline: document.querySelector("#offline-banner"),
   contentDate: document.querySelector("#content-date"),
   aboutDialog: document.querySelector("#about-dialog"),
@@ -59,8 +52,6 @@ const state = {
   sourcesEditorialUse: "",
   regions: [],
   selectedRegion: "de",
-  remember: false,
-  history: [],
   currentItemId: null,
   lastQuery: "",
   view: { type: "idle" },
@@ -141,14 +132,6 @@ function updateConnectivity() {
   elements.offline.hidden = navigator.onLine;
 }
 
-function clearPrivacyNoticeState() {
-  try {
-    localStorage.removeItem(PRIVACY_NOTICE_STORAGE_KEY);
-  } catch {
-    // Lokale Speicherung ist optional; die Kernfunktion bleibt nutzbar.
-  }
-}
-
 function setSettingsOpen(open) {
   if (open && !elements.settings.open) {
     elements.settings.showModal();
@@ -166,16 +149,11 @@ function renderRegions() {
   elements.region.value = state.selectedRegion;
 }
 
-function renderHistory() {
-  elements.historySection.hidden = !state.remember || state.history.length === 0;
-  elements.historyList.innerHTML = state.history
-    .map((query) => `<button type="button" data-history-query="${escapeHtml(query)}">${escapeHtml(query)}</button>`)
-    .join("");
-}
-
 function updateUrl(itemId = null, replace = false) {
   const url = new URL(window.location.href);
+  const language = url.searchParams.get("lang");
   url.search = "";
+  if (language === "en") url.searchParams.set("lang", "en");
   if (itemId) url.searchParams.set("item", itemId);
   window.history[replace ? "replaceState" : "pushState"]({ itemId }, "", `${url.pathname}${url.search}`);
 }
@@ -194,6 +172,7 @@ function emptyState({ title, message, kicker, type = "idle", query = "" }) {
   elements.status.textContent = message;
   elements.status.hidden = false;
   elements.results.innerHTML = "";
+  elements.resultsSection.dataset.view = type;
   elements.reset.hidden = type === "idle";
   elements.resultsSection.hidden = type === "idle";
 }
@@ -232,22 +211,68 @@ function renderSource(source) {
   return `<li><a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title)}</a><small>${escapeHtml(source.publisher)} · ${escapeHtml(source.scope)}</small><small>${escapeHtml(sourceDate)}${escapeHtml(t("sourceReview", { verified: formatDate(source.verifiedAt), reviewDue: formatDate(source.reviewDue) }))}</small><small>${escapeHtml(source.attribution)}</small></li>`;
 }
 
+function recognizedSubject(item) {
+  const normalizedQuery = normalizeText(state.lastQuery);
+  const compactQuery = normalizedQuery.replaceAll(" ", "");
+  if (item.id === "rubber-household-item" && /^(gummiband|gummibaender|gummibnad|rubberband|elasticband)$/.test(compactQuery)) {
+    return t("recognizedRubberBand");
+  }
+  if (item.id === "plastic-household-item") {
+    const exactLabel = [item.name, ...(item.aliases ?? [])]
+      .find((label) => normalizeText(label) === normalizedQuery);
+    if (exactLabel) return exactLabel;
+  }
+  return item.name;
+}
+
+function routeIcon(routeType) {
+  let paths = '<path d="M4 21h16M6 21V8l6-4 6 4v13M9 13h6M12 10v6"/>';
+  if (routeType === "residual") {
+    paths = '<path d="M5 7h14M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/>';
+  } else if (routeType.includes("paper")) {
+    paths = '<path d="M7 3h7l4 4v14H7Z"/><path d="M14 3v5h4M10 13h5M10 17h5"/>';
+  } else if (routeType === "organic") {
+    paths = '<path d="M19 4C11 4 6 8 6 14c0 3 2 5 5 5 6 0 8-7 8-15Z"/><path d="M5 21c2-6 6-9 11-12"/>';
+  } else if (routeType === "container-glass") {
+    paths = '<path d="M9 3h6v4l2 3v11H7V10l2-3Z"/><path d="M9 7h6M9 14h6"/>';
+  } else if (routeType === "light-packaging") {
+    paths = '<path d="m8 5 2-2 2 2M10 3v6M16 9h3l1 3-2 1M19 12l-5 3M8 19H5l-1-3 2-1M5 16l5-3"/>';
+  } else if (routeType === "local-check" || routeType.includes("local") || routeType === "non-packaging-plastic") {
+    paths = '<path d="M12 21s6-5.1 6-11a6 6 0 1 0-12 0c0 5.9 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/>';
+  }
+  return `<svg class="route-icon" data-result-icon aria-hidden="true" viewBox="0 0 24 24">${paths}</svg>`;
+}
+
 function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesById, new Date())) {
   const route = effectiveRoute(item);
   const certainty = certaintyFor(item, integrity);
   const sources = sourceList(item, route);
   const warning = item.warning ? `<div class="warning-box"><strong>${escapeHtml(t("important"))}</strong><p>${escapeHtml(item.warning)}</p></div>` : "";
+  const destination = integrity.valid ? route.label : t("localAdvice");
+  const scope = integrity.valid ? t("routeScope") : t("routeStale");
   return `
     <article class="result-card" data-item-id="${escapeHtml(item.id)}">
-      <div class="result-main">
-        <div class="result-copy">
-          <div class="result-title-row"><div><p class="section-kicker">${escapeHtml(item.category)}</p><h3 id="item-${escapeHtml(item.id)}" tabindex="-1">${escapeHtml(item.name)}</h3></div><span class="certainty-badge ${escapeHtml(certainty.className)}">${escapeHtml(certainty.label)}</span></div>
-          <p class="answer">${escapeHtml(item.answer)}</p>
-          <p class="reason"><strong>${escapeHtml(t("why"))}</strong> ${escapeHtml(item.reason)}</p>
-          <ol class="steps">${item.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
-          ${warning}${integrityWarning(integrity)}${localGuidance(item)}
+      <div class="result-immediate" data-route-type="${escapeHtml(route.type)}">
+        <div class="result-symbol">${routeIcon(route.type)}</div>
+        <div class="result-path">
+          <div class="result-path-part">
+            <span class="result-label">${escapeHtml(t("recognizedLabel"))}</span>
+            <h3 class="result-subject" id="item-${escapeHtml(item.id)}" tabindex="-1">${escapeHtml(recognizedSubject(item))}</h3>
+            <span class="result-category">${escapeHtml(item.category)}</span>
+          </div>
+          <svg class="result-arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h13M14 7l5 5-5 5" /></svg>
+          <div class="result-path-part result-path-destination">
+            <span class="result-label">${escapeHtml(t("disposalRouteLabel"))}</span>
+            <strong class="result-destination">${escapeHtml(destination)}</strong>
+          </div>
         </div>
-        <div class="result-route"><span class="route-type">${escapeHtml(t("recommendedRoute"))}</span><h3>${escapeHtml(integrity.valid ? route.label : t("localAdvice"))}</h3><p>${escapeHtml(integrity.valid ? t("routeScope") : t("routeStale"))}</p></div>
+        <div class="result-certainty"><span class="certainty-badge ${escapeHtml(certainty.className)}">${escapeHtml(certainty.label)}</span><span>${escapeHtml(scope)}</span></div>
+      </div>
+      <div class="result-copy">
+        <p class="answer">${escapeHtml(item.answer)}</p>
+        <section class="result-reason"><h4>${escapeHtml(t("why"))}</h4><p>${escapeHtml(item.reason)}</p></section>
+        <section class="result-steps"><h4>${escapeHtml(t("nextSteps"))}</h4><ol class="steps">${item.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section>
+        <div class="result-details-content">${warning}${integrityWarning(integrity)}${localGuidance(item)}</div>
       </div>
       <div class="result-details">
         <details><summary>${escapeHtml(t("sourcesAndValidity", { count: sources.length }))}</summary><ul class="source-list">${sources.map(renderSource).join("")}</ul><p><strong>${escapeHtml(t("editorialStatus", { reviewed: formatDate(item.reviewedAt), reviewDue: formatDate(item.reviewDue) }))}</strong></p></details>
@@ -258,7 +283,9 @@ function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesB
 
 function sharePayload(item) {
   const url = new URL(window.location.href);
+  const language = url.searchParams.get("lang");
   url.search = "";
+  if (language === "en") url.searchParams.set("lang", "en");
   url.searchParams.set("item", item.id);
   const route = effectiveRoute(item);
   const source = sourceList(item, route)[0];
@@ -294,12 +321,9 @@ function renderOne(item, options = {}) {
   elements.status.hidden = true;
   elements.reset.hidden = false;
   elements.resultsSection.hidden = false;
+  elements.resultsSection.dataset.view = "item";
   elements.results.innerHTML = renderItem(item);
   configureShareButtons();
-  if (options.updateHistory !== false) {
-    state.history = addSearchToHistory(state.lastQuery || item.name);
-    renderHistory();
-  }
   if (options.updateUrl !== false) updateUrl(item.id);
   if (options.focus !== false) elements.resultsTitle.focus();
 }
@@ -314,9 +338,8 @@ function renderChoices(items, query) {
   elements.status.textContent = t("ambiguousMessage");
   elements.reset.hidden = false;
   elements.resultsSection.hidden = false;
+  elements.resultsSection.dataset.view = "choices";
   elements.results.innerHTML = items.slice(0, 6).map((item) => `<article class="result-card compact"><div><p class="section-kicker">${escapeHtml(item.category)}</p><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.answer)}</p></div><button class="secondary-button" type="button" data-select-item="${escapeHtml(item.id)}" aria-label="${escapeHtml(t("selectAria", { name: item.name }))}">${escapeHtml(t("select"))}</button></article>`).join("");
-  state.history = addSearchToHistory(query);
-  renderHistory();
   elements.resultsTitle.focus();
 }
 
@@ -333,8 +356,6 @@ function runSearch(rawQuery, options = {}) {
   const results = searchItems(state.items, query, { sourcesById: state.sourcesById, asOf: new Date(), limit: 8 });
   if (results.length === 0) {
     emptyState({ title: t("noMatchTitle", { query }), message: t("noMatchMessage"), kicker: t("unclear"), type: "no-match", query });
-    state.history = addSearchToHistory(query);
-    renderHistory();
     updateUrlForNonSpecificResult(options);
     elements.resultsTitle.focus();
     return;
@@ -399,7 +420,6 @@ function applyLanguage(language) {
   rebuildLocalizedCatalogs();
   elements.contentDate.textContent = t("contentDate", { date: formatDate(state.contentDate) });
   renderRegions();
-  renderHistory();
   renderAbout();
   rerenderView();
 }
@@ -440,33 +460,10 @@ function bindEvents() {
   });
   elements.region.addEventListener("change", () => {
     state.selectedRegion = elements.region.value;
-    saveRegion(state.selectedRegion);
     rerenderView();
     showToast(t("regionToast", { region: selectedRegion().label }));
   });
-  elements.remember.addEventListener("change", () => {
-    state.remember = elements.remember.checked;
-    setRememberSearches(state.remember);
-    if (!state.remember) state.history = [];
-    renderHistory();
-    showToast(t(state.remember ? "historyEnabled" : "historyDisabled"));
-  });
-  elements.clearData.addEventListener("click", () => {
-    clearLocalData();
-    clearPrivacyNoticeState();
-    state.selectedRegion = "de";
-    state.remember = false;
-    state.history = [];
-    elements.remember.checked = false;
-    renderRegions();
-    renderHistory();
-    rerenderView();
-    showToast(t("localDataCleared"));
-  });
-  elements.historyList.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-history-query]");
-    if (button) runSearch(button.dataset.historyQuery);
-  });
+  elements.enableOffline.addEventListener("click", enableOffline);
   elements.showAbout.addEventListener("click", () => elements.aboutDialog.showModal());
   elements.closeAbout.addEventListener("click", () => elements.aboutDialog.close());
   elements.aboutDialog.addEventListener("click", (event) => {
@@ -495,7 +492,45 @@ async function loadJson(url) {
   return response.json();
 }
 
+async function removeLegacyOfflineState() {
+  if (!("serviceWorker" in navigator)) return;
+  const registrations = await navigator.serviceWorker.getRegistrations();
+  const legacy = registrations.filter((registration) => {
+    const scriptUrl = registration.active?.scriptURL ?? registration.waiting?.scriptURL ?? registration.installing?.scriptURL ?? "";
+    return new URL(scriptUrl, window.location.href).pathname.endsWith("/sw.js");
+  });
+  if (legacy.length === 0) return;
+  await Promise.all(legacy.map((registration) => registration.unregister()));
+  if ("caches" in window) {
+    const names = await caches.keys();
+    await Promise.all(names.filter((name) => name.startsWith("waste-guide-")).map((name) => caches.delete(name)));
+  }
+}
+
+async function enableOffline() {
+  elements.enableOffline.disabled = true;
+  elements.offlineSettingStatus.hidden = false;
+  elements.offlineSettingStatus.textContent = t("offlineEnabling");
+  try {
+    if (!("serviceWorker" in navigator)) throw new Error("Service worker unavailable");
+    await navigator.serviceWorker.register(new URL("../offline-sw.js", import.meta.url));
+    await navigator.serviceWorker.ready;
+    elements.enableOffline.textContent = t("offlineReady");
+    elements.offlineSettingStatus.textContent = t("offlineReadyHelp");
+    showToast(t("offlineReady"));
+  } catch (error) {
+    console.warn("Offline cache could not be enabled.", error);
+    elements.enableOffline.disabled = false;
+    elements.offlineSettingStatus.textContent = t("offlineUnavailable");
+  }
+}
+
 async function initialize() {
+  try {
+    await removeLegacyOfflineState();
+  } catch (error) {
+    console.warn("Legacy offline files could not be removed.", error);
+  }
   bindEvents();
   applyLanguage(document.documentElement.lang);
   updateConnectivity();
@@ -504,14 +539,9 @@ async function initialize() {
     state.catalogs = { itemsCatalog, sourcesCatalog, regionsCatalog, localeCatalog };
     state.contentDate = itemsCatalog.contentDate;
     rebuildLocalizedCatalogs();
-    const local = loadLocalState();
-    state.selectedRegion = state.regions.some((region) => region.id === local.region) ? local.region : "de";
-    state.remember = local.remember;
-    state.history = local.history;
-    elements.remember.checked = state.remember;
+    state.selectedRegion = "de";
     elements.contentDate.textContent = t("contentDate", { date: formatDate(state.contentDate) });
     renderRegions();
-    renderHistory();
     renderAbout();
     const requestedItem = new URL(window.location.href).searchParams.get("item");
     const item = state.items.find((candidate) => candidate.id === requestedItem);
@@ -521,22 +551,15 @@ async function initialize() {
       window.history.replaceState({ itemId: item.id }, "", window.location.href);
     } else {
       renderIdle();
-      window.history.replaceState({ itemId: null }, "", window.location.pathname);
+      updateUrl(null, true);
     }
   } catch (error) {
     console.error(error);
     emptyState({ title: t("dataErrorTitle"), message: t("dataErrorMessage"), kicker: t("dataErrorKicker"), type: "error" });
   }
 
-  document.dispatchEvent(new CustomEvent("milosapps:ready"));
+  globalThis.milosAppEssentials.ready();
 
-  if ("serviceWorker" in navigator) {
-    try {
-      await navigator.serviceWorker.register(new URL("../sw.js", import.meta.url));
-    } catch (error) {
-      console.warn("Offline cache could not be enabled.", error);
-    }
-  }
 }
 
 window.addEventListener("milosapps:localechange", (event) => applyLanguage(event.detail?.locale));
