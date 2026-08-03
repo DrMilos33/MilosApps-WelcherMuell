@@ -602,3 +602,38 @@ Die ausgelieferte Health-Antwort lautet:
 
 Dieser technische Publish erneuert weder die Inhaltsversion noch Quellen-
 Reviewtermine, Gültigkeitsgebiet, Lizenz oder Attribution.
+
+## Ergebnis-Kopf weiter verdichtet · 03.08.2026
+
+Ein erneuter Nutzerbefund zeigte beim Gummiband vier konkurrierende Ebenen in
+der Sofortantwort: „Erkannt“, Kategorie, „Entsorgungsweg“ und darunter noch
+einmal „Örtlich prüfen“ samt allgemeinem Geltungssatz. Die beiden Hilfslabels
+und die doppelte Statuszeile wurden entfernt. Das dekorative Wegsymbol bleibt
+links; rechts heben ausgeschriebene Text-Chips nun die konkreten Begriffe
+`Restmüll` und `örtlich prüfen` hervor. Der allgemeine Geltungssatz folgt erst
+bei den Details. Warnfälle behalten einen ausgeschriebenen Vorsichtshinweis;
+Farbe trägt nie allein die Bedeutung.
+
+### Verbesserungsrunde 1
+
+Der erste vollständige Browserlauf bestand 27/29 Fälle. Beide Fehler waren
+veraltete Testannahmen: ein Test erwartete das entfernte Badge „Bundesweit
+belegt“, ein anderer einen einzigen ungeteilten Textknoten. Nach der Umstellung
+auf die neue semantische Struktur zeigte die Smartphone-Regression außerdem
+einen echten Doppelhinweis: `örtlich prüfen` wurde wegen der deutschen
+Normalisierung zu `oertlich` nicht als bereits vorhanden erkannt.
+
+### Verbesserungsrunde 2
+
+Die Erkennung berücksichtigt die normalisierte Schreibweise, sodass das
+Gummiband exakt zwei hervorgehobene Schlüsselbegriffe besitzt. Die visuelle
+Desktopprüfung zeigte anschließend, dass ein allein markiertes „örtliche“
+abgehackt wirkt. Die Hervorhebung wurde deshalb auf vollständige Wege wie
+„örtliche Wertstoffsammlung“ und ihre englischen Entsprechungen begrenzt.
+
+Abschluss: Shell- und Essentials-Verifier PASS, 79/79 Unit-/Fachtests und
+29/29 Browser-E2E. Desktop, 390 × 844, 360 × 800 bei 200 Prozent Textzoom,
+DE/EN, Offline, Tastatur, Fokus, Touchziele und null Konsolenfehler blieben
+grün. Der explizite Offline-Cache erhielt eine neue technische Kennung, damit
+kein alter Ergebnis-Kopf weiter ausgeliefert wird. Inhaltsversion
+`2026.08.01-1`, Daten, Quellen, Lizenzen und Reviewtermine bleiben unverändert.

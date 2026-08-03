@@ -240,7 +240,10 @@ try {
     await submitSearch(desktopPage, "Joghurtbecher");
     await desktopPage.getByRole("heading", { name: "Joghurtbecher", exact: true }).waitFor();
     await assert.doesNotReject(() => desktopPage.getByText(/Gelbe Tonne, Gelber Sack/).first().waitFor());
-    await assert.doesNotReject(() => desktopPage.getByText("Bundesweit belegt").waitFor());
+    assert.equal(await desktopPage.locator(".result-immediate .result-certainty").count(), 0);
+    const routeKeywords = await desktopPage.locator(".result-destination .route-keyword").allTextContents();
+    assert.ok(routeKeywords.includes("Gelbe Tonne"));
+    assert.ok(routeKeywords.includes("Gelber Sack"));
     assert.match(desktopPage.url(), /\?item=yogurt-cup$/);
     await desktopPage.screenshot({
       path: fileURLToPath(new URL("desktop-result.png", artifacts)),
@@ -697,13 +700,18 @@ try {
     await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
     await submitSearch(mobilePage, "Gummibnad");
     await mobilePage.getByRole("heading", { name: "Gummiband", exact: true }).waitFor();
-    await mobilePage.getByText("Kleine Teile: Restmüll · große Teile und Reifen örtlich prüfen", { exact: true }).waitFor();
+    await mobilePage.locator(".result-destination").waitFor();
     const resultGeometry = await mobilePage.evaluate(() => {
       const card = document.querySelector(".result-card").getBoundingClientRect();
       const route = document.querySelector(".result-immediate").getBoundingClientRect();
       const subject = document.querySelector(".result-subject").textContent.trim();
       const destination = document.querySelector(".result-destination").textContent.trim();
       const icon = document.querySelector("[data-result-icon]");
+      const duplicateLabels = document.querySelectorAll(".result-immediate .result-label, .result-immediate .result-certainty").length;
+      const keywords = [...document.querySelectorAll(".result-destination .route-keyword")].map((element) => ({
+        text: element.textContent.trim(),
+        background: getComputedStyle(element).backgroundColor
+      }));
       const resetSearch = document.querySelector("#reset-search");
       return {
         top: Math.round(route.top),
@@ -714,7 +722,9 @@ try {
         resetWhiteSpace: getComputedStyle(resetSearch).whiteSpace,
         subject,
         destination,
-        iconDecorative: icon.getAttribute("aria-hidden") === "true"
+        iconDecorative: icon.getAttribute("aria-hidden") === "true",
+        duplicateLabels,
+        keywords
       };
     });
     assert.ok(resultGeometry.top < resultGeometry.viewport, `Entsorgungsweg nicht sofort sichtbar: ${JSON.stringify(resultGeometry)}`);
@@ -723,6 +733,9 @@ try {
     assert.equal(resultGeometry.subject, "Gummiband");
     assert.match(resultGeometry.destination, /Kleine Teile: Restmüll/);
     assert.equal(resultGeometry.iconDecorative, true);
+    assert.equal(resultGeometry.duplicateLabels, 0);
+    assert.deepEqual(resultGeometry.keywords.map(({ text }) => text), ["Restmüll", "örtlich prüfen"]);
+    assert.ok(resultGeometry.keywords.every(({ background }) => background !== "rgba(0, 0, 0, 0)"));
     await mobilePage.screenshot({
       path: fileURLToPath(new URL("phone-rubber-result.png", artifacts)),
       fullPage: true

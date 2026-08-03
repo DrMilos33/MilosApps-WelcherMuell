@@ -1,5 +1,20 @@
 # Welcher-Müll-Erkenntnisse
 
+## 03.08.2026 · Schlüsselbegriffe statt doppelter Statuszeilen
+
+Eine Sofortantwort wird nicht klarer, wenn Gegenstand, Kategorie, Weg und
+Sicherheitsstatus jeweils noch ein eigenes Label erhalten. Sobald der Weg
+selbst bereits „örtlich prüfen“ sagt, ist ein gleichlautendes Badge darunter
+reine Wiederholung. Waste Guide zeigt deshalb links nur Symbol und Gegenstand
+mit Materialkategorie; rechts werden konkrete, ausgeschriebene Wege wie
+`Restmüll`, `örtlich prüfen` oder `örtliche Wertstoffsammlung` hervorgehoben.
+Der allgemeine Geltungssatz steht erst bei den Details.
+
+Evidenz: zwei QA-Runden, 79/79 Unit-/Fachtests, 29/29 Browser-E2E und visuelle
+Desktop-/390-px-Prüfung. Gültigkeitsgrenze: Gefahrhinweise werden nicht
+entfernt, sondern als ausgeschriebener Vorsichtshinweis am konkreten Weg
+bewahrt; Farbe bleibt ergänzend.
+
 ## 03.08.2026 · answer-first Ergebnis und flüchtige Komfortzustände
 
 ### Eine Trefferkarte muss die Entscheidung vor der Erklärung liefern

@@ -243,6 +243,65 @@ function routeIcon(routeType) {
   return `<svg class="route-icon" data-result-icon aria-hidden="true" viewBox="0 0 24 24">${paths}</svg>`;
 }
 
+const ROUTE_KEYWORDS = [
+  { text: "örtliche Wertstoffsammlung", className: "local" },
+  { text: "örtliche Verpackungssammlung", className: "local" },
+  { text: "örtliche Problemstoffsammlung", className: "local" },
+  { text: "örtlichen Entsorgungsweg prüfen", className: "local" },
+  { text: "kommunalen Entsorgungsweg prüfen", className: "local" },
+  { text: "örtliche Wertstoffregel beachten", className: "local" },
+  { text: "örtliche Regel prüfen", className: "local" },
+  { text: "local hazardous-waste collection", className: "local" },
+  { text: "municipal disposal route", className: "local" },
+  { text: "municipal collection point", className: "local" },
+  { text: "local packaging collection", className: "local" },
+  { text: "local disposal route", className: "local" },
+  { text: "local recycling rules", className: "local" },
+  { text: "check the local rule", className: "local" },
+  { text: "örtlich prüfen", className: "local" },
+  { text: "check locally", className: "local" },
+  { text: "Besondere Vorsicht", className: "caution" },
+  { text: "Take special care", className: "caution" },
+  { text: "Schadstoffmobil", className: "caution" },
+  { text: "Problemstoff", className: "caution" },
+  { text: "hazardous waste", className: "caution" },
+  { text: "Restmüll", className: "residual" },
+  { text: "residual waste", className: "residual" },
+  { text: "Wertstoffhof", className: "collection" },
+  { text: "recycling centre", className: "collection" },
+  { text: "Gelbe Tonne", className: "collection" },
+  { text: "Gelber Sack", className: "collection" },
+  { text: "Yellow bin", className: "collection" },
+  { text: "yellow bag", className: "collection" },
+  { text: "Biotonne", className: "collection" },
+  { text: "Papiertonne", className: "collection" },
+  { text: "Altglascontainer", className: "collection" },
+  { text: "Sammelstelle", className: "collection" },
+  { text: "Rücknahmestelle", className: "collection" }
+].sort((left, right) => right.text.length - left.text.length);
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function renderDestination(destination, certainty) {
+  const expression = new RegExp(`(${ROUTE_KEYWORDS.map(({ text }) => escapeRegExp(text)).join("|")})`, "giu");
+  const keywordByText = new Map(ROUTE_KEYWORDS.map((entry) => [entry.text.toLocaleLowerCase(), entry]));
+  const matchedClasses = new Set();
+  const parts = String(destination).split(expression).map((part) => {
+    const keyword = keywordByText.get(part.toLocaleLowerCase());
+    if (!keyword) return escapeHtml(part);
+    matchedClasses.add(keyword.className);
+    return `<span class="route-keyword ${keyword.className}">${escapeHtml(part)}</span>`;
+  });
+  if (certainty.className === "local" && !matchedClasses.has("local")) {
+    parts.push(`<span class="route-keyword local">${escapeHtml(certainty.label)}</span>`);
+  } else if (certainty.className === "caution") {
+    parts.push(`<span class="route-keyword caution">${escapeHtml(certainty.label)}</span>`);
+  }
+  return parts.join("");
+}
+
 function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesById, new Date())) {
   const route = effectiveRoute(item);
   const certainty = certaintyFor(item, integrity);
@@ -256,23 +315,20 @@ function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesB
         <div class="result-symbol">${routeIcon(route.type)}</div>
         <div class="result-path">
           <div class="result-path-part">
-            <span class="result-label">${escapeHtml(t("recognizedLabel"))}</span>
             <h3 class="result-subject" id="item-${escapeHtml(item.id)}" tabindex="-1">${escapeHtml(recognizedSubject(item))}</h3>
             <span class="result-category">${escapeHtml(item.category)}</span>
           </div>
           <svg class="result-arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h13M14 7l5 5-5 5" /></svg>
           <div class="result-path-part result-path-destination">
-            <span class="result-label">${escapeHtml(t("disposalRouteLabel"))}</span>
-            <strong class="result-destination">${escapeHtml(destination)}</strong>
+            <strong class="result-destination">${renderDestination(destination, certainty)}</strong>
           </div>
         </div>
-        <div class="result-certainty"><span class="certainty-badge ${escapeHtml(certainty.className)}">${escapeHtml(certainty.label)}</span><span>${escapeHtml(scope)}</span></div>
       </div>
       <div class="result-copy">
         <p class="answer">${escapeHtml(item.answer)}</p>
         <section class="result-reason"><h4>${escapeHtml(t("why"))}</h4><p>${escapeHtml(item.reason)}</p></section>
         <section class="result-steps"><h4>${escapeHtml(t("nextSteps"))}</h4><ol class="steps">${item.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section>
-        <div class="result-details-content">${warning}${integrityWarning(integrity)}${localGuidance(item)}</div>
+        <div class="result-details-content">${warning}${integrityWarning(integrity)}${localGuidance(item)}<p class="result-scope">${escapeHtml(scope)}</p></div>
       </div>
       <div class="result-details">
         <details><summary>${escapeHtml(t("sourcesAndValidity", { count: sources.length }))}</summary><ul class="source-list">${sources.map(renderSource).join("")}</ul><p><strong>${escapeHtml(t("editorialStatus", { reviewed: formatDate(item.reviewedAt), reviewDue: formatDate(item.reviewDue) }))}</strong></p></details>

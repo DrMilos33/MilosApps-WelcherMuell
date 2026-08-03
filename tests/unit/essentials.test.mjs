@@ -102,11 +102,13 @@ describe("public-app-essentials/v1", () => {
     assert.doesNotMatch(appSource, /register\(new URL\("\.\.\/sw\.js"/);
     assert.match(legacyWorkerSource, /self\.registration\.unregister\(\)/);
     assert.match(legacyWorkerSource, /name\.startsWith\("waste-guide-"\)/);
-    assert.match(offlineWorkerSource, /waste-guide-2026-08-01-essentials-v1-1-2/);
+    assert.match(offlineWorkerSource, /waste-guide-2026-08-03-result-header-v2/);
   });
 
   test("stellt den erkannten Gegenstand und Entsorgungsweg vor Details", () => {
     const immediate = appSource.indexOf('class="result-immediate"');
+    const immediateEnd = appSource.indexOf('class="result-copy"');
+    const immediateSource = appSource.slice(immediate, immediateEnd);
     const reason = appSource.indexOf('class="result-reason"');
     const steps = appSource.indexOf('class="result-steps"');
     const sources = appSource.indexOf('class="result-details"');
@@ -114,6 +116,9 @@ describe("public-app-essentials/v1", () => {
     assert.match(appSource, /data-result-icon/);
     assert.match(appSource, /class="result-subject"/);
     assert.match(appSource, /class="result-destination"/);
+    assert.match(appSource, /function renderDestination/);
+    assert.match(appSource, /route-keyword/);
+    assert.doesNotMatch(immediateSource, /recognizedLabel|disposalRouteLabel|result-certainty/);
   });
 
   test("lässt den Pages-Build bei fehlenden oder eingebetteten CSS-Dateien scheitern", () => {
