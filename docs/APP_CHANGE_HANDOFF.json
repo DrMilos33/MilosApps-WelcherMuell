@@ -5,7 +5,7 @@
   "repository": "DrMilos33/MilosApps-WelcherMuell",
   "ownerTask": "MilosApps – Welcher Müll?",
   "status": "dev-verified",
-  "sourceSha": "f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5",
+  "sourceSha": "be6b4c95e7d612441b85d2a59c3553300a04ed01",
   "contract": {
     "id": "public-app-essentials/v1",
     "version": "1.1.2",
@@ -16,11 +16,12 @@
     "commands": [
       "pnpm test:shell",
       "pnpm test:essentials",
-      "node --test tests/unit/*.test.mjs (79/79)",
-      "node tests/e2e/run.mjs (29/29)",
-      "node scripts/check-sources.mjs (21/21 technisch erreichbar)",
+      "node --test tests/unit/*.test.mjs (91/91)",
+      "node tests/e2e/run.mjs (31/31)",
+      "node scripts/check-sources.mjs (22/22 technisch erreichbar)",
       "core.autocrlf=true fresh worktree + vendored verify.mjs",
-      "node tests/e2e/remote-smoke.mjs (extern PASS)"
+      "node tests/e2e/remote-smoke.mjs (extern PASS)",
+      "gezielter externer Suchlauf für Ölgemälde, Ölgemäde, Kinderriegel, Schokolade, Plastik, Karten und unbekannte Eingabe (PASS)"
     ],
     "shellValidator": true,
     "desktop": true,
@@ -32,7 +33,7 @@
   "dev": {
     "url": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
     "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-    "artifactSha": "6075041b44acbd734530ea665a0c51d9961bfa40",
+    "artifactSha": "163dec7620b04b4f5b861b2c4c548f1f1630f65b",
     "externalQa": true
   },
   "portal": {
@@ -87,14 +88,32 @@
         "externer Gummiband-/No-Login-/DE-EN-/Reflow-Smoke PASS"
       ],
       "outcome": "Die Sofortantwort ist ruhiger und zeigt Restmüll sowie örtlich prüfen rechts deutlich, ohne Sicherheitsinformation zu verlieren."
+    },
+    {
+      "round": 4,
+      "findings": [
+        "Alltagsbegriffe wie Ölgemälde, Kinderriegel und Schokolade fehlten; Plastik wurde sachfremd als Elektro-Mehrdeutigkeit behandelt und Karten schlug Pizzakarton vor.",
+        "Der erste externe Suchkandidat reflowte auf der Startseite, verbreiterte aber das geöffnete Plastik-Ergebnis bei 360 × 800 und 200 Prozent Textzoom auf 409 Pixel."
+      ],
+      "changes": [
+        "Die Suche trennt exakte Namen/Aliasse, kuratierte Material- und Funktionsabsichten sowie Keywords; Plastik erhält einen Haupttreffer und nur die passende Verpackungsalternative.",
+        "App-Gutters, Ergebnisicon und nichttextliche Abstände bleiben geometrisch stabil; lange Kategorien, Ziel-Chips, Alternativen und Quellen umbrechen kontrolliert."
+      ],
+      "tests": [
+        "91/91 Unit-/Fachtests und 31/31 lokale Browser-E2E",
+        "externer No-Login-Suchlauf mit allen Nutzerbeispielen sowie 390 px und 360 × 800 bei 200 Prozent: clientWidth=scrollWidth, null Clipping und null Konsolenfehler"
+      ],
+      "outcome": "Die Nutzerbeispiele liefern fachlich sinnvolle Ergebnisse, unsichere freie Eingaben einen sicheren Eingrenzungsweg und der vollständige Ergebniszustand reflowt."
     }
   ],
-  "rollback": "Source f6837bb durch eab33ee0dd788d37394c63ccd8a40d45c13dcdbb und dev-pages 6075041 durch den letzten gesunden Artefaktcommit 83de25132465053d177f43698ff32302fe77618c ersetzen; danach Pages built, Health und Remote-Smoke erneut prüfen.",
+  "rollback": "Den Such-/Reflow-Stand per normalem Revert auf Source f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5 zurückführen und dev-pages koordiniert auf den letzten vollständig gesunden Artefaktcommit 6075041b44acbd734530ea665a0c51d9961bfa40 setzen; danach Pages built, Health und Remote-Smoke erneut prüfen. Der Zwischenstand 6bd8b1c ist wegen des belegten Zoomfehlers kein Rollbackpunkt.",
   "learnings": [
     "Eine Sofortantwort muss Gegenstand und Entsorgungsweg vor Begründung, Grenzen und Quellen zeigen.",
     "Ein Entsorgungsweg darf einen bereits enthaltenen lokalen Prüfhinweis nicht als separates Badge wiederholen.",
     "Dokumentreihenfolge ersetzt bei Top-Level-Await keine explizite Modulabhängigkeit.",
     "Physischer Assetpfad und öffentliche Runtime-URL brauchen getrennte Felder sowie HTTP-MIME- und Hashnachweis.",
+    "Suchnamen und Aliasse dürfen tippfehlertolerant sein; generische Keywords brauchen strengere Grenzen und kuratierte Material-/Funktionsabsichten.",
+    "Eine 200-Prozent-Reflowprüfung muss einen langen produktiven Ergebniszustand öffnen und darf nicht bei der Startseite enden.",
     "Technischer Quellen-Erreichbarkeitscheck ist kein redaktioneller Review."
   ],
   "productionApproved": false

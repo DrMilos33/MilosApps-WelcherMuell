@@ -7,13 +7,13 @@
 - URL: `https://drmilos33.github.io/MilosApps-WelcherMuell/`
 - Health: `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz`
 - Repository: `DrMilos33/MilosApps-WelcherMuell`
-- Quellcommit: `f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5`
-- Inhaltsversion: `2026.08.01-1`
+- Quellcommit: `be6b4c95e7d612441b85d2a59c3553300a04ed01`
+- Inhaltsversion: `2026.08.03-1`
 - Artefaktbranch: `dev-pages`
 - gesunder Artefaktcommit:
-  `6075041b44acbd734530ea665a0c51d9961bfa40`
-- Pages-Build: `1129645835`, Artefaktcommit `6075041`, Status `built` am
-  03.08.2026
+  `163dec7620b04b4f5b861b2c4c548f1f1630f65b`
+- Pages-Build: `1129765751`, Actions-Run `30799681176`, Artefaktcommit
+  `163dec7`, Status `built` am 03.08.2026
 - Shell: vendortes `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`
 - Production-Freigabe: `false`
@@ -74,8 +74,9 @@ Vor einer Aktualisierung gelten zwingend:
 ## Rollback
 
 Aktuelle gesunde DEV-Revision ist
-`6075041b44acbd734530ea665a0c51d9961bfa40`. Der direkte vorherige gesunde
-Rollbackpunkt ist `83de25132465053d177f43698ff32302fe77618c`; der letzte gesunde vor-v2-Punkt ist
+`163dec7620b04b4f5b861b2c4c548f1f1630f65b`. Der direkte bezeichnende
+Rollbackpunkt vor der Suchänderung ist
+`6075041b44acbd734530ea665a0c51d9961bfa40`; der letzte gesunde vor-v2-Punkt ist
 `8e8dfe0f7742a8190a78564bb3a3d2e5b51e3e3c`.
 
 Rollback bedeutet ausschließlich, den Remote-Ref `dev-pages` auf einen zuvor
@@ -87,6 +88,10 @@ Der gestoppte v2.0.2-Zwischenstand `991132f` bleibt historisch erhalten, ist
 wegen des zentralen CSP-Defekts aber kein bezeichneter Rollbackpunkt. Der
 direkte Rollback `141231c` enthält dieselbe Inhaltsversion `2026.08.01-1`, aber
 noch nicht `public-app-essentials/v1.0.0`.
+
+Der Suchkandidat `6bd8b1c` bleibt ebenfalls historisch erhalten, ist wegen des
+erst in der externen Ergebnis-Zoomprüfung belegten Überlaufs aber kein
+bezeichneter Rollbackpunkt.
 
 ## Deployment ist kein Quellenreview
 

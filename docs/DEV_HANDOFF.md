@@ -10,7 +10,7 @@
 | Sprache | `de-DE/en` |
 | Status | DEV, öffentlich, ohne Anmeldung |
 | Plattformen | Web, mobile/PWA, Desktop |
-| Inhaltsstand | `2026.08.01-1`, 01.08.2026 |
+| Inhaltsstand | `2026.08.03-1`, 03.08.2026 |
 | Gültigkeit | Private Haushalte in Deutschland; belegte Ergänzungen für Berlin, Hamburg und München |
 | öffentliche DEV-URL | `https://drmilos33.github.io/MilosApps-WelcherMuell/` |
 | Healthcheck | `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz` |
@@ -29,12 +29,13 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5`
-- Quellbaum: `0dc6d0e2b2b29c8a4ace95bc6081d9ceea074755`
+  `be6b4c95e7d612441b85d2a59c3553300a04ed01`
+- Quellbaum: `f2dd813e2297abf14593780f524e2d29c4d6419b`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `6075041b44acbd734530ea665a0c51d9961bfa40`
-- GitHub-Pages-Build `1129645835`: Artefaktcommit `6075041`, Status `built`
+  `163dec7620b04b4f5b861b2c4c548f1f1630f65b`
+- GitHub-Pages-Build `1129765751`, Actions-Run `30799681176`:
+  Artefaktcommit `163dec7`, Status `built`/`success`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
 - Essentials-Pin: `public-app-essentials/v1.1.2`, Shared-Commit
@@ -52,7 +53,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.01-1","productionApproved":false,"sourceCommit":"f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-1","productionApproved":false,"sourceCommit":"be6b4c95e7d612441b85d2a59c3553300a04ed01"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -129,11 +130,23 @@ No-Login, speicherfreien Start, explizites Offline und 360 × 800 bei
 `30793628420` waren erfolgreich. Fachinhalte und Inhaltsversion blieben
 unverändert.
 
+Der Suchqualitätsstand wurde anschließend aus Source `be6b4c95` als
+Artefakt `163dec7` veröffentlicht. Pages-Build `1129765751` und Actions-Run
+`30799681176` endeten erfolgreich. Ein frischer cookie-loser Browserkontext
+bestätigte `Ölgemälde`, `Ölgemäde`, `Kinderriegel` und `Schokolade`, einen
+sinnvollen Haupttreffer für `Plastik` mit genau einer kuratierten
+Verpackungsalternative und ohne Elektro-Raten sowie `Karten` ohne
+Pizzakarton-Vorschlag. Eine unbekannte Eingabe bietet sichere
+Eingrenzungsaktionen, ohne eine Tonne zu erfinden. Bei 390 Pixeln sowie
+360 × 800 und 200 Prozent Textzoom waren `clientWidth` und `scrollWidth`
+jeweils identisch; es gab null Clipping, Cookies, Web-Storage-Aufrufe,
+fehlgeschlagene Ressourcen oder Konsolenfehler.
+
 Reproduzierbarer Test:
 
 ```powershell
 $env:WASTE_GUIDE_REMOTE_URL="https://drmilos33.github.io/MilosApps-WelcherMuell/"
-$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5"
+$env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT="be6b4c95e7d612441b85d2a59c3553300a04ed01"
 pnpm test:remote:dev
 ```
 
@@ -177,16 +190,18 @@ GitHub Pages ist in diesem Vertrag ausschließlich der öffentliche DEV-Host.
 `milos-apps.de`.
 
 Ein erfolgreicher Deploy oder Healthcheck erneuert kein redaktionelles
-Prüfdatum. Nur der neue Kunststoff-Nichtverpackungsfall wurde am 01.08.2026
-redaktionell ergänzt. Allgemeines Gültigkeitsgebiet, Lizenznachweise und die
-Reviewtermine bestehender Einträge bleiben eigenständig; die früheste erneute
-Prüfung ist weiterhin am 30.09.2026. Details stehen in
+Prüfdatum. Die neuen Kunststoff-, Lebensmittel-/Verpackungs- und Gemäldewege
+wurden am 03.08.2026 separat aus amtlichen Quellen redaktionell geprüft.
+Allgemeines Gültigkeitsgebiet, Lizenznachweise und die Reviewtermine
+bestehender Einträge bleiben eigenständig; die früheste erneute Prüfung ist
+weiterhin am 30.09.2026. Details stehen in
 `SOURCES_AND_LICENSES.md`.
 
-Aktueller gesunder DEV-Artefaktcommit ist `6075041`; direkter Rollbackpunkt ist
-`83de251` mit derselben Inhaltsversion und dem vorherigen Ergebnis-Kopf. Der letzte gesunde
-vor-v2-Rollbackpunkt bleibt `8e8dfe0`. Der gestoppte v2.0.2-Zwischenstand ist
-kein bezeichneter Rollbackpunkt.
+Aktueller gesunder DEV-Artefaktcommit ist `163dec7`; bezeichneter
+Rollbackpunkt vor der Suchänderung ist `6075041`. Der Zwischenstand `6bd8b1c`
+ist wegen des erst extern gefundenen Ergebnis-Zoomfehlers kein Rollbackpunkt.
+Der letzte gesunde vor-v2-Punkt bleibt `8e8dfe0`. Der gestoppte
+v2.0.2-Zwischenstand ist ebenfalls kein bezeichneter Rollbackpunkt.
 
 ## Codex-Projektstatus
 

@@ -25,13 +25,13 @@
     "environment": "DEV",
     "repository": "https://github.com/DrMilos33/MilosApps-WelcherMuell",
     "sourceBranch": "codex/waste-guide-dev",
-    "sourceCommit": "f6837bb593e3b4e8fbd24a99be5e8ebd42c20dd5",
-    "sourceTree": "0dc6d0e2b2b29c8a4ace95bc6081d9ceea074755",
+    "sourceCommit": "be6b4c95e7d612441b85d2a59c3553300a04ed01",
+    "sourceTree": "f2dd813e2297abf14593780f524e2d29c4d6419b",
     "artifactBranch": "dev-pages",
-    "artifactCommit": "6075041b44acbd734530ea665a0c51d9961bfa40",
-    "pagesBuildId": 1129645835,
+    "artifactCommit": "163dec7620b04b4f5b861b2c4c548f1f1630f65b",
+    "pagesBuildId": 1129765751,
     "pagesBuildStatus": "built",
-    "pagesBuiltAt": "2026-08-03T07:26:48Z",
+    "pagesBuiltAt": "2026-08-03T09:02:06Z",
     "productionApproved": false
   },
   "sharedDependencies": [

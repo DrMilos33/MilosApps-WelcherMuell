@@ -706,3 +706,16 @@ und null Konsolenfehler.
 
 Der technische Reflow-Fix ändert weder Inhaltsversion, Quellenreview,
 Gültigkeitsgebiet, Lizenz noch den separat gehaltenen Loader-Vertrag.
+
+### Externe DEV-Verifikation
+
+Source `be6b4c95e7d612441b85d2a59c3553300a04ed01` wurde als
+Pages-Artefakt `163dec7620b04b4f5b861b2c4c548f1f1630f65b` veröffentlicht.
+GitHub Pages Build `1129765751` und Actions-Run `30799681176` endeten
+erfolgreich. Der standardisierte Remote-Smoke bestätigte Health, No-Login,
+null Cookies/Web Storage, Offline-Opt-in, Share, Shell/Essentials und die
+Production-Sperre. Der zusätzliche Live-Suchlauf bestätigte `Ölgemälde`,
+`Ölgemäde`, `Kinderriegel`, `Schokolade`, `Plastik`, `Karten` sowie den sicheren
+Fallback einer unbekannten Eingabe. Auf 390 Pixel und auf 360 × 800 bei
+200 Prozent blieben `clientWidth` und `scrollWidth` identisch; es gab null
+Clipping und null Konsolenfehler.
