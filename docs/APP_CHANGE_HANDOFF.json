@@ -1,29 +1,34 @@
 {
   "$schema": "https://milos-apps.de/schemas/app-change-handoff.schema.json",
-  "campaignId": "public-app-ux-refinement-2026-08",
+  "campaignId": "public-app-shell-icon-transition-2026-08",
   "appKey": "waste-guide",
   "repository": "DrMilos33/MilosApps-WelcherMuell",
   "ownerTask": "MilosApps – Welcher Müll?",
   "status": "dev-verified",
-  "sourceSha": "c7af103d60141fc7335ccb52771d1f4f9f14f8e8",
+  "sourceSha": "2c60635b12c09b2c7549aab95228806b566a2a08",
+  "workflow": {
+    "changeClass": "shared-consumer",
+    "coordinationScope": "affected-owners"
+  },
   "contract": {
     "id": "public-app-essentials/v1",
-    "version": "1.1.3",
-    "sharedCommit": "babe74a0e62e1a7f9095648195e54b322a837726",
+    "version": "1.1.5",
+    "sharedCommit": "2942132ad3bf6cf39edc9f52ed918de6a230be23",
     "lockVerified": true
   },
   "tests": {
+    "tier": "contract",
     "commands": [
-      "pnpm test:shell",
-      "pnpm test:essentials",
-      "node --test tests/unit/*.test.mjs (91/91)",
-      "node tests/e2e/run.mjs (31/31)",
-      "node scripts/check-sources.mjs (22/22 technisch erreichbar)",
-      "core.autocrlf=true fresh worktree + vendored verify.mjs",
-      "node tests/e2e/remote-smoke.mjs (extern PASS)",
-      "gezielter externer Suchlauf für Ölgemälde, Ölgemäde, Kinderriegel, Schokolade, Plastik, Karten und unbekannte Eingabe (PASS)",
-      "langsamer externer 390-x-844-Start: Loader sichtbar exakt 32 x 32 px, clientWidth=scrollWidth=390, null Cookies und Konsolenfehler",
-      "externer Plastik-Ergebniszustand bei 360 x 800 und 200 Prozent: clientWidth=scrollWidth=360, Loader computed/max 32 px"
+      "pnpm test:essentials (PASS)",
+      "pnpm test:shell (PASS)",
+      "pnpm test (91/91)",
+      "pnpm run test:e2e:shell-transition (lokal 390x844 plus 360x800@200%, PASS)",
+      "core.autocrlf=true fresh worktree: beide Vendor-Validatoren und i/lf w/lf PASS",
+      "pnpm run build:github-pages:dev plus beide Artefakt-Validatoren (PASS)",
+      "pnpm run test:remote:dev (extern, PASS)",
+      "WASTE_GUIDE_TRANSITION_URL=https://drmilos33.github.io/MilosApps-WelcherMuell/ pnpm run test:e2e:shell-transition (extern, PASS)",
+      "gezielter externer 1440x900-Endzustand: Icon 38x38, eine H1, clientWidth=scrollWidth, null Browserfehler",
+      "GitHub Pages Actions 30816179048 auf Artefakt f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1 (success)"
     ],
     "shellValidator": true,
     "desktop": true,
@@ -35,106 +40,58 @@
   "dev": {
     "url": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
     "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-    "artifactSha": "9c4959ad259c7374ffcfda7c97a9a74229584d06",
+    "artifactSha": "f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1",
     "externalQa": true
   },
   "portal": {
     "route": "/apps/waste-guide",
-    "integrationRequested": true
+    "integrationRequested": false,
+    "routesVerified": [
+      "/apps/waste-guide"
+    ]
   },
   "iterationEvidence": [
     {
       "round": 1,
       "findings": [
-        "Der permanente Datenschutzlink lag zunächst im eingeklappten Vertrauensbereich.",
-        "Der optionale Verlaufs- und Regionszustand war für seinen Nutzen zu prominent und nicht notwendig."
+        "Der frühere Test erfasste das intrinsisch begrenzte SVG vor der Critical-CSS; mit geladener Essentials-v1.1.3-CSS und undefinierter Shell maß es tatsächlich 40 mal 40 Pixel.",
+        "Der erste externe Übergangstest erwartete JSON-MIME für den statischen Healthcheck, obwohl GitHub Pages dessen valides JSON als application/octet-stream ausliefert."
       ],
       "changes": [
-        "Datenschutz und App-Metadaten wurden als kompakte, immer erreichbare Zeile platziert.",
-        "Verlauf wurde entfernt, Region auf die Sitzung begrenzt und Sprache in die sichtbare URL verlegt."
+        "Essentials wurde atomar auf v1.1.5 synchronisiert; die gemeinsame Critical-CSS begrenzt den undefinierten Shell-Slot nun auf 38 mal 38 Pixel, ohne app-eigenen CSS-Override.",
+        "Der fokussierte Test blockiert Bootstrap und Komponenten-CSS getrennt und akzeptiert den Healthcheck nur nach erfolgreichem JSON-Parsing und vollständiger App-Identitätsprüfung unabhängig vom MIME."
       ],
       "tests": [
-        "79/79 Unit-/Vertragstests",
-        "27/29 Browserfälle vor Korrektur, danach Regression ergänzt"
+        "Rotlauf unter v1.1.3: undefinierter Zustand 40 mal 40 Pixel.",
+        "Lokal und extern unter v1.1.5: verborgen 38 mal 38, während CSS-Verzögerung sichtbar 38 mal 38, Endzustand exakt 38 mal 38; Loader separat 32 mal 32.",
+        "390 mal 844, 360 mal 800 bei 200 Prozent und 1440 mal 900 ohne horizontalen Überlauf oder Browserfehler."
       ],
-      "outcome": "Der Datenschutzweg blieb dauerhaft sichtbar und die optionale Oberfläche wurde deutlich kompakter."
-    },
-    {
-      "round": 2,
-      "findings": [
-        "Ein zu breiter Shell-Locator behandelte zwei korrekte Datenschutzlinks als Duplikat.",
-        "Die Shell-Registrierung konnte ohne explizite Importkante bei Top-Level-Await hängen."
-      ],
-      "changes": [
-        "Die Regression wurde semantisch auf den Shell-Footer begrenzt.",
-        "Der Shell-Bootstrap wurde zur expliziten Modulabhängigkeit und der URL-Sprachadapter race-sicher verbunden."
-      ],
-      "tests": [
-        "29/29 lokale Browser-E2E",
-        "externer No-Login-/Storage-/Reflow-Smoke PASS"
-      ],
-      "outcome": "Genau eine Shell und H1, stabiler Loaderabschluss, keine Storage-Aufrufe und keine Browserfehler."
-    },
-    {
-      "round": 3,
-      "findings": [
-        "Der Gummiband-Kopf wiederholte örtlich prüfen als eigene Statuszeile.",
-        "Eine erste Hervorhebung markierte bei örtliche Wertstoffsammlung nur das einzelne Adjektiv."
-      ],
-      "changes": [
-        "Hilfslabels und doppelte Statuszeile wurden entfernt; der Geltungssatz steht bei den Details.",
-        "Vollständige wichtige Entsorgungswege werden DE/EN textgeführt hervorgehoben."
-      ],
-      "tests": [
-        "79/79 lokale Unit-/Fachtests und 29/29 Browser-E2E",
-        "externer Gummiband-/No-Login-/DE-EN-/Reflow-Smoke PASS"
-      ],
-      "outcome": "Die Sofortantwort ist ruhiger und zeigt Restmüll sowie örtlich prüfen rechts deutlich, ohne Sicherheitsinformation zu verlieren."
-    },
-    {
-      "round": 4,
-      "findings": [
-        "Alltagsbegriffe wie Ölgemälde, Kinderriegel und Schokolade fehlten; Plastik wurde sachfremd als Elektro-Mehrdeutigkeit behandelt und Karten schlug Pizzakarton vor.",
-        "Der erste externe Suchkandidat reflowte auf der Startseite, verbreiterte aber das geöffnete Plastik-Ergebnis bei 360 × 800 und 200 Prozent Textzoom auf 409 Pixel."
-      ],
-      "changes": [
-        "Die Suche trennt exakte Namen/Aliasse, kuratierte Material- und Funktionsabsichten sowie Keywords; Plastik erhält einen Haupttreffer und nur die passende Verpackungsalternative.",
-        "App-Gutters, Ergebnisicon und nichttextliche Abstände bleiben geometrisch stabil; lange Kategorien, Ziel-Chips, Alternativen und Quellen umbrechen kontrolliert."
-      ],
-      "tests": [
-        "91/91 Unit-/Fachtests und 31/31 lokale Browser-E2E",
-        "externer No-Login-Suchlauf mit allen Nutzerbeispielen sowie 390 px und 360 × 800 bei 200 Prozent: clientWidth=scrollWidth, null Clipping und null Konsolenfehler"
-      ],
-      "outcome": "Die Nutzerbeispiele liefern fachlich sinnvolle Ergebnisse, unsichere freie Eingaben einen sicheren Eingrenzungsweg und der vollständige Ergebniszustand reflowt."
-    },
-    {
-      "round": 5,
-      "findings": [
-        "Der gemeinsame Loadervertrag verlangte appübergreifend ein exakt 32 x 32 Pixel großes Symbol; der bisherige gesunde DEV-Stand war noch auf Essentials v1.1.2 gepinnt.",
-        "Ein echter Windows-Recheckout wandelte die älteren Shell-Vendorartefakte ohne enge Verzeichnisregel um und ließ dadurch den bytegenauen Shell-Lock scheitern."
-      ],
-      "changes": [
-        "Essentials wurde atomar auf v1.1.3 am unveränderlichen Shared-Commit babe74a0 migriert; HTML-Fallback, gemeinsames CSS, Manifest, sechs Artefakte und Lock wurden gemeinsam übernommen.",
-        "Auch der bereits gepinnte Shell-Vendorordner erhielt die enge LF-Policy; Runtime und Shell-Pin blieben unverändert."
-      ],
-      "tests": [
-        "91/91 Unit-/Fachtests und 31/31 lokale Browser-E2E",
-        "beide vendorten Validatoren und echter Windows-Recheckout mit core.autocrlf=true PASS",
-        "externer langsamer 390-px-Start und 360-x-800-/200-Prozent-Ergebniszustand mit exakt 32 px und ohne Überlauf PASS"
-      ],
-      "outcome": "Das Ladesymbol bleibt auf allen geprüften Geräten kompakt und exakt 32 x 32 Pixel; Suchfunktion, Datenschutz-, Share-, Offline- und Productiongrenzen blieben unverändert."
+      "outcome": "Der riesige App-Icon-Flash am Loaderende ist im öffentlichen Waste-Guide-DEV in allen drei Übergangsphasen regressionsgesichert ausgeschlossen."
     }
   ],
-  "rollback": "Die Loader-Migration per normalem Revert auf den weiterhin gesunden Source be6b4c95e7d612441b85d2a59c3553300a04ed01 zurückführen und dev-pages koordiniert auf Artefaktcommit 163dec7620b04b4f5b861b2c4c548f1f1630f65b setzen; danach Pages built, Health und Remote-Smoke erneut prüfen. Der Zwischenstand 6bd8b1c ist wegen des belegten Zoomfehlers kein Rollbackpunkt.",
+  "evidenceRefs": [
+    {
+      "kind": "product-commit",
+      "value": "75fa779c67c118b1018b146ef70ade8f8031042c"
+    },
+    {
+      "kind": "owner-commit",
+      "value": "2c60635b12c09b2c7549aab95228806b566a2a08"
+    },
+    {
+      "kind": "artifact",
+      "value": "f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1"
+    },
+    {
+      "kind": "pages-run",
+      "value": "30816179048"
+    }
+  ],
+  "rollback": "Den App-DEV-Source auf 2760bf6402a36e0811be63a20dee54ad02e6edde und dev-pages auf den zuvor gesunden Artefaktcommit cefdd80d2d3a33b205ff1b15cea5be3f57213302 zurückführen; anschließend Pages built, Health-Identität und Remote-Smoke erneut prüfen. Portalroute und Production bleiben unverändert.",
   "learnings": [
-    "Eine Sofortantwort muss Gegenstand und Entsorgungsweg vor Begründung, Grenzen und Quellen zeigen.",
-    "Ein Entsorgungsweg darf einen bereits enthaltenen lokalen Prüfhinweis nicht als separates Badge wiederholen.",
-    "Dokumentreihenfolge ersetzt bei Top-Level-Await keine explizite Modulabhängigkeit.",
-    "Physischer Assetpfad und öffentliche Runtime-URL brauchen getrennte Felder sowie HTTP-MIME- und Hashnachweis.",
-    "Suchnamen und Aliasse dürfen tippfehlertolerant sein; generische Keywords brauchen strengere Grenzen und kuratierte Material-/Funktionsabsichten.",
-    "Eine 200-Prozent-Reflowprüfung muss einen langen produktiven Ergebniszustand öffnen und darf nicht bei der Startseite enden.",
-    "Bytegenaue vendorte Textlocks brauchen pro Vendorverzeichnis eine enge LF-Regel und einen echten Windows-Recheckout als Gate.",
-    "Technischer Quellen-Erreichbarkeitscheck ist kein redaktioneller Review."
+    "Ein Web-Component-Slot braucht getrennte Messpunkte vor Upgrade, nach Upgrade bei verzögerter Komponenten-CSS und im Endzustand; intrinsische Maße plus fertige CSS allein schließen einen Größen-Flash nicht aus.",
+    "Ein statischer Readiness-Body kann korrektes JSON mit generischem MIME liefern; die Identitätsprüfung muss fail-closed auf parsebaren Inhalt und erwartete Felder prüfen, nicht auf HTTP 200 oder MIME allein.",
+    "Der technische Shared-Pin und die Cachekennung ändern weder Fachinhalt noch Inhalts- oder Quellenreview."
   ],
   "productionApproved": false
 }

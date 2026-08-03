@@ -29,13 +29,13 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `c7af103d60141fc7335ccb52771d1f4f9f14f8e8`
-- Quellbaum: `68d94c093f38de267579c1af1d60d47c87e59957`
+  `2c60635b12c09b2c7549aab95228806b566a2a08`
+- Quellbaum: `66fe80b04355f7a4dd8a72f7bd24893213bcc462`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `9c4959ad259c7374ffcfda7c97a9a74229584d06`
-- GitHub-Pages-Build `1129793087`, Actions-Run `30801330326`:
-  Artefaktcommit `9c4959a`, Status `built`/`success`
+  `f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1`
+- GitHub-Pages-Actions-Run `30816179048`: Artefaktcommit `f90ecb3`,
+  Status `built`/`success`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
 - Essentials-Pin: `public-app-essentials/v1.1.5`, Shared-Commit
@@ -53,7 +53,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-1","productionApproved":false,"sourceCommit":"c7af103d60141fc7335ccb52771d1f4f9f14f8e8"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.03-1","productionApproved":false,"sourceCommit":"2c60635b12c09b2c7549aab95228806b566a2a08"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,

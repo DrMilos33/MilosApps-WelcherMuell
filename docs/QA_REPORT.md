@@ -773,3 +773,41 @@ und deshalb bei `core.autocrlf=true` seinen Lock verlor. Eine app-lokale
 `* text eol=lf`-Regel schützt nun auch dessen fünf gelockte Textartefakte; ein
 Unit-Test prüft beide Vendorordner byteweise auf LF. Runtime und Shell-Pin
 bleiben unverändert.
+
+## Shell-Icon-Übergang · public-app-essentials/v1.1.5 · 03.08.2026
+
+Der bisherige Übergangstest zeichnete das Shell-Icon zu früh auf: Er belegte
+die intrinsischen `38 × 38`-Attribute vor dem Laden der Critical-CSS, nicht
+aber den Zustand mit geladener Essentials-CSS und noch undefiniertem
+Custom Element. Der neue Rotlauf hielt den Shell-Bootstrap gezielt zurück und
+maß dort mit v1.1.3 reproduzierbar `40 × 40` Pixel.
+
+Essentials wurde anschließend atomar auf Version `1.1.5` und Shared-Commit
+`2942132ad3bf6cf39edc9f52ed918de6a230be23` synchronisiert. Der 6er-Lock,
+Schema, Runtime, Bootstrap und beide CSS-Dateien wurden gemeinsam übernommen;
+das bereits intrinsisch begrenzte App-SVG blieb `38 × 38`. Es gibt keinen
+app-eigenen CSS-Override. Wegen der stabilen Vendor-URLs erhielt nur der
+Service-Worker-Cache eine neue technische Kennung.
+
+Vertragstier-Nachweise: Essentials- und Shell-Verifier PASS, 91/91
+Unit-/Fachtests, reproduzierbarer Pages-Build und echter Windows-Recheckout
+mit `core.autocrlf=true` sowie durchgehend `i/lf w/lf`. Der fokussierte
+Browserlauf blockierte Bootstrap und Komponenten-CSS getrennt. Lokal und im
+öffentlichen DEV ergaben sich bei 390 × 844 exakt diese Zustände:
+
+- Essentials-CSS geladen, Shell undefiniert: Icon verborgen und `38 × 38`;
+- Shell definiert, Komponenten-CSS verzögert: sichtbar und `38 × 38`;
+- Endzustand: sichtbar und exakt `38 × 38`.
+
+Der getrennte Loader blieb vor dem Ready-Signal `32 × 32`; danach war er
+verborgen. Bei 360 × 800 und 200 Prozent waren `clientWidth` und
+`scrollWidth` jeweils 360, ohne großes sichtbares Ersatz-SVG und ohne
+Konsolenfehler. Der externe Standard-Smoke bestätigte zusätzlich No-Login,
+DE/EN-Persistenz, No-Cookies/kein Web Storage, Share, Offline-Opt-in und die
+Production-Sperre.
+
+Deployte Evidenz: Source
+`2c60635b12c09b2c7549aab95228806b566a2a08`, Pages-Artefakt
+`f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1`, Actions-Run `30816179048`
+erfolgreich. Der technische Vertrag änderte weder Fachinhalt, Inhaltsversion,
+Quellenreview, Datenschutz-/Share-Funktion noch Portalroute oder Production.

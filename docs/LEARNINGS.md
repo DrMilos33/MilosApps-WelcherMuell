@@ -453,6 +453,24 @@ Gültigkeitsgrenze: Die LF-Regel schützt Reproduzierbarkeit und
 Artefaktintegrität; sie ändert weder den gepinnten Vertrag noch Fachinhalt oder
 Laufzeitverhalten.
 
+### Custom-Element-Übergänge brauchen einen eigenen Messzustand
+
+Intrinsische SVG-Maße und der fertige Shadow-DOM-Stil belegen nicht den kurzen
+Zustand dazwischen. Für Slot-Icons muss ein Browsergate die Critical-CSS
+zuerst vollständig laden, den Komponenten-Bootstrap noch blockieren und danach
+die Komponenten-CSS separat verzögern. Erst die drei Messpunkte „undefiniert“,
+„definiert ohne Komponenten-CSS“ und „fertig“ schließen einen Größen-Flash
+belastbar aus.
+
+Evidenz: Der frühere Test sah vor der Critical-CSS korrekte `38 × 38`, während
+der ergänzte Zustand mit v1.1.3 tatsächlich `40 × 40` maß. Mit dem atomaren
+v1.1.5-Pin messen lokaler und externer Browserlauf in allen drei Phasen maximal
+beziehungsweise final exakt `38 × 38`; der unabhängige Loader bleibt `32 × 32`.
+
+Gültigkeitsgrenze: Dieses Gate schützt nur den visuellen Übergang von
+CSS-first-Loader zu Web Component. Es bewertet weder Fachinhalt noch
+Suchqualität oder redaktionelle Aktualität.
+
 ## Weitergabe
 
 Die allgemein relevanten Punkte zu dreistufiger Quellenpflege, Suchgewichtung,
