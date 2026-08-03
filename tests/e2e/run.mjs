@@ -796,6 +796,8 @@ try {
       document.documentElement.style.fontSize = "200%";
     });
     await mobilePage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
+    await submitSearch(mobilePage, "Plastik");
+    await mobilePage.getByRole("heading", { name: "Meintest du etwas anderes?", exact: true }).waitFor();
     const geometry = await mobilePage.locator("milos-app-shell").evaluate((shell) => {
       const icon = shell.shadowRoot.querySelector(".app-icon").getBoundingClientRect();
       const searchInput = document.querySelector(".search-control input").getBoundingClientRect();

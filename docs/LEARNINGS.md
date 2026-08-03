@@ -419,6 +419,23 @@ Quelldatei zu vertrauen.
 Gültigkeitsgrenze: Der Hashnachweis schützt das Loader-Asset und die
 Deploymenttreue; er bewertet nicht die redaktionelle Entsorgungsinformation.
 
+### Reflow-Matrizen müssen den längsten produktiven Zustand öffnen
+
+Eine überlauffreie Startseite belegt nicht, dass auch ein echtes Suchergebnis
+mit langem Entsorgungsweg, Alternative und Quellen bei 200 Prozent Textzoom
+reflowt. Nichttextliche Abstände und Icons sollten geometrisch stabil bleiben;
+fachliche Bezeichnungen und hervorgehobene Zielbegriffe müssen dagegen
+kontrolliert umbrechen dürfen.
+
+Evidenz: Der externe Plastik-Ergebniszustand maß zunächst 409 Pixel
+`scrollWidth` bei 360 Pixel `clientWidth`. Nach der Korrektur und Erweiterung
+des E2E-Zoomfalls messen beide Werte 360 Pixel; 31/31 Browserprüfungen sind
+grün.
+
+Gültigkeitsgrenze: Diese Regel betrifft Layoutzustände. Sie verbessert weder
+Suchranking noch fachliche Richtigkeit und ersetzt keine separate Inhalts- und
+Quellenprüfung.
+
 ## Weitergabe
 
 Die allgemein relevanten Punkte zu dreistufiger Quellenpflege, Suchgewichtung,

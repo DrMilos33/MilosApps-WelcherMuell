@@ -685,3 +685,24 @@ hervorgehobenen Begriffen `Restmüll` und `örtlich prüfen`, null doppelten
 Hilfs-/Statuszeilen, vollständiges DE/EN, explizites Offline und 200-Prozent-
 Reflow. Health antwortete mit HTTP 200 und exakt dem neuen Source-SHA; es gab
 keine fehlgeschlagenen Ressourcen, Konsolenfehler oder Überläufe.
+
+## Suchergebnis-Reflow nach externer Kandidatenprüfung · 03.08.2026
+
+Die erste externe Prüfung des neuen intentbasierten Suchstands bestätigte die
+Treffer, deckte aber eine Lücke in der bisherigen Zoommatrix auf: Die
+Startseite war bei 360 × 800 und 200 Prozent Textzoom überlauffrei, der längere
+Plastik-Ergebniszustand verbreiterte das Dokument dagegen auf 409 Pixel. Die
+Ursache war eine Kombination aus rem-skalierten Nichttextabständen,
+Mindestbreiten langer Kategorien und nicht umbrechenden Ergebnis-Chips.
+
+App-Gutters, Ergebnisicon und geometrische Abstände bleiben nun bei Textzoom
+stabil; Kategorie, Ziel-Chips, kuratierte Alternative und Quellen können
+kontrolliert umbrechen. Der Browserregressionstest öffnet bei 360 × 800 und
+200 Prozent ausdrücklich das Ergebnis `Plastik` samt Alternative, statt nur
+die Startseite zu messen. Abschluss lokal: Shell- und Essentials-Verifier
+PASS, 91/91 Unit-/Fachtests, 31/31 Browser-E2E sowie 22/22 amtliche URLs mit
+HTTP 200. Gemessen wurden `clientWidth=360`, `scrollWidth=360`, null Clipping
+und null Konsolenfehler.
+
+Der technische Reflow-Fix ändert weder Inhaltsversion, Quellenreview,
+Gültigkeitsgebiet, Lizenz noch den separat gehaltenen Loader-Vertrag.
