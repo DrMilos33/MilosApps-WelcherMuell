@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "language": "en",
-  "contentVersion": "2026.08.01-1",
-  "contentDate": "2026-08-01",
+  "contentVersion": "2026.08.03-1",
+  "contentDate": "2026-08-03",
   "editorialUse": "The app does not reproduce an external dataset, logos, images or lengthy passages. Disposal facts were checked against official pages and rewritten as concise original summaries. Every recommendation links to its source.",
   "items": {
     "yogurt-cup": {
@@ -76,6 +76,7 @@
     "plastic-household-item": {
       "name": "Plastic household item (not packaging)",
       "aliases": [
+        "plastic",
         "plastic object",
         "artificial flower",
         "plastic flower",
@@ -116,6 +117,33 @@
       ],
       "warning": "Do not automatically place it in a yellow bin or yellow bag. Electrical, battery-powered or contaminated items need a different route.",
       "localVariation": "Berlin and Hamburg accept many plastic household items in their recycling bins. Munich directs a plastic watering can to a recycling centre. Other municipalities may require residual waste or another collection system."
+    },
+    "food-and-wrapper": {
+      "name": "Chocolate or snack bar",
+      "aliases": [
+        "chocolate",
+        "chocolate bar",
+        "snack bar",
+        "cereal bar",
+        "sweet",
+        "candy",
+        "food leftovers",
+        "leftover food",
+        "food"
+      ],
+      "keywords": ["food", "organic waste", "packaging", "snack bar", "confectionery"],
+      "category": "Food + packaging",
+      "route": {
+        "label": "Contents: local organic waste · empty wrapper: sort by material"
+      },
+      "answer": "Separate food from its wrapper: use the local organic-waste route for unpackaged leftovers and sort the empty packaging by its material.",
+      "reason": "Food leftovers and packaging are collected separately. For bars and sweets, the product name alone does not reveal the wrapper's disposal route; the actual packaging material does.",
+      "steps": [
+        "Use up or pass on food that is still safe to eat.",
+        "Remove inedible contents from the wrapper and check the local rule for food leftovers.",
+        "Sort the empty wrapper by material: plastic, metal or composite packaging with the local lightweight-packaging collection; clean uncoated paper with waste paper."
+      ],
+      "localVariation": "The municipal waste authority decides which food leftovers its organic-waste collection accepts. Packaging must never go into organic waste together with the contents."
     },
     "foam-packaging": {
       "name": "Polystyrene packaging",
@@ -204,7 +232,7 @@
     },
     "glass-container": {
       "name": "Glass packaging",
-      "aliases": ["container glass", "glass bottle", "jam jar", "food jar", "single-use glass"],
+      "aliases": ["glass", "container glass", "glass bottle", "jam jar", "food jar", "single-use glass"],
       "keywords": ["packaging glass", "packaging", "bottle", "glass container"],
       "category": "Glass",
       "route": {
@@ -239,7 +267,7 @@
     },
     "drinking-glass": {
       "name": "Drinking glass",
-      "aliases": ["wine glass", "water glass", "crystal glass", "glass tableware", "broken glass"],
+      "aliases": ["glass", "wine glass", "water glass", "crystal glass", "glass tableware", "broken glass"],
       "keywords": ["tableware", "glass", "shards"],
       "category": "Residual waste",
       "route": {
@@ -257,7 +285,7 @@
     },
     "window-glass": {
       "name": "Window glass or mirror",
-      "aliases": ["window pane", "sheet glass", "mirror glass", "mirror", "flat glass"],
+      "aliases": ["glass", "window pane", "sheet glass", "mirror glass", "mirror", "flat glass"],
       "keywords": ["glass", "shards", "window", "construction waste"],
       "category": "Residual waste / recycling centre",
       "route": {
@@ -549,6 +577,31 @@
       ],
       "warning": "Do not open or combine unknown chemicals.",
       "localVariation": "Collection sites, quantities and fees are regulated locally."
+    },
+    "painting": {
+      "name": "Painting or canvas picture",
+      "aliases": [
+        "oil painting",
+        "painting",
+        "canvas picture",
+        "picture on canvas",
+        "art print",
+        "framed picture",
+        "wall picture"
+      ],
+      "keywords": ["art", "canvas", "picture frame", "wooden frame", "decoration"],
+      "category": "Picture + frame",
+      "route": {
+        "label": "Usable: pass it on · damaged: check material and size locally"
+      },
+      "answer": "Pass on a usable picture. If it is beyond use, consider frame, glass, metal and canvas separately and check the local route for its size.",
+      "reason": "Paintings and framed pictures often combine several materials. Municipal rules therefore differ by frame material, separable parts and whether the object fits in the residual-waste bin.",
+      "steps": [
+        "Sell, donate or otherwise reuse pictures in usable condition.",
+        "Separate glass, metal parts and the frame only when this can be done safely.",
+        "Search the local waste guide for picture, picture frame or canvas and check bulky-waste rules for large items."
+      ],
+      "localVariation": "Munich's AWM directs wooden or plastic picture frames to residual waste, metal frames to a recycling centre and bulky pieces to bulky-waste collection. This is not a nationwide rule."
     },
     "dried-paint": {
       "name": "Dried paint",
@@ -961,6 +1014,12 @@
       "publisher": "Munich municipal waste management (AWM)",
       "scope": "City of Munich; specific everyday household waste",
       "attribution": "Local information: Munich municipal waste management."
+    },
+    "munich-awm-picture-frame": {
+      "title": "Picture frames — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; reuse and disposal routes for picture frames by material and size",
+      "attribution": "Local information: Munich municipal waste management; original summary."
     },
     "uba-rights-2026": {
       "title": "Privacy, liability and copyright",

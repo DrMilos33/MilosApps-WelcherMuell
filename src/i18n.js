@@ -111,6 +111,9 @@ export const UI_MESSAGES = Object.freeze({
     print: "Drucken",
     resultKicker: "Entsorgungshinweis",
     resultTitle: "Treffer",
+    relatedKicker: "Alternative",
+    relatedTitle: "Meintest du etwas anderes?",
+    relatedMessage: "Bei ähnlichen Begriffen entscheidet oft die Funktion oder das Material.",
     ambiguousKicker: "Mehrdeutige Suche",
     ambiguousTitle: "Was meinst du mit „{{query}}“?",
     ambiguousMessage:
@@ -124,6 +127,16 @@ export const UI_MESSAGES = Object.freeze({
     noMatchTitle: "Kein sicherer Treffer für „{{query}}“",
     noMatchMessage:
       "Bitte beschreibe Material und Funktion genauer. Bis dahin: nicht in eine Tonne raten, sondern im örtlichen Abfall-ABC nachsehen.",
+    fallbackKicker: "Sicher eingrenzen",
+    fallbackTitle: "Was trifft am ehesten zu?",
+    fallbackMessage: "Wähle eine Eigenschaft. Die App öffnet dann einen belegten allgemeinen Hinweis statt eine Tonne zu erraten.",
+    fallbackPlastic: "Plastikgegenstand",
+    fallbackPackaging: "Leere Kunststoffverpackung",
+    fallbackElectrical: "Mit Kabel, Stecker oder Batterie",
+    fallbackPaper: "Papier oder Pappe",
+    fallbackGlass: "Glas",
+    fallbackFood: "Lebensmittelrest",
+    fallbackRubber: "Gummi oder Latex",
     unclear: "Unklar",
     shareText:
       "{{name}}: {{answer}} Empfohlener Weg: {{route}}. Stand {{date}}.",
@@ -260,6 +273,9 @@ export const UI_MESSAGES = Object.freeze({
     print: "Print",
     resultKicker: "Disposal guidance",
     resultTitle: "Result",
+    relatedKicker: "Alternative",
+    relatedTitle: "Did you mean something else?",
+    relatedMessage: "For similar terms, the item's function or material often decides the route.",
     ambiguousKicker: "Ambiguous search",
     ambiguousTitle: "What do you mean by “{{query}}”?",
     ambiguousMessage:
@@ -273,6 +289,16 @@ export const UI_MESSAGES = Object.freeze({
     noMatchTitle: "No safe result for “{{query}}”",
     noMatchMessage:
       "Describe the material and function more precisely. Until then, do not guess a bin; check your local waste guide.",
+    fallbackKicker: "Narrow it down safely",
+    fallbackTitle: "Which description fits best?",
+    fallbackMessage: "Choose one property. The app will open sourced general guidance instead of guessing a bin.",
+    fallbackPlastic: "Plastic object",
+    fallbackPackaging: "Empty plastic packaging",
+    fallbackElectrical: "Has a cable, plug or battery",
+    fallbackPaper: "Paper or cardboard",
+    fallbackGlass: "Glass",
+    fallbackFood: "Food leftovers",
+    fallbackRubber: "Rubber or latex",
     unclear: "Unclear",
     shareText:
       "{{name}}: {{answer}} Recommended route: {{route}}. Reviewed {{date}}.",

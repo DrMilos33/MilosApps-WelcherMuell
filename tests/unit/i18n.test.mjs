@@ -121,6 +121,9 @@ test("englische Suche nutzt übersetzte Namen, Synonyme und Hinweise", () => {
   assert.equal(searchItems(localized.items, "car tire", { sourcesById })[0].item.id, "car-tire");
   assert.equal(searchItems(localized.items, "old medicine", { sourcesById })[0].item.id, "medicine");
   assert.equal(searchItems(localized.items, "plastic flower", { sourcesById })[0].item.id, "plastic-household-item");
+  assert.equal(searchItems(localized.items, "plastic", { sourcesById })[0].item.id, "plastic-household-item");
+  assert.equal(searchItems(localized.items, "oil painting", { sourcesById })[0].item.id, "painting");
+  assert.equal(searchItems(localized.items, "chocolate bar", { sourcesById })[0].item.id, "food-and-wrapper");
   assert.equal(localized.regions.find((region) => region.id === "de").label, "Germany — general guidance");
   assert.match(localized.items.find((item) => item.id === "rubber-household-item").warning, /car and motorcycle tires/i);
   assert.equal(translate("en", "allApps"), "All apps");

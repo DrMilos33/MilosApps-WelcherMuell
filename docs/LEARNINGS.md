@@ -1,5 +1,36 @@
 # Welcher-Müll-Erkenntnisse
 
+## 03.08.2026 · Suchqualität braucht Begriffsebenen statt immer mehr Fuzzy
+
+Ein einzelner Ähnlichkeitswert vermischt vier verschiedene Dinge: einen echten
+Gegenstand, ein Synonym, einen Tippfehler und ein zufällig enthaltenes
+Teilwort. Dadurch konnte `Plastik` über zusammengesetzte Aliaswörter bis zum
+Elektrogerät streuen; `Karten` zog über ein unscharfes Keyword den
+Pizzakarton nach. Die Suche trennt diese Ebenen nun: Namen und Synonyme bleiben
+stark, Tippfehler gelten nur für Namen/Synonyme, Keywords werden nicht unscharf
+erweitert und natürlichsprachliche Treffer brauchen ganze Wortgruppen.
+
+Für wenige fachlich stabile Kombinationen ergänzt der Datenbestand explizite
+Suchabsichten, etwa Kunststoff + Verpackungsform oder Elektronikmerkmal. So
+führt `Plastikflasche` zur bedingten Verpackungsantwort,
+`kaputte Plastikgabel` zum vorsichtigen Kunststoffgegenstand und
+`Batteriespielzeug` zu Elektro. Ein breites `Plastik` zeigt sofort den
+allgemeinen Nichtverpackungsfall; die Kunststoffverpackung steht direkt nach
+der Kurzantwort als kuratierte Alternative. Unbekannte Wörter erzeugen keinen
+geratenen Tonnenweg, sondern eine kurze material- und funktionsbasierte
+Eingrenzung.
+
+Evidenz: 91/91 Unit-/Inhalts-/Such-/Vertragstests, 31/31 Browser-E2E,
+22/22 erreichbare amtliche Quellen sowie visuelle QA bei 1440 × 900,
+390 × 844 und 360 × 800 bei 200 Prozent. Positive Regressionen umfassen
+`Ölgemälde`, `Ölgemäde`, `Kinderriegel`, `Schokolade`,
+`Plastikflasche`, `Plastik`, `Karten` und sachfremde Teilworttreffer.
+
+Gültigkeitsgrenze: Eine gute Suche ersetzt keinen redaktionellen Bestand.
+Gemälde und Lebensmittel wurden deshalb als belegte Fachfälle ergänzt; für
+wirklich unbekannte Gegenstände bleibt ein sicherer nächster Prüfschritt besser
+als ein statistisch ähnlicher, aber falscher Treffer.
+
 ## 03.08.2026 · Schlüsselbegriffe statt doppelter Statuszeilen
 
 Eine Sofortantwort wird nicht klarer, wenn Gegenstand, Kategorie, Weg und

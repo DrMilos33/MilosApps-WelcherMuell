@@ -1,5 +1,11 @@
 import "../vendor/milosapps-shell/v2/bootstrap.js";
-import { isAmbiguous, normalizeText, searchItems, validateItemIntegrity } from "./search.js";
+import {
+  isAmbiguous,
+  normalizeText,
+  searchItems,
+  suggestedAlternatives,
+  validateItemIntegrity
+} from "./search.js";
 import {
   localizeCatalogs,
   normalizeLanguage,
@@ -171,10 +177,36 @@ function emptyState({ title, message, kicker, type = "idle", query = "" }) {
   elements.resultsTitle.textContent = title;
   elements.status.textContent = message;
   elements.status.hidden = false;
-  elements.results.innerHTML = "";
+  elements.results.innerHTML = type === "no-match" ? renderFallbackGuide() : "";
   elements.resultsSection.dataset.view = type;
   elements.reset.hidden = type === "idle";
   elements.resultsSection.hidden = type === "idle";
+}
+
+function renderFallbackGuide() {
+  const choices = [
+    ["fallbackPlastic", "Plastik", "plastic"],
+    ["fallbackPackaging", "Kunststoffverpackung", "plastic packaging"],
+    ["fallbackElectrical", "Elektrogerät", "electrical device"],
+    ["fallbackPaper", "Papier", "paper"],
+    ["fallbackGlass", "Glas", "glass"],
+    ["fallbackFood", "Lebensmittelrest", "food leftovers"],
+    ["fallbackRubber", "Gummi", "rubber"]
+  ];
+  return `
+    <section class="fallback-guide" aria-labelledby="fallback-title">
+      <div>
+        <p class="section-kicker">${escapeHtml(t("fallbackKicker"))}</p>
+        <h3 id="fallback-title">${escapeHtml(t("fallbackTitle"))}</h3>
+        <p>${escapeHtml(t("fallbackMessage"))}</p>
+      </div>
+      <div class="fallback-options">
+        ${choices.map(([labelKey, queryDe, queryEn]) => `
+          <button type="button" data-fallback-query-de="${escapeHtml(queryDe)}" data-fallback-query-en="${escapeHtml(queryEn)}">
+            ${escapeHtml(t(labelKey))}<span aria-hidden="true">→</span>
+          </button>`).join("")}
+      </div>
+    </section>`;
 }
 
 function renderIdle() {
@@ -231,7 +263,7 @@ function routeIcon(routeType) {
     paths = '<path d="M5 7h14M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/>';
   } else if (routeType.includes("paper")) {
     paths = '<path d="M7 3h7l4 4v14H7Z"/><path d="M14 3v5h4M10 13h5M10 17h5"/>';
-  } else if (routeType === "organic") {
+  } else if (routeType === "organic" || routeType === "food-conditional") {
     paths = '<path d="M19 4C11 4 6 8 6 14c0 3 2 5 5 5 6 0 8-7 8-15Z"/><path d="M5 21c2-6 6-9 11-12"/>';
   } else if (routeType === "container-glass") {
     paths = '<path d="M9 3h6v4l2 3v11H7V10l2-3Z"/><path d="M9 7h6M9 14h6"/>';
@@ -294,7 +326,8 @@ function renderDestination(destination, certainty) {
     matchedClasses.add(keyword.className);
     return `<span class="route-keyword ${keyword.className}">${escapeHtml(part)}</span>`;
   });
-  if (certainty.className === "local" && !matchedClasses.has("local")) {
+  const destinationAlreadySignalsLocal = /örtlich|local/iu.test(String(destination));
+  if (certainty.className === "local" && !matchedClasses.has("local") && !destinationAlreadySignalsLocal) {
     parts.push(`<span class="route-keyword local">${escapeHtml(certainty.label)}</span>`);
   } else if (certainty.className === "caution") {
     parts.push(`<span class="route-keyword caution">${escapeHtml(certainty.label)}</span>`);
@@ -302,7 +335,11 @@ function renderDestination(destination, certainty) {
   return parts.join("");
 }
 
-function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesById, new Date())) {
+function renderItem(
+  item,
+  integrity = validateItemIntegrity(item, state.sourcesById, new Date()),
+  relatedItems = []
+) {
   const route = effectiveRoute(item);
   const certainty = certaintyFor(item, integrity);
   const sources = sourceList(item, route);
@@ -326,6 +363,7 @@ function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesB
       </div>
       <div class="result-copy">
         <p class="answer">${escapeHtml(item.answer)}</p>
+        ${renderRelated(relatedItems)}
         <section class="result-reason"><h4>${escapeHtml(t("why"))}</h4><p>${escapeHtml(item.reason)}</p></section>
         <section class="result-steps"><h4>${escapeHtml(t("nextSteps"))}</h4><ol class="steps">${item.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section>
         <div class="result-details-content">${warning}${integrityWarning(integrity)}${localGuidance(item)}<p class="result-scope">${escapeHtml(scope)}</p></div>
@@ -335,6 +373,25 @@ function renderItem(item, integrity = validateItemIntegrity(item, state.sourcesB
         <div class="result-actions"><milos-share-button data-share-item="${escapeHtml(item.id)}"></milos-share-button><button class="secondary-button" type="button" data-print="${escapeHtml(item.id)}">${escapeHtml(t("print"))}</button></div>
       </div>
     </article>`;
+}
+
+function renderRelated(items) {
+  if (items.length === 0) return "";
+  return `
+    <aside class="related-results" aria-labelledby="related-results-title">
+      <div class="related-intro">
+        <p class="section-kicker">${escapeHtml(t("relatedKicker"))}</p>
+        <h3 id="related-results-title">${escapeHtml(t("relatedTitle"))}</h3>
+        <p>${escapeHtml(t("relatedMessage"))}</p>
+      </div>
+      <div class="related-list">
+        ${items.map((item) => `
+          <button class="related-choice" type="button" data-select-item="${escapeHtml(item.id)}" aria-label="${escapeHtml(t("selectAria", { name: item.name }))}">
+            <span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.route.label)}</small></span>
+            <span aria-hidden="true">→</span>
+          </button>`).join("")}
+      </div>
+    </aside>`;
 }
 
 function sharePayload(item) {
@@ -369,8 +426,14 @@ function configureShareButtons() {
 }
 
 function renderOne(item, options = {}) {
+  const relatedItems = options.relatedItems ?? [];
   state.currentItemId = item.id;
-  state.view = { type: "item", itemId: item.id };
+  state.view = {
+    type: "item",
+    itemId: item.id,
+    query: options.query ?? state.lastQuery,
+    relatedItemIds: relatedItems.map((relatedItem) => relatedItem.id)
+  };
   elements.resultKicker.textContent = t("resultKicker");
   elements.resultKicker.hidden = true;
   elements.resultsTitle.textContent = t("resultTitle");
@@ -378,7 +441,7 @@ function renderOne(item, options = {}) {
   elements.reset.hidden = false;
   elements.resultsSection.hidden = false;
   elements.resultsSection.dataset.view = "item";
-  elements.results.innerHTML = renderItem(item);
+  elements.results.innerHTML = renderItem(item, undefined, relatedItems);
   configureShareButtons();
   if (options.updateUrl !== false) updateUrl(item.id);
   if (options.focus !== false) elements.resultsTitle.focus();
@@ -421,7 +484,12 @@ function runSearch(rawQuery, options = {}) {
     updateUrlForNonSpecificResult(options);
     return;
   }
-  renderOne(results[0].item, options);
+  const primaryItem = results[0].item;
+  renderOne(primaryItem, {
+    ...options,
+    query,
+    relatedItems: suggestedAlternatives(state.items, primaryItem, query)
+  });
 }
 
 function resetSearch({ updateUrl: shouldUpdateUrl = true, focus = true } = {}) {
@@ -449,7 +517,16 @@ function rebuildLocalizedCatalogs() {
 function rerenderView() {
   if (state.view.type === "item") {
     const item = state.items.find((candidate) => candidate.id === state.view.itemId);
-    if (item) renderOne(item, { updateUrl: false, updateHistory: false, focus: false });
+    const relatedItems = (state.view.relatedItemIds ?? [])
+      .map((id) => state.items.find((candidate) => candidate.id === id))
+      .filter(Boolean);
+    if (item) renderOne(item, {
+      updateUrl: false,
+      updateHistory: false,
+      focus: false,
+      query: state.view.query,
+      relatedItems
+    });
     return;
   }
   if (state.view.type === "choices") {
@@ -495,6 +572,11 @@ function bindEvents() {
     button.addEventListener("click", () => runSearch(button.dataset[state.language === "en" ? "queryEn" : "queryDe"]));
   });
   elements.results.addEventListener("click", (event) => {
+    const fallback = event.target.closest("[data-fallback-query-de]");
+    if (fallback) {
+      runSearch(fallback.dataset[state.language === "en" ? "fallbackQueryEn" : "fallbackQueryDe"]);
+      return;
+    }
     const selected = event.target.closest("[data-select-item]");
     if (selected) {
       const item = state.items.find((candidate) => candidate.id === selected.dataset.selectItem);

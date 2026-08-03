@@ -9,7 +9,7 @@ const expectedSourceCommit = process.env.WASTE_GUIDE_SOURCE_COMMIT;
 if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_SOURCE_COMMIT muss den vollständigen, zu veröffentlichenden Quellcommit enthalten.");
 }
-const expectedContentVersion = "2026.08.01-1";
+const expectedContentVersion = "2026.08.03-1";
 const repositoryName = "MilosApps-WelcherMuell";
 const basePath = `/${repositoryName}`;
 const devUrl = `https://drmilos33.github.io${basePath}/`;

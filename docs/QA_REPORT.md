@@ -6,12 +6,48 @@ Der DEV-Stand wurde nach dem ersten lauffähigen Meilenstein in zwei getrennten
 Miteinander-Product-QA-Runden geprüft und verbessert. Der abschließende Stand
 erreichte:
 
-- 79 von 79 Unit-, Inhalts-, Quellen-, Such-, Speicher- und Vertragstests;
-- 29 von 29 Browser-E2E-Prüfungen;
-- 21 von 21 technisch erreichbare amtliche oder kommunale Quellen;
+- 91 von 91 Unit-, Inhalts-, Quellen-, Such-, Speicher- und Vertragstests;
+- 31 von 31 Browser-E2E-Prüfungen;
+- 22 von 22 technisch erreichbare amtliche oder kommunale Quellen;
 - keine Konsolenfehler in Desktop- und Smartphone-Kontexten;
 - keinen horizontalen Überlauf bei 390 px, 640 px und 1440 px Breite sowie
   360 × 800 bei 200 Prozent Textzoom.
+
+## QA-Erweiterung für Inhaltsversion 2026.08.03-1
+
+Nutzerfeedback belegte nicht nur vier fehlende Wörter, sondern einen
+Rankingfehler: `Plastik` behandelte bloße Präfixe wie echte Begriffe und zeigte
+dadurch unter anderem Elektro als Auswahl; `Karten` zog den Pizzakarton über ein
+unscharfes Keyword nach.
+
+### Runde 1: Begriffsebenen und neue Fachfälle
+
+- exakte Namen/Synonyme, Tippfehler, ganze Wortgruppen und Keywords getrennt
+  gewichtet;
+- Keyword-Fuzzy und sachfremde Teilworttreffer entfernt;
+- `Plastik` als Haupttreffer mit kuratierter Verpackungsalternative umgesetzt;
+- amtlich belegte Fachfälle für Gemälde sowie Schokolade/Riegel mit getrennter
+  Betrachtung von Inhalt und Verpackung ergänzt;
+- sichere Eingrenzung nach Material/Funktion für unbekannte Begriffe ergänzt;
+- erste vollständige Matrix: 91/91 Unit-/Vertragstests; in der Browsermatrix
+  war 30/31 fachlich grün, eine zu breit auf die ganze Seite gerichtete
+  Pizzakarton-Prüfung erfasste lediglich den unveränderten Beispiel-Chip.
+
+### Runde 2: visuelle Hierarchie und Regression
+
+- Pizzakarton-Prüfung auf den echten Ergebnisbereich begrenzt;
+- Verpackungsalternative direkt hinter die Plastik-Sofortantwort gezogen;
+- redundantes „Örtlich prüfen“ beim Lebensmittelweg entfernt und Bio-Symbol
+  fachlich passend gesetzt;
+- Desktop-, 390-px- und Fallback-Screenshots visuell geprüft;
+- vollständige Matrix erneut ausgeführt: 91/91 Unit-/Vertragstests,
+  31/31 Browser-E2E und 22/22 Online-Quellenchecks bestanden.
+
+Die Browsermatrix umfasst weiterhin DE/EN, Reload, Tastatur, Screenreader-Nähe,
+44-px-Ziele, Reduced Motion, 390 × 844, 360 × 800 bei 200 Prozent,
+Querformat, langsames Netz, Offline, Teilen/Drucken, direkte URL und strikte
+CSP. Produktionsfreigabe und der separate Shared-Loader-Hold wurden nicht
+verändert.
 
 ## Ausgangslage
 

@@ -59,9 +59,35 @@ describe("redaktioneller Datenvertrag", () => {
       "photos",
       "sports-ball",
       "contact-lenses",
-      "plastic-household-item"
+      "plastic-household-item",
+      "food-and-wrapper",
+      "painting"
     ]) {
       assert.ok(ids.has(id), `${id} fehlt im Alltagsbestand`);
+    }
+  });
+
+  test("kuratierten Suchalternativen verweisen nur auf vorhandene Einträge", () => {
+    const ids = new Set(catalogs.items.items.map((item) => item.id));
+    for (const item of catalogs.items.items) {
+      for (const alternative of item.guidedAlternatives ?? []) {
+        assert.ok(alternative.queries.length > 0, `${item.id}: Suchauslöser fehlt`);
+        for (const itemId of alternative.itemIds) {
+          assert.ok(ids.has(itemId), `${item.id}: unbekannte Alternative ${itemId}`);
+          assert.notEqual(itemId, item.id, `${item.id}: verweist auf sich selbst`);
+        }
+      }
+    }
+  });
+
+  test("Suchabsichten sind begrenzt und maschinenlesbar", () => {
+    for (const item of catalogs.items.items) {
+      for (const rule of item.searchIntents ?? []) {
+        assert.ok(rule.all.length > 0, `${item.id}: Suchabsicht ohne Gruppe`);
+        assert.ok(rule.all.every((group) => group.length > 0), `${item.id}: leere Suchgruppe`);
+        assert.ok(rule.all.flat().every((root) => root.length >= 3), `${item.id}: zu kurze Suchwurzel`);
+        assert.ok(rule.score >= 100 && rule.score <= 125, `${item.id}: unsicherer Intent-Score`);
+      }
     }
   });
 

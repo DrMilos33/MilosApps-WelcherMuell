@@ -102,7 +102,7 @@ describe("public-app-essentials/v1", () => {
     assert.doesNotMatch(appSource, /register\(new URL\("\.\.\/sw\.js"/);
     assert.match(legacyWorkerSource, /self\.registration\.unregister\(\)/);
     assert.match(legacyWorkerSource, /name\.startsWith\("waste-guide-"\)/);
-    assert.match(offlineWorkerSource, /waste-guide-2026-08-03-result-header-v2/);
+    assert.match(offlineWorkerSource, /waste-guide-2026-08-03-search-v3/);
   });
 
   test("stellt den erkannten Gegenstand und Entsorgungsweg vor Details", () => {

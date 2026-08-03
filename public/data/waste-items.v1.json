@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "2026.08.01-1",
-  "contentDate": "2026-08-01",
+  "contentVersion": "2026.08.03-1",
+  "contentDate": "2026-08-03",
   "defaultScope": "Private Haushalte in Deutschland",
   "items": [
     {
@@ -60,6 +60,16 @@
       "name": "Kunststoffverpackung",
       "aliases": ["Plastikverpackung", "Plastikfolie", "Verpackungsfolie", "Shampooflasche", "Spülmittelflasche"],
       "keywords": ["Verpackung", "Kunststoff", "Folie", "Flasche"],
+      "searchIntents": [
+        {
+          "all": [
+            ["Plastik", "Kunststoff", "plastic"],
+            ["Verpack", "Folie", "Tüte", "Beutel", "Flasche", "wrapper", "film", "bag", "bottle"]
+          ],
+          "exclude": ["Elekt", "Batter", "Akku", "electric", "battery"],
+          "score": 118
+        }
+      ],
       "category": "Verpackung",
       "route": {"type": "light-packaging", "label": "Gelbe Tonne, Gelber Sack oder örtliche Wertstoffsammlung"},
       "certainty": "confirmed",
@@ -76,6 +86,8 @@
       "id": "plastic-household-item",
       "name": "Kunststoffgegenstand (keine Verpackung)",
       "aliases": [
+        "Plastik",
+        "Kunststoff",
         "Plastikgegenstand",
         "Plastikblume",
         "Plastikblumen",
@@ -117,6 +129,23 @@
         "Haushaltsgegenstand aus Plastik",
         "Deko aus Plastik"
       ],
+      "guidedAlternatives": [
+        {
+          "queries": ["Plastik", "Kunststoff", "plastic"],
+          "itemIds": ["plastic-packaging"]
+        }
+      ],
+      "searchIntents": [
+        {
+          "all": [["Plastik", "Kunststoff", "plastic"]],
+          "exclude": [
+            "Verpack", "Folie", "Tüte", "Beutel", "Flasche",
+            "Elekt", "Batter", "Akku", "Kabel",
+            "wrapper", "film", "bag", "bottle", "electric", "battery", "cable"
+          ],
+          "score": 108
+        }
+      ],
       "category": "Kunststoff-Nichtverpackung",
       "route": {
         "type": "non-packaging-plastic",
@@ -141,6 +170,50 @@
       ],
       "reviewedAt": "2026-08-01",
       "reviewDue": "2026-10-31"
+    },
+    {
+      "id": "food-and-wrapper",
+      "name": "Schokolade oder Riegel",
+      "aliases": [
+        "Schokolade",
+        "Kinderriegel",
+        "Kinder Riegel",
+        "Schokoriegel",
+        "Müsliriegel",
+        "Süßigkeit",
+        "Bonbon",
+        "Lebensmittelrest",
+        "Essensrest",
+        "Essensreste",
+        "Süßigkeiten",
+        "Essen"
+      ],
+      "keywords": ["Lebensmittel", "Biomüll", "Verpackung", "Riegel", "Süßwaren"],
+      "searchIntents": [
+        {
+          "all": [["Schokolad", "Schoko", "Kinderriegel", "Riegel", "Süßig", "Bonbon", "Lebensmittel", "Essensrest", "chocolat", "snackbar", "candy", "foodleftover"]],
+          "exclude": [],
+          "score": 112
+        }
+      ],
+      "category": "Lebensmittel + Verpackung",
+      "route": {
+        "type": "food-conditional",
+        "label": "Inhalt: örtliche Biotonne · leere Verpackung: nach Material"
+      },
+      "certainty": "check-local",
+      "answer": "Lebensmittel und Hülle trennen: unverpackte Reste nach örtlicher Regel zur Biotonne, die leere Verpackung nach ihrem Material entsorgen.",
+      "reason": "Lebensmittelreste und Verpackungen werden getrennt gesammelt. Bei Riegeln lässt sich der Entsorgungsweg der Hülle nicht am Produktnamen erkennen, sondern nur am tatsächlichen Verpackungsmaterial.",
+      "steps": [
+        "Genießbare Lebensmittel möglichst aufbrauchen oder weitergeben.",
+        "Nicht mehr genießbaren Inhalt aus der Verpackung nehmen und die örtliche Regel für Lebensmittelreste prüfen.",
+        "Die leere Hülle nach Material trennen: Kunststoff, Metall oder Verbund zur örtlichen Leichtverpackung; sauberes unbeschichtetes Papier zum Altpapier."
+      ],
+      "warning": null,
+      "localVariation": "Welche Lebensmittelreste in die Biotonne dürfen, legt der kommunale Entsorgungsträger fest. Verpackungen gehören nie zusammen mit dem Inhalt in die Biotonne.",
+      "sources": ["uba-household-waste", "uba-packaging"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
     },
     {
       "id": "foam-packaging",
@@ -230,7 +303,7 @@
     {
       "id": "glass-container",
       "name": "Glasverpackung",
-      "aliases": ["Altglas", "Glasflasche", "Marmeladenglas", "Konservenglas", "Flasche", "Gläser", "Einwegglas"],
+      "aliases": ["Glas", "Altglas", "Glasflasche", "Marmeladenglas", "Konservenglas", "Flasche", "Gläser", "Einwegglas"],
       "keywords": ["Behälterglas", "Verpackung", "Flasche", "Glascontainer"],
       "category": "Glas",
       "route": {"type": "container-glass", "label": "Altglascontainer – nach Farbe getrennt"},
@@ -264,7 +337,7 @@
     {
       "id": "drinking-glass",
       "name": "Trinkglas",
-      "aliases": ["Weinglas", "Wasserglas", "Kristallglas", "Glasgeschirr", "kaputtes Glas"],
+      "aliases": ["Glas", "Weinglas", "Wasserglas", "Kristallglas", "Glasgeschirr", "kaputtes Glas"],
       "keywords": ["Geschirr", "Glas", "Scherben"],
       "category": "Rest",
       "route": {"type": "residual", "label": "Restmüll – sicher verpackt"},
@@ -281,7 +354,7 @@
     {
       "id": "window-glass",
       "name": "Fensterglas oder Spiegel",
-      "aliases": ["Fensterscheibe", "Glasscheibe", "Spiegelglas", "Spiegel", "Flachglas"],
+      "aliases": ["Glas", "Fensterscheibe", "Glasscheibe", "Spiegelglas", "Spiegel", "Flachglas"],
       "keywords": ["Glas", "Scherben", "Fenster", "Bauabfall"],
       "category": "Rest / Wertstoffhof",
       "route": {"type": "bulky-local", "label": "Kleine Menge Restmüll; größere Menge örtlich prüfen"},
@@ -470,6 +543,13 @@
       "name": "Elektrogerät",
       "aliases": ["Elektroschrott", "Elektroaltgerät", "Handy", "Smartphone", "Toaster", "Föhn", "elektrische Zahnbürste", "elektronisches Spielzeug", "elektrisches Spielzeug", "elektronisches Plastikspielzeug", "Plastikspielzeug mit Elektronik", "Plastikspielzeug mit Batterie", "Spielzeug mit Batterie", "Spielzeugauto mit Batterie", "Kabel", "Ladegerät", "Computer"],
       "keywords": ["Strom", "Stecker", "Batterie", "Elektronik", "E-Schrott"],
+      "searchIntents": [
+        {
+          "all": [["Elekt", "Elektronik", "Batteriespielzeug", "Akkuspielzeug", "electric", "electronic", "batterytoy"]],
+          "exclude": [],
+          "score": 122
+        }
+      ],
       "category": "Elektro",
       "route": {"type": "electrical", "label": "Wertstoffhof oder Rücknahme im Handel"},
       "certainty": "caution",
@@ -485,7 +565,7 @@
     {
       "id": "e-cigarette",
       "name": "E-Zigarette",
-      "aliases": ["Vape", "Einweg Vape", "Einweg E-Zigarette", "Elfbar", "elektronische Zigarette"],
+      "aliases": ["Vape", "Einweg Vape", "Einweg E-Zigarette", "E-Zigaretten", "E Zigaretten", "Elfbar", "elektronische Zigarette"],
       "keywords": ["Elektrogerät", "Akku", "Lithium", "Verdampfer"],
       "category": "Elektro + Akku",
       "route": {"type": "electrical", "label": "Elektro-Rücknahmestelle oder rücknahmepflichtiger Handel"},
@@ -566,6 +646,46 @@
       "sources": ["uba-problem-waste"],
       "reviewedAt": "2026-07-30",
       "reviewDue": "2026-10-30"
+    },
+    {
+      "id": "painting",
+      "name": "Gemälde oder Leinwandbild",
+      "aliases": [
+        "Ölgemälde",
+        "Oelgemälde",
+        "Gemälde",
+        "Leinwandbild",
+        "Bild auf Leinwand",
+        "Kunstdruck",
+        "Bild mit Rahmen",
+        "Wandbild"
+      ],
+      "keywords": ["Kunst", "Leinwand", "Bilderrahmen", "Holzrahmen", "Dekoration"],
+      "searchIntents": [
+        {
+          "all": [["Ölgemäld", "Oelgemäld", "Gemäld", "Leinwand", "Kunstdruck", "oilpainting", "canvaspicture", "artprint"]],
+          "exclude": [],
+          "score": 112
+        }
+      ],
+      "category": "Bild + Rahmen",
+      "route": {
+        "type": "bulky-local",
+        "label": "Erhalten: weitergeben · beschädigt: Material und Größe örtlich prüfen"
+      },
+      "certainty": "check-local",
+      "answer": "Ein erhaltenes Bild weitergeben. Ist es unbrauchbar, Rahmen, Glas, Metall und Leinwand getrennt betrachten und den örtlichen Weg nach Größe prüfen.",
+      "reason": "Gemälde und gerahmte Bilder bestehen häufig aus mehreren Materialien. Kommunale Regeln unterscheiden deshalb nach Rahmenmaterial, trennbaren Bestandteilen und danach, ob das Stück in die Restmülltonne passt.",
+      "steps": [
+        "Erhaltene Bilder verkaufen, verschenken oder einer Wiederverwendung zuführen.",
+        "Nur wenn es gefahrlos möglich ist, Glas, Metallteile und Rahmen voneinander trennen.",
+        "Im örtlichen Abfall-ABC nach Bild, Bilderrahmen oder Leinwand suchen und bei großen Stücken die Sperrmüllregel prüfen."
+      ],
+      "warning": null,
+      "localVariation": "Der AWM München nennt für Bilderrahmen aus Holz oder Kunststoff die Restmülltonne, für Metallrahmen den Wertstoffhof und für sperrige Stücke die Sperrmüllabholung. Das ist keine pauschale Deutschland-Regel.",
+      "sources": ["uba-separation-2026", "munich-awm-picture-frame"],
+      "reviewedAt": "2026-08-03",
+      "reviewDue": "2026-11-03"
     },
     {
       "id": "dried-paint",

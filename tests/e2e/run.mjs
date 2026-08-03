@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 const host = "127.0.0.1";
 const port = 4318;
 const baseUrl = `http://${host}:${port}`;
-const expectedContentVersion = "2026.08.01-1";
+const expectedContentVersion = "2026.08.03-1";
 const artifacts = new URL("../../test-results/qa/", import.meta.url);
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -392,6 +392,10 @@ try {
       ["Joghurbecher", "Joghurtbecher"],
       ["Akkus", "Batterie oder Akku"],
       ["Plastikschüssel", "Plastikschüssel"],
+      ["Ölgemälde", "Gemälde oder Leinwandbild"],
+      ["Ölgemäde", "Gemälde oder Leinwandbild"],
+      ["Kinderriegel", "Schokolade oder Riegel"],
+      ["schokolade", "Schokolade oder Riegel"],
       ["elektrische Zahnbürste", "Elektrogerät"],
       ["elektronisches Plastikspielzeug", "Elektrogerät"],
       ["aufgeblähter Handyakku", "Aufgeblähter oder beschädigter Akku"]
@@ -401,6 +405,23 @@ try {
       await desktopPage.getByRole("heading", { name: heading, exact: true }).waitFor();
     }
     await assert.doesNotReject(() => desktopPage.getByText(/Bei Rauch, Zischen/).waitFor());
+  });
+
+  await check("Desktop: Plastik erhält einen sinnvollen Haupttreffer statt Elektro-Raten", async () => {
+    await submitSearch(desktopPage, "Plastik");
+    await desktopPage.getByRole("heading", { name: "Plastik", exact: true }).waitFor();
+    await desktopPage.getByRole("heading", { name: "Meintest du etwas anderes?", exact: true }).waitFor();
+    assert.equal(await desktopPage.getByRole("button", { name: "Kunststoffverpackung auswählen" }).count(), 1);
+    assert.equal(await desktopPage.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
+    const relatedTop = await desktopPage.locator(".related-results").evaluate((element) => element.getBoundingClientRect().top);
+    const reasonTop = await desktopPage.locator(".result-reason").evaluate((element) => element.getBoundingClientRect().top);
+    assert.ok(relatedTop < reasonTop, "Die kuratierte Alternative muss vor den langen Erläuterungen stehen.");
+    await desktopPage.getByRole("button", { name: "Kunststoffverpackung auswählen" }).click();
+    await desktopPage.getByRole("heading", { name: "Kunststoffverpackung", exact: true }).waitFor();
+
+    await submitSearch(desktopPage, "Karten");
+    await desktopPage.getByRole("heading", { name: "Karton", exact: true }).waitFor();
+    assert.equal(await desktopPage.locator(".results-grid").getByText("Pizzakarton", { exact: true }).count(), 0);
   });
 
   await check("Desktop: Mehrdeutigkeit wird nicht geraten", async () => {
@@ -420,6 +441,7 @@ try {
 
     await submitSearch(desktopPage, "quantenmüll xyz");
     await desktopPage.getByRole("heading", { name: /Kein sicherer Treffer/ }).waitFor();
+    await desktopPage.getByRole("heading", { name: "Was trifft am ehesten zu?", exact: true }).waitFor();
     assert.doesNotMatch(desktopPage.url(), /\?item=/);
     await desktopPage.goBack();
     await desktopPage.getByRole("heading", { name: "Glasverpackung", exact: true }).waitFor();
@@ -427,6 +449,13 @@ try {
     await submitSearch(desktopPage, "x");
     await desktopPage.getByRole("heading", { name: "Bitte etwas genauer" }).waitFor();
     assert.doesNotMatch(desktopPage.url(), /\?item=/);
+  });
+
+  await check("Desktop: unbekannte Gegenstände lassen sich sicher eingrenzen", async () => {
+    await submitSearch(desktopPage, "unbekannter Haushaltsfund");
+    await desktopPage.getByRole("button", { name: /Plastikgegenstand/ }).click();
+    await desktopPage.getByRole("heading", { name: "Plastik", exact: true }).waitFor();
+    await assert.doesNotReject(() => desktopPage.getByText(/nicht automatisch in Gelbe Tonne/i).waitFor());
   });
 
   await check("Desktop: regionale Korrektur bleibt auf die geöffnete Seite begrenzt", async () => {

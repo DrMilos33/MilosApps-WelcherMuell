@@ -5,6 +5,7 @@ import {
   isAmbiguous,
   normalizeText,
   searchItems,
+  suggestedAlternatives,
   validateItemIntegrity
 } from "../../src/search.js";
 import { loadCatalogs } from "./fixtures.mjs";
@@ -21,7 +22,7 @@ before(async () => {
 function first(query) {
   return searchItems(items, query, {
     sourcesById,
-    asOf: new Date("2026-08-01T00:00:00Z")
+    asOf: new Date("2026-08-03T00:00:00Z")
   })[0]?.item.id;
 }
 
@@ -81,7 +82,15 @@ describe("Suchqualität", () => {
     ["Kleiderbügel aus Plastik", "plastic-household-item", "weiterer Kunststoff-Haushaltsgegenstand"],
     ["Plastikspielzeug", "plastic-household-item", "Spielzeug ohne Elektronik"],
     ["elektronisches Plastikspielzeug", "electrical-device", "Elektronik schlägt Materialroute"],
-    ["Spielzeugauto mit Batterie", "electrical-device", "Batterie schlägt Materialroute"]
+    ["Spielzeugauto mit Batterie", "electrical-device", "Batterie schlägt Materialroute"],
+    ["Plastikflasche", "plastic-packaging", "Material plus Verpackungsform"],
+    ["kaputte Plastikgabel", "plastic-household-item", "unbekannter Kunststoffgegenstand über Materialabsicht"],
+    ["Batteriespielzeug", "electrical-device", "Elektronikabsicht in einem zusammengesetzten Wort"],
+    ["Ölgemälde", "painting", "Gemälde als eigener Gegenstand"],
+    ["Ölgemäde", "painting", "Tippfehler im Gemälde"],
+    ["Kinderriegel", "food-and-wrapper", "Alltagsname eines Schokoriegels"],
+    ["Schokolade", "food-and-wrapper", "Lebensmittel und Hülle getrennt betrachten"],
+    ["leere Schokoriegelverpackung", "food-and-wrapper", "zusammengesetzter Produkt- und Verpackungsbegriff"]
   ];
 
   for (const [query, expected, label] of cases) {
@@ -100,15 +109,41 @@ describe("Suchqualität", () => {
     assert.equal(isAmbiguous(results), true);
   });
 
-  test("der reine Materialbegriff Plastik trennt Verpackung und Gegenstand", () => {
+  test("der reine Materialbegriff Plastik zeigt einen Haupttreffer und nur die passende Alternative", () => {
     const results = searchItems(items, "Plastik", {
       sourcesById,
-      asOf: new Date("2026-08-01T00:00:00Z")
+      asOf: new Date("2026-08-03T00:00:00Z")
     });
     const ids = results.map(({ item }) => item.id);
+    assert.equal(results[0].item.id, "plastic-household-item");
     assert.ok(ids.includes("plastic-packaging"));
     assert.ok(ids.includes("plastic-household-item"));
-    assert.equal(isAmbiguous(results), true);
+    assert.ok(!ids.includes("electrical-device"));
+    assert.equal(isAmbiguous(results), false);
+    assert.deepEqual(
+      suggestedAlternatives(items, results[0].item, "Plastik").map((item) => item.id),
+      ["plastic-packaging"]
+    );
+  });
+
+  test("Karten wird als Karton-Tippfehler verstanden, aber nie zum Pizzakarton erweitert", () => {
+    const results = searchItems(items, "Karten", {
+      sourcesById,
+      asOf: new Date("2026-08-03T00:00:00Z")
+    });
+    assert.equal(results[0].item.id, "cardboard");
+    assert.ok(!results.some(({ item }) => item.id === "pizza-box"));
+    assert.equal(isAmbiguous(results), false);
+  });
+
+  test("eingebettete Teilwörter erzeugen keine sachfremden Flaschen- oder Aschetreffer", () => {
+    const ids = searchItems(items, "Plastikflasche", {
+      sourcesById,
+      asOf: new Date("2026-08-03T00:00:00Z")
+    }).map(({ item }) => item.id);
+    assert.equal(ids[0], "plastic-packaging");
+    assert.ok(!ids.includes("glass-container"));
+    assert.ok(!ids.includes("cold-ash"));
   });
 
   test("generisches Keyword verdrängt keinen exakten Batterie-Treffer", () => {

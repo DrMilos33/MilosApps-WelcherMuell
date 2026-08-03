@@ -2,9 +2,9 @@
 
 ## Inhaltsstand
 
-- Inhaltsversion: `2026.08.01-1`
-- redaktionell erweitert: 01.08.2026
-- Umfang: 47 Entsorgungseinträge, 21 Quellen
+- Inhaltsversion: `2026.08.03-1`
+- redaktionell erweitert: 03.08.2026
+- Umfang: 49 Entsorgungseinträge, 22 Quellen
 - früheste erneute Prüfung: 30.09.2026
 - allgemeine Geltung: private Haushalte in Deutschland
 - regionale Ergänzungen: Berlin, Hamburg und München
@@ -29,11 +29,20 @@ Fachliche Aussagen stammen ausschließlich von:
   gebrauchten Spritzen.
 
 UBA- und BMG-Rechteseiten sind zusätzlich als Lizenznachweis katalogisiert.
-Am 01.08.2026 beantworteten alle 21 URLs den automatisierten Live-Check mit
+Am 03.08.2026 beantworteten alle 22 URLs den automatisierten Live-Check mit
 HTTP 200. Für die Erweiterung um kleine Gummi- und Alltagsgegenstände wurden
 insbesondere das Abfalllexikon des Abfallwirtschaftsbetriebs München sowie die
 UBA-Hinweise zu Haushaltsabfällen geprüft. Autoreifen sind anhand der eigenen
 UBA-Fachseite ausdrücklich vom gewöhnlichen Haus- und Sperrmüllfall getrennt.
+
+Für Schokolade, Riegel und andere Lebensmittelreste werden die UBA-Regeln zu
+Bioabfall und restentleerten Verpackungen gemeinsam ausgewertet: Inhalt und
+Hülle werden getrennt, der Verpackungsweg richtet sich nach dem tatsächlichen
+Material und die kommunale Biotonnenregel bleibt sichtbar. Für Gemälde belegt
+die allgemeine UBA-Abfallhierarchie die Weiterverwendung und den örtlichen
+Prüfschritt; die neue AWM-Detailseite zu Bilderrahmen zeigt eng für München,
+dass Rahmenmaterial und Größe unterschiedliche Wege auslösen. Daraus wird
+keine bundesweite Rahmentonne abgeleitet.
 
 Für Kunststoffgegenstände ohne Verpackungsfunktion belegen vier getrennte
 amtliche Quellen die Gültigkeitsgrenze: Das UBA ordnet Gelbe Tonne und Gelben
