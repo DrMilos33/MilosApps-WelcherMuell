@@ -189,11 +189,18 @@ function renderFallbackGuide() {
   const choices = [
     ["fallbackPlastic", "Plastik", "plastic"],
     ["fallbackPackaging", "Kunststoffverpackung", "plastic packaging"],
+    ["fallbackMetal", "Metall", "metal"],
+    ["fallbackMetalPackaging", "Metallverpackung", "metal packaging"],
+    ["fallbackWood", "Holz", "wood"],
     ["fallbackElectrical", "Elektrogerät", "electrical device"],
     ["fallbackPaper", "Papier", "paper"],
     ["fallbackGlass", "Glas", "glass"],
     ["fallbackFood", "Lebensmittelrest", "food leftovers"],
-    ["fallbackRubber", "Gummi", "rubber"]
+    ["fallbackRubber", "Gummi", "rubber"],
+    ["fallbackConstruction", "Bauschutt", "construction rubble"],
+    ["fallbackLeather", "Leder", "leather"],
+    ["fallbackCork", "Kork", "cork"],
+    ["fallbackComposite", "Mischmaterial", "mixed material"]
   ];
   return `
     <section class="fallback-guide" aria-labelledby="fallback-title">
@@ -205,7 +212,7 @@ function renderFallbackGuide() {
       <div class="fallback-options">
         ${choices.map(([labelKey, queryDe, queryEn]) => `
           <button type="button" data-fallback-query-de="${escapeHtml(queryDe)}" data-fallback-query-en="${escapeHtml(queryEn)}">
-            ${escapeHtml(t(labelKey))}<span aria-hidden="true">→</span>
+            <span>${escapeHtml(t(labelKey))}</span><span aria-hidden="true">→</span>
           </button>`).join("")}
       </div>
     </section>`;
@@ -302,6 +309,8 @@ const ROUTE_KEYWORDS = [
   { text: "hazardous waste", className: "caution" },
   { text: "Restmüll", className: "residual" },
   { text: "residual waste", className: "residual" },
+  { text: "Wertstofftonne", className: "collection" },
+  { text: "recycling bin", className: "collection" },
   { text: "Wertstoffhof", className: "collection" },
   { text: "recycling centre", className: "collection" },
   { text: "Gelbe Tonne", className: "collection" },

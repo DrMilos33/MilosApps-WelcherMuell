@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.08.03-3",
+  "catalogVersion": "2026.08.03-4",
   "verifiedAt": "2026-08-03",
   "editorialUse": "Die App übernimmt keinen externen Datensatz, keine Logos, Bilder oder längeren Textpassagen. Entsorgungstatsachen wurden aus amtlichen Seiten geprüft und eigenständig kurz formuliert. Jeder Hinweis verlinkt die Quelle.",
   "sources": [
@@ -243,6 +243,66 @@
       "reviewDue": "2026-11-03",
       "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Es werden keine Texte, Bilder oder Datensätze kopiert; die materialspezifische örtliche Auskunft ist eigenständig zusammengefasst und verlinkt.",
       "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München; eigenständige Zusammenfassung."
+    },
+    {
+      "id": "hamburg-srh-metals",
+      "title": "Verpackungen, Kunststoff & Metall",
+      "publisher": "Stadtreinigung Hamburg",
+      "url": "https://www.stadtreinigung.hamburg/kunststoff-metall/",
+      "scope": "Hamburg; Verpackungen und haushaltsübliche, nicht verunreinigte Nichtverpackungen aus Metall oder Kunststoff",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-03",
+      "reviewDue": "2026-11-03",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Es werden keine Texte, Bilder oder Listen kopiert; die regionale Annahmegrenze ist eigenständig zusammengefasst und verlinkt.",
+      "attribution": "Quelle: Stadtreinigung Hamburg; regionale Metall- und Kunststoffregel eigenständig zusammengefasst."
+    },
+    {
+      "id": "hamburg-srh-recycling-centres",
+      "title": "Recyclinghöfe",
+      "publisher": "Stadtreinigung Hamburg",
+      "url": "https://www.stadtreinigung.hamburg/entsorgung-recycling/recyclinghoefe",
+      "scope": "Hamburg; Annahme unter anderem von Schrott und kleinen Mengen Bauschutt aus privaten Haushalten",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-03",
+      "reviewDue": "2026-11-03",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Keine Text-, Bild- oder Listenübernahme; nur eigenständige Zusammenfassung der Annahmekategorien.",
+      "attribution": "Quelle: Stadtreinigung Hamburg; Annahmekategorien eigenständig zusammengefasst."
+    },
+    {
+      "id": "munich-awm-wood",
+      "title": "Holz – Abfalllexikon",
+      "publisher": "Abfallwirtschaftsbetrieb München (AWM)",
+      "url": "https://www.awm-muenchen.de/abfall-entsorgen/abfalllexikon/detailansicht-lexikoneintrag?cHash=10afac0648d7d2a7a96c5e691cfe8db7&tx_awmabfalllexikon_lexikoneintrag%5Beintrag%5D=376&tx_awmabfalllexikon_pi1%5Baction%5D=detail&tx_awmabfalllexikon_pi1%5Bcontroller%5D=Lexikoneintrag",
+      "scope": "Stadt München; Holz aus privaten Haushalten einschließlich lackiertem und mit Holzschutzmitteln behandeltem Holz",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-03",
+      "reviewDue": "2026-11-03",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Keine Text- oder Bildübernahme; Annahme- und Behandlungsgrenzen eigenständig zusammengefasst.",
+      "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München; Holzannahme eigenständig zusammengefasst."
+    },
+    {
+      "id": "munich-awm-construction",
+      "title": "Bauschutt – Abfalllexikon",
+      "publisher": "Abfallwirtschaftsbetrieb München (AWM)",
+      "url": "https://www.awm-muenchen.de/abfall-entsorgen/abfalllexikon/detailansicht-lexikoneintrag/bauschutt",
+      "scope": "Stadt München; sortenreiner Bauschutt aus privaten Haushalten und kommunale Mengengrenzen",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-03",
+      "reviewDue": "2026-11-03",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Keine Text-, Bild- oder Listenübernahme; Material- und Mengengrenzen eigenständig zusammengefasst.",
+      "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München; Bauschuttgrenzen eigenständig zusammengefasst."
+    },
+    {
+      "id": "munich-awm-leather",
+      "title": "Leder – Abfalllexikon",
+      "publisher": "Abfallwirtschaftsbetrieb München (AWM)",
+      "url": "https://www.awm-muenchen.de/abfall-entsorgen/abfalllexikon/detailansicht-lexikoneintrag/leder",
+      "scope": "Stadt München; Lederreste und brauchbare Lederbekleidung aus privaten Haushalten",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-03",
+      "reviewDue": "2026-11-03",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Keine Text- oder Bildübernahme; örtliche Rest- und Textilsammelwege eigenständig zusammengefasst.",
+      "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München; Lederwege eigenständig zusammengefasst."
     },
     {
       "id": "uba-paper-guide",

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "language": "en",
-  "contentVersion": "2026.08.03-3",
+  "contentVersion": "2026.08.03-4",
   "contentDate": "2026-08-03",
   "editorialUse": "The app does not reproduce an external dataset, logos, images or lengthy passages. Disposal facts were checked against official pages and rewritten as concise original summaries. Every recommendation links to its source.",
   "items": {
@@ -646,7 +646,7 @@
     },
     "household-chemicals": {
       "name": "Household chemicals",
-      "aliases": ["chemicals", "solvents", "pesticides", "insecticide", "adhesive", "cleaner residue", "acid", "alkali"],
+      "aliases": ["chemicals", "solvents", "pesticides", "insecticide", "adhesive", "cleaner residue", "acid", "alkali", "liquid paint", "liquid paint residue", "varnish residue", "ink"],
       "keywords": ["hazardous waste", "pollutant", "poison", "dangerous substance"],
       "category": "Hazardous waste",
       "route": {
@@ -904,6 +904,151 @@
       ],
       "localVariation": "Manufacturer or optician take-back schemes may also be available locally."
     },
+    "metal-packaging": {
+      "name": "Metal packaging",
+      "aliases": ["metal packages", "iron packaging", "steel packaging", "aluminium packaging", "aluminum packaging", "metal wrapper", "metal packaging container"],
+      "keywords": ["packaging", "metal", "tinplate", "aluminium"],
+      "category": "Metal packaging",
+      "route": {
+        "label": "Normally empty: yellow bin, yellow bag or local packaging collection"
+      },
+      "answer": "If the metal item is normally empty sales packaging, place it in the local lightweight-packaging collection.",
+      "reason": "Metal packaging is collected separately across Germany. This does not automatically apply to metal products that are not packaging.",
+      "steps": [
+        "Empty the packaging normally; rinsing is not required.",
+        "Separate parts that come apart easily.",
+        "Use the yellow bin, yellow bag or locally named packaging collection."
+      ],
+      "warning": "Pressure containers, gas cylinders, paint or chemical containers that are not empty, and electrical devices need a different route.",
+      "localVariation": "The service may be called a yellow bin, yellow bag, recycling bin or recycling island. Non-packaging metal objects are collected differently by municipalities."
+    },
+    "metal-household-item": {
+      "name": "Iron or metal",
+      "aliases": ["iron", "metal", "metals", "steel", "stainless steel", "aluminium", "aluminum", "copper", "brass", "bronze", "tin", "cast iron", "iron bar", "metal bar", "sheet steel", "sheet metal", "piece of metal", "metal part", "scrap metal", "aluminium part", "aluminum part", "copper pipe", "copper wire", "metal pot", "metal pan", "metal cutlery", "metal tool", "screw", "screws", "nail", "nails", "wire", "metal fitting", "metal hanger", "bicycle rim"],
+      "keywords": ["scrap metal", "recyclable", "non-packaging", "recycling centre"],
+      "category": "Non-packaging metal",
+      "route": {
+        "label": "Small: local recycling bin if accepted · otherwise or large: recycling centre"
+      },
+      "answer": "For iron or metal, first check whether it is packaging, how large it is and whether it contains electronics. Metal products that are not packaging belong in a recycling bin only where the local authority explicitly accepts them; otherwise use a recycling centre.",
+      "reason": "Yellow bins and yellow bags collect metal packaging nationwide. Municipal systems handle non-packaging metal differently, so recycling bins and recycling centres do not follow one nationwide rule.",
+      "steps": [
+        "Reuse or pass on metal objects that are still usable.",
+        "Check whether it is normally empty packaging, an electrical device or an item containing a battery.",
+        "Use a local recycling bin for a small safe metal item only if the authority explicitly accepts it.",
+        "Take large, heavy or unaccepted metal parts to a recycling centre or municipal scrap collection."
+      ],
+      "warning": "Do not treat gas or pressure containers, batteries, electrical devices, ammunition, sharp parts or metal contaminated with oil, paint or chemicals as ordinary scrap metal.",
+      "localVariation": "Hamburg accepts many household metal objects in its yellow recycling bin. Munich directs iron, metal and non-ferrous metal parts to recycling centres. Without a location, a local check is therefore essential."
+    },
+    "wood-household-item": {
+      "name": "Wooden object",
+      "aliases": ["wood", "wooden board", "wooden boards", "board", "plank", "wooden slat", "slat", "wooden crate", "wooden box", "piece of wood", "wood scraps", "plywood", "chipboard", "wooden furniture", "wooden door", "parquet", "wooden shelf"],
+      "keywords": ["waste wood", "construction timber", "furniture part", "recycling centre"],
+      "category": "Wood / waste wood",
+      "route": {
+        "label": "Pass on or check the local waste-wood/recycling-centre route"
+      },
+      "answer": "Reuse wood where possible. For boards, crates, furniture parts and larger pieces, use the local recycling-centre or bulky-waste route.",
+      "reason": "Municipal services set acceptance limits and distinguish untreated, painted and wood-preservative-treated wood.",
+      "steps": [
+        "Remove fittings, glass and other parts that come off easily.",
+        "Identify the size, amount and treatment of the wood.",
+        "Check the local waste guide for waste wood, wood or bulky waste."
+      ],
+      "warning": "Construction or garden wood treated with preservatives, burnt wood and contaminated parts may need special acceptance sites. Do not burn them yourself.",
+      "localVariation": "Munich accepts many wood types at recycling centres and separates treated outdoor wood. Other municipalities may draw different boundaries for small items, bulky waste and waste wood."
+    },
+    "mineral-construction-waste": {
+      "name": "Stone or construction rubble",
+      "aliases": ["construction rubble", "stone", "stones", "concrete", "piece of concrete", "brick", "tiles", "mortar", "cement", "gypsum", "gravel", "sand", "plaster", "aerated concrete", "sink", "toilet bowl"],
+      "keywords": ["mineral", "construction waste", "recycling centre", "rubble container"],
+      "category": "Mineral construction waste",
+      "route": {
+        "label": "Keep sorted and take an accepted amount to the local recycling centre"
+      },
+      "answer": "Keep clean mineral rubble separate and check acceptance, quantity limits and possible fees with the local recycling centre.",
+      "reason": "Stone, concrete, brick, tiles and similar mineral waste require separate acceptance. Municipalities limit amounts and distinguish clean rubble from mixed waste.",
+      "steps": [
+        "Sort out wood, metal, plastic, cables and other foreign materials.",
+        "Do not mix it with unknown or potentially hazardous waste.",
+        "Check acceptance conditions and maximum amounts before transport."
+      ],
+      "warning": "Asbestos, mineral wool, tar-containing materials, soot-contaminated stones and contaminated soil are not ordinary rubble. Do not break them up or transport them without expert guidance.",
+      "localVariation": "Munich accepts sorted rubble from private households only in limited amounts at recycling centres. Limits, fees and excluded substances differ locally."
+    },
+    "leather-household-item": {
+      "name": "Leather object",
+      "aliases": ["leather", "leather scraps", "piece of leather", "leather belt", "leather bag", "leather jacket", "leather shoes", "leather gloves", "faux leather"],
+      "keywords": ["clothing", "material scrap", "reuse", "residual waste"],
+      "category": "Leather / clothing",
+      "route": {
+        "label": "Usable: pass on · unusable: check the local residual/textile route"
+      },
+      "answer": "Pass on usable leather goods. Small unusable leather scraps may be residual waste locally; check the municipal textile or recycling route for clothing and larger items.",
+      "reason": "Reuse is preferable to disposal. Municipal collections differ for wearable clothing, material scraps, faux leather and large objects.",
+      "steps": [
+        "Check whether the bag, shoes, belt or clothing can still be used.",
+        "Place only clean, dry and wearable items in an approved collection.",
+        "Look up unusable or large leather items in the local waste guide."
+      ],
+      "warning": "Do not treat leather contaminated with oil, solvents or chemicals as ordinary material scraps.",
+      "localVariation": "Munich lists leather scraps as residual waste and usable leather clothing for its municipal textile collection. Other municipalities may differ."
+    },
+    "cork-household-item": {
+      "name": "Cork",
+      "aliases": ["cork", "corks", "bottle cork", "wine cork", "cork sheet", "cork flooring", "cork scraps", "natural cork"],
+      "keywords": ["bottle stopper", "flooring", "natural material", "recycling centre"],
+      "category": "Cork",
+      "route": {
+        "label": "Check for a local cork collection or recycling centre"
+      },
+      "answer": "Collect natural cork separately where possible and use a local cork collection or recycling centre. Flooring and composite cork follow different quantity and material rules.",
+      "reason": "Cork can be recovered separately, but collection points and acceptance of cork flooring or coated boards are not uniform nationwide.",
+      "steps": [
+        "Keep plastic stoppers and heavily coated parts separate.",
+        "Distinguish bottle corks from flooring or construction cork.",
+        "Check the local waste guide for cork or bottle corks."
+      ],
+      "warning": "Do not treat cork flooring, insulation cork or glued boards like loose bottle corks without checking locally.",
+      "localVariation": "Hamburg and Munich list recycling centres for cork or bottle corks; other municipalities may offer dedicated collections or different routes."
+    },
+    "wax-household-item": {
+      "name": "Wax or candle remains",
+      "aliases": ["wax", "candle", "candles", "candle stub", "candle remains", "candle wax", "wax scraps", "tea-light wax"],
+      "keywords": ["candle stub", "paraffin", "stearin", "residual waste"],
+      "category": "Wax",
+      "route": {
+        "label": "Reuse · small remains are usually residual waste; a local collection may exist"
+      },
+      "answer": "Reuse clean wax for new candles where possible. Small unusable remains may be residual waste locally; use any available municipal wax collection first.",
+      "reason": "Wax is not organic waste and is not collected as packaging. Voluntary and municipal collection routes differ locally.",
+      "steps": [
+        "Separate the wick, glass, metal shell and decorations by material.",
+        "Reuse clean remains or place them in an available collection.",
+        "Without a collection, dispose of small amounts according to the local rule."
+      ],
+      "warning": "Candle jars do not automatically belong in bottle-glass containers. Treat metal shells and electric LED candles according to their function.",
+      "localVariation": "Munich lists recycling centres or residual waste for wax and candles. Other municipalities may provide collection campaigns."
+    },
+    "composite-household-item": {
+      "name": "Composite or mixed material",
+      "aliases": ["composite material", "composite", "mixed material", "material mix", "multilayer material", "fiberglass", "fibreglass", "carbon-fibre part", "resin part", "coated material"],
+      "keywords": ["material mix", "inseparable", "non-packaging", "check locally"],
+      "category": "Composite material",
+      "route": {
+        "label": "Identify function, size and main material · check locally"
+      },
+      "answer": "For inseparable material combinations, the actual object determines the route. Packaging, electrical devices, construction waste and small household objects can require completely different handling.",
+      "reason": "Without the product function and local collection system, there is no reliable general bin for composite materials.",
+      "steps": [
+        "Check whether the item is packaging, electrical equipment or construction waste.",
+        "Separate parts that come apart easily only when it is safe.",
+        "Look up the size, main material and actual object in the local waste guide."
+      ],
+      "warning": "Do not work on fibre dust, unknown resins, liquids or damaged components. Seek expert guidance if there may be a health hazard.",
+      "localVariation": "Municipalities distinguish by object, size and available processing. The app therefore does not claim one nationwide bin."
+    },
     "needle": {
       "name": "Syringe or needle",
       "aliases": ["needle", "injection needle", "insulin syringe", "used syringe", "lancet", "pen needle"],
@@ -1043,6 +1188,36 @@
       "publisher": "Munich municipal waste management (AWM)",
       "scope": "City of Munich; reuse and disposal routes for picture frames by material and size",
       "attribution": "Local information: Munich municipal waste management; original summary."
+    },
+    "hamburg-srh-metals": {
+      "title": "Packaging, plastics and metal",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; packaging and ordinary uncontaminated non-packaging items made of metal or plastic",
+      "attribution": "Source: Hamburg municipal cleaning service; regional metal and plastic rule independently summarised."
+    },
+    "hamburg-srh-recycling-centres": {
+      "title": "Recycling centres",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; acceptance including scrap metal and small quantities of rubble from private households",
+      "attribution": "Source: Hamburg municipal cleaning service; acceptance categories independently summarised."
+    },
+    "munich-awm-wood": {
+      "title": "Wood — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; household wood including painted wood and wood treated with preservatives",
+      "attribution": "Local information: Munich municipal waste management; wood acceptance independently summarised."
+    },
+    "munich-awm-construction": {
+      "title": "Construction rubble — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; sorted household construction rubble and municipal quantity limits",
+      "attribution": "Local information: Munich municipal waste management; rubble limits independently summarised."
+    },
+    "munich-awm-leather": {
+      "title": "Leather — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; leather scraps and usable leather clothing from private households",
+      "attribution": "Local information: Munich municipal waste management; leather routes independently summarised."
     },
     "uba-paper-guide": {
       "title": "Paper — protecting forests and the climate",
