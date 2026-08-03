@@ -68,9 +68,12 @@ Migrationspfad, der eine frühere automatische Registrierung und deren
 
 Namen und Synonyme haben mehr Gewicht als generische Schlagwörter. Die Suche
 normalisiert deutsche Umlaute und `ß`, entfernt irrelevante Fragewörter und
-verwendet Damerau-Levenshtein-Distanzen für kleine Tippfehler. Niedrige
-Trefferwerte werden verworfen. Nahe Treffer werden als Auswahl gezeigt, statt
-eine Tonne zu raten.
+verwendet Damerau-Levenshtein-Distanzen zur Kandidatensuche. Treffer werden in
+zwei Vertrauensstufen getrennt: Exakt-, Leerzeichen-, Ganzphrasen- und kuratierte
+Intent-Treffer dürfen Ergebnisse öffnen; Präfix-, Teil-, Token- und
+Tippfehlerkandidaten dürfen nur als bestätigbares „Meintest du …?“ erscheinen.
+Existiert ein belastbarer Treffer, werden schwächere Kandidaten vor der Ausgabe
+vollständig verworfen.
 
 Zusammengesetzte und getrennte Schreibweisen werden zusätzlich ohne Leerzeichen
 verglichen, sodass etwa `Plastikblume` und `Plastik Blume` denselben redaktionell
@@ -78,6 +81,13 @@ geprüften Begriff treffen. Das erweitert nur die Schreibweise; neue fachliche
 Bedeutungen entstehen weiterhin ausschließlich über versionierte Synonyme und
 Einträge. Materialwörter wie `Plastik` bleiben mehrdeutig, wenn Verpackung und
 Nichtverpackung unterschiedliche Wege haben.
+
+Die Korrekturkandidaten verwenden neben Distanz und Längenverhältnis einen
+sprachlichen Anker: stabile Präfixe, echte Nachbarvertauschungen und eng
+begrenzte Einfüge-/Auslassmuster. Ein bestätigter Korrekturbutton startet danach
+eine neue exakte Suche; die unscharfe Eingabe selbst erhält keine Item-ID und
+keinen Entsorgungsweg. Damit bleibt hohe Wiederauffindbarkeit von der
+fachlichen Autorität einer Antwort getrennt.
 
 Eine konkrete Ergebnis-URL enthält nur die stabile Item-ID, zum Beispiel
 `/?item=battery`. Kurze, unbekannte oder mehrdeutige Zustände entfernen eine
@@ -123,7 +133,7 @@ Port `4318` ist fest. Der Server meldet auf `/healthz`:
   "status": "ok",
   "appKey": "waste-guide",
   "environment": "DEV",
-  "contentVersion": "2026.08.03-2",
+  "contentVersion": "2026.08.03-3",
   "productionApproved": false
 }
 ```

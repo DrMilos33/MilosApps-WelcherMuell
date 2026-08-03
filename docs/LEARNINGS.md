@@ -476,19 +476,39 @@ Suchqualität oder redaktionelle Aktualität.
 Editierdistanz allein verwechselt kurze, häufige Wörter leicht mit fachlich
 gefährlichen Kategorien. `Poster` und `Toaster` liegen nur zwei Änderungen
 auseinander; eine großzügige Distanzschwelle machte daraus fälschlich ein
-Elektrogerät. Fuzzy-Korrekturen werden deshalb nur noch akzeptiert, wenn die
-ersten drei normalisierten Zeichen stabil bleiben; zusätzlich ist ein einzelner
-echter benachbarter Buchstabendreher erlaubt. Kuratierte Alltagsnamen schließen
-bekannte Fälle.
+Elektrogerät. Fuzzy-Kandidaten werden deshalb nur noch gebildet, wenn ein
+sprachlicher Anker wie ein stabiler Wortanfang oder ein echter benachbarter
+Buchstabendreher vorliegt. Kuratierte Alltagsnamen schließen bekannte Fälle.
 
 Evidenz: Vor der Korrektur erhielten `Poster`, `Polster`, `Raster` und `Koster`
 den Elektro-Score 87. Danach führen `Poster`, `Plakat`, `Postre` und `Psoter`
 zum eigenen Materialcheck, während die drei unverwandten Wörter keinen Treffer
 erzeugen; alle bestehenden Tippfehlerregressionen bleiben grün.
 
-Gültigkeitsgrenze: Der Präfixanker reduziert semantisch falsche Fuzzy-Treffer,
-ersetzt aber keinen redaktionellen Eintrag für einen tatsächlich häufigen
-Gegenstand und keine Material- oder Sicherheitsprüfung.
+Gültigkeitsgrenze: Der sprachliche Anker reduziert semantisch falsche
+Fuzzy-Kandidaten, ersetzt aber keinen redaktionellen Eintrag für einen
+tatsächlich häufigen Gegenstand und keine Material- oder Sicherheitsprüfung.
+
+### Wiederfinden und fachlich antworten sind zwei getrennte Rechte
+
+Eine hohe Ähnlichkeit darf beim Suchen helfen, aber keinen Entsorgungsweg
+autorisieren. Exakte Synonyme und kuratierte Suchabsichten dürfen eine Antwort
+öffnen; Präfix-, Teilwort- und Tippfehlerkandidaten zeigen nur einen
+bestätigbaren „Meintest du …?“-Schritt. Erst dessen Auswahl startet eine neue
+exakte Suche. Damit bleibt ein falscher Vorschlag korrigierbar, bevor eine
+gefährliche oder sachfremde Tonne sichtbar wird.
+
+Evidenz: `Toast` war zuvor ein Präfixtreffer für `Toaster`; `Toiaster` blieb
+ohne Hilfe. Nun ist `Toast` ein exaktes redaktionelles Lebensmittelsynonym,
+`Toiaster` schlägt ausschließlich `Toaster` vor und zeigt vor Bestätigung
+keinen Entsorgungsweg. `Polster`, `Raster` und `Koster` erzeugen weder Ergebnis
+noch Korrektur. 100/100 Logik-/Inhaltstests und 33/33 Browserprüfungen sichern
+DE/EN, Tastatur, Screenreaderstatus, Mobilansicht und 200-Prozent-Reflow ab.
+
+Gültigkeitsgrenze: Das Verfahren kann unbekannte echte Wörter weiterhin als
+Vorschlag erkennen oder übersehen. Der entscheidende Sicherheitsgewinn ist,
+dass solche unscharfen Kandidaten niemals stillschweigend zur fachlichen
+Antwort werden. Neue tatsächliche Gegenstände bleiben redaktionelle Datenarbeit.
 
 ## Weitergabe
 

@@ -118,6 +118,13 @@ export const UI_MESSAGES = Object.freeze({
     ambiguousTitle: "Was meinst du mit „{{query}}“?",
     ambiguousMessage:
       "Wähle den passenden Gegenstand. Ähnlich klingende Dinge können verschiedene Entsorgungswege haben.",
+    correctionKicker: "Suchvorschlag",
+    correctionTitleSingle: "Meintest du „{{term}}“?",
+    correctionTitleMultiple: "Meintest du einen dieser Begriffe?",
+    correctionMessage:
+      "Wir ändern deine Eingabe nicht automatisch. Wähle den Begriff nur aus, wenn er wirklich gemeint ist.",
+    correctionSuggestion: "Mögliche Korrektur",
+    correctionSelect: "{{term}} suchen",
     selectAria: "{{name}} auswählen",
     select: "Auswählen",
     shortTitle: "Bitte etwas genauer",
@@ -280,6 +287,13 @@ export const UI_MESSAGES = Object.freeze({
     ambiguousTitle: "What do you mean by “{{query}}”?",
     ambiguousMessage:
       "Choose the matching item. Similar-sounding things may require different disposal routes.",
+    correctionKicker: "Search suggestion",
+    correctionTitleSingle: "Did you mean “{{term}}”?",
+    correctionTitleMultiple: "Did you mean one of these terms?",
+    correctionMessage:
+      "We do not change your input automatically. Choose a term only if it is what you meant.",
+    correctionSuggestion: "Possible correction",
+    correctionSelect: "Search for {{term}}",
     selectAria: "Select {{name}}",
     select: "Select",
     shortTitle: "Please be more specific",

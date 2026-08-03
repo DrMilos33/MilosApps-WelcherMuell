@@ -7,7 +7,7 @@ Nutzerdatenbank sind nicht nötig.
 
 ## DEV-Stand
 
-- Inhaltsversion: `2026.08.03-2`, Stand 03.08.2026
+- Inhaltsversion: `2026.08.03-3`, Stand 03.08.2026
 - 50 redaktionelle Einträge und 23 amtliche oder kommunale Quellen
 - allgemeiner Geltungsbereich: private Haushalte in Deutschland
 - belegte regionale Ergänzungen: Berlin, Hamburg und München
@@ -123,6 +123,13 @@ Zusammensetzungen ab, etwa `Gummi`, `Gummiband`, `Haargummi`, `Radiergummi`,
 bleibt eine Auswahl zwischen Verpackung und Gegenstand. Sicherheitsrelevante
 Abgrenzungen wie Auto- und Motorradreifen sowie elektrische Spielsachen bleiben
 eigene, vorsichtige Treffer.
+
+Exakte und redaktionell modellierte Begriffe verdrängen schwächere Präfix-,
+Teil- und Fuzzy-Kandidaten vollständig. Ein unscharfer Kandidat zeigt nur einen
+bestätigbaren „Meintest du …?“-Vorschlag; erst nach Auswahl erscheint ein
+Entsorgungsweg. So ist `Toast` als Lebensmittel erfasst und kann nicht zum
+Elektroalias `Toaster` erweitert werden, während `Toiaster` sicher `Toaster`
+vorschlägt, ohne die Eingabe stillschweigend umzudeuten.
 
 ## Dokumentation
 

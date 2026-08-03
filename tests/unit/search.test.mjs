@@ -3,8 +3,10 @@ import { before, describe, test } from "node:test";
 import {
   damerauLevenshtein,
   isAmbiguous,
+  isDirectSearchMatch,
   normalizeText,
   searchItems,
+  suggestCorrections,
   suggestedAlternatives,
   validateItemIntegrity
 } from "../../src/search.js";
@@ -120,7 +122,6 @@ describe("Suchqualität", () => {
     });
     const ids = results.map(({ item }) => item.id);
     assert.equal(results[0].item.id, "plastic-household-item");
-    assert.ok(ids.includes("plastic-packaging"));
     assert.ok(ids.includes("plastic-household-item"));
     assert.ok(!ids.includes("electrical-device"));
     assert.equal(isAmbiguous(results), false);
@@ -157,8 +158,59 @@ describe("Suchqualität", () => {
         asOf: new Date("2026-08-03T00:00:00Z")
       }).map(({ item }) => item.id);
       assert.deepEqual(ids, [], `${query}: ${ids.join(", ")}`);
+      assert.deepEqual(suggestCorrections(items, query), [], `${query}: unerwünschte Korrektur`);
     }
     assert.ok(!searchItems(items, "Poster").some(({ item }) => item.id === "electrical-device"));
+  });
+
+  test("Toast bleibt ein Lebensmittel und wird nie zum Toaster erweitert", () => {
+    const results = searchItems(items, "Toast", {
+      sourcesById,
+      asOf: new Date("2026-08-03T00:00:00Z")
+    });
+    assert.equal(results[0].item.id, "food-and-wrapper");
+    assert.ok(!results.some(({ item }) => item.id === "electrical-device"));
+    assert.deepEqual(suggestCorrections(items, "Toast"), []);
+  });
+
+  test("unsichere Schreibweisen werden als bestätigbare Korrektur statt als Entsorgungsweg angeboten", () => {
+    const [correction] = suggestCorrections(items, "Toiaster");
+    assert.equal(correction.item.id, "electrical-device");
+    assert.equal(correction.term, "Toaster");
+    assert.equal(correction.distance, 1);
+    assert.ok(searchItems(items, "Toatsr").every((result) => !isDirectSearchMatch(result)));
+    assert.deepEqual(
+      suggestCorrections(items, "Toatsr").map(({ term }) => term),
+      ["Toaster"]
+    );
+  });
+
+  test("typische Einfügungen, Auslassungen und Vertauschungen bleiben bestätigbar", () => {
+    const cases = [
+      ["Baterie", "Batterie", "battery"],
+      ["Gummibnad", "Gummiband", "rubber-household-item"],
+      ["Ölgemäde", "Ölgemälde", "painting"],
+      ["Postre", "Poster", "poster"],
+      ["Psoter", "Poster", "poster"],
+      ["Karten", "Karton", "cardboard"]
+    ];
+    for (const [query, term, itemId] of cases) {
+      assert.ok(searchItems(items, query).every((result) => !isDirectSearchMatch(result)), query);
+      const corrections = suggestCorrections(items, query);
+      assert.ok(corrections.some((entry) => entry.term === term && entry.item.id === itemId), query);
+    }
+  });
+
+  test("jeder redaktionelle Name und jedes Synonym bleibt direkt auffindbar", () => {
+    for (const item of items) {
+      for (const term of [item.name, ...(item.aliases ?? [])]) {
+        const result = searchItems(items, term, { limit: 100 });
+        assert.ok(
+          result.some((entry) => entry.item.id === item.id && isDirectSearchMatch(entry)),
+          `${item.id}: ${term}`
+        );
+      }
+    }
   });
 
   test("generisches Keyword verdrängt keinen exakten Batterie-Treffer", () => {

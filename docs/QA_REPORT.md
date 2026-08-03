@@ -846,3 +846,27 @@ erfolgreich. Der frische Remote-Smoke bestätigte denselben Poster-/Polster-Flus
 No-Login, Inhaltsversion `2026.08.03-2`, App-Identität und
 `productionApproved=false`; die unveränderte Portal-DEV-Route blieb für `GET`
 und `HEAD` ein 302 auf die App-URL, Production blieb HTTP 404.
+
+## Bestätigbare Tippfehler statt stiller Umdeutung · Inhaltsversion 2026.08.03-3
+
+Der rote Baseline-Lauf belegte zwei komplementäre Fehler: `TOast` erhielt über
+den Präfixscore 112 den Elektroalias `Toaster`; `Toiaster` lieferte keinen
+Treffer. Die frühere Suche vermischte außerdem Kandidatenfindung und
+fachliche Freigabe, sodass andere akzeptierte Tippfehler direkt einen
+Entsorgungsweg öffneten.
+
+Die Suche trennt nun belastbare Exakt-/Phrasen-/Intent-Treffer von unsicheren
+Präfix-, Teil-, Token- und Distanzkandidaten. Sobald ein belastbarer Treffer
+existiert, werden alle schwächeren Kandidaten aus der Ergebnisliste entfernt.
+Andernfalls erscheint höchstens ein bestätigbarer „Meintest du …?“-Zustand
+ohne Item-ID oder Entsorgungsweg. Die Auswahl startet eine neue exakte Suche.
+`Toast`, `Toastbrot`, `Brot` und `Brotrest` sind redaktionelle Synonyme des
+bereits belegten Lebensmittel-/Verpackungswegs; Quellen und Reviewtermin
+wurden nicht künstlich erneuert.
+
+Abschluss lokal: 100/100 Unit-, Inhalts-, Such-, Quellen-, DE/EN- und
+Speichervertragstests, 33/33 Browser-E2E sowie 23/23 amtliche Quellen mit HTTP
+200. Browser-E2E bestätigt `Toiaster → Meintest du „Toaster“? → Toaster`, vor
+Bestätigung null Entsorgungsweg, `TOast` als Lebensmittel ohne Elektrotext,
+keine Korrektur für `Polster`, 44-Pixel-Korrekturziel und überlauffreien
+360-×-800-Zustand bei 200 Prozent Textzoom. Production bleibt gesperrt.

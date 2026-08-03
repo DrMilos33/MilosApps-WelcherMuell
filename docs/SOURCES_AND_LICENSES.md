@@ -2,7 +2,7 @@
 
 ## Inhaltsstand
 
-- Inhaltsversion: `2026.08.03-2`
+- Inhaltsversion: `2026.08.03-3`
 - redaktionell erweitert: 03.08.2026
 - Umfang: 50 Entsorgungseinträge, 23 Quellen
 - früheste erneute Prüfung: 30.09.2026
@@ -50,6 +50,12 @@ die allgemeine UBA-Abfallhierarchie die Weiterverwendung und den örtlichen
 Prüfschritt; die neue AWM-Detailseite zu Bilderrahmen zeigt eng für München,
 dass Rahmenmaterial und Größe unterschiedliche Wege auslösen. Daraus wird
 keine bundesweite Rahmentonne abgeleitet.
+
+Mit Inhaltsversion `2026.08.03-3` wurden `Toast`, `Toastbrot`, `Brot` und
+`Brotrest` als weitere Alltagssynonyme desselben belegten Lebensmittelwegs
+ergänzt. Das ist keine neue Entsorgungsregel und kein erneuertes Quellenreview:
+Lebensmittelrest und gegebenenfalls vorhandene Verpackung bleiben getrennt;
+die kommunale Biotonnenregel ist weiterhin sichtbar zu prüfen.
 
 Für Kunststoffgegenstände ohne Verpackungsfunktion belegen vier getrennte
 amtliche Quellen die Gültigkeitsgrenze: Das UBA ordnet Gelbe Tonne und Gelben

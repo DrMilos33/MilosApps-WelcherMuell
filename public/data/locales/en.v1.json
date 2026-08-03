@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "language": "en",
-  "contentVersion": "2026.08.03-2",
+  "contentVersion": "2026.08.03-3",
   "contentDate": "2026-08-03",
   "editorialUse": "The app does not reproduce an external dataset, logos, images or lengthy passages. Disposal facts were checked against official pages and rewritten as concise original summaries. Every recommendation links to its source.",
   "items": {
@@ -129,9 +129,14 @@
         "candy",
         "food leftovers",
         "leftover food",
-        "food"
+        "food",
+        "toast",
+        "toast bread",
+        "bread",
+        "bread leftovers",
+        "stale bread"
       ],
-      "keywords": ["food", "organic waste", "packaging", "snack bar", "confectionery"],
+      "keywords": ["food", "organic waste", "packaging", "snack bar", "confectionery", "baked goods"],
       "category": "Food + packaging",
       "route": {
         "label": "Contents: local organic waste · empty wrapper: sort by material"

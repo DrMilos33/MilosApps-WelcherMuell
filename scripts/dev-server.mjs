@@ -40,7 +40,7 @@ const server = createServer((request, response) => {
       status: "ok",
       appKey: "waste-guide",
       environment: "DEV",
-      contentVersion: "2026.08.03-2",
+      contentVersion: "2026.08.03-3",
       productionApproved: false
     }));
     return;

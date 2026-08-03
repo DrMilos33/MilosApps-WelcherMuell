@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 const host = "127.0.0.1";
 const port = 4318;
 const baseUrl = `http://${host}:${port}`;
-const expectedContentVersion = "2026.08.03-2";
+const expectedContentVersion = "2026.08.03-3";
 const artifacts = new URL("../../test-results/qa/", import.meta.url);
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -140,6 +140,14 @@ async function submitSearch(page, query) {
   await page.getByRole("button", { name: /Suchen|Search/ }).click();
 }
 
+async function confirmCorrection(page, query, term) {
+  await submitSearch(page, query);
+  await page.getByRole("heading", { name: `Meintest du „${term}“?`, exact: true }).waitFor();
+  assert.equal(await page.locator(".result-immediate").count(), 0, `${query} darf noch keinen Entsorgungsweg zeigen.`);
+  assert.doesNotMatch(page.url(), /[?&]item=/);
+  await page.getByRole("button", { name: `${term} suchen`, exact: true }).click();
+}
+
 await waitForServer();
 const browser = await chromium.launch({ executablePath, headless: true });
 
@@ -230,6 +238,7 @@ try {
     };
   });
   const desktopPage = await desktop.newPage();
+  desktopPage.setDefaultTimeout(8000);
   const desktopErrors = collectPageErrors(desktopPage);
 
   await check("Desktop: Start, Semantik und exakter Suchfluss", async () => {
@@ -389,15 +398,13 @@ try {
 
   await check("Desktop: Tippfehler, Umlaute, Plural und Sicherheitspriorität", async () => {
     const cases = [
-      ["Joghurbecher", "Joghurtbecher"],
       ["Akkus", "Batterie oder Akku"],
       ["Plastikschüssel", "Plastikschüssel"],
       ["Ölgemälde", "Gemälde oder Leinwandbild"],
-      ["Ölgemäde", "Gemälde oder Leinwandbild"],
-      ["Kinderriegel", "Schokolade oder Riegel"],
-      ["schokolade", "Schokolade oder Riegel"],
-      ["Poster", "Poster oder Plakat"],
-      ["Plakat", "Poster oder Plakat"],
+      ["Kinderriegel", "Kinderriegel"],
+      ["schokolade", "Schokolade"],
+      ["Poster", "Poster"],
+      ["Plakat", "Plakat"],
       ["elektrische Zahnbürste", "Elektrogerät"],
       ["elektronisches Plastikspielzeug", "Elektrogerät"],
       ["aufgeblähter Handyakku", "Aufgeblähter oder beschädigter Akku"]
@@ -407,16 +414,33 @@ try {
       await desktopPage.getByRole("heading", { name: heading, exact: true }).waitFor();
     }
     await assert.doesNotReject(() => desktopPage.getByText(/Bei Rauch, Zischen/).waitFor());
+    await confirmCorrection(desktopPage, "Joghurbecher", "Joghurtbecher");
+    await desktopPage.getByRole("heading", { name: "Joghurtbecher", exact: true }).waitFor();
+    await confirmCorrection(desktopPage, "Ölgemäde", "Ölgemälde");
+    await desktopPage.getByRole("heading", { name: "Gemälde oder Leinwandbild", exact: true }).waitFor();
+  });
+
+  await check("Desktop: Toiaster wird bestätigt, Toast bleibt Lebensmittel", async () => {
+    await confirmCorrection(desktopPage, "Toiaster", "Toaster");
+    await desktopPage.getByRole("heading", { name: "Toaster", exact: true }).waitFor();
+    await desktopPage.getByText(/Wertstoffhof oder Rücknahme im Handel/).waitFor();
+
+    await submitSearch(desktopPage, "TOast");
+    await desktopPage.getByRole("heading", { name: "Toast", exact: true }).waitFor();
+    assert.equal(await desktopPage.getByText("Elektrogerät", { exact: true }).count(), 0);
+    assert.equal(await desktopPage.getByText(/Wertstoffhof oder Rücknahme im Handel/).count(), 0);
+    await desktopPage.getByText(/örtliche Biotonne/).waitFor();
   });
 
   await check("Desktop: Poster erhält den Materialcheck und ähnliche Wörter werden nicht geraten", async () => {
     await submitSearch(desktopPage, "Poster");
-    await desktopPage.getByRole("heading", { name: "Poster oder Plakat", exact: true }).waitFor();
+    await desktopPage.getByRole("heading", { name: "Poster", exact: true }).waitFor();
     assert.equal(await desktopPage.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
 
     await submitSearch(desktopPage, "Polster");
     await desktopPage.getByRole("heading", { name: /Kein sicherer Treffer/ }).waitFor();
     assert.equal(await desktopPage.getByText("Elektrogerät", { exact: true }).count(), 0);
+    assert.equal(await desktopPage.getByText(/Meintest du/).count(), 0);
   });
 
   await check("Desktop: Plastik erhält einen sinnvollen Haupttreffer statt Elektro-Raten", async () => {
@@ -432,8 +456,10 @@ try {
     await desktopPage.getByRole("heading", { name: "Kunststoffverpackung", exact: true }).waitFor();
 
     await submitSearch(desktopPage, "Karten");
-    await desktopPage.getByRole("heading", { name: "Karton", exact: true }).waitFor();
+    await desktopPage.getByRole("heading", { name: "Meintest du „Karton“?", exact: true }).waitFor();
     assert.equal(await desktopPage.locator(".results-grid").getByText("Pizzakarton", { exact: true }).count(), 0);
+    await desktopPage.getByRole("button", { name: "Karton suchen", exact: true }).click();
+    await desktopPage.getByRole("heading", { name: "Karton", exact: true }).waitFor();
   });
 
   await check("Desktop: Mehrdeutigkeit wird nicht geraten", async () => {
@@ -641,6 +667,7 @@ try {
     deviceScaleFactor: 2
   });
   const mobilePage = await mobile.newPage();
+  mobilePage.setDefaultTimeout(8000);
   const mobileErrors = collectPageErrors(mobilePage);
 
   await check("Smartphone: Loader reflowt und Datenschutz bleibt ohne Scheinbanner erreichbar", async () => {
@@ -742,7 +769,7 @@ try {
   await check("Smartphone: Gummiband zeigt den Entsorgungsweg ohne Umweg", async () => {
     await mobilePage.setViewportSize({ width: 390, height: 844 });
     await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
-    await submitSearch(mobilePage, "Gummibnad");
+    await confirmCorrection(mobilePage, "Gummibnad", "Gummiband");
     await mobilePage.getByRole("heading", { name: "Gummiband", exact: true }).waitFor();
     await mobilePage.locator(".result-destination").waitFor();
     const resultGeometry = await mobilePage.evaluate(() => {
@@ -894,6 +921,15 @@ try {
       path: fileURLToPath(new URL("phone-text-zoom-200.png", artifacts)),
       fullPage: true
     });
+    await submitSearch(mobilePage, "Toiaster");
+    await mobilePage.getByRole("heading", { name: "Meintest du „Toaster“?", exact: true }).waitFor();
+    const correctionGeometry = await mobilePage.getByRole("button", { name: "Toaster suchen", exact: true }).evaluate((button) => ({
+      buttonHeight: Math.round(button.getBoundingClientRect().height),
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth
+    }));
+    assert.ok(correctionGeometry.buttonHeight >= 44, `Korrekturziel zu klein: ${JSON.stringify(correctionGeometry)}`);
+    assert.ok(correctionGeometry.scrollWidth <= correctionGeometry.clientWidth + 1, `Korrektur läuft bei 200 % über: ${JSON.stringify(correctionGeometry)}`);
     await mobilePage.evaluate(() => {
       document.documentElement.style.fontSize = "";
     });
@@ -954,6 +990,7 @@ try {
 
   const slow = await browser.newContext({ viewport: { width: 1024, height: 768 } });
   const slowPage = await slow.newPage();
+  slowPage.setDefaultTimeout(8000);
   await slowPage.route(`${baseUrl}/public/data/**`, async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 700));
     await route.continue();

@@ -8,7 +8,7 @@ const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT;
 if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_EXPECTED_SOURCE_COMMIT muss den vollständigen deployten Quellcommit enthalten.");
 }
-const expectedContentVersion = "2026.08.03-2";
+const expectedContentVersion = "2026.08.03-3";
 const expectedEssentialsVersion = "1.1.5";
 const expectedEssentialsCommit = "2942132ad3bf6cf39edc9f52ed918de6a230be23";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
@@ -279,7 +279,7 @@ try {
   await page.getByRole("button", { name: "Neue Suche" }).click();
   await page.getByLabel("Gegenstand oder Material").fill("Poster");
   await page.getByRole("button", { name: "Suchen" }).click();
-  await page.getByRole("heading", { name: "Poster oder Plakat", exact: true }).waitFor();
+  await page.getByRole("heading", { name: "Poster", exact: true }).waitFor();
   assert.equal(await page.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
 
   await page.getByRole("button", { name: "Neue Suche" }).click();
@@ -287,6 +287,21 @@ try {
   await page.getByRole("button", { name: "Suchen" }).click();
   await page.getByRole("heading", { name: /Kein sicherer Treffer/ }).waitFor();
   assert.equal(await page.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
+
+  await page.getByRole("button", { name: "Neue Suche" }).click();
+  await page.getByLabel("Gegenstand oder Material").fill("Toiaster");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Meintest du „Toaster“?", exact: true }).waitFor();
+  assert.equal(await page.locator(".result-immediate").count(), 0);
+  await page.getByRole("button", { name: "Toaster suchen", exact: true }).click();
+  await page.getByRole("heading", { name: "Toaster", exact: true }).waitFor();
+
+  await page.getByRole("button", { name: "Neue Suche" }).click();
+  await page.getByLabel("Gegenstand oder Material").fill("TOast");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Toast", exact: true }).waitFor();
+  assert.equal(await page.getByText("Elektrogerät", { exact: true }).count(), 0);
+  assert.match((await page.locator(".result-destination").textContent()) ?? "", /Biotonne/);
 
   await shell.getByRole("button", { name: "EN", exact: true }).click();
   await page.locator("html[lang='en']").waitFor();
