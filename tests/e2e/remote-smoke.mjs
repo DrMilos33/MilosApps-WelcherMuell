@@ -9,8 +9,8 @@ if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_EXPECTED_SOURCE_COMMIT muss den vollständigen deployten Quellcommit enthalten.");
 }
 const expectedContentVersion = "2026.08.03-1";
-const expectedEssentialsVersion = "1.1.2";
-const expectedEssentialsCommit = "b14aac6107b75f03ff49e74160af7e7e30c29e59";
+const expectedEssentialsVersion = "1.1.3";
+const expectedEssentialsCommit = "babe74a0e62e1a7f9095648195e54b322a837726";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
 if (!configuredUrl) throw new Error("WASTE_GUIDE_REMOTE_URL fehlt.");
 
@@ -196,6 +196,22 @@ try {
   assert.deepEqual(await page.evaluate(() => window.__storageCalls), []);
   assert.equal(await page.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).length), 0);
   assert.equal(await page.locator("[data-milos-app-loading]").isHidden(), true);
+  const loaderIconContract = await page.locator("[data-milos-loading-icon]").evaluate((element) => ({
+    width: element.getAttribute("width"),
+    height: element.getAttribute("height"),
+    computedWidth: getComputedStyle(element).width,
+    computedHeight: getComputedStyle(element).height,
+    maxWidth: getComputedStyle(element).maxWidth,
+    maxHeight: getComputedStyle(element).maxHeight
+  }));
+  assert.deepEqual(loaderIconContract, {
+    width: "32",
+    height: "32",
+    computedWidth: "32px",
+    computedHeight: "32px",
+    maxWidth: "32px",
+    maxHeight: "32px"
+  });
   assert.equal(await page.locator("milos-date-picker, milos-place-search").count(), 0);
   const essentialsRuntime = await page.evaluate(() => ({
     version: globalThis.milosAppEssentials?.version,

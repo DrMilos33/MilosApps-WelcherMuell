@@ -13,6 +13,11 @@ const legacyWorkerSource = await readFile(new URL("sw.js", repositoryRoot), "utf
 const offlineWorkerSource = await readFile(new URL("offline-sw.js", repositoryRoot), "utf8");
 const vendorRoot = new URL("vendor/milosapps-essentials/v1/", repositoryRoot);
 const vendorAttributes = await readFile(new URL(".gitattributes", vendorRoot), "utf8");
+const shellVendorAttributes = await readFile(
+  new URL("vendor/milosapps-shell/v2/.gitattributes", repositoryRoot),
+  "utf8"
+);
+const shellVendorRoot = new URL("vendor/milosapps-shell/v2/", repositoryRoot);
 const lockedArtifacts = [
   "bootstrap.js",
   "milos-app-essentials.css",
@@ -20,6 +25,13 @@ const lockedArtifacts = [
   "milos-app-essentials.js",
   "verify.mjs",
   "essentials-manifest.schema.json"
+];
+const shellLockedArtifacts = [
+  "bootstrap.js",
+  "milos-app-shell-theme.css",
+  "milos-app-shell.css",
+  "milos-app-shell.js",
+  "verify.mjs"
 ];
 
 describe("public-app-essentials/v1", () => {
@@ -29,8 +41,8 @@ describe("public-app-essentials/v1", () => {
     assert.equal(manifest.productionApproved, false);
     assert.deepEqual(manifest.essentialsContract, {
       id: "public-app-essentials/v1",
-      version: "1.1.2",
-      sharedCommit: "b14aac6107b75f03ff49e74160af7e7e30c29e59",
+      version: "1.1.3",
+      sharedCommit: "babe74a0e62e1a7f9095648195e54b322a837726",
       vendorDirectory: "vendor/milosapps-essentials/v1",
       runtimeBasePath: "vendor/milosapps-essentials/v1"
     });
@@ -74,7 +86,7 @@ describe("public-app-essentials/v1", () => {
     assert.ok(essentialsCss > 0 && essentialsCss < firstModule);
     assert.ok(essentialsTheme > essentialsCss && essentialsTheme < firstModule);
     assert.match(indexHtml, /data-milos-app-loading/);
-    assert.match(indexHtml, /data-milos-loading-icon[^>]+width="52"[^>]+height="52"/);
+    assert.match(indexHtml, /data-milos-loading-icon[^>]+width="32"[^>]+height="32"/);
     assert.equal((indexHtml.match(/<h1\b/g) ?? []).length, 1);
     assert.match(appSource, /<milos-share-button data-share-item=/);
     assert.match(appSource, /url\.searchParams\.set\("item", item\.id\)/);
@@ -134,10 +146,15 @@ describe("public-app-essentials/v1", () => {
 
   test("erzwingt LF für alle bytegenau gelockten Vendor-Dateien", async () => {
     assert.equal(vendorAttributes, "* text eol=lf\n");
+    assert.equal(shellVendorAttributes, "* text eol=lf\n");
 
     for (const artifact of lockedArtifacts) {
       const content = await readFile(new URL(artifact, vendorRoot), "utf8");
       assert.doesNotMatch(content, /\r\n/, `${artifact} enthält CRLF statt LF`);
+    }
+    for (const artifact of shellLockedArtifacts) {
+      const content = await readFile(new URL(artifact, shellVendorRoot), "utf8");
+      assert.doesNotMatch(content, /\r\n/, `Shell ${artifact} enthält CRLF statt LF`);
     }
   });
 });

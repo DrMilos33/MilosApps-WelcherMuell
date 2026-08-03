@@ -639,7 +639,10 @@ try {
     await mobilePage.goto(baseUrl, { waitUntil: "domcontentloaded" });
     const loader = mobilePage.locator("[data-milos-app-loading]");
     const loadingIcon = await loader.locator("[data-milos-loading-icon]").boundingBox();
-    assert.ok(loadingIcon.width <= 48 && loadingIcon.height <= 48, JSON.stringify(loadingIcon));
+    assert.deepEqual(
+      { width: Math.round(loadingIcon.width), height: Math.round(loadingIcon.height) },
+      { width: 32, height: 32 }
+    );
     await mobilePage.getByRole("heading", { name: "Welcher Müll?", level: 1 }).waitFor();
     await loader.waitFor({ state: "hidden" });
     await mobilePage.unroute(`${baseUrl}/public/data/**`);
@@ -800,6 +803,8 @@ try {
     await mobilePage.getByRole("heading", { name: "Meintest du etwas anderes?", exact: true }).waitFor();
     const geometry = await mobilePage.locator("milos-app-shell").evaluate((shell) => {
       const icon = shell.shadowRoot.querySelector(".app-icon").getBoundingClientRect();
+      const loadingIcon = document.querySelector("[data-milos-loading-icon]");
+      const loadingIconStyle = getComputedStyle(loadingIcon);
       const searchInput = document.querySelector(".search-control input").getBoundingClientRect();
       const controls = [...shell.shadowRoot.querySelectorAll(".control")].map((element) => {
         const rect = element.getBoundingClientRect();
@@ -809,6 +814,12 @@ try {
         scrollWidth: document.documentElement.scrollWidth,
         clientWidth: document.documentElement.clientWidth,
         iconWidth: Math.round(icon.width),
+        loadingIcon: {
+          width: loadingIconStyle.width,
+          height: loadingIconStyle.height,
+          maxWidth: loadingIconStyle.maxWidth,
+          maxHeight: loadingIconStyle.maxHeight
+        },
         searchInputWidth: Math.round(searchInput.width),
         controls,
         shellOffenders: [...shell.shadowRoot.querySelectorAll("*")]
@@ -859,6 +870,12 @@ try {
     });
     assert.ok(geometry.scrollWidth <= geometry.clientWidth + 1, `200-%-Textzoom läuft horizontal über: ${JSON.stringify(geometry)}`);
     assert.equal(geometry.iconWidth, 38);
+    assert.deepEqual(geometry.loadingIcon, {
+      width: "32px",
+      height: "32px",
+      maxWidth: "32px",
+      maxHeight: "32px"
+    });
     assert.ok(geometry.searchInputWidth >= 180, `Suchfeld bei 200 % nicht sinnvoll bedienbar: ${JSON.stringify(geometry)}`);
     assert.deepEqual(geometry.controls.filter(({ width, height }) => width < 44 || height < 44), []);
     await mobilePage.screenshot({
@@ -945,7 +962,8 @@ try {
         overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth
       };
     });
-    assert.ok(geometry.iconWidth <= 56 && geometry.iconHeight <= 56, JSON.stringify(geometry));
+    assert.equal(geometry.iconWidth, 32, JSON.stringify(geometry));
+    assert.equal(geometry.iconHeight, 32, JSON.stringify(geometry));
     assert.ok(geometry.cardWidth <= 320 && geometry.cardHeight <= 220, JSON.stringify(geometry));
     assert.ok(geometry.overflow <= 1, JSON.stringify(geometry));
     await slowPage.screenshot({ path: fileURLToPath(new URL("startup-slow.png", artifacts)) });

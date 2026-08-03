@@ -41,8 +41,8 @@ Fachoberfläche hört auf `milosapps:localechange`. Deutsch
 und Englisch verwenden denselben redaktionellen Inhaltsstand; die Übersetzung
 hebt weder Inhaltsversion noch Quellenreview an.
 
-`milos-essentials.json` pinnt zusätzlich `public-app-essentials/v1.1.2` auf
-Shared-Commit `b14aac6107b75f03ff49e74160af7e7e30c29e59`. Die sechs lokal
+`milos-essentials.json` pinnt zusätzlich `public-app-essentials/v1.1.3` auf
+Shared-Commit `babe74a0e62e1a7f9095648195e54b322a837726`. Die sechs lokal
 vendorten Artefakte liefern einen CSS-first-Loader, Datenschutzlogik und
 `<milos-share-button>`. Datum und Ort sind für diese App
 ausgeschaltet; die grobe Entsorgungsregion bleibt der vorhandene fachliche

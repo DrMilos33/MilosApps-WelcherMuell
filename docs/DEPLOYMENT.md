@@ -49,8 +49,8 @@ Manifest-Schema. Der
 Builder bricht ab, wenn eines dieser Artefakte fehlt, wenn die beiden CSS-Links
 im gebauten HTML nicht jeweils genau einmal extern erhalten bleiben oder wenn
 eine `data:`-Einbettung auftaucht. Der feste Vertrag ist
-`public-app-essentials/v1.1.2` auf Shared-Commit
-`b14aac6107b75f03ff49e74160af7e7e30c29e59`.
+`public-app-essentials/v1.1.3` auf Shared-Commit
+`babe74a0e62e1a7f9095648195e54b322a837726`.
 
 `dist/` bleibt ein ignoriertes Buildartefakt und wird nicht in den Quellbranch
 eingecheckt.

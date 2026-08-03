@@ -719,3 +719,31 @@ Production-Sperre. Der zusätzliche Live-Suchlauf bestätigte `Ölgemälde`,
 Fallback einer unbekannten Eingabe. Auf 390 Pixel und auf 360 × 800 bei
 200 Prozent blieben `clientWidth` und `scrollWidth` identisch; es gab null
 Clipping und null Konsolenfehler.
+
+## App-Loader 32 × 32 · public-app-essentials/v1.1.3 · 03.08.2026
+
+Der vendorte Essentials-Vertrag wurde atomar auf Version `1.1.3` und den
+unveränderlichen Shared-Commit
+`babe74a0e62e1a7f9095648195e54b322a837726` synchronisiert. Manifest,
+Runtime, Basis-CSS, app-spezifische Theme-CSS, Bootstrap, Schema und Verifier
+sind durch den neuen 6er-Lock gebunden; die enge LF-Regel bleibt bestehen.
+Das Quellmarkup setzt das Loadericon bereits vor CSS explizit auf 32 × 32.
+
+Der erste vollständige lokale Lauf bestand ohne Produktkorrektur: Shell- und
+Essentials-Verifier PASS, 91/91 Unit-/Fachtests und 31/31 Browser-E2E. Der
+Loader maß auf 1024 × 768 und 390 × 844 tatsächlich 32 × 32 Pixel. Bei
+360 × 800 und 200 Prozent meldeten `width`, `height`, `max-width` und
+`max-height` jeweils exakt `32px`; der geöffnete Plastik-Ergebniszustand blieb
+gleichzeitig überlauffrei. Startup/Ready, No-Cookies-Datenschutzlink, Share,
+Offline, DE/EN, Fachsuche und CSP-Struktur blieben unverändert.
+
+Diese Migration verändert weder Inhaltsversion noch Quellenreview, regionale
+Gültigkeit oder Production-Freigabe. Der externe DEV-Nachweis folgt erst nach
+einem eigenen koordinierten App-Publishfenster.
+
+Der erste echte Windows-Recheckout zeigte zusätzlich, dass der ältere
+Shell-Vendorordner – anders als Essentials – noch keine enge LF-Regel besaß
+und deshalb bei `core.autocrlf=true` seinen Lock verlor. Eine app-lokale
+`* text eol=lf`-Regel schützt nun auch dessen fünf gelockte Textartefakte; ein
+Unit-Test prüft beide Vendorordner byteweise auf LF. Runtime und Shell-Pin
+bleiben unverändert.
