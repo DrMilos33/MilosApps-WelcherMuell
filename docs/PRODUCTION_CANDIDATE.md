@@ -77,6 +77,26 @@ No-Login/No-Storage, explizites Offline, Production-Shell, Privacy, CSP und MIME
 ab. Ein Cloudflare-Publish und externe Production-Smokes folgen erst nach
 bestätigtem Ziel.
 
+## Lokaler Release-Nachweis
+
+Der technische Full-Gate bestand 115/115 Unit-, Inhalts-, Such-, Speicher- und
+DE/EN-Tests, 34/34 bestehende Browser-E2E-Prüfungen, den fokussierten
+Loader-/Shell-Übergang, beide vendorten Vertragsverifier und 28/28 amtliche
+Quellen mit HTTP 200. Ein erster Quellenabruf war transient fehlgeschlagen;
+der direkte Wiederholungsabruf und die anschließende vollständige
+Quellenmatrix waren grün.
+
+Der Production-Browserlauf bestand Desktop, 390 × 844 sowie 360 × 800 bei
+200 Prozent inklusive DE/EN, No-Login, No-Storage, Offline, Privacy, CSP, MIME,
+44-Pixel-Zielen und ohne horizontalen Überlauf. Ein frischer
+Windows-Recheckout mit `core.autocrlf=true` bestand den Production-Build,
+beide Verifier und die bytegenauen Vendor-/Lockgrenzen.
+
+Bis Project-ID und tatsächliche Pages-URL extern bestätigt sind, bleibt
+`targetConfirmed=false` und es erfolgt kein Upload. Der exakte Source- und
+Artefakt-SHA wird bei jedem Build in `dist/production/deployment.json`
+festgehalten.
+
 ## Rollback
 
 Vor der ersten Veröffentlichung gibt es keine gesunde Production-Revision.
