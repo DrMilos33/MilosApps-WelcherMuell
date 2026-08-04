@@ -37,7 +37,25 @@ jobs:
       - run: pnpm test:shell
       - run: pnpm test:essentials
       - run: pnpm test
-      - run: pnpm test:sources:online
+      - name: Verify official sources online or reuse immutable evidence
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          pnpm test:sources:online
+          source_status=$?
+          set -e
+
+          if [ "$source_status" -eq 0 ]; then
+            exit 0
+          fi
+
+          if [ "$source_status" -ne 2 ]; then
+            echo "Online source verification failed with a non-transient error; prior evidence is forbidden."
+            exit "$source_status"
+          fi
+
+          pnpm test:sources:evidence
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - run: pnpm build:cloudflare:production
