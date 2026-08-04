@@ -90,12 +90,17 @@ assert.deepEqual(health, {
 });
 
 const index = await readFile(resolve(outputRoot, "index.html"), "utf8");
+const notFound = await readFile(resolve(outputRoot, "404.html"), "utf8");
 assert.match(index, /<html lang="de" data-milos-environment="production" data-milos-production-approved="true">/);
 assert.match(index, /data-milos-privacy-info href="https:\/\/milos-apps\.de\/datenschutz"/);
 assert.doesNotMatch(index, /https:\/\/dev\.milos-apps\.de\/datenschutz/);
 assert.doesNotMatch(index, /MilosApps-WelcherMuell\//);
 assert.equal((index.match(/milos-app-essentials\.css/g) ?? []).length, 1);
 assert.equal((index.match(/milos-app-essentials-theme\.css/g) ?? []).length, 1);
+assert.match(notFound, /<html lang="de" data-milos-environment="production" data-milos-production-approved="true">/);
+assert.match(notFound, /<h1 id="not-found-title">Diese Seite gibt es nicht\.<\/h1>/);
+assert.match(notFound, /<a href="\/">Open Waste Guide<\/a>/);
+assert.doesNotMatch(notFound, /<script|unsafe-inline|https:\/\//);
 
 const shellBootstrap = await readFile(resolve(outputRoot, "vendor", "milosapps-shell", "v2", "bootstrap.js"), "utf8");
 const essentialsBootstrap = await readFile(resolve(outputRoot, "vendor", "milosapps-essentials", "v1", "bootstrap.js"), "utf8");

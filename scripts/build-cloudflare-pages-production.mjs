@@ -84,6 +84,7 @@ try {
 const sourceTree = git(["show", "-s", "--format=%T", sourceCommit], { encoding: "utf8" }).trim();
 const deployablePrefixes = ["assets/", "public/", "src/", "vendor/"];
 const deployableRootFiles = new Set([
+  "404.html",
   "index.html",
   "manifest.webmanifest",
   "meta.json",
@@ -98,6 +99,7 @@ const sourcePaths = git(["ls-tree", "-r", "--name-only", sourceCommit], { encodi
   .filter((path) => deployableRootFiles.has(path) || deployablePrefixes.some((prefix) => path.startsWith(prefix)));
 
 for (const required of [
+  "404.html",
   "index.html",
   "manifest.webmanifest",
   "meta.json",
