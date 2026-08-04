@@ -52,6 +52,14 @@ function sha256(contents) {
   return createHash("sha256").update(contents).digest("hex");
 }
 
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
 async function writeJson(path, value) {
   await writeFile(path, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
@@ -223,7 +231,7 @@ await writeJson(shellLockPath, shellLock);
 
 const essentialsLockPath = resolve(outputRoot, "vendor", "milosapps-essentials", "v1", "essentials-lock.json");
 const essentialsLock = JSON.parse(await readFile(essentialsLockPath, "utf8"));
-essentialsLock.manifestSha256 = `sha256:${sha256(await readFile(essentialsManifestPath))}`;
+essentialsLock.manifestSha256 = `sha256:${sha256(Buffer.from(canonicalJson(essentialsManifest), "utf8"))}`;
 for (const artifact of Object.keys(essentialsLock.artifacts)) {
   essentialsLock.artifacts[artifact] = `sha256:${sha256(await readFile(resolve(dirname(essentialsLockPath), artifact)))}`;
 }
