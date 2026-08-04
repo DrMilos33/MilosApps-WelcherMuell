@@ -115,6 +115,9 @@ describe("public-app-essentials/v1", () => {
     assert.match(legacyWorkerSource, /self\.registration\.unregister\(\)/);
     assert.match(legacyWorkerSource, /name\.startsWith\("waste-guide-"\)/);
     assert.match(offlineWorkerSource, /waste-guide-2026-08-09-feedback-v8/);
+    const cacheName = offlineWorkerSource.match(/const CACHE_NAME = "([^"]+)";/)?.[1];
+    const inventoryCache = storageInventory.deviceAccess.find((entry) => entry.api === "CacheStorage")?.identifier;
+    assert.equal(inventoryCache, cacheName, "Das Speicherinventar muss den tatsächlich verwendeten Offline-Cache nennen.");
   });
 
   test("stellt den erkannten Gegenstand und Entsorgungsweg vor Details", () => {
