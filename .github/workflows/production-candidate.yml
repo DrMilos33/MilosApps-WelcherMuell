@@ -20,7 +20,7 @@ jobs:
     env:
       WASTE_GUIDE_SOURCE_COMMIT: ${{ github.sha }}
       WASTE_GUIDE_PRODUCTION_URL: https://milosapps-waste-guide-production.pages.dev/
-      WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED: "0"
+      WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED: "1"
       WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH: codex/waste-guide-production-launch
     steps:
       - uses: actions/checkout@v4

@@ -15,7 +15,17 @@ const chromeCandidates = [
   "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
   "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe"
 ];
-const executablePath = chromeCandidates.find(existsSync);
+const linuxChromeCandidates = [
+  "/usr/bin/google-chrome",
+  "/usr/bin/google-chrome-stable",
+  "/usr/bin/microsoft-edge",
+  "/usr/bin/microsoft-edge-stable"
+];
+const playwrightChromiumPath = process.platform === "linux" ? chromium.executablePath() : undefined;
+const executablePath = process.platform === "linux"
+  ? linuxChromeCandidates.find(existsSync) ??
+    (playwrightChromiumPath && existsSync(playwrightChromiumPath) ? playwrightChromiumPath : undefined)
+  : chromeCandidates.find(existsSync);
 
 if (!executablePath) {
   throw new Error("Für den lokalen E2E-Lauf wurde kein Chrome- oder Edge-Browser gefunden.");
