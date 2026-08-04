@@ -6,7 +6,7 @@ const catalog = JSON.parse(
 const timeoutMs = Number(process.env.WASTE_GUIDE_SOURCE_TIMEOUT_MS || 15000);
 const maxAttempts = Math.min(
   5,
-  Math.max(1, Number(process.env.WASTE_GUIDE_SOURCE_MAX_ATTEMPTS || 3))
+  Math.max(1, Number(process.env.WASTE_GUIDE_SOURCE_MAX_ATTEMPTS || 5))
 );
 const failures = [];
 
