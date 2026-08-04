@@ -235,15 +235,15 @@ try {
   });
   page.on("pageerror", (error) => errors.push(error.message));
 
-  const bootstrapGate = createGate();
-  const bootstrapRequestedGate = createGate();
+  const definitionGate = createGate();
+  const definitionRequestedGate = createGate();
   const cssGate = createGate();
   const cssRequestedGate = createGate();
 
   await page.addInitScript(installTransitionCapture);
-  await page.route("**/vendor/milosapps-shell/v2/bootstrap.js", async (route) => {
-    bootstrapRequestedGate.release();
-    await bootstrapGate.promise;
+  await page.route("**/vendor/milosapps-shell/v2/milos-app-shell.js", async (route) => {
+    definitionRequestedGate.release();
+    await definitionGate.promise;
     await route.continue();
   });
   await page.route("**/vendor/milosapps-shell/v2/milos-app-shell.css", async (route) => {
@@ -255,7 +255,7 @@ try {
   let navigationError = null;
   const navigation = page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 30000 })
     .catch((error) => { navigationError = error; });
-  await withTimeout(bootstrapRequestedGate.promise, "Shell-Bootstrap");
+  await withTimeout(definitionRequestedGate.promise, "Shell-Komponentendefinition");
   const beforeUpgrade = await withTimeout(
     stateGates.before.promise,
     "Essentials-CSS bei undefinierter Shell",
@@ -263,7 +263,7 @@ try {
   ).catch(async (error) => {
     throw new Error(`${error.message} Zustand: ${JSON.stringify(await readGeometry(page))}`);
   });
-  bootstrapGate.release();
+  definitionGate.release();
   await withTimeout(cssRequestedGate.promise, "Shell-Komponenten-CSS");
   const whileCssPending = await withTimeout(
     stateGates.pending.promise,
