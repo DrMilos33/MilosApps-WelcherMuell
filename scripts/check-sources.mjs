@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
 const catalog = JSON.parse(
@@ -9,10 +10,38 @@ const maxAttempts = Math.min(
   Math.max(1, Number(process.env.WASTE_GUIDE_SOURCE_MAX_ATTEMPTS || 5))
 );
 const failures = [];
+const sourceCheckUserAgent = "MilosApps-Waste-Guide-Source-Check/0.1 (+manual editorial verification)";
 
 function shouldRetry(error) {
   const status = Number(/^HTTP (\d{3})$/.exec(error.message)?.[1]);
   return !status || status === 408 || status === 429 || status >= 500;
+}
+
+function checkWithCurl(source) {
+  const nullDevice = process.platform === "win32" ? "NUL" : "/dev/null";
+  const statusText = execFileSync(
+    "curl",
+    [
+      "--location",
+      "--silent",
+      "--show-error",
+      "--output",
+      nullDevice,
+      "--write-out",
+      "%{http_code}",
+      "--max-time",
+      String(Math.max(1, Math.ceil(timeoutMs / 1000))),
+      "--user-agent",
+      sourceCheckUserAgent,
+      source.url
+    ],
+    { encoding: "utf8", timeout: timeoutMs + 5000 }
+  ).trim();
+  const status = Number(statusText.slice(-3));
+  if (!Number.isInteger(status) || status < 200 || status >= 400) {
+    throw new Error(`curl HTTP ${statusText || "unbekannt"}`);
+  }
+  return status;
 }
 
 async function checkSource(source) {
@@ -25,7 +54,7 @@ async function checkSource(source) {
         redirect: "follow",
         signal: controller.signal,
         headers: {
-          "user-agent": "MilosApps-Waste-Guide-Source-Check/0.1 (+manual editorial verification)"
+          "user-agent": sourceCheckUserAgent
         }
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -35,8 +64,14 @@ async function checkSource(source) {
     } catch (error) {
       const retry = attempt < maxAttempts && shouldRetry(error);
       if (!retry) {
-        failures.push(`${source.id}: ${error.name === "AbortError" ? "Zeitüberschreitung" : error.message}`);
-        console.error(`FEHLER ${source.id} ${failures.at(-1)}`);
+        try {
+          const status = checkWithCurl(source);
+          console.log(`OK ${source.id} ${status} ${source.url} (curl fallback)`);
+        } catch (curlError) {
+          const fetchMessage = error.name === "AbortError" ? "Zeitüberschreitung" : error.message;
+          failures.push(`${source.id}: fetch ${fetchMessage}; curl ${curlError.message}`);
+          console.error(`FEHLER ${source.id} ${failures.at(-1)}`);
+        }
         return;
       }
       console.warn(`RETRY ${source.id} ${attempt}/${maxAttempts}: ${error.message}`);
