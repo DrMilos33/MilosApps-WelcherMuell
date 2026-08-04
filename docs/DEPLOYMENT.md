@@ -16,7 +16,7 @@
   `built`/`success` am 03.08.2026
 - Shell: vendortes `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`
-- Production-Freigabe: `false`
+- Production-Freigabe dieses DEV-Artefakts: `false`
 
 Portal, Shared, Nutzerkonto und Datenbank sind keine Laufzeitabhängigkeiten.
 
@@ -115,11 +115,16 @@ Ein Deploy verändert deshalb weder `reviewedAt` noch `reviewDue`.
 
 ## Production-Grenze
 
-Dieses Hosting ist explizit DEV. Nicht erlaubt sind ohne neue ausdrückliche
-Freigabe:
+Dieses Hosting bleibt trotz der gesonderten Production-Freigabe explizit DEV.
+Die Kampagne `public-app-production-launch-2026-08` erlaubt ausschließlich ein
+getrenntes Cloudflare-Pages-Production-Ziel. Nicht erlaubt sind:
 
-- eine Production-URL oder ein Production-Branch;
+- das Umwidmen oder Verschieben von `dev-pages`;
 - Änderungen an `milos-apps.de`;
 - OpenAI-Sites-Deployments;
 - automatische Portaländerungen;
 - stilles Anheben von Inhalts- oder Quellenständen.
+
+Der lokale Production-Kandidat und sein Rollbackvertrag stehen in
+`PRODUCTION_CANDIDATE.md`. Ohne bestätigte Cloudflare-Project-ID und öffentliche
+URL endet der Ablauf nach Build und lokalem Full Gate; es erfolgt kein Publish.

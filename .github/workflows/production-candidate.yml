@@ -1,0 +1,51 @@
+name: Production candidate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - codex/waste-guide-production-launch
+
+permissions:
+  contents: read
+
+concurrency:
+  group: waste-guide-production-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  full-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      WASTE_GUIDE_SOURCE_COMMIT: ${{ github.sha }}
+      WASTE_GUIDE_PRODUCTION_URL: https://milosapps-waste-guide-production.pages.dev/
+      WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED: "0"
+      WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH: codex/waste-guide-production-launch
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:shell
+      - run: pnpm test:essentials
+      - run: pnpm test
+      - run: pnpm test:sources:online
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - run: pnpm build:cloudflare:production
+      - run: pnpm test:production:artifact
+      - run: pnpm test:e2e:production
+      - uses: actions/upload-artifact@v4
+        with:
+          name: waste-guide-production-candidate-${{ github.sha }}
+          path: dist/production
+          if-no-files-found: error
+          retention-days: 7

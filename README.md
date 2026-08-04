@@ -17,7 +17,8 @@ Nutzerdatenbank sind nicht nötig.
 - gemeinsame öffentliche Interaktionen: lokal vendortes
   `public-app-essentials/v1.1.5` für kompakten Start, ehrlichen
   Datenschutzhinweis und Teilen
-- Production: nicht freigegeben
+- Production: durch Kampagne `public-app-production-launch-2026-08`
+  freigegeben; getrennter Cloudflare-Pages-Kandidat noch nicht veröffentlicht
 
 Der unabhängige öffentliche DEV-Stand ist ohne Portal und ohne Login erreichbar:
 
@@ -30,8 +31,10 @@ Repository:  https://github.com/DrMilos33/MilosApps-WelcherMuell
 Deploymentquelle ist
 `5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c`; der getrennte
 Pages-Artefaktcommit ist `3e7d427eb9d4159791d741933d57e75e4e88ad8b`.
-GitHub Pages ist ausschließlich der DEV-Host. Production bleibt nicht
-freigegeben.
+GitHub Pages bleibt ausschließlich der DEV-Host. Der getrennte
+Cloudflare-Pages-Production-Kandidat besitzt bis zur Bestätigung von Project-ID
+und URL keinen veröffentlichten Endpunkt. Seine Reproduktion steht unter
+[Production-Kandidat](docs/PRODUCTION_CANDIDATE.md).
 
 Der lokale DEV- und E2E-Port bleibt fest auf `4318` reserviert:
 
@@ -73,6 +76,20 @@ $env:WASTE_GUIDE_EXPECTED_SOURCE_COMMIT=(git rev-parse HEAD)
 pnpm test:remote:dev
 pnpm test:all
 ```
+
+Der Production-Kandidat wird getrennt nach `dist/production` gebaut:
+
+```powershell
+$env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
+$env:WASTE_GUIDE_PRODUCTION_URL="https://milosapps-waste-guide-production.pages.dev/"
+$env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="0"
+pnpm build:cloudflare:production
+pnpm test:production:artifact
+pnpm test:e2e:production
+```
+
+Die URL ist bis zur Cloudflare-Bestätigung nur die explizite Kandidaten-URL;
+der Builder veröffentlicht nichts.
 
 `test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler,
 flüchtige Einstellungen, Endgeräteinventar und die app-spezifische
@@ -143,4 +160,5 @@ vorschlägt, ohne die Eingabe stillschweigend umzudeuten.
 - [QA-Bericht](docs/QA_REPORT.md)
 - [DEV- und Portal-Übergabe](docs/DEV_HANDOFF.md)
 - [DEV-Deployment und Rollback](docs/DEPLOYMENT.md)
+- [Production-Kandidat und Rollback](docs/PRODUCTION_CANDIDATE.md)
 - [Erkenntnisse](docs/LEARNINGS.md)

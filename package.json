@@ -13,9 +13,12 @@
     "test:sources:online": "node scripts/check-sources.mjs",
     "test:e2e": "node tests/e2e/run.mjs",
     "test:e2e:shell-transition": "node tests/e2e/shell-transition.mjs",
+    "test:e2e:production": "node tests/e2e/production-candidate.mjs",
     "test:remote:dev": "node tests/e2e/remote-smoke.mjs",
     "test:all": "pnpm test:shell && pnpm test:essentials && node --test tests/unit/*.test.mjs && node tests/e2e/run.mjs",
-    "build:github-pages:dev": "node scripts/build-github-pages-dev.mjs"
+    "build:github-pages:dev": "node scripts/build-github-pages-dev.mjs",
+    "build:cloudflare:production": "node scripts/build-cloudflare-pages-production.mjs",
+    "test:production:artifact": "node scripts/verify-cloudflare-pages-production.mjs"
   },
   "engines": {
     "node": ">=20"

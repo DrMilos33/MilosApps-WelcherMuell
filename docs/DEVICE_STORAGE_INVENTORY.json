@@ -48,7 +48,7 @@
     },
     {
       "api": "CacheStorage",
-      "identifier": "waste-guide-2026-08-01-essentials-v1-1",
+      "identifier": "waste-guide-2026-08-03-search-v6",
       "purpose": "Ausschließlich öffentliche App-Dateien für die ausdrücklich aktivierte Offline-Nutzung vorhalten",
       "lifetime": "bounded-by-app-cache-version-or-browser-clear",
       "trigger": "service-worker-after-explicit-user-action",

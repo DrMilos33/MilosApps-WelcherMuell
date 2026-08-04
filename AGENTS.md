@@ -10,7 +10,7 @@ Dieses Repository enthält ausschließlich `Welcher Müll?` mit dem App-Key
 - App-Klasse: `öffentlich`
 - Plattformen: `Web, mobil und Desktop`
 - Datenhaltung: `redaktionelle App-Daten; optionale grobe Region und letzte Suche lokal; keine Nutzerdatenbank`
-- Deployment: `eigener DEV-Dienst; Production nicht freigegeben`
+- Deployment: `eigener GitHub-Pages-DEV-Dienst; Production ausschließlich über die freigegebene Kampagne public-app-production-launch-2026-08 auf getrenntem Cloudflare-Pages-Ziel`
 - Gemeinsame Abhängigkeiten: `keine`
 
 Wenn der lokale MilosApps Workspace verfügbar ist, vor appübergreifenden
@@ -24,8 +24,9 @@ Wenn der lokale MilosApps Workspace verfügbar ist, vor appübergreifenden
   Aktualisierungsdatum dokumentieren.
 - Regionale Regeln nicht verallgemeinern und Unsicherheit offen anzeigen.
 - Keine Datenbank, Cookies, Secrets oder Quellcode mit anderen Apps teilen.
-- DEV und Production strikt trennen; Production nur nach ausdrücklicher
-  Freigabe verändern.
+- DEV und Production strikt trennen. Die Production-Freigabe vom 04.08.2026
+  gilt ausschließlich für den kampagnengebundenen Cloudflare-Pages-Lifecycle;
+  ohne bestätigte Project-ID und URL wird nicht veröffentlicht.
 
 ## Qualität
 
