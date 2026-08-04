@@ -23,6 +23,7 @@ function checkWithCurl(source) {
     "curl",
     [
       "--location",
+      "--ipv4",
       "--silent",
       "--show-error",
       "--output",
