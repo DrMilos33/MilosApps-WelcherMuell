@@ -30,7 +30,7 @@ function parseHeaderBlock(path) {
       .map((line) => line.trim())
       .map((line) => {
         const separator = line.indexOf(":");
-        return [line.slice(0, separator), line.slice(separator + 1).trim()];
+        return [line.slice(0, separator).toLowerCase(), line.slice(separator + 1).trim()];
       })
   );
 }
@@ -163,7 +163,7 @@ try {
       return {
         devHidden: root.querySelector(".dev").hidden,
         brand: root.querySelector(".brand").href,
-        apps: root.querySelector('a[data-text="apps"]').href,
+        apps: root.querySelector('[data-text="allApps"]').closest("a").href,
         privacy: root.querySelector('a[data-text="privacy"]').href
       };
     });
