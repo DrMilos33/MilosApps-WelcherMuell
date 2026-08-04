@@ -182,7 +182,7 @@ try {
     await submit(page, "TOast");
     assert.doesNotMatch(await page.locator("#results").innerText(), /Elektrogerät/);
     await shell.evaluate((element) => element.shadowRoot.querySelector('button[data-locale="en"]').click());
-    await page.getByRole("heading", { name: "Which bin?", exact: true }).waitFor();
+    await page.getByRole("heading", { name: "Waste guide", exact: true }).waitFor();
     await submit(page, "iron bar");
     assert.match(await page.locator("#results").innerText(), /recycling centre/i);
     assert.equal(await page.evaluate(() => document.cookie), "");
