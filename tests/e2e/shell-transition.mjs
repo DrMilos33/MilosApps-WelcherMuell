@@ -258,8 +258,11 @@ try {
   await withTimeout(bootstrapRequestedGate.promise, "Shell-Bootstrap");
   const beforeUpgrade = await withTimeout(
     stateGates.before.promise,
-    "Essentials-CSS bei undefinierter Shell"
-  );
+    "Essentials-CSS bei undefinierter Shell",
+    15000
+  ).catch(async (error) => {
+    throw new Error(`${error.message} Zustand: ${JSON.stringify(await readGeometry(page))}`);
+  });
   bootstrapGate.release();
   await withTimeout(cssRequestedGate.promise, "Shell-Komponenten-CSS");
   const whileCssPending = await withTimeout(
