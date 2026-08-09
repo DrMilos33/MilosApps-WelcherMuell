@@ -17,8 +17,8 @@
   "feedback": {
     "provider": "Cloudflare Worker + D1",
     "environment": "DEV",
-    "endpoint": null,
-    "healthUrl": null,
+    "endpoint": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/v1/feedback",
+    "healthUrl": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/healthz",
     "productionApproved": false
   },
   "suggestedPortalRoute": "/apps/waste-guide",

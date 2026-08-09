@@ -23,6 +23,17 @@ pnpm feedback:dev
 Die App selbst nutzt lokal ihren integrierten Testadapter auf `/api/feedback`.
 Wrangler steht für eine echte lokale D1-Prüfung separat auf Port 4319 bereit.
 
+## Aktuelles DEV-Ziel
+
+- Worker: `milosapps-waste-guide-feedback-dev`
+- HTTPS: `https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev`
+- D1: `milosapps-waste-guide-feedback-dev`, EU-Jurisdiktion
+- Health: `/healthz`, `environment=DEV`, `productionApproved=false`
+
+Der echte Cloudflare-Ressourcen-Identifier bleibt in der ignorierten Datei
+`wrangler.deploy.jsonc`; sie enthält keine Secrets. Die versionierte Vorlage
+bleibt portabel.
+
 ## Einmalig für DEV bereitstellen
 
 Cloudflare-Anmeldung und ein app-eigenes Ziel sind Voraussetzung:
@@ -40,7 +51,7 @@ Danach werden Worker-Health und ein Testdatensatz geprüft. Erst dann wird die
 App mit der absoluten HTTPS-Adresse gebaut:
 
 ```powershell
-$env:WASTE_GUIDE_FEEDBACK_ENDPOINT='https://<worker>.workers.dev/v1/feedback'
+$env:WASTE_GUIDE_FEEDBACK_ENDPOINT='https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/v1/feedback'
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
 pnpm build:github-pages:dev
 ```

@@ -55,7 +55,7 @@
       "personalDataRisk": "Optional free text may contain information entered by the user; the UI asks users not to submit names or contact details.",
       "retention": "automatically deleted after 365 days",
       "publicReadAccess": false,
-      "deploymentStatus": "local candidate; external DEV deployment blocked until Cloudflare authentication and resource IDs exist"
+      "deploymentStatus": "DEV deployed; explicit submissions are stored in the app-owned EU-jurisdiction D1 database"
     }
   },
   "deviceAccess": [
@@ -129,7 +129,9 @@
       "runtimeRequest": true,
       "userTriggered": true,
       "credentialsInBrowser": false,
-      "status": "not externally deployed"
+      "status": "DEV deployed",
+      "endpoint": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/v1/feedback",
+      "healthUrl": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/healthz"
     }
   ],
   "legacyKeys": [

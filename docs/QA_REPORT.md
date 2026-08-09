@@ -979,8 +979,13 @@ Meldung mit HTTP 201 an und lieferte sie anschließend per SQL mit
 der Direktversand, alle vier Platzhalter, die fehlende Oberkante am
 Kommentarfeld sowie null Browserpersistenz sind darin enthalten.
 
-Externer Status: kein Push oder Deployment. Auf dem Rechner ist weder eine
-Cloudflare-CLI-Sitzung noch `CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID`
-vorhanden. Ohne app-eigene D1-ID und endgültige Worker-HTTPS-Adresse verweigert
-der Pages-Builder bewusst ein Artefakt. Der vorherige gesunde DEV-Stand
-`52f07ad` / `5714c1a` bleibt deshalb unverändert.
+Externer Dienstnachweis: Der Worker
+`milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev` wurde mit
+D1-Binding, globalem 30/60-Sekunden-Limit und täglichem Lösch-Cron in DEV
+veröffentlicht. Seine Datenbank liegt in der EU-Jurisdiktion. `/healthz`
+antwortete mit HTTP 200 und exakt `appKey=waste-guide`, `service=feedback`,
+`environment=DEV`, `productionApproved=false`. Ein CORS-POST von der exakten
+GitHub-Pages-Origin wurde mit HTTP 201 angenommen, per Remote-D1-SQL als
+`review_state=new` gelesen und danach als klar markierter QA-Datensatz wieder
+gelöscht. Erst dieser Nachweis hebt das fail-closed Build-Gate für das neue
+Pages-Artefakt auf.

@@ -81,19 +81,21 @@ Vor einer Aktualisierung gelten zwingend:
 5. Artefakt erzeugen, Hashmanifest prüfen und erst dann `dev-pages` bewegen;
 6. Pages-Status `built`, Remote-Smoke und Browser-Direktaufruf prüfen.
 
-## Feedbackdienst und aktueller externer Blocker
+## Feedbackdienst (DEV)
 
 `feedback-worker/` enthält Worker, D1-Migration, Summary-View, Auswertungsquery,
 lokale Wrangler-Konfiguration und eine deploybare Konfigurationsvorlage. Lokal
 sind Migration, echter Worker-Health, D1-Insert und anschließende SQL-Abfrage
 reproduzierbar geprüft. Der Dienst akzeptiert keine öffentlichen Leseanfragen.
 
-Extern fehlen aktuell eine geladene Cloudflare-Anmeldung, die app-eigene
-D1-`database_id` und damit die endgültige Worker-HTTPS-Adresse. Deshalb bleiben
-Source-Push und GitHub-Pages-Deploy dieses Kandidaten angehalten; die bestehende
-DEV-App und ihr Rollbackpunkt werden nicht überschrieben. Nach Anmeldung gelten
-die Schritte aus `feedback-worker/README.md`, anschließend direkte CORS-/POST-,
-D1-, Browser- und Fehlerfallprüfung.
+Der app-eigene Worker ist unter
+`https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev`
+veröffentlicht. Seine D1-Datenbank `milosapps-waste-guide-feedback-dev` liegt in
+der EU-Jurisdiktion. `/healthz` muss `appKey=waste-guide`, `service=feedback`,
+`environment=DEV` und `productionApproved=false` ausweisen. Vor jedem
+App-Artefakt werden CORS, ein echter POST, die anschließende D1-Abfrage und die
+Löschung des QA-Datensatzes geprüft. Die Analyseabfragen stehen in
+`feedback-worker/queries/analysis.sql`.
 
 ## Rollback
 
