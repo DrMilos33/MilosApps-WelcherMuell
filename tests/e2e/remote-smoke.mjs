@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
 import { chromium } from "playwright";
 
 const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT;
@@ -115,7 +115,9 @@ const iconResponse = await fetch(new URL("assets/icon.svg", baseUrl), { redirect
 assert.equal(iconResponse.status, 200);
 assert.match(iconResponse.headers.get("content-type") ?? "", /^image\/svg\+xml(?:;|$)/);
 const remoteIcon = Buffer.from(await iconResponse.arrayBuffer());
-const sourceIcon = await readFile(new URL("../../assets/icon.svg", import.meta.url));
+const sourceIcon = execFileSync("git", ["show", `${expectedSourceCommit}:assets/icon.svg`], {
+  cwd: new URL("../../", import.meta.url)
+});
 assert.equal(createHash("sha256").update(remoteIcon).digest("hex"), createHash("sha256").update(sourceIcon).digest("hex"));
 
 for (const stylesheet of ["milos-app-shell.css", "milos-app-shell-theme.css"]) {
@@ -303,6 +305,56 @@ try {
   assert.equal(await page.getByText("Elektrogerät", { exact: true }).count(), 0);
   assert.match((await page.locator(".result-destination").textContent()) ?? "", /Biotonne/);
 
+  await page.getByLabel("Gegenstand oder Material").fill("Öl");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Welche Art Öl ist es?", exact: true }).waitFor();
+  await page.getByRole("button", { name: /Speise- oder Frittieröl/ }).click();
+  await page.getByRole("heading", { name: "Speiseöl oder Frittierfett", exact: true }).waitFor();
+
+  await page.getByLabel("Gegenstand oder Material").fill("Pizzareste");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Lebensmittelreste", exact: true }).waitFor();
+
+  await page.getByLabel("Gegenstand oder Material").fill("nasse Farbe");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Flüssige Farbe oder Lack", exact: true }).waitFor();
+  assert.equal(await page.getByRole("heading", { name: "Eingetrocknete Farbe", exact: true }).count(), 0);
+
+  await page.getByLabel("Gegenstand oder Material").fill("Was für Werkzeug?");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Hat das Werkzeug Strom?", exact: true }).waitFor();
+  await page.getByRole("button", { name: /reines Handwerkzeug/ }).click();
+  await page.getByRole("button", { name: /sauber und leer/ }).click();
+  await page.getByRole("button", { name: /Metall oder Eisen/ }).click();
+  await page.getByRole("heading", { name: "Eisen oder Metall", exact: true }).waitFor();
+
+  await page.evaluate(() => {
+    window.open = (url) => {
+      window.__feedbackIssueUrl = url;
+      return null;
+    };
+  });
+  await page.getByRole("button", { name: "Ergebnis melden", exact: true }).click();
+  await page.getByLabel("Kommentar (optional)").fill("Externer DEV-Smoke");
+  await page.getByRole("button", { name: "Auf GitHub prüfen und senden", exact: true }).click();
+  const feedbackIssue = new URL(await page.evaluate(() => window.__feedbackIssueUrl));
+  assert.equal(feedbackIssue.origin, "https://github.com");
+  assert.match(feedbackIssue.searchParams.get("body"), /Was für Werkzeug\?/);
+
+  await page.getByLabel("Gegenstand oder Material").fill("Haushaltschemikalien");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  const longSubject = page.getByRole("heading", { name: "Haushaltschemikalien", exact: true });
+  await longSubject.waitFor();
+  const longSubjectGeometry = await longSubject.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return {
+      lines: Math.round(rect.height / Number.parseFloat(getComputedStyle(element).lineHeight)),
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      oldArrowCount: document.querySelectorAll(".result-arrow").length
+    };
+  });
+  assert.deepEqual(longSubjectGeometry, { lines: 1, overflow: 0, oldArrowCount: 0 });
+
   await shell.getByRole("button", { name: "EN", exact: true }).click();
   await page.locator("html[lang='en']").waitFor();
   await page.getByLabel("Item or material").fill("old medicine");
@@ -350,6 +402,13 @@ try {
   assert.ok(zoomGeometry.overflow <= 1, `200% text zoom overflow: ${JSON.stringify(zoomGeometry)}`);
   assert.equal(zoomGeometry.iconWidth, 38);
   assert.equal(zoomGeometry.undersized, 0);
+  await page.getByLabel("Gegenstand oder Material").fill("Haushaltschemikalien");
+  await page.getByRole("button", { name: "Suchen" }).click();
+  await page.getByRole("heading", { name: "Haushaltschemikalien", exact: true }).waitFor();
+  assert.ok(
+    await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth) <= 1,
+    "long result overflows at 200% text zoom"
+  );
 
   assert.deepEqual(consoleErrors, []);
   assert.deepEqual(failedResponses, []);
@@ -377,5 +436,7 @@ console.log(JSON.stringify({
   offlineOptIn: true,
   shareFallback: true,
   compactResultHeader: true,
+  guidedGeneralTerms: true,
+  resultFeedbackHandoff: true,
   textZoom200: true
 }, null, 2));
