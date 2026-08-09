@@ -18,6 +18,13 @@
   "healthcheck": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
   "localDevUrl": "http://127.0.0.1:4318/",
   "localHealthcheck": "http://127.0.0.1:4318/healthz",
+  "feedback": {
+    "provider": "Cloudflare Worker + D1",
+    "environment": "DEV",
+    "endpoint": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/v1/feedback",
+    "healthUrl": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/healthz",
+    "productionApproved": false
+  },
   "suggestedPortalRoute": "/apps/waste-guide",
   "previewImage": {
     "path": "/MilosApps-WelcherMuell/assets/preview.svg",
@@ -27,8 +34,8 @@
   "deployment": {
     "provider": "GitHub Pages",
     "environment": "DEV",
-    "sourceCommit": "52f07ad9c81808f8840ce964f5516fa31f4b0980",
-    "sourceTree": "69469440e064b2cddf68942a099166fa39b1cd0e",
+    "sourceCommit": "e573e7711e69f5b59603f611e64adc9f29c490e3",
+    "sourceTree": "57d85c1da6d56eef9fae40207b86abf052f8476e",
     "branch": "dev-pages",
     "productionApproved": false
   },

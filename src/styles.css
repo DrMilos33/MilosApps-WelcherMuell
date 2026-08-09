@@ -1177,7 +1177,9 @@ dialog::backdrop {
 }
 
 .feedback-content .field-group {
-  margin-top: 1rem;
+  margin-top: 0.8rem;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .feedback-content textarea {
@@ -1207,6 +1209,25 @@ dialog::backdrop {
   color: #fff;
   background: var(--brand);
   font-weight: 850;
+}
+
+.dialog-actions button[type="submit"][aria-busy="true"] {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.feedback-status {
+  margin: 0.65rem 0 0;
+  color: var(--danger-ink);
+  font-weight: 750;
+}
+
+.feedback-trap {
+  position: fixed;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
 
 .offline-setting button {

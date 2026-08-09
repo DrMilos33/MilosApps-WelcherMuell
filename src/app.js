@@ -9,7 +9,12 @@ import {
   suggestedAlternatives,
   validateItemIntegrity
 } from "./search.js";
-import { buildFeedbackIssueUrl } from "./feedback.js";
+import {
+  createFeedbackPayload,
+  feedbackEndpoint,
+  feedbackPlaceholderKey,
+  submitFeedback
+} from "./feedback.js";
 import {
   localizeCatalogs,
   normalizeLanguage,
@@ -51,6 +56,8 @@ const elements = {
   feedbackForm: document.querySelector("#feedback-form"),
   feedbackContext: document.querySelector("#feedback-context"),
   feedbackComment: document.querySelector("#feedback-comment"),
+  feedbackStatus: document.querySelector("#feedback-status"),
+  feedbackSubmit: document.querySelector("#submit-feedback"),
   closeFeedback: document.querySelector("#close-feedback"),
   cancelFeedback: document.querySelector("#cancel-feedback"),
   trust: document.querySelector(".trust-section"),
@@ -180,6 +187,21 @@ function applyStaticTranslations() {
     button.textContent = t(button.dataset.queryKey);
   });
   elements.trustHint.textContent = t(elements.trust.open ? "trustHide" : "trustShow");
+  updateFeedbackPlaceholder();
+}
+
+function selectedFeedbackReason() {
+  return elements.feedbackForm.querySelector('input[name="feedback-reason"]:checked')?.value ?? "wrong";
+}
+
+function updateFeedbackPlaceholder() {
+  elements.feedbackComment.placeholder = t(feedbackPlaceholderKey(selectedFeedbackReason()));
+}
+
+function setFeedbackSubmitting(submitting) {
+  elements.feedbackSubmit.disabled = submitting;
+  elements.feedbackSubmit.setAttribute("aria-busy", String(submitting));
+  elements.feedbackSubmit.textContent = t(submitting ? "feedbackSending" : "feedbackContinue");
 }
 
 function selectedRegion() {
@@ -661,6 +683,10 @@ function openFeedback(itemId) {
   if (!item) return;
   state.feedbackItemId = item.id;
   elements.feedbackForm.reset();
+  elements.feedbackStatus.hidden = true;
+  elements.feedbackStatus.textContent = "";
+  setFeedbackSubmitting(false);
+  updateFeedbackPlaceholder();
   elements.feedbackContext.textContent = t("feedbackContext", { name: item.name });
   elements.feedbackDialog.showModal();
   elements.feedbackForm.querySelector('input[name="feedback-reason"]:checked')?.focus();
@@ -669,6 +695,7 @@ function openFeedback(itemId) {
 function closeFeedback() {
   if (elements.feedbackDialog.open) elements.feedbackDialog.close();
   state.feedbackItemId = null;
+  setFeedbackSubmitting(false);
 }
 
 function resetSearch({ updateUrl: shouldUpdateUrl = true, focus = true } = {}) {
@@ -835,24 +862,38 @@ function bindEvents() {
   elements.feedbackDialog.addEventListener("cancel", () => {
     state.feedbackItemId = null;
   });
-  elements.feedbackForm.addEventListener("submit", (event) => {
+  elements.feedbackForm.addEventListener("change", (event) => {
+    if (event.target.matches('input[name="feedback-reason"]')) updateFeedbackPlaceholder();
+  });
+  elements.feedbackForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const item = state.items.find((candidate) => candidate.id === state.feedbackItemId);
-    if (!item) return;
+    if (!item || elements.feedbackSubmit.disabled) return;
     const formData = new FormData(elements.feedbackForm);
-    const issueUrl = buildFeedbackIssueUrl({
-      itemId: item.id,
-      itemName: item.name,
-      reason: String(formData.get("feedback-reason") ?? "wrong"),
-      comment: elements.feedbackComment.value,
-      query: state.lastQuery,
-      contentVersion: state.contentVersion,
-      language: state.language,
-      resultUrl: window.location.href
-    });
-    window.open(issueUrl, "_blank", "noopener,noreferrer");
-    closeFeedback();
-    showToast(t("feedbackOpened"));
+    elements.feedbackStatus.hidden = true;
+    setFeedbackSubmitting(true);
+    try {
+      const payload = createFeedbackPayload({
+        itemId: item.id,
+        itemName: item.name,
+        reason: String(formData.get("feedback-reason") ?? "wrong"),
+        comment: elements.feedbackComment.value,
+        query: state.lastQuery,
+        contentVersion: state.contentVersion,
+        language: state.language,
+        resultUrl: window.location.href,
+        website: String(formData.get("feedback-website") ?? "")
+      });
+      await submitFeedback(feedbackEndpoint(), payload);
+      closeFeedback();
+      showToast(t("feedbackStored"));
+    } catch (error) {
+      console.warn("Feedback could not be stored.", error);
+      setFeedbackSubmitting(false);
+      elements.feedbackStatus.textContent = t("feedbackSendError");
+      elements.feedbackStatus.hidden = false;
+      elements.feedbackStatus.focus?.();
+    }
   });
   elements.trust.addEventListener("toggle", () => {
     elements.trustHint.textContent = t(elements.trust.open ? "trustHide" : "trustShow");

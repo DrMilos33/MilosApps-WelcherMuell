@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#163d36">
     <meta name="description" content="Welcher Müll? gibt kurze, quellenbasierte Entsorgungshinweise und zeigt regionale Unsicherheit offen an.">
     <meta name="color-scheme" content="light dark">
+    <meta name="waste-guide-feedback-endpoint" content="https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/v1/feedback">
     <link rel="manifest" href="./manifest.webmanifest">
     <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="./vendor/milosapps-essentials/v1/milos-app-essentials.css">
@@ -175,14 +176,19 @@
                 <label><input type="radio" name="feedback-reason" value="unclear"><span data-i18n="feedbackUnclear">Die Erklärung ist unklar</span></label>
                 <label><input type="radio" name="feedback-reason" value="other"><span data-i18n="feedbackOther">Etwas anderes</span></label>
               </fieldset>
-              <label class="field-group" for="feedback-comment">
+              <label class="field-group feedback-comment-group" for="feedback-comment">
                 <span data-i18n="feedbackComment">Kommentar (optional)</span>
-                <textarea id="feedback-comment" name="feedback-comment" rows="4" maxlength="500" data-i18n-placeholder="feedbackCommentPlaceholder" placeholder="Was sollte stattdessen angezeigt werden?"></textarea>
+                <textarea id="feedback-comment" name="feedback-comment" rows="4" maxlength="500" placeholder="Was sollte stattdessen angezeigt werden?"></textarea>
               </label>
-              <p class="field-help" data-i18n="feedbackPrivacy">Die App speichert nichts. Erst der nächste Schritt öffnet eine vorausgefüllte GitHub-Meldung; gespeichert wird sie dort nur, wenn du sie absendest.</p>
+              <div class="feedback-trap" aria-hidden="true">
+                <label for="feedback-website">Website</label>
+                <input id="feedback-website" name="feedback-website" type="text" tabindex="-1" autocomplete="off">
+              </div>
+              <p class="field-help" data-i18n="feedbackPrivacy">Mit Abschicken werden diese Auswahl, der Suchbegriff und dein optionaler Kommentar im app-eigenen Meldedienst gespeichert. Bitte keine Namen oder Kontaktdaten eintragen.</p>
+              <p class="feedback-status" id="feedback-status" role="status" aria-live="polite" hidden></p>
               <div class="dialog-actions">
                 <button class="text-button" id="cancel-feedback" type="button" data-i18n="feedbackCancel">Abbrechen</button>
-                <button type="submit" data-i18n="feedbackContinue">Auf GitHub prüfen und senden</button>
+                <button id="submit-feedback" type="submit" data-i18n="feedbackContinue">Abschicken</button>
               </div>
             </div>
           </form>
