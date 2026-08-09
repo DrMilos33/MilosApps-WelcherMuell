@@ -154,6 +154,8 @@ getrenntes Cloudflare-Pages-Production-Ziel. Nicht erlaubt sind:
 - automatische Portaländerungen;
 - stilles Anheben von Inhalts- oder Quellenständen.
 
-Der lokale Production-Kandidat und sein Rollbackvertrag stehen in
-`PRODUCTION_CANDIDATE.md`. Ohne bestätigte Cloudflare-Project-ID und öffentliche
-URL endet der Ablauf nach Build und lokalem Full Gate; es erfolgt kein Publish.
+Der Production-Build und sein Rollbackvertrag stehen in
+`PRODUCTION_CANDIDATE.md`. Kanonische Production-URL ist
+`https://welcher-muell.milos-apps.de/`; die Cloudflare-`pages.dev`-Adresse ist
+nur technischer Fallback. Custom Domain, TLS und Portalredirect werden vor dem
+Publish getrennt und extern verifiziert.
