@@ -950,3 +950,14 @@ Dark Mode, Tastatur, Screenreader-Namen, 44-Pixel-Ziele, Reduced Motion,
 Offline-Opt-in, Rücknavigation und null Konsolenfehler. Der DEV-Publish wird
 erst aus dem nach diesen Gates erzeugten Quellcommit gebaut; Production ist
 nicht Teil dieser Änderung.
+
+Extern veröffentlicht: Runtime-Source
+`0b6fe0a9350aa6fe8478879f316913291c80aac2`, Pages-Artefakt
+`d5bf8bea48f925eb64877ceff4168044575dc4e4`, Pages-Run `31287160146`
+`success`. Der frische cookie-lose Remote-Smoke bestätigte App/Health HTTP 200,
+exakte DEV-Identität, `productionApproved=false`, Öl-/Werkzeug-Eingrenzung,
+Pizzareste, nasse Farbe ohne Trockentreffer, GitHub-Feedbackübergabe,
+No-Storage, DE/EN, Offline-Opt-in, 390 × 844 und 360 × 800 bei 200 Prozent.
+Der bytegenaue SVG-Nachweis vergleicht unter Windows den deployten Inhalt mit
+dem Git-Blob des erwarteten Source-SHA und nicht mit einer durch
+`core.autocrlf` materialisierten Arbeitskopie.
