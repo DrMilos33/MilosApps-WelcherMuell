@@ -1,0 +1,19 @@
+{
+  "contract": "public-app-essentials/v1",
+  "version": "1.1.5",
+  "sharedCommit": "2942132ad3bf6cf39edc9f52ed918de6a230be23",
+  "appKey": "waste-guide",
+  "manifest": "milos-essentials.json",
+  "manifestSha256": "sha256:d0cc61b001ddfe4603615bd2814450dd6efcda64768eeac45a56b4625c416286",
+  "vendorDirectory": "vendor/milosapps-essentials/v1",
+  "runtimeBasePath": "vendor/milosapps-essentials/v1",
+  "loadingIconRuntimePath": "./assets/icon.svg",
+  "artifacts": {
+    "milos-app-essentials.css": "sha256:45639329f6a94093354fd7d416a636d4e0da4d751b9fa97e2c75c84c7c6c4ade",
+    "milos-app-essentials-theme.css": "sha256:c5024328e7cd1fb08bdd1e1af3118e3073ed4697364db1232f986f3c187c083e",
+    "milos-app-essentials.js": "sha256:c361558a7bd98c7a40c64b99e1b7c68916cf6711ac6da76c51482067f458c83f",
+    "bootstrap.js": "sha256:c42da64871c4136d51a533d5731eaec8f92689c06ee88e96f1ed4a395af130f9",
+    "verify.mjs": "sha256:f9e35bef7cbae39780b96339792ac9e7e09c70fcb78c4df45e66808d79d93453",
+    "essentials-manifest.schema.json": "sha256:6d87625c2bb4d10d3b18f8c4ff7f6982512ba20cb7b3105c8be00432eed40385"
+  }
+}

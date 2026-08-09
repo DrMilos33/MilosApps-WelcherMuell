@@ -1,0 +1,19 @@
+{
+  "name": "Welcher Müll?",
+  "short_name": "Müll?",
+  "description": "Quellenbasierte Entsorgungshinweise mit sichtbarer regionaler Unsicherheit.",
+  "lang": "de-DE",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f1e8",
+  "theme_color": "#163d36",
+  "icons": [
+    {
+      "src": "/assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

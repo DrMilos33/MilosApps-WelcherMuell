@@ -1,0 +1,30 @@
+{
+  "name": "milosapps-welcher-muell",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Quellenbasierte, öffentliche Entsorgungs-Nachschlage-App",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "start": "node scripts/dev-server.mjs",
+    "test": "node --test tests/unit/*.test.mjs",
+    "test:shell": "node vendor/milosapps-shell/v2/verify.mjs --app-root . --manifest milos-app.json",
+    "test:essentials": "node vendor/milosapps-essentials/v1/verify.mjs --app-root . --manifest milos-essentials.json",
+    "test:sources:online": "node scripts/check-sources.mjs",
+    "test:e2e": "node tests/e2e/run.mjs",
+    "test:e2e:shell-transition": "node tests/e2e/shell-transition.mjs",
+    "test:remote:dev": "node tests/e2e/remote-smoke.mjs",
+    "feedback:test": "node --test tests/unit/feedback.test.mjs tests/unit/feedback-worker.test.mjs",
+    "feedback:migrate:local": "wrangler d1 migrations apply FEEDBACK_DB --local --config feedback-worker/wrangler.local.jsonc",
+    "feedback:dev": "wrangler dev --config feedback-worker/wrangler.local.jsonc --port 4319",
+    "test:all": "pnpm test:shell && pnpm test:essentials && node --test tests/unit/*.test.mjs && node tests/e2e/run.mjs",
+    "build:github-pages:dev": "node scripts/build-github-pages-dev.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1",
+    "wrangler": "4.120.0"
+  }
+}

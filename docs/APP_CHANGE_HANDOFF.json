@@ -1,0 +1,97 @@
+{
+  "$schema": "https://milos-apps.de/schemas/app-change-handoff.schema.json",
+  "campaignId": "public-app-shell-icon-transition-2026-08",
+  "appKey": "waste-guide",
+  "repository": "DrMilos33/MilosApps-WelcherMuell",
+  "ownerTask": "MilosApps – Welcher Müll?",
+  "status": "dev-verified",
+  "sourceSha": "2c60635b12c09b2c7549aab95228806b566a2a08",
+  "workflow": {
+    "changeClass": "shared-consumer",
+    "coordinationScope": "affected-owners"
+  },
+  "contract": {
+    "id": "public-app-essentials/v1",
+    "version": "1.1.5",
+    "sharedCommit": "2942132ad3bf6cf39edc9f52ed918de6a230be23",
+    "lockVerified": true
+  },
+  "tests": {
+    "tier": "contract",
+    "commands": [
+      "pnpm test:essentials (PASS)",
+      "pnpm test:shell (PASS)",
+      "pnpm test (91/91)",
+      "pnpm run test:e2e:shell-transition (lokal 390x844 plus 360x800@200%, PASS)",
+      "core.autocrlf=true fresh worktree: beide Vendor-Validatoren und i/lf w/lf PASS",
+      "pnpm run build:github-pages:dev plus beide Artefakt-Validatoren (PASS)",
+      "pnpm run test:remote:dev (extern, PASS)",
+      "WASTE_GUIDE_TRANSITION_URL=https://drmilos33.github.io/MilosApps-WelcherMuell/ pnpm run test:e2e:shell-transition (extern, PASS)",
+      "gezielter externer 1440x900-Endzustand: Icon 38x38, eine H1, clientWidth=scrollWidth, null Browserfehler",
+      "GitHub Pages Actions 30816179048 auf Artefakt f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1 (success)"
+    ],
+    "shellValidator": true,
+    "desktop": true,
+    "mobile": true,
+    "zoom200": true,
+    "deEnPersistence": true,
+    "accessibility": true
+  },
+  "dev": {
+    "url": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
+    "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
+    "artifactSha": "f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1",
+    "externalQa": true
+  },
+  "portal": {
+    "route": "/apps/waste-guide",
+    "integrationRequested": false,
+    "routesVerified": [
+      "/apps/waste-guide"
+    ]
+  },
+  "iterationEvidence": [
+    {
+      "round": 1,
+      "findings": [
+        "Der frühere Test erfasste das intrinsisch begrenzte SVG vor der Critical-CSS; mit geladener Essentials-v1.1.3-CSS und undefinierter Shell maß es tatsächlich 40 mal 40 Pixel.",
+        "Der erste externe Übergangstest erwartete JSON-MIME für den statischen Healthcheck, obwohl GitHub Pages dessen valides JSON als application/octet-stream ausliefert."
+      ],
+      "changes": [
+        "Essentials wurde atomar auf v1.1.5 synchronisiert; die gemeinsame Critical-CSS begrenzt den undefinierten Shell-Slot nun auf 38 mal 38 Pixel, ohne app-eigenen CSS-Override.",
+        "Der fokussierte Test blockiert Bootstrap und Komponenten-CSS getrennt und akzeptiert den Healthcheck nur nach erfolgreichem JSON-Parsing und vollständiger App-Identitätsprüfung unabhängig vom MIME."
+      ],
+      "tests": [
+        "Rotlauf unter v1.1.3: undefinierter Zustand 40 mal 40 Pixel.",
+        "Lokal und extern unter v1.1.5: verborgen 38 mal 38, während CSS-Verzögerung sichtbar 38 mal 38, Endzustand exakt 38 mal 38; Loader separat 32 mal 32.",
+        "390 mal 844, 360 mal 800 bei 200 Prozent und 1440 mal 900 ohne horizontalen Überlauf oder Browserfehler."
+      ],
+      "outcome": "Der riesige App-Icon-Flash am Loaderende ist im öffentlichen Waste-Guide-DEV in allen drei Übergangsphasen regressionsgesichert ausgeschlossen."
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "kind": "product-commit",
+      "value": "75fa779c67c118b1018b146ef70ade8f8031042c"
+    },
+    {
+      "kind": "owner-commit",
+      "value": "2c60635b12c09b2c7549aab95228806b566a2a08"
+    },
+    {
+      "kind": "artifact",
+      "value": "f90ecb3f621d5c6f1b0494fc92890a0ebf0d5de1"
+    },
+    {
+      "kind": "pages-run",
+      "value": "30816179048"
+    }
+  ],
+  "rollback": "Den App-DEV-Source auf 2760bf6402a36e0811be63a20dee54ad02e6edde und dev-pages auf den zuvor gesunden Artefaktcommit cefdd80d2d3a33b205ff1b15cea5be3f57213302 zurückführen; anschließend Pages built, Health-Identität und Remote-Smoke erneut prüfen. Portalroute und Production bleiben unverändert.",
+  "learnings": [
+    "Ein Web-Component-Slot braucht getrennte Messpunkte vor Upgrade, nach Upgrade bei verzögerter Komponenten-CSS und im Endzustand; intrinsische Maße plus fertige CSS allein schließen einen Größen-Flash nicht aus.",
+    "Ein statischer Readiness-Body kann korrektes JSON mit generischem MIME liefern; die Identitätsprüfung muss fail-closed auf parsebaren Inhalt und erwartete Felder prüfen, nicht auf HTTP 200 oder MIME allein.",
+    "Der technische Shared-Pin und die Cachekennung ändern weder Fachinhalt noch Inhalts- oder Quellenreview."
+  ],
+  "productionApproved": false
+}

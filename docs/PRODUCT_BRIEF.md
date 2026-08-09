@@ -27,8 +27,12 @@ wenn örtliche Regeln abweichen.
 
 ## Datenschutz
 
-Die App funktioniert ohne Standort. Eine grobe Region und letzte Suchbegriffe
-dürfen nur lokal und löschbar gespeichert werden.
+Die App funktioniert ohne Standort. Die grobe Region gilt nur für die aktuell
+geöffnete Seite; ein Suchverlauf wird nicht gespeichert. Die Sprache steht
+sichtbar in der URL. Frühere optionale Speicherwerte werden nicht mehr gelesen
+oder geschrieben und können über die Website-Daten des Browsers entfernt
+werden. Öffentliche App-Dateien werden erst nach
+der ausdrücklichen Aktion „Offline aktivieren“ zwischengespeichert.
 
 ## Portalvertrag
 

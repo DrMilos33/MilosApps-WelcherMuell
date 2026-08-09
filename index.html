@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#163d36">
+    <meta name="description" content="Welcher Müll? gibt kurze, quellenbasierte Entsorgungshinweise und zeigt regionale Unsicherheit offen an.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="waste-guide-feedback-endpoint" content="/api/feedback">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./vendor/milosapps-essentials/v1/milos-app-essentials.css">
+    <link rel="stylesheet" href="./vendor/milosapps-essentials/v1/milos-app-essentials-theme.css">
+    <link rel="stylesheet" href="./src/styles.css">
+    <title>Welcher Müll? – MilosApps</title>
+  </head>
+  <body data-milos-essentials-loading>
+    <section data-milos-app-loading role="status" aria-live="polite">
+      <div data-milos-loading-card>
+        <img data-milos-loading-icon src="./assets/icon.svg" width="32" height="32" alt="">
+        <span data-milos-loading-brand>MilosApps</span>
+        <p data-milos-loading-title>Welcher Müll?</p>
+        <p data-milos-loading-message>Entsorgungshinweise werden vorbereitet …</p>
+        <span data-milos-loading-progress aria-hidden="true"></span>
+      </div>
+    </section>
+    <milos-app-shell>
+      <svg slot="app-icon" width="38" height="38" viewBox="0 0 48 48" role="img" aria-label="Welcher Müll?">
+        <rect width="48" height="48" rx="14" fill="#163d36" />
+        <path d="M14 16h20M18 16l1.4 19h9.2L30 16M20 12h8" fill="none" stroke="#d9ff56" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M20.5 23.5h7" fill="none" stroke="#f6f2e8" stroke-width="3" stroke-linecap="round" />
+      </svg>
+
+      <main id="main" slot="main">
+        <aside class="offline-banner" id="offline-banner" hidden role="status" data-i18n="offline">
+          Offline – die mitgelieferten Hinweise bleiben verfügbar. Quellenlinks brauchen Internet.
+        </aside>
+
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-topline">
+            <span class="content-date" id="content-date" data-i18n="contentLoading">Inhalte werden geladen …</span>
+            <button class="header-button" id="open-settings" type="button" aria-controls="settings-panel" aria-expanded="false">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M8 14v6" />
+              </svg>
+              <span data-i18n="settingsButton">Region</span>
+            </button>
+          </div>
+          <div class="hero-heading">
+            <h1 id="hero-title" data-i18n="heroTitle">Welcher Müll?</h1>
+            <p class="hero-prompt" data-i18n="heroPrompt">Wohin damit?</p>
+          </div>
+        </section>
+
+        <div class="search-dock">
+          <form class="search-form" id="search-form" role="search" novalidate>
+            <label class="sr-only" for="waste-query" data-i18n="searchLabel">Gegenstand oder Material</label>
+            <div class="search-control">
+              <input
+                id="waste-query"
+                name="q"
+                type="search"
+                inputmode="search"
+                autocomplete="off"
+                enterkeyhint="search"
+                maxlength="120"
+                placeholder="z. B. Gummiband, Akku, Pizzakarton"
+                data-i18n-placeholder="searchPlaceholder"
+                aria-describedby="search-help"
+              >
+              <button type="submit" data-i18n="searchSubmit">Suchen</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="search-support">
+          <p id="search-help" class="field-help" data-i18n="searchHelp">Auch Alltagssprache und kleine Tippfehler funktionieren.</p>
+          <div class="quick-search" aria-label="Häufig gesucht" data-i18n-aria-label="quickSearchLabel">
+            <span data-i18n="quickExamples">Beispiele:</span>
+            <button type="button" data-query-key="quickRubber" data-query-de="Gummiband" data-query-en="rubber band">Gummiband</button>
+            <button type="button" data-query-key="quickBattery" data-query-de="Batterie" data-query-en="battery">Batterie</button>
+            <button type="button" data-query-key="quickPizza" data-query-de="Pizzakarton" data-query-en="pizza box">Pizzakarton</button>
+            <button type="button" data-query-key="quickMedicine" data-query-de="Medikamente" data-query-en="medicine">Medikamente</button>
+            <button type="button" data-query-key="quickGlass" data-query-de="Glas" data-query-en="glass">Glas</button>
+          </div>
+
+        </div>
+
+        <dialog class="settings-dialog" id="settings-panel" aria-labelledby="settings-title">
+          <div class="dialog-header settings-dialog-header">
+            <div>
+              <p class="section-kicker" data-i18n="optional">Optional</p>
+              <h2 id="settings-title" data-i18n="settingsTitle">Region</h2>
+            </div>
+            <button class="icon-button" id="close-settings" type="button" aria-label="Einstellungen schließen" data-i18n-aria-label="settingsClose">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+            </button>
+          </div>
+          <div class="settings-content">
+            <p class="settings-note" data-i18n="settingsNote">Kein Standortzugriff: Die grobe Region gilt nur für diese geöffnete Seite und wird nicht gespeichert.</p>
+            <div class="field-group">
+              <label for="region-select" data-i18n="regionLabel">Grobe Region</label>
+              <select id="region-select"><option value="de">Deutschland – allgemeine Hinweise</option></select>
+              <p class="field-help" data-i18n="regionHelp">Ergänzt belegte örtliche Abweichungen bis zum Neuladen der Seite.</p>
+            </div>
+            <div class="offline-setting">
+              <div>
+                <strong data-i18n="offlineTitle">Offline-Nutzung</strong>
+                <small data-i18n="offlineHelp">Nur nach deiner Auswahl werden öffentliche App-Dateien zwischengespeichert – nie Suchen oder Region. Entfernen geht über die Website-Daten des Browsers.</small>
+              </div>
+              <button class="secondary-button" id="enable-offline" type="button" data-i18n="offlineEnable">Offline aktivieren</button>
+            </div>
+            <p class="field-help" id="offline-setting-status" role="status" aria-live="polite" hidden></p>
+          </div>
+        </dialog>
+
+        <section class="results-section" id="results-section" aria-labelledby="results-title" hidden>
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker" id="result-kicker" data-i18n="resultReady">Bereit</p>
+              <h2 id="results-title" tabindex="-1" data-i18n="resultIdleTitle">Was möchtest du entsorgen?</h2>
+            </div>
+            <button class="text-button" id="reset-search" type="button" hidden data-i18n="newSearch">Neue Suche</button>
+          </div>
+          <p class="status-message" id="search-status" role="status" aria-live="polite" data-i18n="resultIdleStatus">
+            Suche oben nach einem Gegenstand – eine Region ist dafür nicht nötig.
+          </p>
+          <div id="results" class="results-grid"></div>
+        </section>
+
+        <details class="trust-section">
+          <summary>
+            <strong data-i18n="trustTitle">Quellen, Gültigkeit &amp; Datenschutz</strong>
+            <span class="summary-hint" aria-hidden="true" data-i18n="trustShow">Anzeigen</span>
+          </summary>
+          <div class="trust-grid">
+            <article><span class="trust-number" aria-hidden="true">01</span><h3 data-i18n="trustOneTitle">Amtlich belegt</h3><p data-i18n="trustOneText">Jede konkrete Empfehlung nennt Quelle, Geltungsgebiet und Prüfdatum.</p></article>
+            <article><span class="trust-number" aria-hidden="true">02</span><h3 data-i18n="trustTwoTitle">Region sichtbar</h3><p data-i18n="trustTwoText">Örtliche Systeme werden nur gezeigt, wenn eine kommunale Quelle sie bestätigt.</p></article>
+            <article><span class="trust-number" aria-hidden="true">03</span><h3 data-i18n="trustThreeTitle">Sicherheitsfälle zuerst</h3><p data-i18n="trustThreeText">Akkus, Elektrogeräte, Chemikalien und Medikamente bekommen klare Warnhinweise.</p></article>
+          </div>
+          <div class="meta-actions">
+            <button class="text-button" id="show-about" type="button" data-i18n="aboutButton">Alle Quellen &amp; Datenschutz</button>
+          </div>
+        </details>
+        <nav class="app-meta-links" id="app-meta-links" aria-label="Datenschutz und App-Informationen" data-i18n-aria-label="metaNav">
+          <a data-milos-privacy-info href="https://dev.milos-apps.de/datenschutz" data-i18n="privacyInfo">Datenschutz &amp; Speicher</a>
+          <a href="./meta.json" data-i18n="metadata">App-Metadaten</a>
+        </nav>
+        <dialog id="about-dialog" aria-labelledby="about-title">
+          <div class="dialog-header">
+            <div><p class="section-kicker" data-i18n="transparency">Transparenz</p><h2 id="about-title" data-i18n="aboutTitle">Quellen, Rechte &amp; Datenschutz</h2></div>
+            <button class="icon-button" id="close-about" type="button" aria-label="Dialog schließen" data-i18n-aria-label="aboutClose">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+            </button>
+          </div>
+          <div class="dialog-content" id="about-content"><p data-i18n="aboutLoading">Die Quelleninformationen werden geladen.</p></div>
+        </dialog>
+
+        <dialog class="feedback-dialog" id="feedback-dialog" aria-labelledby="feedback-title">
+          <form id="feedback-form">
+            <div class="dialog-header">
+              <div>
+                <p class="section-kicker" data-i18n="feedbackKicker">Ergebnis verbessern</p>
+                <h2 id="feedback-title" data-i18n="feedbackTitle">Ergebnis melden</h2>
+              </div>
+              <button class="icon-button" id="close-feedback" type="button" aria-label="Meldung schließen" data-i18n-aria-label="feedbackClose">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+              </button>
+            </div>
+            <div class="dialog-content feedback-content">
+              <p id="feedback-context"></p>
+              <fieldset class="feedback-reasons">
+                <legend data-i18n="feedbackReasonLegend">Was stimmt nicht?</legend>
+                <label><input type="radio" name="feedback-reason" value="wrong" checked><span data-i18n="feedbackWrong">Das Ergebnis ist falsch</span></label>
+                <label><input type="radio" name="feedback-reason" value="missing"><span data-i18n="feedbackMissing">Ein wichtiger Entsorgungsweg fehlt</span></label>
+                <label><input type="radio" name="feedback-reason" value="unclear"><span data-i18n="feedbackUnclear">Die Erklärung ist unklar</span></label>
+                <label><input type="radio" name="feedback-reason" value="other"><span data-i18n="feedbackOther">Etwas anderes</span></label>
+              </fieldset>
+              <label class="field-group feedback-comment-group" for="feedback-comment">
+                <span data-i18n="feedbackComment">Kommentar (optional)</span>
+                <textarea id="feedback-comment" name="feedback-comment" rows="4" maxlength="500" placeholder="Was sollte stattdessen angezeigt werden?"></textarea>
+              </label>
+              <div class="feedback-trap" aria-hidden="true">
+                <label for="feedback-website">Website</label>
+                <input id="feedback-website" name="feedback-website" type="text" tabindex="-1" autocomplete="off">
+              </div>
+              <p class="field-help" data-i18n="feedbackPrivacy">Mit Abschicken werden diese Auswahl, der Suchbegriff und dein optionaler Kommentar im app-eigenen Meldedienst gespeichert. Bitte keine Namen oder Kontaktdaten eintragen.</p>
+              <p class="feedback-status" id="feedback-status" role="status" aria-live="polite" hidden></p>
+              <div class="dialog-actions">
+                <button class="text-button" id="cancel-feedback" type="button" data-i18n="feedbackCancel">Abbrechen</button>
+                <button id="submit-feedback" type="submit" data-i18n="feedbackContinue">Abschicken</button>
+              </div>
+            </div>
+          </form>
+        </dialog>
+
+        <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+      </main>
+    </milos-app-shell>
+    <noscript><div class="noscript">Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.</div></noscript>
+    <script type="module" src="./vendor/milosapps-essentials/v1/bootstrap.js"></script>
+    <script type="module" src="./src/shell-session.js"></script>
+    <script type="module" src="./vendor/milosapps-shell/v2/bootstrap.js"></script>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

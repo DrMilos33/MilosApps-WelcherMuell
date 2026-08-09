@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "appKey": "waste-guide",
+  "title": "Welcher Müll?",
+  "shortDescription": "Eine kurze, quellenbasierte Antwort auf „Wohin damit?“ – mit sichtbarer Unsicherheit bei örtlichen Unterschieden.",
+  "language": "de-DE/en",
+  "status": "DEV",
+  "platforms": ["web", "mobile", "desktop"],
+  "authentication": "none",
+  "contentVersion": "2026.08.09-1",
+  "contentDate": "2026-08-09",
+  "validity": "Allgemeine Hinweise für private Haushalte in Deutschland; belegte regionale Ergänzungen für Berlin, Hamburg und München.",
+  "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
+  "healthcheck": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
+  "localDevUrl": "http://127.0.0.1:4318/",
+  "localHealthcheck": "http://127.0.0.1:4318/healthz",
+  "feedback": {
+    "provider": "Cloudflare Worker + D1",
+    "environment": "DEV",
+    "endpoint": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/v1/feedback",
+    "healthUrl": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/healthz",
+    "workerVersion": "986e1609-e059-46cc-b4f3-58e16e9aaa0b",
+    "database": "milosapps-waste-guide-feedback-dev",
+    "dataJurisdiction": "EU",
+    "productionApproved": false
+  },
+  "suggestedPortalRoute": "/apps/waste-guide",
+  "previewImage": {
+    "path": "/assets/preview.svg",
+    "rights": "Eigenes Werk dieses Repositorys; keine Fremdassets, Logos oder Fotografien."
+  },
+  "productionApproved": false,
+  "deployment": {
+    "provider": "GitHub Pages",
+    "environment": "DEV",
+    "repository": "https://github.com/DrMilos33/MilosApps-WelcherMuell",
+    "sourceBranch": "codex/waste-guide-dev",
+    "sourceCommit": "e573e7711e69f5b59603f611e64adc9f29c490e3",
+    "sourceTree": "57d85c1da6d56eef9fae40207b86abf052f8476e",
+    "artifactBranch": "dev-pages",
+    "artifactCommit": "e3feb2bb88d170d5f492c948d5877fba76de0fd7",
+    "pagesRunId": 31288717713,
+    "pagesBuildStatus": "built",
+    "pagesBuiltAt": "2026-08-09T01:39:55Z",
+    "productionApproved": false
+  },
+  "sharedDependencies": [
+    {
+      "id": "public-app-shell/v2",
+      "version": "2.0.3",
+      "sharedCommit": "ed898412306e22c6ae1b10ee8953df29f8acd627",
+      "vendored": true,
+      "runtimeImport": false
+    },
+    {
+      "id": "public-app-essentials/v1",
+      "version": "1.1.5",
+      "sharedCommit": "2942132ad3bf6cf39edc9f52ed918de6a230be23",
+      "vendored": true,
+      "runtimeImport": false
+    }
+  ]
+}

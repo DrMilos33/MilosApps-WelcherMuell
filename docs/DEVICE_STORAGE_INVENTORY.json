@@ -1,0 +1,145 @@
+{
+  "appKey": "waste-guide",
+  "reviewedAt": "2026-08-09",
+  "productionApproved": false,
+  "browserStorage": {
+    "cookies": false,
+    "localStorage": false,
+    "sessionStorage": false,
+    "indexedDB": false
+  },
+  "optionalState": {
+    "region": {
+      "storage": "memory-only",
+      "lifetime": "until-page-close-or-reload",
+      "required": false
+    },
+    "searchHistory": {
+      "storage": "disabled",
+      "lifetime": "none",
+      "required": false
+    },
+    "language": {
+      "storage": "url-only",
+      "lifetime": "while-lang-query-is-present",
+      "required": false
+    }
+  },
+  "serverData": {
+    "resultFeedback": {
+      "storage": "app-owned Cloudflare D1",
+      "trigger": "explicit-submit-action",
+      "required": false,
+      "fields": [
+        "random submission ID",
+        "timestamp",
+        "environment",
+        "content version",
+        "item ID and name",
+        "selected reason",
+        "optional comment",
+        "triggering search query",
+        "language",
+        "canonical result URL",
+        "review state and optional editorial review notes"
+      ],
+      "excludedFields": [
+        "IP address",
+        "user agent",
+        "cookie",
+        "account identifier",
+        "selected region",
+        "search history",
+        "device identifier"
+      ],
+      "personalDataRisk": "Optional free text may contain information entered by the user; the UI asks users not to submit names or contact details.",
+      "retention": "automatically deleted after 365 days",
+      "publicReadAccess": false,
+      "deploymentStatus": "DEV deployed; explicit submissions are stored in the app-owned EU-jurisdiction D1 database"
+    }
+  },
+  "deviceAccess": [
+    {
+      "api": "ServiceWorkerRegistration.getRegistrations/unregister",
+      "identifier": "legacy-sw.js",
+      "purpose": "Frühere automatische Offline-Registrierung und zugehörige öffentliche App-Caches entfernen",
+      "lifetime": "bounded-to-v1.1-migration",
+      "trigger": "startup-migration",
+      "provider": "user-agent",
+      "strictlyNecessary": true,
+      "personalData": false
+    },
+    {
+      "api": "ServiceWorkerRegistration",
+      "identifier": "waste-guide-offline",
+      "purpose": "Vom Nutzer ausdrücklich angeforderte Offline-Nutzung der öffentlichen App aktivieren",
+      "lifetime": "until-browser-site-data-is-cleared-or-registration-is-removed",
+      "trigger": "explicit-user-action",
+      "provider": "user-agent",
+      "strictlyNecessary": true,
+      "personalData": false
+    },
+    {
+      "api": "CacheStorage",
+      "identifier": "waste-guide-2026-08-09-feedback-v8",
+      "purpose": "Ausschließlich öffentliche App-Dateien für die ausdrücklich aktivierte Offline-Nutzung vorhalten",
+      "lifetime": "bounded-by-app-cache-version-or-browser-clear",
+      "trigger": "service-worker-after-explicit-user-action",
+      "provider": "user-agent",
+      "strictlyNecessary": true,
+      "personalData": false
+    },
+    {
+      "api": "WebShare",
+      "identifier": "navigator.share",
+      "purpose": "Den sichtbaren Entsorgungshinweis nach ausdrücklicher Nutzeraktion an ein gewähltes Ziel übergeben",
+      "lifetime": "single-user-action",
+      "trigger": "explicit-user-action",
+      "provider": "operating-system-share-sheet",
+      "strictlyNecessary": true,
+      "personalData": false
+    },
+    {
+      "api": "Clipboard",
+      "identifier": "navigator.clipboard.writeText",
+      "purpose": "Fallback: sichtbaren Entsorgungshinweis nach ausdrücklicher Nutzeraktion kopieren",
+      "lifetime": "single-user-action",
+      "trigger": "explicit-user-action",
+      "provider": "operating-system-clipboard",
+      "strictlyNecessary": true,
+      "personalData": false
+    }
+  ],
+  "externalServices": [
+    {
+      "service": "GitHub Pages",
+      "purpose": "DEV-App und alle redaktionellen Daten als Same-Origin-Dateien ausliefern",
+      "runtimeRequest": true,
+      "userTriggered": false
+    },
+    {
+      "service": "Amtliche und kommunale Quellen-Websites",
+      "purpose": "Quellen und örtliche Abfallberatung nach bewusster Linkaktivierung öffnen",
+      "runtimeRequest": false,
+      "userTriggered": true
+    },
+    {
+      "service": "App-owned Cloudflare Worker and D1",
+      "purpose": "Eine bewusst abgeschickte Ergebnismeldung ohne Konto strukturiert zur redaktionellen Prüfung speichern",
+      "runtimeRequest": true,
+      "userTriggered": true,
+      "credentialsInBrowser": false,
+      "status": "DEV deployed",
+      "endpoint": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/v1/feedback",
+      "healthUrl": "https://milosapps-waste-guide-feedback-dev.pascalcasiddu.workers.dev/healthz"
+    }
+  ],
+  "legacyKeys": [
+    "waste-guide:region:v1",
+    "waste-guide:remember:v1",
+    "waste-guide:history:v1",
+    "milosapps.waste-guide.language",
+    "milosapps.waste-guide.privacyNotice.v1"
+  ],
+  "legacyPolicy": "Version 1.1 never reads or writes these keys. Existing values are ignored and remain removable through browser site-data controls. The earlier automatic sw.js registration and its public app caches are removed automatically. New region, history and language state are never stored in Web Storage."
+}

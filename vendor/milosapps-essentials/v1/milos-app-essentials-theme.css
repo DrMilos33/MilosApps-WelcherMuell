@@ -1,0 +1,10 @@
+body[data-milos-essentials-app="waste-guide"] {
+  --milos-essential-accent: #163d36;
+  --milos-essential-accent-contrast: #ffffff;
+  --milos-essential-surface: #fffdf8;
+  --milos-essential-surface-soft: #f4f1e8;
+  --milos-essential-text: #112d29;
+  --milos-essential-muted: #596864;
+  --milos-essential-border: #c8cec9;
+  --milos-essential-focus: #0078d4;
+}

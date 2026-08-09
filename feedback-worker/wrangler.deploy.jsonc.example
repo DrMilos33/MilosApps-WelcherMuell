@@ -1,0 +1,35 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "milosapps-waste-guide-feedback-dev",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-08-08",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "APP_ENVIRONMENT": "DEV",
+    "PRODUCTION_APPROVED": "false",
+    "ALLOWED_ORIGINS": "https://drmilos33.github.io",
+    "ALLOWED_RESULT_PATHS": "/MilosApps-WelcherMuell/"
+  },
+  "d1_databases": [
+    {
+      "binding": "FEEDBACK_DB",
+      "database_name": "milosapps-waste-guide-feedback-dev",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "REPORT_LIMIT",
+      "namespace_id": "431801",
+      "simple": {
+        "limit": 30,
+        "period": 60
+      }
+    }
+  ],
+  "triggers": {
+    "crons": ["17 3 * * *"]
+  }
+}

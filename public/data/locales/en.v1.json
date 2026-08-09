@@ -1,0 +1,1379 @@
+{
+  "schemaVersion": 1,
+  "language": "en",
+  "contentVersion": "2026.08.09-1",
+  "contentDate": "2026-08-09",
+  "editorialUse": "The app does not reproduce an external dataset, logos, images or lengthy passages. Disposal facts were checked against official pages and rewritten as concise original summaries. Every recommendation links to its source.",
+  "items": {
+    "yogurt-cup": {
+      "name": "Yogurt cup",
+      "aliases": ["yoghurt cup", "plastic cup", "yogurt pot", "yoghurt pot"],
+      "keywords": ["packaging", "plastic", "foil lid", "cup"],
+      "category": "Packaging",
+      "route": {
+        "label": "Yellow bin, yellow bag or local packaging collection"
+      },
+      "answer": "Empty it normally and place it in the local lightweight-packaging collection.",
+      "reason": "Plastic cups and metal lids are sales packaging and are collected separately from residual waste.",
+      "steps": [
+        "Empty the cup normally; rinsing is not required.",
+        "Separate the foil lid and cardboard sleeve.",
+        "Place the parts in separately instead of stacking them inside each other."
+      ],
+      "localVariation": "The collection name and accepted range differ locally. A recycling bin may also accept non-packaging items."
+    },
+    "tin-can": {
+      "name": "Food can",
+      "aliases": ["tin can", "metal can", "empty can", "food tins"],
+      "keywords": ["packaging", "metal", "tinplate", "aluminium"],
+      "category": "Packaging",
+      "route": {
+        "label": "Yellow bin, yellow bag or local packaging collection"
+      },
+      "answer": "Empty it normally and place it in the local lightweight-packaging collection.",
+      "reason": "Empty metal packaging is collected separately so the metal can be recycled.",
+      "steps": [
+        "Empty the can normally.",
+        "Do not rinse it or place it inside other packaging.",
+        "Handle loose lids carefully and place them in separately."
+      ],
+      "localVariation": "The collection may be called yellow bin, yellow bag, recycling bin or recycling island."
+    },
+    "beverage-carton": {
+      "name": "Beverage carton",
+      "aliases": ["drink carton", "milk carton", "juice carton", "Tetra Pak"],
+      "keywords": ["packaging", "composite material", "milk pack", "juice pack"],
+      "category": "Packaging",
+      "route": {
+        "label": "Yellow bin, yellow bag or local packaging collection"
+      },
+      "answer": "Empty it normally and place it with lightweight packaging — not with waste paper.",
+      "reason": "Beverage cartons are composite packaging, not pure cardboard.",
+      "steps": [
+        "Remove all contents.",
+        "Flatten the carton to save space.",
+        "The cap may stay with the packaging collection."
+      ],
+      "localVariation": "The local name of the collection may differ."
+    },
+    "plastic-packaging": {
+      "name": "Plastic packaging",
+      "aliases": ["plastic wrapper", "plastic film", "shampoo bottle", "washing-up liquid bottle"],
+      "keywords": ["packaging", "plastic", "film", "bottle"],
+      "category": "Packaging",
+      "route": {
+        "label": "Yellow bin, yellow bag or local packaging collection"
+      },
+      "answer": "If it is empty sales packaging, place it with lightweight packaging.",
+      "reason": "Plastic sales packaging is collected separately from residual waste.",
+      "steps": [
+        "Empty it normally; rinsing is not required.",
+        "Separate parts that come apart easily.",
+        "Do not stuff packaging inside other packaging."
+      ],
+      "localVariation": "A plastic object that is not packaging may have a different local route."
+    },
+    "plastic-household-item": {
+      "name": "Plastic household item (not packaging)",
+      "aliases": [
+        "plastic",
+        "plastic object",
+        "artificial flower",
+        "plastic flower",
+        "plastic flowers",
+        "plastic decoration",
+        "plastic bowl",
+        "plastic toy",
+        "plastic bucket",
+        "plastic tub",
+        "plastic watering can",
+        "plastic basket",
+        "plastic storage box",
+        "plastic tray",
+        "plastic chopping board",
+        "plastic clothes hanger",
+        "plastic chair",
+        "plastic garden chair",
+        "plastic part",
+        "plastic plant pot"
+      ],
+      "keywords": [
+        "non-packaging plastic",
+        "same-material non-packaging item",
+        "plastic household object",
+        "plastic decoration"
+      ],
+      "category": "Non-packaging plastic",
+      "route": {
+        "label": "Reuse it or check the local disposal route"
+      },
+      "answer": "Pass it on if it is still usable. Otherwise check its material and function and use the local route for non-packaging plastic items.",
+      "reason": "Across Germany, yellow bins and bags are for packaging. Some municipalities also collect plastic objects in a recycling bin, while others direct them to a recycling centre or residual waste. There is therefore no reliable nationwide bin for every plastic object.",
+      "steps": [
+        "Pass on usable decorations, bowls, baskets or toys.",
+        "Treat batteries, cables, lights and other electronics as electrical equipment.",
+        "Separate metal, glass, textiles and large non-plastic parts where practical.",
+        "Search the local waste guide for the exact object or non-packaging plastic items."
+      ],
+      "warning": "Do not automatically place it in a yellow bin or yellow bag. Electrical, battery-powered or contaminated items need a different route.",
+      "localVariation": "Berlin and Hamburg accept many plastic household items in their recycling bins. Munich directs a plastic watering can to a recycling centre. Other municipalities may require residual waste or another collection system."
+    },
+    "food-leftovers": {
+      "name": "Food leftovers",
+      "aliases": ["pizza leftovers", "leftover food", "meal leftovers", "cooked leftovers", "bread leftovers", "stale bread", "toast", "toast bread", "spoiled food"],
+      "keywords": ["food", "organic waste", "kitchen waste", "meal"],
+      "category": "Food",
+      "route": {
+        "label": "Local organic-waste collection or check the municipal route"
+      },
+      "answer": "Use the local organic-waste route for unpackaged food leftovers; completely separate all packaging first.",
+      "reason": "Food leftovers are organic waste, but municipalities decide which cooked meals, animal products or liquid residues their organic-waste collection accepts.",
+      "steps": [
+        "Use up or pass on food that is still safe to eat.",
+        "Completely remove packaging, film and cutlery and dispose of them separately.",
+        "Check the local waste guide to see whether the specific leftovers are accepted with organic waste."
+      ],
+      "warning": "Do not treat liquid cooking oil or fat like solid food leftovers; search separately for cooking oil or frying fat.",
+      "localVariation": "Accepted food residues and collection liners differ by municipality. If unsure, check the organic-waste rule for your city or district."
+    },
+    "food-and-wrapper": {
+      "name": "Chocolate or snack bar",
+      "aliases": [
+        "chocolate",
+        "chocolate bar",
+        "snack bar",
+        "cereal bar",
+        "sweet",
+        "candy",
+        "packaged confectionery"
+      ],
+      "keywords": ["food", "organic waste", "packaging", "snack bar", "confectionery", "baked goods"],
+      "category": "Food + packaging",
+      "route": {
+        "label": "Contents: local organic waste · empty wrapper: sort by material"
+      },
+      "answer": "Separate food from its wrapper: use the local organic-waste route for unpackaged leftovers and sort the empty packaging by its material.",
+      "reason": "Food leftovers and packaging are collected separately. For bars and sweets, the product name alone does not reveal the wrapper's disposal route; the actual packaging material does.",
+      "steps": [
+        "Use up or pass on food that is still safe to eat.",
+        "Remove inedible contents from the wrapper and check the local rule for food leftovers.",
+        "Sort the empty wrapper by material: plastic, metal or composite packaging with the local lightweight-packaging collection; clean uncoated paper with waste paper."
+      ],
+      "localVariation": "The municipal waste authority decides which food leftovers its organic-waste collection accepts. Packaging must never go into organic waste together with the contents."
+    },
+    "foam-packaging": {
+      "name": "Polystyrene packaging",
+      "aliases": ["Styrofoam packaging", "foam packaging", "EPS packaging", "packaging foam"],
+      "keywords": ["packaging", "plastic", "foam", "polystyrene"],
+      "category": "Packaging",
+      "route": {
+        "label": "Yellow bin, yellow bag or local packaging collection"
+      },
+      "answer": "Clean polystyrene packaging usually belongs with lightweight packaging; construction or insulation foam does not.",
+      "reason": "The deciding factor is whether the material was sales packaging or a construction or insulation product.",
+      "steps": [
+        "Check whether it was packaging.",
+        "Remove contents and attached residue.",
+        "Ask the local waste authority about insulation boards or material of unknown origin."
+      ],
+      "warning": "Insulation materials may contain special substances. Do not place them in the yellow collection based on appearance alone.",
+      "localVariation": "Local acceptance rules differ for large quantities and construction waste."
+    },
+    "paper": {
+      "name": "Paper",
+      "aliases": ["newspaper", "magazine", "letter", "exercise book", "book"],
+      "keywords": ["waste paper", "paper bin", "paper container"],
+      "category": "Paper",
+      "route": {
+        "label": "Paper bin or waste-paper container"
+      },
+      "answer": "Place clean, dry paper in the waste-paper collection.",
+      "reason": "Paper fibres can be recycled effectively only when unsuitable or heavily soiled paper is kept separate.",
+      "steps": [
+        "Remove large pieces of film or other foreign material.",
+        "Place it in dry and loose.",
+        "Keep thermal paper, photos and heavily soiled paper out."
+      ],
+      "localVariation": "Bin colour and collection method may differ locally."
+    },
+    "poster": {
+      "name": "Poster or placard",
+      "aliases": ["poster", "placard", "paper poster", "wall poster", "advertising poster", "poster print"],
+      "keywords": ["printed paper", "outdoor poster", "wet-strength paper", "laminated", "coated"],
+      "category": "Paper / composite material",
+      "route": {
+        "label": "Uncoated paper: waste paper · coated, laminated or wet-strength: residual waste or check locally"
+      },
+      "answer": "Check the material: a clean poster made from ordinary paper can go with waste paper. Laminated, coated, self-adhesive or wet-strength posters do not belong in the paper bin.",
+      "reason": "Paper recycling requires usable paper fibres to be kept separate from plastic layers, adhesive films and wet-strength speciality papers.",
+      "steps": [
+        "Where practical, separate frames, rails, metal eyelets and large films.",
+        "Use a tear test: if the material tears like paper and shows paper fibres, place it clean and dry with waste paper.",
+        "Place a small household quantity of plastic film, laminated, self-adhesive or wet-strength outdoor material in residual waste; check large or unknown formats locally."
+      ],
+      "warning": "Illuminated, flashing or electronically equipped advertising signs are electrical devices, not paper posters.",
+      "localVariation": "Large formats, PVC banners, composite boards and commercial quantities may require a recycling-centre or special local route."
+    },
+    "cardboard": {
+      "name": "Cardboard",
+      "aliases": ["cardboard box", "shipping box", "carton", "paperboard box"],
+      "keywords": ["waste paper", "paper bin", "shipping", "box"],
+      "category": "Paper",
+      "route": {
+        "label": "Paper bin or waste-paper container"
+      },
+      "answer": "Place clean, dry cardboard with waste paper.",
+      "reason": "Paperboard and cardboard belong in the separate paper collection.",
+      "steps": [
+        "Remove tape and large foreign parts where this is easy.",
+        "Flatten or cut up boxes.",
+        "Place heavily soiled pieces in residual waste."
+      ],
+      "localVariation": "Large quantities may need to go to a recycling centre rather than a household bin."
+    },
+    "pizza-box": {
+      "name": "Pizza box",
+      "aliases": ["pizza carton", "pizza boxes", "pizza packaging"],
+      "keywords": ["cardboard", "food residue", "grease", "paper"],
+      "category": "Paper",
+      "route": {
+        "label": "Clean: waste paper · heavily soiled: residual waste"
+      },
+      "answer": "Put clean parts with waste paper and greasy or food-soiled parts in residual waste.",
+      "reason": "Heavy grease and food residue interfere with paper recycling.",
+      "steps": [
+        "Remove food scraps.",
+        "Tear off clean lid or edge sections and place them with waste paper.",
+        "Place only the heavily soiled parts in residual waste."
+      ],
+      "localVariation": "The basic rule is reliable nationwide; bin colour and collection method may differ locally."
+    },
+    "receipt": {
+      "name": "Receipt",
+      "aliases": ["shop receipt", "till receipt", "thermal paper", "ticket", "bus ticket"],
+      "keywords": ["paper", "thermal paper", "proof of purchase"],
+      "category": "Residual waste",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "Place receipts and other thermal paper in residual waste.",
+      "reason": "Thermal paper is not suitable for waste-paper recycling.",
+      "steps": [
+        "Do not place it in the paper bin.",
+        "Digital receipts can prevent this waste."
+      ],
+      "localVariation": "No relevant regional variation was found for this general rule."
+    },
+    "glass-container": {
+      "name": "Glass packaging",
+      "aliases": ["glass", "container glass", "glass bottle", "jam jar", "food jar", "single-use glass"],
+      "keywords": ["packaging glass", "packaging", "bottle", "glass container"],
+      "category": "Glass",
+      "route": {
+        "label": "Bottle bank — separated by colour"
+      },
+      "answer": "Place empty glass packaging in the bottle bank, separated by colour.",
+      "reason": "Only container glass has the right composition for packaging-glass recycling.",
+      "steps": [
+        "Remove all contents.",
+        "Separate clear, brown and green glass.",
+        "Place other colours, such as blue, with green glass."
+      ],
+      "warning": "Drinking glasses, window glass, mirrors, ceramics, porcelain and lamps do not belong in a bottle bank.",
+      "localVariation": "Opening times and container locations are set locally."
+    },
+    "blue-glass": {
+      "name": "Blue glass bottle",
+      "aliases": ["blue glass", "red glass bottle", "black glass bottle", "other-coloured glass"],
+      "keywords": ["bottle bank", "glass colour", "packaging"],
+      "category": "Glass",
+      "route": {
+        "label": "Green-glass container"
+      },
+      "answer": "Place glass packaging of other colours, such as blue, with green glass.",
+      "reason": "Green glass tolerates the widest colour variation during recycling.",
+      "steps": [
+        "Place only empty container glass in the bottle bank.",
+        "Remove lids where this is easy.",
+        "Observe local deposit times."
+      ],
+      "localVariation": "Container locations and deposit times are regulated locally."
+    },
+    "drinking-glass": {
+      "name": "Drinking glass",
+      "aliases": ["glass", "wine glass", "water glass", "crystal glass", "glass tableware", "broken glass"],
+      "keywords": ["tableware", "glass", "shards"],
+      "category": "Residual waste",
+      "route": {
+        "label": "Residual waste — wrapped safely"
+      },
+      "answer": "Small quantities of drinking glass do not belong in a bottle bank; place them in residual waste.",
+      "reason": "Drinking and crystal glass have different material properties from packaging glass and disrupt recycling.",
+      "steps": [
+        "Wrap shards so nobody can be injured.",
+        "Do not place them in a bottle bank.",
+        "Ask the recycling centre about large quantities."
+      ],
+      "warning": "Wrap sharp edges so they cannot puncture or cut.",
+      "localVariation": "Local acceptance rules apply to larger quantities."
+    },
+    "window-glass": {
+      "name": "Window glass or mirror",
+      "aliases": ["glass", "window pane", "sheet glass", "mirror glass", "mirror", "flat glass"],
+      "keywords": ["glass", "shards", "window", "construction waste"],
+      "category": "Residual waste / recycling centre",
+      "route": {
+        "label": "Small amount: residual waste · larger amount: check locally"
+      },
+      "answer": "Never use a bottle bank. Wrap small fragments safely for residual waste and check locally for larger panes.",
+      "reason": "Window and mirror glass do not have the composition of container glass.",
+      "steps": [
+        "Protect people from cuts.",
+        "Do not place it in a bottle bank.",
+        "Ask the recycling centre about large, coated or fitted panes."
+      ],
+      "warning": "Do not break large panes merely to fit them into a bin.",
+      "localVariation": "Recycling centres set local acceptance rules and possible fees."
+    },
+    "banana-peel": {
+      "name": "Banana peel",
+      "aliases": ["fruit peel", "apple peel", "fruit scraps", "banana skin"],
+      "keywords": ["organic waste", "food waste", "fruit", "kitchen"],
+      "category": "Organic waste",
+      "route": {
+        "label": "Organic-waste bin or suitable home compost"
+      },
+      "answer": "Place unpackaged kitchen waste in the organic-waste bin or on suitable home compost.",
+      "reason": "Fruit scraps are separately recyclable organic waste.",
+      "steps": [
+        "Remove stickers and packaging.",
+        "Do not include a plastic bag.",
+        "Observe local rules for home composting."
+      ],
+      "localVariation": "Municipalities define the details of organic-waste collection."
+    },
+    "coffee-grounds": {
+      "name": "Coffee grounds",
+      "aliases": ["coffee filter", "filter paper", "ground coffee", "tea bag"],
+      "keywords": ["organic waste", "food waste", "coffee", "kitchen"],
+      "category": "Organic waste",
+      "route": {
+        "label": "Organic-waste bin or suitable home compost"
+      },
+      "answer": "Place coffee grounds and paper filters in the organic-waste bin or on suitable home compost.",
+      "reason": "Coffee grounds are organic kitchen waste.",
+      "steps": [
+        "Do not place them in a plastic bag.",
+        "For capsules, consider the material and contents separately.",
+        "Dispose of plastic or metal capsules according to local packaging rules."
+      ],
+      "localVariation": "Municipalities may define details for tea bags, capsules or collection liners."
+    },
+    "egg-shells": {
+      "name": "Eggshells",
+      "aliases": ["egg shell", "egg shells", "egg remains"],
+      "keywords": ["organic waste", "food waste", "kitchen"],
+      "category": "Organic waste",
+      "route": {
+        "label": "Organic-waste bin or suitable home compost"
+      },
+      "answer": "Place eggshells in the organic-waste bin or on suitable home compost.",
+      "reason": "Eggshells are organic kitchen waste.",
+      "steps": [
+        "Dispose of the packaging separately.",
+        "Do not place them in the organic-waste bin inside a plastic bag."
+      ],
+      "localVariation": "Municipalities define the details of organic-waste collection."
+    },
+    "compostable-bag": {
+      "name": "Compostable plastic bag",
+      "aliases": ["bioplastic bag", "food-waste bag", "compostable liner", "biodegradable bag"],
+      "keywords": ["bioplastic", "plastic", "organic bin", "bag"],
+      "category": "Check locally",
+      "route": {
+        "label": "Not automatically accepted in organic waste — check the local rule"
+      },
+      "answer": "Plastic bags labelled “compostable” are not automatically permitted in the organic-waste bin.",
+      "reason": "Sorting facilities often cannot distinguish them reliably from conventional plastic, and municipalities may prohibit them.",
+      "steps": [
+        "Check the local organic-waste rules or waste guide.",
+        "Do not put a plastic bag in the organic-waste bin until this is clear.",
+        "Collect organic waste loose or in the locally recommended paper liner."
+      ],
+      "localVariation": "Permission is explicitly determined by the municipality."
+    },
+    "diaper": {
+      "name": "Nappy or diaper",
+      "aliases": ["nappy", "diaper", "baby diaper", "incontinence pad", "sanitary pad", "tampon"],
+      "keywords": ["hygiene", "residual waste", "sanitary product"],
+      "category": "Residual waste",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "Place used nappies, diapers and sanitary products in residual waste.",
+      "reason": "These soiled composite materials are unsuitable for paper, organic or packaging recycling.",
+      "steps": [
+        "Seal them securely.",
+        "Never dispose of them through the toilet or drain."
+      ],
+      "localVariation": "Municipalities may offer additional nappy services; the basic route remains residual waste."
+    },
+    "cold-ash": {
+      "name": "Cold ash",
+      "aliases": ["ash", "fireplace ash", "barbecue ash", "wood ash"],
+      "keywords": ["fireplace", "barbecue", "residual waste"],
+      "category": "Residual waste",
+      "route": {
+        "label": "Only when completely cold: residual waste"
+      },
+      "answer": "Place only completely cold ash in residual waste, packaged to contain dust.",
+      "reason": "Ash is unsuitable for organic waste and may contain hidden embers.",
+      "steps": [
+        "Let it cool for several days in a non-combustible container.",
+        "Check for hidden embers.",
+        "Package it to contain dust before placing it in residual waste."
+      ],
+      "warning": "Warm or glowing ash can set bins and collection vehicles on fire.",
+      "localVariation": "Observe municipal fire-safety guidance."
+    },
+    "ceramic": {
+      "name": "Ceramic or porcelain",
+      "aliases": ["cup", "plate", "porcelain plate", "plant pot", "ceramic pot", "tableware"],
+      "keywords": ["shards", "tableware", "residual waste"],
+      "category": "Residual waste",
+      "route": {
+        "label": "Small amount: residual waste · larger amount: check locally"
+      },
+      "answer": "Wrap small amounts of broken ceramic safely for residual waste — never use a bottle bank.",
+      "reason": "Ceramic and porcelain disrupt glass recycling.",
+      "steps": [
+        "Wrap sharp edges safely.",
+        "Do not place them in a bottle bank.",
+        "Ask or notify the recycling centre about larger quantities."
+      ],
+      "localVariation": "Acceptance of larger quantities is regulated locally."
+    },
+    "wallpaper": {
+      "name": "Wallpaper",
+      "aliases": ["wallpaper scraps", "woodchip wallpaper", "old wallpaper"],
+      "keywords": ["renovation", "paper", "residual waste"],
+      "category": "Residual waste",
+      "route": {
+        "label": "Small amount: residual waste · renovation quantity: check locally"
+      },
+      "answer": "Wallpaper scraps do not belong with waste paper. Use residual waste for small amounts and check locally for renovation quantities.",
+      "reason": "Coatings, paste and contamination make wallpaper unsuitable for waste-paper collection.",
+      "steps": [
+        "Do not place it in the paper bin.",
+        "Ask the recycling centre or waste authority about renovation quantities."
+      ],
+      "localVariation": "Quantity limits and acceptance fees differ."
+    },
+    "battery": {
+      "name": "Battery or rechargeable battery",
+      "aliases": ["battery", "batteries", "rechargeable battery", "button cell", "AA battery", "AAA battery", "phone battery"],
+      "keywords": ["lithium", "energy storage", "collection box", "battery return"],
+      "category": "Safety case",
+      "route": {
+        "label": "Retail battery collection box or municipal collection point"
+      },
+      "answer": "Never place it in residual, packaging or bulky waste: return it separately free of charge.",
+      "reason": "Batteries may contain hazardous substances and cause fires; their raw materials should be recycled.",
+      "steps": [
+        "Tape lithium-battery terminals to prevent short circuits.",
+        "Transport loose batteries protected to the collection point.",
+        "Ask the retailer or recycling centre in advance about large e-bike or e-scooter batteries."
+      ],
+      "warning": "Do not put damaged, leaking or swollen batteries in a normal collection box — speak directly to staff.",
+      "localVariation": "Municipal sites accept different sizes depending on battery type. Retailers take back the battery types they sell."
+    },
+    "damaged-lithium-battery": {
+      "name": "Swollen or damaged battery",
+      "aliases": ["broken battery", "damaged battery", "swollen phone battery", "leaking battery", "hot battery"],
+      "keywords": ["lithium", "fire risk", "damaged", "leaking", "swollen"],
+      "category": "Immediate caution",
+      "route": {
+        "label": "Hand it directly to trained staff at a return point"
+      },
+      "answer": "Do not use or open it. Tape the terminals, transport it protected and tell staff about the damage.",
+      "reason": "Damaged lithium batteries may catch fire or explode.",
+      "steps": [
+        "Do not charge, open, crush or continue using it.",
+        "If safe, tape the terminals and transport it in a suitable closable container.",
+        "Speak directly to staff at a retailer or recycling centre; do not leave it unattended in a collection box."
+      ],
+      "warning": "If it smokes, hisses, becomes very hot or burns, keep your distance, warn others and call 112.",
+      "localVariation": "Before moving a large or badly damaged battery, phone the collection site and ask for its safe procedure."
+    },
+    "electrical-device": {
+      "name": "Electrical device",
+      "aliases": ["electronic waste", "old electrical device", "phone", "smartphone", "toaster", "hair dryer", "electric toothbrush", "electronic toy", "electric toy", "electronic plastic toy", "plastic toy with electronics", "plastic toy with battery", "battery-powered toy", "toy car with battery", "cable", "charger", "computer"],
+      "keywords": ["electricity", "plug", "battery", "electronics", "e-waste"],
+      "category": "Electrical equipment",
+      "route": {
+        "label": "Recycling centre or retailer take-back"
+      },
+      "answer": "Take electrical devices separately and free of charge to an authorised collection point.",
+      "reason": "Electrical devices contain valuable raw materials and sometimes hazardous substances; they must not go in household or packaging waste.",
+      "steps": [
+        "Delete personal data from the device.",
+        "Remove batteries, rechargeable batteries and lamps first when they are easy and safe to remove without damage.",
+        "Take the intact device to a recycling centre or a retailer required to accept it."
+      ],
+      "warning": "Even very small or flashing products containing electronics are electrical devices.",
+      "localVariation": "Collection sites and pickup services differ; statutory retailer take-back depends, among other things, on size and product range."
+    },
+    "e-cigarette": {
+      "name": "E-cigarette",
+      "aliases": ["vape", "disposable vape", "electronic cigarette", "vape pen"],
+      "keywords": ["electrical device", "battery", "lithium", "vaporiser"],
+      "category": "Electrical device + battery",
+      "route": {
+        "label": "Electrical take-back point or retailer required to accept it"
+      },
+      "answer": "Return it as a battery-powered electrical device — never place it in residual waste or the yellow collection.",
+      "reason": "E-cigarettes contain electronics and usually a lithium battery; incorrect disposal may cause fires.",
+      "steps": [
+        "Do not open or dismantle it when the battery is built in.",
+        "Take it intact to an electrical-equipment return point.",
+        "Contact collection staff first if the device is damaged or hot."
+      ],
+      "warning": "A built-in battery stays inside the device. Do not force the device open.",
+      "localVariation": "Recycling centres and retailers required to accept devices publish their specific return routes."
+    },
+    "led-lamp": {
+      "name": "LED or energy-saving lamp",
+      "aliases": ["LED lamp", "LED bulb", "energy-saving bulb", "fluorescent tube", "light bulb"],
+      "keywords": ["lamp", "electrical device", "mercury", "light"],
+      "category": "Electrical equipment",
+      "route": {
+        "label": "Lamp return point, retailer or recycling centre"
+      },
+      "answer": "Return LED, fluorescent and energy-saving lamps separately and protected from breakage.",
+      "reason": "These lamps are covered by electrical-equipment law; gas-discharge lamps may contain mercury.",
+      "steps": [
+        "Do not place them in residual waste, the yellow collection or a bottle bank.",
+        "Transport them protected from breakage to a municipal or retail return point.",
+        "If one breaks, ventilate and follow the current safety guidance from the German Environment Agency."
+      ],
+      "warning": "Avoid breaking fluorescent and energy-saving lamps.",
+      "localVariation": "Return points and hazardous-waste vehicles differ locally."
+    },
+    "incandescent-bulb": {
+      "name": "Incandescent or halogen bulb",
+      "aliases": ["incandescent lamp", "halogen bulb", "old light bulb", "halogen lamp"],
+      "keywords": ["lamp", "glass", "light", "residual waste"],
+      "category": "Residual waste",
+      "route": {
+        "label": "Residual waste — protected from breakage"
+      },
+      "answer": "Conventional incandescent and halogen bulbs belong in residual waste, not in a bottle bank.",
+      "reason": "They are not covered by the electrical lamp collection, and their glass disrupts container-glass recycling.",
+      "steps": [
+        "Protect them from breakage or wrap shards safely.",
+        "Do not place them in a bottle bank.",
+        "If the lamp type is unclear, use a lamp return point."
+      ],
+      "localVariation": "No relevant regional variation was found for this general rule."
+    },
+    "medicine": {
+      "name": "Old medicine",
+      "aliases": ["medicine", "medication", "tablets", "expired tablets", "antibiotics", "pharmaceuticals"],
+      "keywords": ["medicine", "pharmacy", "household waste", "toilet", "hazardous-waste vehicle"],
+      "category": "Check locally",
+      "route": {
+        "label": "Check the leaflet and the municipal disposal route"
+      },
+      "answer": "Never use the toilet or sink. Unless the leaflet gives special instructions, household waste is generally a safe route, but some municipalities offer or require other collection routes.",
+      "reason": "Medicines in wastewater harm the environment; local return services and rules are not uniform nationwide.",
+      "steps": [
+        "First follow any special disposal instructions in the package leaflet.",
+        "Search the municipal waste guide for old medicine.",
+        "Dispose of it so children or unauthorised people cannot gain access."
+      ],
+      "warning": "Pharmacies often take back old medicine voluntarily but are not universally required to do so. Ask first.",
+      "localVariation": "Household waste, hazardous-waste vehicles, recycling centres or dedicated medicine bins may apply depending on the municipality."
+    },
+    "liquid-paint": {
+      "name": "Liquid paint or varnish",
+      "aliases": ["paint residue", "varnish residue", "liquid wall paint", "wet paint", "damp paint", "paint that is still liquid", "paint that has not dried", "nail polish", "wood stain", "paint tin with residue"],
+      "keywords": ["hazardous waste", "pollutant", "solvent", "renovation"],
+      "category": "Hazardous waste",
+      "route": {
+        "label": "Recycling centre or hazardous-waste vehicle"
+      },
+      "answer": "Take liquid paint and varnish residue to the municipal hazardous-waste collection.",
+      "reason": "Liquid paints and varnishes may contain substances harmful to health or the environment.",
+      "steps": [
+        "Keep it in the tightly closed original container.",
+        "Do not mix, decant or pour it down a drain.",
+        "Check opening times and quantity limits in advance."
+      ],
+      "warning": "Do not open or combine unknown chemicals.",
+      "localVariation": "Collection sites, quantities and fees are regulated locally."
+    },
+    "painting": {
+      "name": "Painting or canvas picture",
+      "aliases": [
+        "oil painting",
+        "painting",
+        "canvas picture",
+        "picture on canvas",
+        "art print",
+        "framed picture",
+        "wall picture"
+      ],
+      "keywords": ["art", "canvas", "picture frame", "wooden frame", "decoration"],
+      "category": "Picture + frame",
+      "route": {
+        "label": "Usable: pass it on · damaged: check material and size locally"
+      },
+      "answer": "Pass on a usable picture. If it is beyond use, consider frame, glass, metal and canvas separately and check the local route for its size.",
+      "reason": "Paintings and framed pictures often combine several materials. Municipal rules therefore differ by frame material, separable parts and whether the object fits in the residual-waste bin.",
+      "steps": [
+        "Sell, donate or otherwise reuse pictures in usable condition.",
+        "Separate glass, metal parts and the frame only when this can be done safely.",
+        "Search the local waste guide for picture, picture frame or canvas and check bulky-waste rules for large items."
+      ],
+      "localVariation": "Munich's AWM directs wooden or plastic picture frames to residual waste, metal frames to a recycling centre and bulky pieces to bulky-waste collection. This is not a nationwide rule."
+    },
+    "dried-paint": {
+      "name": "Dried paint",
+      "aliases": ["dry paint", "empty paint tin", "hardened wall paint", "dried emulsion paint"],
+      "keywords": ["paint", "renovation", "residual waste", "bucket"],
+      "category": "Residual waste / packaging",
+      "route": {
+        "label": "Hardened contents: residual waste · empty container: local packaging collection"
+      },
+      "answer": "Completely hardened paint residue may go in residual waste; dispose of the normally empty packaging separately under local rules.",
+      "reason": "The German Environment Agency distinguishes dried paint from liquid hazardous paint residue.",
+      "steps": [
+        "Make sure no liquid residue remains.",
+        "Separate hardened contents from the empty packaging when this can be done safely.",
+        "Ask the hazardous-waste collection about solvent-based or unknown products."
+      ],
+      "warning": "Do not deliberately evaporate it indoors and do not mix unknown residue.",
+      "localVariation": "Municipalities may set special rules for containers and renovation quantities."
+    },
+    "household-chemicals": {
+      "name": "Household chemicals",
+      "aliases": ["chemicals", "solvents", "pesticides", "insecticide", "adhesive", "cleaner residue", "acid", "alkali", "liquid paint", "liquid paint residue", "varnish residue", "ink"],
+      "keywords": ["hazardous waste", "pollutant", "poison", "dangerous substance"],
+      "category": "Hazardous waste",
+      "route": {
+        "label": "Recycling centre or hazardous-waste vehicle"
+      },
+      "answer": "Keep them separate, tightly closed and preferably in the original container for hazardous-waste collection.",
+      "reason": "Such residue may endanger people, the environment and waste-treatment facilities.",
+      "steps": [
+        "Do not mix or decant it.",
+        "Keep hazard labels legible.",
+        "Contact the collection point in advance if the contents are unknown."
+      ],
+      "warning": "If there is an immediate poisoning or fire risk, do not transport it: keep your distance and call 112 or the responsible poison centre.",
+      "localVariation": "Collection sites, maximum quantities and excluded substances differ."
+    },
+    "contaminated-tool": {
+      "name": "Tool with oil or chemical residue",
+      "aliases": ["oily tool", "tool with paint residue", "tool with chemicals", "contaminated hand tool"],
+      "keywords": ["hazardous waste", "tool", "oil", "paint", "chemicals"],
+      "category": "Tool / hazardous waste",
+      "route": {
+        "label": "Ask the hazardous-waste collection in advance"
+      },
+      "answer": "Do not automatically place it in residual waste or scrap metal. Tell the local hazardous-waste service what substance and amount remain on it.",
+      "reason": "A tool may contain recyclable metal, but attached oil, paint or unknown chemicals can change the safe disposal route.",
+      "steps": [
+        "Do not rinse, mix or scrape off anything without professional guidance.",
+        "Note the product name and hazard symbols of the attached substance.",
+        "Before transport, ask the hazardous-waste service or recycling centre about the tool type, substance and amount."
+      ],
+      "warning": "Keep away from leaking, reacting or unknown substances and seek professional advice before transport.",
+      "localVariation": "Whether a collection point accepts the whole tool or only separately collected residue depends on the municipality and substance."
+    },
+    "used-oil": {
+      "name": "Used oil or engine oil",
+      "aliases": ["engine oil", "gear oil", "lubricating oil", "hydraulic oil", "car oil", "old engine oil", "oil container"],
+      "keywords": ["vehicle", "hazardous waste", "pollutant", "garage"],
+      "category": "Hazardous waste",
+      "route": {
+        "label": "Return to the retailer or local hazardous-waste collection"
+      },
+      "answer": "Return used oil in a tightly closed container to the seller or use the local hazardous-waste route.",
+      "reason": "Engine oils are hazardous vehicle fluids and must not enter drains, soil or household waste.",
+      "steps": [
+        "Keep it in a suitable, tightly closed container.",
+        "Check the receipt and the retailer's return instructions.",
+        "Alternatively, contact the municipal collection site in advance."
+      ],
+      "warning": "Never mix it with other liquids or pour it down a drain.",
+      "localVariation": "Municipal acceptance may have quantity limits or fees; retailers have their own take-back conditions."
+    },
+    "cooking-oil": {
+      "name": "Cooking oil or frying fat",
+      "aliases": ["cooking oil", "frying oil", "olive oil", "vegetable oil", "frying fat", "used cooking oil", "spoiled cooking oil"],
+      "keywords": ["kitchen", "fat", "food", "collection point"],
+      "category": "Kitchen oil",
+      "route": {
+        "label": "Collect tightly closed · check the local cooking-oil or residual-waste route"
+      },
+      "answer": "Let it cool, collect it in a suitable tightly closed container and use the local route for cooking oil or fat.",
+      "reason": "Cooking oil must not enter sinks or toilets. Municipal routes differ: Munich names residual waste for bottled oil, while Hamburg provides dedicated cooking-oil collection points.",
+      "steps": [
+        "Let it cool completely and place it in a tightly closed, shatterproof container.",
+        "Search the municipal waste guide for cooking oil, frying fat or used cooking fat.",
+        "Use only the locally specified collection or residual-waste route."
+      ],
+      "warning": "Never pour it into a sink, toilet, drain or soil. Do not mix it with engine oil or chemicals.",
+      "localVariation": "Munich and Hamburg document different municipal routes; the app does not turn either one into a nationwide bin rule."
+    },
+    "unknown-oil": {
+      "name": "Other or unknown oil",
+      "aliases": ["unknown oil", "heating-oil residue", "lamp oil", "chain oil", "unknown machine oil"],
+      "keywords": ["hazardous waste", "oil", "fuel", "pollutant"],
+      "category": "Oil / hazardous waste",
+      "route": {
+        "label": "Ask the local hazardous-waste collection in advance"
+      },
+      "answer": "Do not guess or mix it with other liquids. Tell the local hazardous-waste service the product type and container.",
+      "reason": "Heating, lamp, machine and unknown oils require different acceptance routes depending on composition and municipality.",
+      "steps": [
+        "Keep it in its labelled, tightly closed original container.",
+        "Note the product name, purpose and approximate amount.",
+        "Contact the hazardous-waste service or recycling centre before transport."
+      ],
+      "warning": "Never put it into a sink, toilet, soil or residual waste and do not mix it with cooking or engine oil.",
+      "localVariation": "Collection point, quantity limit and fee depend on the product and municipality."
+    },
+    "spray-can": {
+      "name": "Aerosol can",
+      "aliases": ["spray can", "deodorant can", "hair spray can", "paint spray can", "aerosol"],
+      "keywords": ["packaging", "pressurised container", "hazardous waste", "metal"],
+      "category": "Packaging / hazardous waste",
+      "route": {
+        "label": "Completely empty: local packaging collection · with residue: hazardous waste"
+      },
+      "answer": "Only completely empty aerosol cans go to packaging collection; take cans with residue or unknown contents to hazardous-waste collection.",
+      "reason": "Residue and pressure inside the container may become dangerous during collection and treatment.",
+      "steps": [
+        "Do not puncture, crush or burn the can.",
+        "Empty it completely only through normal use.",
+        "Ask the municipal hazardous-waste service about residue or a defective can."
+      ],
+      "warning": "Do not continue using swollen, rusty or hot cans; ask trained staff before transport.",
+      "localVariation": "Municipalities decide which aerosol cans their hazardous-waste collection accepts."
+    },
+    "clothing": {
+      "name": "Clothing or shoes",
+      "aliases": ["old clothes", "clothes", "textiles", "shoes", "trousers", "jacket", "T-shirt"],
+      "keywords": ["reuse", "textile collection", "clothes bank"],
+      "category": "Textiles",
+      "route": {
+        "label": "Wearable: pass on or use a reputable textile collection · unusable: check locally"
+      },
+      "answer": "Pass on clean clothing in good condition or use a reputable local textile collection. Check the municipal rule for badly soiled or damaged textiles.",
+      "reason": "Reuse takes priority; acceptance criteria for unwearable textiles are not uniform locally.",
+      "steps": [
+        "Collect only clean and dry items.",
+        "Tie shoes together in pairs.",
+        "Check the acceptance criteria on the container or with the municipality."
+      ],
+      "warning": "Do not place wet, oily or chemically contaminated textiles in a clothes bank.",
+      "localVariation": "Municipalities and collectors differ on damaged, heavily soiled or wet textiles."
+    },
+    "rubber-household-item": {
+      "name": "Rubber item",
+      "aliases": ["rubber", "rubber band", "elastic band", "sealing ring", "rubber ring", "hair tie", "eraser", "rubber glove", "latex glove", "rubber boot", "rubber mat", "balloon", "bicycle tire", "bicycle tyre", "inner tube"],
+      "keywords": ["natural rubber", "latex", "elastic", "residual waste", "small rubber item"],
+      "category": "Rubber / composite material",
+      "route": {
+        "label": "Small items: residual waste · large items and tires: check locally"
+      },
+      "answer": "A small unusable rubber band or similar rubber item may go in residual waste. For large items and tires, first check the object and local acceptance route.",
+      "reason": "Rubber composite items are usually not sales packaging. Munich's official waste guide assigns rubber, rubber gloves, rubber boots and rubber mats to residual waste; the precise route elsewhere is set by each municipality.",
+      "steps": [
+        "Reuse or repair the item where possible.",
+        "Place small, non-hazardous rubber items without electronics or chemical residue in residual waste.",
+        "Check the local waste guide for large mats, vehicle parts or unknown contamination."
+      ],
+      "warning": "Car and motorcycle tires do not belong in household or bulky waste. Electrical or battery-powered items are electrical devices.",
+      "localVariation": "Municipal recycling systems and collection points differ. The residual-waste route is officially documented for Munich and is not presented as an identical system everywhere."
+    },
+    "car-tire": {
+      "name": "Car or motorcycle tire",
+      "aliases": ["car tire", "car tyre", "old tire", "vehicle tire", "motorcycle tire", "winter tire", "summer tire"],
+      "keywords": ["tire retailer", "tyre retailer", "specialist tire recycler", "rubber", "vehicle"],
+      "category": "Vehicle part",
+      "route": {
+        "label": "Tire retailer or specialist waste-tire recycler"
+      },
+      "answer": "Take it to a tire retailer or specialist waste-tire recycler. Check acceptance conditions first.",
+      "reason": "Vehicle tires contain several materials and require specialist recycling. The German Environment Agency explicitly excludes household and bulky waste.",
+      "steps": [
+        "Use the tire retailer's take-back service when buying replacements.",
+        "Without a purchase, ask about acceptance and possible fees first.",
+        "Hand it only to a municipally listed or professionally suitable collection point."
+      ],
+      "warning": "Do not place it in residual waste, bulky waste or an illegal dump.",
+      "localVariation": "Municipal recycling centres do not accept tires everywhere or may charge a fee, so the tire retailer is the safest first check."
+    },
+    "vacuum-waste": {
+      "name": "Vacuum bag or sweepings",
+      "aliases": ["vacuum cleaner bag", "vacuum contents", "house dust", "sweepings", "dust from vacuum"],
+      "keywords": ["dust", "dirt", "broom", "residual waste"],
+      "category": "Household residue",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "Seal it or otherwise contain dust and place it in residual waste.",
+      "reason": "Vacuum contents and sweepings are contaminated household residue that cannot be separately recycled.",
+      "steps": [
+        "Remove the bag closed.",
+        "Place loose dust in a bag while minimising dust release.",
+        "Put it in the residual-waste bin."
+      ],
+      "localVariation": "Different rules apply to hazardous, glowing or commercial dust; ask the local waste authority in those cases."
+    },
+    "pet-litter": {
+      "name": "Cat or small-animal litter",
+      "aliases": ["cat litter", "litter tray", "small animal litter", "pet litter", "dog waste", "dog waste bag"],
+      "keywords": ["pet", "faeces", "residual waste", "litter"],
+      "category": "Pet waste",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "Seal it tightly and place it in residual waste.",
+      "reason": "Animal litter and faeces are contaminated and do not belong in organic or paper collection.",
+      "steps": [
+        "Seal it in a tear-resistant bag.",
+        "Do not place it in the toilet, organic-waste bin or compost.",
+        "Put it in the residual-waste bin."
+      ],
+      "localVariation": "Do not place litter advertised as biodegradable in the organic-waste bin without explicit municipal approval."
+    },
+    "hygiene-paper": {
+      "name": "Used tissue or wet wipe",
+      "aliases": ["tissue", "used tissue", "wet wipe", "facial tissue", "makeup wipe", "paper towel", "cotton bud"],
+      "keywords": ["hygiene paper", "hygiene", "residual waste", "toilet"],
+      "category": "Hygiene product",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "Place used items in residual waste.",
+      "reason": "Used hygiene products and papers are contaminated and unsuitable for paper recycling.",
+      "steps": [
+        "Wrap hygienically if needed.",
+        "Do not place it in the toilet or waste-paper collection.",
+        "Dispose of it through residual waste."
+      ],
+      "localVariation": "Medical or chemically contaminated material may require a special disposal route."
+    },
+    "manual-toothbrush": {
+      "name": "Non-electric toothbrush",
+      "aliases": ["toothbrush", "old toothbrush", "manual toothbrush", "bamboo toothbrush", "plastic toothbrush"],
+      "keywords": ["hygiene", "brush", "residual waste", "non-electric"],
+      "category": "Hygiene product",
+      "route": {
+        "label": "Residual waste — observe local recycling rules"
+      },
+      "answer": "Place a normal toothbrush without power or battery in residual waste unless the municipality names a special recycling collection.",
+      "reason": "Small used hygiene products are not packaging. The residual-waste route is documented locally; municipal recycling bins may differ.",
+      "steps": [
+        "Check that it contains no battery or electrical component.",
+        "Use residual waste or an explicitly named local collection for non-packaging recyclables."
+      ],
+      "warning": "Electric toothbrushes and their batteries must be returned separately as electrical equipment and batteries.",
+      "localVariation": "Recycling bins may accept non-packaging plastics. Without an explicit local rule, do not use the yellow bin or yellow bag."
+    },
+    "cleaning-sponge": {
+      "name": "Washing-up sponge or cleaning cloth",
+      "aliases": ["dish sponge", "cleaning sponge", "dish cloth", "cleaning rag", "cleaning cloth"],
+      "keywords": ["sponge", "cloth", "cleaning", "residual waste"],
+      "category": "Cleaning product",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "When used and no longer washable, place it in residual waste.",
+      "reason": "Sponges and used cleaning cloths often consist of mixed materials and are contaminated after use.",
+      "steps": [
+        "Reuse washable cloths where possible.",
+        "Let wet items drain.",
+        "Place unusable sponges or cloths in residual waste."
+      ],
+      "warning": "Do not automatically place cloths soaked with solvents, oil or hazardous chemicals in residual waste; ask the local hazardous-waste service.",
+      "localVariation": "Residual waste is documented in Munich's official waste guide; hazardous contamination is subject to local special rules."
+    },
+    "writing-utensils": {
+      "name": "Ballpoint pen or felt-tip pen",
+      "aliases": ["ballpoint pen", "biro", "felt-tip pen", "coloured pencil", "pencil", "highlighter", "pen"],
+      "keywords": ["writing tool", "refill", "office", "residual waste"],
+      "category": "Small everyday item",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "Place empty or dried-out writing tools in residual waste.",
+      "reason": "Small writing tools usually consist of mixed materials and are not collected as packaging.",
+      "steps": [
+        "Keep refillable pens in use where possible.",
+        "Place dried-out pens and empty refills in residual waste."
+      ],
+      "localVariation": "Voluntary take-back schemes from individual manufacturers or retailers may be a better alternative."
+    },
+    "photos": {
+      "name": "Photo or photographic paper",
+      "aliases": ["photo", "photographs", "old photos", "photo paper", "slide", "negative", "photographic film"],
+      "keywords": ["picture", "coated paper", "film", "residual waste"],
+      "category": "Coated material",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "Place small household quantities in residual waste.",
+      "reason": "Photos and photographic paper are coated and therefore unsuitable for normal paper recycling.",
+      "steps": [
+        "Make personal content unreadable if needed.",
+        "Do not place it with waste paper.",
+        "Dispose of it through residual waste."
+      ],
+      "localVariation": "Treat large photo archives or chemical developing residue separately and check locally."
+    },
+    "sports-ball": {
+      "name": "Broken ball",
+      "aliases": ["football", "soccer ball", "basketball", "volleyball", "handball", "sports ball"],
+      "keywords": ["sport", "ball", "rubber", "leather", "residual waste"],
+      "category": "Sports equipment",
+      "route": {
+        "label": "Small and deflated: residual waste · large quantities: check locally"
+      },
+      "answer": "If it cannot be repaired, fully deflate it and place it in residual waste.",
+      "reason": "Balls are usually made from bonded material layers and are not packaging.",
+      "steps": [
+        "First check whether it can be repaired or passed on.",
+        "Use residual waste only when it is depressurised and fits the bin."
+      ],
+      "localVariation": "Larger sports equipment and larger quantities have different municipal routes."
+    },
+    "contact-lenses": {
+      "name": "Contact lenses",
+      "aliases": ["contact lens", "daily lenses", "monthly lenses", "soft lenses", "hard lenses"],
+      "keywords": ["vision aid", "hygiene", "plastic", "residual waste"],
+      "category": "Hygiene product",
+      "route": {
+        "label": "Residual waste"
+      },
+      "answer": "Place used contact lenses in residual waste.",
+      "reason": "The small used lenses belong neither in wastewater nor in packaging collection.",
+      "steps": [
+        "Remove them from the container and handle the liquid according to the product instructions.",
+        "Place the lenses in residual waste.",
+        "Separate blister packs and cardboard only by material and local packaging rules."
+      ],
+      "localVariation": "Manufacturer or optician take-back schemes may also be available locally."
+    },
+    "metal-packaging": {
+      "name": "Metal packaging",
+      "aliases": ["metal packages", "iron packaging", "steel packaging", "aluminium packaging", "aluminum packaging", "metal wrapper", "metal packaging container"],
+      "keywords": ["packaging", "metal", "tinplate", "aluminium"],
+      "category": "Metal packaging",
+      "route": {
+        "label": "Normally empty: yellow bin, yellow bag or local packaging collection"
+      },
+      "answer": "If the metal item is normally empty sales packaging, place it in the local lightweight-packaging collection.",
+      "reason": "Metal packaging is collected separately across Germany. This does not automatically apply to metal products that are not packaging.",
+      "steps": [
+        "Empty the packaging normally; rinsing is not required.",
+        "Separate parts that come apart easily.",
+        "Use the yellow bin, yellow bag or locally named packaging collection."
+      ],
+      "warning": "Pressure containers, gas cylinders, paint or chemical containers that are not empty, and electrical devices need a different route.",
+      "localVariation": "The service may be called a yellow bin, yellow bag, recycling bin or recycling island. Non-packaging metal objects are collected differently by municipalities."
+    },
+    "metal-household-item": {
+      "name": "Iron or metal",
+      "aliases": ["iron", "metal", "metals", "steel", "stainless steel", "aluminium", "aluminum", "copper", "brass", "bronze", "tin", "cast iron", "iron bar", "metal bar", "sheet steel", "sheet metal", "piece of metal", "metal part", "scrap metal", "aluminium part", "aluminum part", "copper pipe", "copper wire", "metal pot", "metal pan", "metal cutlery", "metal tool", "screw", "screws", "nail", "nails", "wire", "metal fitting", "metal hanger", "bicycle rim"],
+      "keywords": ["scrap metal", "recyclable", "non-packaging", "recycling centre"],
+      "category": "Non-packaging metal",
+      "route": {
+        "label": "Small: local recycling bin if accepted · otherwise or large: recycling centre"
+      },
+      "answer": "For iron or metal, first check whether it is packaging, how large it is and whether it contains electronics. Metal products that are not packaging belong in a recycling bin only where the local authority explicitly accepts them; otherwise use a recycling centre.",
+      "reason": "Yellow bins and yellow bags collect metal packaging nationwide. Municipal systems handle non-packaging metal differently, so recycling bins and recycling centres do not follow one nationwide rule.",
+      "steps": [
+        "Reuse or pass on metal objects that are still usable.",
+        "Check whether it is normally empty packaging, an electrical device or an item containing a battery.",
+        "Use a local recycling bin for a small safe metal item only if the authority explicitly accepts it.",
+        "Take large, heavy or unaccepted metal parts to a recycling centre or municipal scrap collection."
+      ],
+      "warning": "Do not treat gas or pressure containers, batteries, electrical devices, ammunition, sharp parts or metal contaminated with oil, paint or chemicals as ordinary scrap metal.",
+      "localVariation": "Hamburg accepts many household metal objects in its yellow recycling bin. Munich directs iron, metal and non-ferrous metal parts to recycling centres. Without a location, a local check is therefore essential."
+    },
+    "wood-household-item": {
+      "name": "Wooden object",
+      "aliases": ["wood", "wooden board", "wooden boards", "board", "plank", "wooden slat", "slat", "wooden crate", "wooden box", "piece of wood", "wood scraps", "plywood", "chipboard", "wooden furniture", "wooden door", "parquet", "wooden shelf"],
+      "keywords": ["waste wood", "construction timber", "furniture part", "recycling centre"],
+      "category": "Wood / waste wood",
+      "route": {
+        "label": "Pass on or check the local waste-wood/recycling-centre route"
+      },
+      "answer": "Reuse wood where possible. For boards, crates, furniture parts and larger pieces, use the local recycling-centre or bulky-waste route.",
+      "reason": "Municipal services set acceptance limits and distinguish untreated, painted and wood-preservative-treated wood.",
+      "steps": [
+        "Remove fittings, glass and other parts that come off easily.",
+        "Identify the size, amount and treatment of the wood.",
+        "Check the local waste guide for waste wood, wood or bulky waste."
+      ],
+      "warning": "Construction or garden wood treated with preservatives, burnt wood and contaminated parts may need special acceptance sites. Do not burn them yourself.",
+      "localVariation": "Munich accepts many wood types at recycling centres and separates treated outdoor wood. Other municipalities may draw different boundaries for small items, bulky waste and waste wood."
+    },
+    "mineral-construction-waste": {
+      "name": "Stone or construction rubble",
+      "aliases": ["construction rubble", "stone", "stones", "concrete", "piece of concrete", "brick", "tiles", "mortar", "cement", "gypsum", "gravel", "sand", "plaster", "aerated concrete", "sink", "toilet bowl"],
+      "keywords": ["mineral", "construction waste", "recycling centre", "rubble container"],
+      "category": "Mineral construction waste",
+      "route": {
+        "label": "Keep sorted and take an accepted amount to the local recycling centre"
+      },
+      "answer": "Keep clean mineral rubble separate and check acceptance, quantity limits and possible fees with the local recycling centre.",
+      "reason": "Stone, concrete, brick, tiles and similar mineral waste require separate acceptance. Municipalities limit amounts and distinguish clean rubble from mixed waste.",
+      "steps": [
+        "Sort out wood, metal, plastic, cables and other foreign materials.",
+        "Do not mix it with unknown or potentially hazardous waste.",
+        "Check acceptance conditions and maximum amounts before transport."
+      ],
+      "warning": "Asbestos, mineral wool, tar-containing materials, soot-contaminated stones and contaminated soil are not ordinary rubble. Do not break them up or transport them without expert guidance.",
+      "localVariation": "Munich accepts sorted rubble from private households only in limited amounts at recycling centres. Limits, fees and excluded substances differ locally."
+    },
+    "leather-household-item": {
+      "name": "Leather object",
+      "aliases": ["leather", "leather scraps", "piece of leather", "leather belt", "leather bag", "leather jacket", "leather shoes", "leather gloves", "faux leather"],
+      "keywords": ["clothing", "material scrap", "reuse", "residual waste"],
+      "category": "Leather / clothing",
+      "route": {
+        "label": "Usable: pass on · unusable: check the local residual/textile route"
+      },
+      "answer": "Pass on usable leather goods. Small unusable leather scraps may be residual waste locally; check the municipal textile or recycling route for clothing and larger items.",
+      "reason": "Reuse is preferable to disposal. Municipal collections differ for wearable clothing, material scraps, faux leather and large objects.",
+      "steps": [
+        "Check whether the bag, shoes, belt or clothing can still be used.",
+        "Place only clean, dry and wearable items in an approved collection.",
+        "Look up unusable or large leather items in the local waste guide."
+      ],
+      "warning": "Do not treat leather contaminated with oil, solvents or chemicals as ordinary material scraps.",
+      "localVariation": "Munich lists leather scraps as residual waste and usable leather clothing for its municipal textile collection. Other municipalities may differ."
+    },
+    "cork-household-item": {
+      "name": "Cork",
+      "aliases": ["cork", "corks", "bottle cork", "wine cork", "cork sheet", "cork flooring", "cork scraps", "natural cork"],
+      "keywords": ["bottle stopper", "flooring", "natural material", "recycling centre"],
+      "category": "Cork",
+      "route": {
+        "label": "Check for a local cork collection or recycling centre"
+      },
+      "answer": "Collect natural cork separately where possible and use a local cork collection or recycling centre. Flooring and composite cork follow different quantity and material rules.",
+      "reason": "Cork can be recovered separately, but collection points and acceptance of cork flooring or coated boards are not uniform nationwide.",
+      "steps": [
+        "Keep plastic stoppers and heavily coated parts separate.",
+        "Distinguish bottle corks from flooring or construction cork.",
+        "Check the local waste guide for cork or bottle corks."
+      ],
+      "warning": "Do not treat cork flooring, insulation cork or glued boards like loose bottle corks without checking locally.",
+      "localVariation": "Hamburg and Munich list recycling centres for cork or bottle corks; other municipalities may offer dedicated collections or different routes."
+    },
+    "wax-household-item": {
+      "name": "Wax or candle remains",
+      "aliases": ["wax", "candle", "candles", "candle stub", "candle remains", "candle wax", "wax scraps", "tea-light wax"],
+      "keywords": ["candle stub", "paraffin", "stearin", "residual waste"],
+      "category": "Wax",
+      "route": {
+        "label": "Reuse · small remains are usually residual waste; a local collection may exist"
+      },
+      "answer": "Reuse clean wax for new candles where possible. Small unusable remains may be residual waste locally; use any available municipal wax collection first.",
+      "reason": "Wax is not organic waste and is not collected as packaging. Voluntary and municipal collection routes differ locally.",
+      "steps": [
+        "Separate the wick, glass, metal shell and decorations by material.",
+        "Reuse clean remains or place them in an available collection.",
+        "Without a collection, dispose of small amounts according to the local rule."
+      ],
+      "warning": "Candle jars do not automatically belong in bottle-glass containers. Treat metal shells and electric LED candles according to their function.",
+      "localVariation": "Munich lists recycling centres or residual waste for wax and candles. Other municipalities may provide collection campaigns."
+    },
+    "composite-household-item": {
+      "name": "Composite or mixed material",
+      "aliases": ["composite material", "composite", "mixed material", "material mix", "multilayer material", "fiberglass", "fibreglass", "carbon-fibre part", "resin part", "coated material"],
+      "keywords": ["material mix", "inseparable", "non-packaging", "check locally"],
+      "category": "Composite material",
+      "route": {
+        "label": "Identify function, size and main material · check locally"
+      },
+      "answer": "For inseparable material combinations, the actual object determines the route. Packaging, electrical devices, construction waste and small household objects can require completely different handling.",
+      "reason": "Without the product function and local collection system, there is no reliable general bin for composite materials.",
+      "steps": [
+        "Check whether the item is packaging, electrical equipment or construction waste.",
+        "Separate parts that come apart easily only when it is safe.",
+        "Look up the size, main material and actual object in the local waste guide."
+      ],
+      "warning": "Do not work on fibre dust, unknown resins, liquids or damaged components. Seek expert guidance if there may be a health hazard.",
+      "localVariation": "Municipalities distinguish by object, size and available processing. The app therefore does not claim one nationwide bin."
+    },
+    "needle": {
+      "name": "Syringe or needle",
+      "aliases": ["needle", "injection needle", "insulin syringe", "used syringe", "lancet", "pen needle"],
+      "keywords": ["sharp", "medical", "puncture-proof", "injury"],
+      "category": "Injury risk",
+      "route": {
+        "label": "Seal in a sharps container and check the municipal disposal route"
+      },
+      "answer": "Never discard it loose or recap it. Secure it in an approved puncture-proof container and check the local disposal instructions.",
+      "reason": "Loose needles can injure other people; municipal rules for households differ.",
+      "steps": [
+        "Do not touch the needle with bare hands or recap it.",
+        "Place it in an approved, securely closable puncture-proof container.",
+        "Ask a pharmacy, healthcare provider or municipal waste authority about the local return route."
+      ],
+      "warning": "After a needlestick injury, treat the wound and seek medical advice immediately.",
+      "localVariation": "Residual waste, special sharps containers or return points may apply locally. The app does not claim one nationwide bin route."
+    }
+  },
+  "sources": {
+    "uba-separation-2026": {
+      "title": "Proper waste sorting conserves resources and protects the environment",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; general household waste",
+      "attribution": "Source: German Environment Agency; editorially shortened and rewritten."
+    },
+    "uba-packaging": {
+      "title": "Questions and answers: packaging and packaging waste",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; normally empty sales packaging from private households",
+      "attribution": "Source: German Environment Agency; original factual summary."
+    },
+    "uba-electrical": {
+      "title": "Waste electrical equipment",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; waste electrical equipment from private households",
+      "attribution": "Source: German Environment Agency; original factual summary."
+    },
+    "uba-batteries": {
+      "title": "Batteries and waste batteries",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; portable and other waste batteries",
+      "attribution": "Source: German Environment Agency; original factual summary."
+    },
+    "uba-lithium": {
+      "title": "Proper handling of lithium batteries is essential",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; lithium batteries, including damaged batteries",
+      "attribution": "Source: German Environment Agency; safety guidance independently summarised."
+    },
+    "uba-lamps": {
+      "title": "Where should broken lamps go?",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; lamps from private households",
+      "attribution": "Source: German Environment Agency; original factual summary."
+    },
+    "uba-problem-waste": {
+      "title": "Less waste at home",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; hazardous waste from private households",
+      "attribution": "Source: German Environment Agency; original factual summary."
+    },
+    "bmg-medicine-2026": {
+      "title": "Store and dispose of medicine correctly",
+      "publisher": "German Federal Ministry of Health",
+      "scope": "Germany; general principles for old medicine",
+      "attribution": "Source: German Federal Ministry of Health; original factual summary."
+    },
+    "berlin-bsr-abc": {
+      "title": "Waste guide (Abfall-ABC)",
+      "publisher": "Berlin municipal cleaning services (BSR)",
+      "scope": "Berlin; private households",
+      "attribution": "Local information: Berlin municipal cleaning services."
+    },
+    "berlin-bsr-recyclables": {
+      "title": "Collect recyclables correctly and conserve resources",
+      "publisher": "Berlin municipal cleaning services (BSR)",
+      "scope": "Berlin; recycling bin and recycling centres",
+      "attribution": "Source: Berlin municipal cleaning services."
+    },
+    "hamburg-srh-abc": {
+      "title": "Waste guide (Abfall-ABC)",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; private households",
+      "attribution": "Local information: Hamburg municipal cleaning service."
+    },
+    "hamburg-srh-info-2024": {
+      "title": "INFO 2024 — waste and recyclable-material collection",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; same-material non-packaging items from private households",
+      "attribution": "Source: Hamburg municipal cleaning service; original summary of Hamburg's recyclable-material collection."
+    },
+    "munich-awm-overview": {
+      "title": "Sorting waste in Munich",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; private households, system as of 2026",
+      "attribution": "Source: Munich municipal waste management."
+    },
+    "munich-awm-giftmobile": {
+      "title": "The hazardous-waste vehicle",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; hazardous household waste, 2026 schedule",
+      "attribution": "Local information: Munich municipal waste management."
+    },
+    "bmj-alt-oil-law": {
+      "title": "Section 8 Waste Oil Ordinance — used-oil collection when supplied to consumers",
+      "publisher": "German Federal Ministry of Justice / Federal Office of Justice",
+      "scope": "Germany; take-back of combustion-engine and transmission oil",
+      "attribution": "Source: Laws on the Internet, section 8 Waste Oil Ordinance."
+    },
+    "munich-awm-cooking-oil": {
+      "title": "Cooking oil, fats and frying fat — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; cooking oil and fat from private households",
+      "attribution": "Local information: Munich municipal waste management; cooking-oil route independently summarised."
+    },
+    "hamburg-srh-cooking-oil": {
+      "title": "EcoHHub — cooking oil and fat collection",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; dedicated collection points for cooking oil and fat from private households",
+      "attribution": "Local information: Hamburg municipal cleaning service; cooking-oil collection independently summarised."
+    },
+    "cologne-sharps-safety": {
+      "title": "Drug use in public spaces: what should you do? — questions and answers",
+      "publisher": "City of Cologne, public health department",
+      "scope": "Cologne; injury-safe handling of found used syringes",
+      "attribution": "Source: City of Cologne, public health department."
+    },
+    "uba-household-waste": {
+      "title": "Household waste",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; general classification of residual and municipally regulated household waste",
+      "attribution": "Source: German Environment Agency; original factual summary."
+    },
+    "uba-car-tires": {
+      "title": "Car tires: consider road noise, pressure and wear",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; proper disposal of car tires",
+      "attribution": "Source: German Environment Agency; disposal principle independently summarised."
+    },
+    "munich-awm-lexicon": {
+      "title": "Waste guide — disposal and prevention tips",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; specific everyday household waste",
+      "attribution": "Local information: Munich municipal waste management."
+    },
+    "munich-awm-picture-frame": {
+      "title": "Picture frames — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; reuse and disposal routes for picture frames by material and size",
+      "attribution": "Local information: Munich municipal waste management; original summary."
+    },
+    "hamburg-srh-metals": {
+      "title": "Packaging, plastics and metal",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; packaging and ordinary uncontaminated non-packaging items made of metal or plastic",
+      "attribution": "Source: Hamburg municipal cleaning service; regional metal and plastic rule independently summarised."
+    },
+    "hamburg-srh-recycling-centres": {
+      "title": "Recycling centres",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; acceptance including scrap metal and small quantities of rubble from private households",
+      "attribution": "Source: Hamburg municipal cleaning service; acceptance categories independently summarised."
+    },
+    "munich-awm-wood": {
+      "title": "Wood — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; household wood including painted wood and wood treated with preservatives",
+      "attribution": "Local information: Munich municipal waste management; wood acceptance independently summarised."
+    },
+    "munich-awm-construction": {
+      "title": "Construction rubble — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; sorted household construction rubble and municipal quantity limits",
+      "attribution": "Local information: Munich municipal waste management; rubble limits independently summarised."
+    },
+    "munich-awm-leather": {
+      "title": "Leather — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; leather scraps and usable leather clothing from private households",
+      "attribution": "Local information: Munich municipal waste management; leather routes independently summarised."
+    },
+    "uba-paper-guide": {
+      "title": "Paper — protecting forests and the climate",
+      "publisher": "German Environment Agency",
+      "scope": "Germany; suitability of paper products for waste-paper collection, including coated and wet-strength papers",
+      "attribution": "Source: German Environment Agency; paper and coating boundary independently summarised."
+    },
+    "uba-rights-2026": {
+      "title": "Privacy, liability and copyright",
+      "publisher": "German Environment Agency",
+      "scope": "Use and attribution status of the agency's web content and data",
+      "attribution": "German Environment Agency."
+    },
+    "bmg-rights-2026": {
+      "title": "Legal notice and publication rules",
+      "publisher": "German Federal Ministry of Health",
+      "scope": "Use and attribution status of the ministry's web content",
+      "attribution": "German Federal Ministry of Health."
+    }
+  },
+  "regions": {
+    "de": {
+      "label": "Germany — general guidance",
+      "scope": "Private households in Germany; municipal implementation may differ.",
+      "officialName": "Local waste authority",
+      "notice": "Without a region, the app shows nationwide principles. When it says “check locally”, consult your city or district waste authority.",
+      "routeOverrides": {}
+    },
+    "berlin": {
+      "label": "Berlin",
+      "scope": "Private households in the state of Berlin",
+      "officialName": "BSR waste guide",
+      "notice": "For collection sites, quantities and special waste, use the current BSR waste guide.",
+      "routeOverrides": {
+        "light-packaging": {
+          "label": "Berlin recycling bin",
+          "note": "Berlin uses its local recycling bin for packaging and other accepted recyclable materials."
+        },
+        "non-packaging-plastic": {
+          "label": "Berlin recycling bin",
+          "note": "Plastic household items such as bowls, watering cans and toys without electronics may go in the Berlin recycling bin."
+        }
+      }
+    },
+    "hamburg": {
+      "label": "Hamburg",
+      "scope": "Private households in the Free and Hanseatic City of Hamburg",
+      "officialName": "Hamburg municipal waste guide",
+      "notice": "For collection sites, quantities and special waste, use the current Hamburg municipal waste guide.",
+      "routeOverrides": {
+        "light-packaging": {
+          "label": "Hamburg recycling bin",
+          "note": "Hamburg collects packaging and accepted recyclable materials through the Hamburg recycling bin."
+        },
+        "non-packaging-plastic": {
+          "label": "Hamburg recycling bin or recycling bag",
+          "note": "Hamburg accepts same-material non-packaging items when at least half of the item is plastic or metal."
+        }
+      }
+    },
+    "munich": {
+      "label": "Munich",
+      "scope": "Private households within the City of Munich",
+      "officialName": "AWM waste guide",
+      "notice": "As of the 2026 content review, Munich uses recycling islands for glass, plastic and metal packaging. According to AWM, the yellow bin is planned from 2027.",
+      "routeOverrides": {
+        "light-packaging": {
+          "label": "Recycling island for plastic and metal",
+          "note": "In Munich, these items belong at a recycling island under the 2026 system, not automatically in a yellow bin."
+        },
+        "problem-waste": {
+          "label": "AWM recycling centre or hazardous-waste vehicle",
+          "note": "Check acceptance conditions, maximum quantities and schedules with AWM first."
+        },
+        "non-packaging-plastic": {
+          "label": "AWM recycling centre",
+          "note": "AWM directs a plastic watering can to a recycling centre. Check the exact object in its waste guide."
+        }
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@ Dieses Repository enthält ausschließlich `Welcher Müll?` mit dem App-Key
 
 - App-Klasse: `öffentlich`
 - Plattformen: `Web, mobil und Desktop`
-- Datenhaltung: `redaktionelle App-Daten; optionale grobe Region und letzte Suche lokal; keine Nutzerdatenbank`
+- Datenhaltung: `redaktionelle App-Daten; Region nur bis Reload; keine Konto-/Profildatenbank; ausschließlich bewusst abgeschickte Ergebnisrückmeldungen in einer app-eigenen Feedbackdatenbank`
 - Deployment: `eigener DEV-Dienst; Production nicht freigegeben`
 - Gemeinsame Abhängigkeiten: `keine`
 
@@ -23,7 +23,9 @@ Wenn der lokale MilosApps Workspace verfügbar ist, vor appübergreifenden
 - Entsorgungsaussagen mit belastbaren Quellen, Gültigkeitsbereich und
   Aktualisierungsdatum dokumentieren.
 - Regionale Regeln nicht verallgemeinern und Unsicherheit offen anzeigen.
-- Keine Datenbank, Cookies, Secrets oder Quellcode mit anderen Apps teilen.
+- Keine Datenbank, Cookies, Secrets oder Quellcode mit anderen Apps teilen. Die
+  app-eigene Feedbackdatenbank enthält nur ausdrücklich abgeschickte Meldungen,
+  nie Suchverlauf oder lokale Einstellungen.
 - DEV und Production strikt trennen; Production nur nach ausdrücklicher
   Freigabe verändern.
 
