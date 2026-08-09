@@ -989,3 +989,15 @@ GitHub-Pages-Origin wurde mit HTTP 201 angenommen, per Remote-D1-SQL als
 `review_state=new` gelesen und danach als klar markierter QA-Datensatz wieder
 gelöscht. Erst dieser Nachweis hebt das fail-closed Build-Gate für das neue
 Pages-Artefakt auf.
+
+Der vollständige DEV-Publish ist auf Runtime-Source
+`e573e7711e69f5b59603f611e64adc9f29c490e3`, Pages-Artefakt
+`e3feb2bb88d170d5f492c948d5877fba76de0fd7` und erfolgreichen Pages-Run
+`31288717713` gebunden. Der externe Remote-Smoke bestätigte Health-Identität,
+No-Login, DE/EN, Suche, 390 × 844 und 360 × 800 bei 200 Prozent. Zusätzlich
+wurde der nicht abgefangene echte Browserweg auf 390 × 844 geprüft:
+`Etwas anderes` zeigte den passenden Platzhalter, die Kommentarsektion hatte
+keine Oberkante, `clientWidth=scrollWidth=390`, es gab null Konsolenfehler und
+der eine Klick auf „Abschicken“ erzeugte in D1 einen Datensatz mit
+`review_state=new`. Der eindeutig markierte QA-Datensatz wurde danach gelöscht;
+die Datenbank enthielt anschließend null Meldungen.

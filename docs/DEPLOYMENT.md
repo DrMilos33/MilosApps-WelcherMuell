@@ -100,8 +100,10 @@ Löschung des QA-Datensatzes geprüft. Die Analyseabfragen stehen in
 ## Rollback
 
 Aktuelle gesunde DEV-Revision ist
-`5714c1ad95fdb6e8fd03aa03ba0be64b3c9751d3`. Direkter Rollback vor der
-geführten Allgemeinsuche ist `3e7d427eb9d4159791d741933d57e75e4e88ad8b`;
+`e3feb2bb88d170d5f492c948d5877fba76de0fd7`. Direkter Rollback vor dem
+app-eigenen Feedbackdienst ist `5714c1ad95fdb6e8fd03aa03ba0be64b3c9751d3`;
+der Rollback vor der geführten Allgemeinsuche ist
+`3e7d427eb9d4159791d741933d57e75e4e88ad8b`;
 der Rollback vor der allgemeinen Materialsuche ist `d6c9deea4eb87899106b0eeb4a94d0a3a6c37822`;
 der Rollback vor der bestätigbaren Tippfehlerkorrektur ist
 `864243c99c361993e66d83978eae937b83dea013`;

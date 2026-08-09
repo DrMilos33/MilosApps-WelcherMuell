@@ -340,6 +340,7 @@ try {
   await page.getByRole("button", { name: "Ergebnis melden", exact: true }).click();
   await page.getByLabel("Kommentar (optional)").fill("Externer DEV-Smoke");
   await page.getByRole("button", { name: "Abschicken", exact: true }).click();
+  await page.getByText("Danke – die Meldung wurde gespeichert.", { exact: true }).waitFor();
   assert.equal(feedbackRequest.appKey, "waste-guide");
   assert.equal(feedbackRequest.query, "Was für Werkzeug?");
   assert.equal(feedbackRequest.comment, "Externer DEV-Smoke");
