@@ -25,6 +25,39 @@
       "required": false
     }
   },
+  "serverData": {
+    "resultFeedback": {
+      "storage": "app-owned Cloudflare D1",
+      "trigger": "explicit-submit-action",
+      "required": false,
+      "fields": [
+        "random submission ID",
+        "timestamp",
+        "environment",
+        "content version",
+        "item ID and name",
+        "selected reason",
+        "optional comment",
+        "triggering search query",
+        "language",
+        "canonical result URL",
+        "review state and optional editorial review notes"
+      ],
+      "excludedFields": [
+        "IP address",
+        "user agent",
+        "cookie",
+        "account identifier",
+        "selected region",
+        "search history",
+        "device identifier"
+      ],
+      "personalDataRisk": "Optional free text may contain information entered by the user; the UI asks users not to submit names or contact details.",
+      "retention": "automatically deleted after 365 days",
+      "publicReadAccess": false,
+      "deploymentStatus": "local candidate; external DEV deployment blocked until Cloudflare authentication and resource IDs exist"
+    }
+  },
   "deviceAccess": [
     {
       "api": "ServiceWorkerRegistration.getRegistrations/unregister",
@@ -48,7 +81,7 @@
     },
     {
       "api": "CacheStorage",
-      "identifier": "waste-guide-2026-08-09-search-v7",
+      "identifier": "waste-guide-2026-08-09-feedback-v8",
       "purpose": "Ausschließlich öffentliche App-Dateien für die ausdrücklich aktivierte Offline-Nutzung vorhalten",
       "lifetime": "bounded-by-app-cache-version-or-browser-clear",
       "trigger": "service-worker-after-explicit-user-action",
@@ -91,10 +124,12 @@
       "userTriggered": true
     },
     {
-      "service": "GitHub Issues",
-      "purpose": "Eine vom Nutzer ausdrücklich ausgelöste und vor dem Absenden prüfbare Ergebnismeldung entgegennehmen",
-      "runtimeRequest": false,
-      "userTriggered": true
+      "service": "App-owned Cloudflare Worker and D1",
+      "purpose": "Eine bewusst abgeschickte Ergebnismeldung ohne Konto strukturiert zur redaktionellen Prüfung speichern",
+      "runtimeRequest": true,
+      "userTriggered": true,
+      "credentialsInBrowser": false,
+      "status": "not externally deployed"
     }
   ],
   "legacyKeys": [

@@ -558,20 +558,26 @@ nicht durch freie Textinterpretation einer Tonne zuweisen.
 
 ### Fehlerfeedback braucht einen ehrlichen Speicherort
 
-Ohne Nutzerkonto oder eigenes Backend kann eine App keine dauerhafte
-Meldesammlung versprechen. Ein expliziter Übergang zu einer vorausgefüllten
-Repository-Meldung ist dagegen prüfbar: Grund, optionaler Kommentar, Item-ID,
-Inhaltsversion und Ergebnislink werden erst bei Nutzeraktion erzeugt; in der
-App bleibt nichts gespeichert. Native GitHub-Anmeldung und endgültiges
-Absenden bleiben sichtbar außerhalb der App.
+Eine vorausgefüllte Repository-Meldung ist transparent, verlangt aber einen
+zweiten Klick und häufig ein fremdes Konto. Für echtes Ein-Klick-Feedback muss
+der Speicherweg app-eigen sein: Der Browser sendet nur einen minimierten,
+versionierten Datensatz an einen kleinen Worker; ein privates D1-Schema trennt
+Meldung, Analysezustand und redaktionelle Notiz. Browser-Secrets und ein
+öffentlicher Lese-Endpunkt sind dafür weder nötig noch zulässig.
 
-Evidenz: Unit-Tests begrenzen Kommentare auf 500 Zeichen und entfernen
-Verlaufsparameter. Browser-E2E bestätigt den Dialog, die auswählbaren Gründe,
-den kanonischen Link und null Web-Storage-/Cookiezugriffe.
+Evidenz: Unit-/Worker-Tests begrenzen Kommentar und Suchbegriff, prüfen Origin,
+CORS, MIME, URL, Gründe, Honeypot, Rate-Limitpfad und Prepared Statement. Eine
+echte lokale Wrangler-/D1-Runde migriert das Schema, nimmt den Datensatz an und
+liest ihn über die versionierte Analyseabfrage zurück. Browser-E2E bestätigt
+vier auswahlabhängige Hilfetexte, die entfernte Trennlinie, genau einen
+Direktversand und weiterhin null Web-Storage-/Cookiezugriffe.
 
-Gültigkeitsgrenze: Nur tatsächlich bei GitHub abgesendete Meldungen stehen zur
-späteren Analyse zur Verfügung. Eine anonyme In-App-Sammlung würde einen
-eigenen Backend-, Datenschutz- und Missbrauchsschutzvertrag benötigen.
+Gültigkeitsgrenze: Freitext kann trotz Datenminimierung personenbezogene Angaben
+enthalten. Die UI warnt davor, die Meldung speichert keine IP-/Browserkennung,
+und der tägliche Löschlauf begrenzt die Aufbewahrung auf 365 Tage. Bis
+Cloudflare-Identität, D1-Ressource und HTTPS-Endpunkt extern feststehen, bleibt
+der neue Stand ein lokaler Kandidat; die öffentliche App darf keinen
+Speichererfolg vortäuschen.
 
 ## Weitergabe
 

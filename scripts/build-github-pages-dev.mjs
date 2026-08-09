@@ -9,6 +9,23 @@ const expectedSourceCommit = process.env.WASTE_GUIDE_SOURCE_COMMIT;
 if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_SOURCE_COMMIT muss den vollständigen, zu veröffentlichenden Quellcommit enthalten.");
 }
+const configuredFeedbackEndpoint = process.env.WASTE_GUIDE_FEEDBACK_ENDPOINT;
+let feedbackEndpoint;
+try {
+  feedbackEndpoint = new URL(configuredFeedbackEndpoint);
+} catch {
+  throw new Error("WASTE_GUIDE_FEEDBACK_ENDPOINT muss die veröffentlichte absolute HTTPS-URL des app-eigenen Meldediensts enthalten.");
+}
+if (
+  feedbackEndpoint.protocol !== "https:" ||
+  feedbackEndpoint.username ||
+  feedbackEndpoint.password ||
+  feedbackEndpoint.pathname !== "/v1/feedback" ||
+  feedbackEndpoint.search ||
+  feedbackEndpoint.hash
+) {
+  throw new Error("WASTE_GUIDE_FEEDBACK_ENDPOINT muss credential-frei, HTTPS und exakt auf /v1/feedback gesetzt sein.");
+}
 const expectedContentVersion = "2026.08.09-1";
 const repositoryName = "MilosApps-WelcherMuell";
 const basePath = `/${repositoryName}`;
@@ -83,6 +100,11 @@ for (const [from, to] of [
 ]) {
   indexHtml = indexHtml.replaceAll(from, to);
 }
+const feedbackMarker = '<meta name="waste-guide-feedback-endpoint" content="/api/feedback">';
+if (!indexHtml.includes(feedbackMarker)) {
+  throw new Error("Feedback-Endpunktmarker fehlt im Quell-HTML.");
+}
+indexHtml = indexHtml.replace(feedbackMarker, `<meta name="waste-guide-feedback-endpoint" content="${feedbackEndpoint}">`);
 for (const stylesheet of ["milos-app-essentials.css", "milos-app-essentials-theme.css"]) {
   const expectedHref = `./vendor/milosapps-essentials/v1/${stylesheet}`;
   const matches = indexHtml.match(new RegExp(`href=["']${expectedHref.replaceAll(".", "\\.")}["']`, "g")) ?? [];
@@ -134,6 +156,13 @@ meta.deployment = {
   branch: "dev-pages",
   productionApproved: false
 };
+meta.feedback = {
+  provider: "Cloudflare Worker + D1",
+  environment: "DEV",
+  endpoint: feedbackEndpoint.toString(),
+  healthUrl: new URL("/healthz", feedbackEndpoint).toString(),
+  productionApproved: false
+};
 await writeFile(metaPath, `${JSON.stringify(meta, null, 2)}\n`, "utf8");
 
 const health = {
@@ -177,6 +206,7 @@ const deployment = {
   sourceTree,
   contentVersion: expectedContentVersion,
   productionApproved: false,
+  feedbackEndpoint: feedbackEndpoint.toString(),
   files: artifactFiles
 };
 await writeFile(resolve(outputRoot, "deployment.json"), `${JSON.stringify(deployment, null, 2)}\n`, "utf8");

@@ -323,6 +323,12 @@ try {
     await submitSearch(desktopPage, "iron bar");
     await desktopPage.getByRole("heading", { name: "Iron or metal", exact: true }).waitFor();
     await desktopPage.locator(".result-destination").getByText(/local recycling bin/).waitFor();
+    await desktopPage.getByRole("button", { name: "Report result", exact: true }).click();
+    const englishFeedback = desktopPage.getByRole("dialog", { name: "Report result", exact: true });
+    await englishFeedback.getByLabel("An important disposal route is missing").check();
+    assert.equal(await englishFeedback.getByLabel("Comment (optional)").getAttribute("placeholder"), "Which disposal route is missing?");
+    assert.equal(await englishFeedback.getByRole("button", { name: "Submit", exact: true }).count(), 1);
+    await englishFeedback.getByRole("button", { name: "Cancel", exact: true }).click();
     await desktopPage.getByRole("button", { name: "Region", exact: true }).click();
     await desktopPage.getByRole("dialog", { name: "Region", exact: true }).waitFor();
     assert.equal(await desktopPage.getByLabel("Broad region").locator("option").first().textContent(), "Germany — general guidance");
@@ -460,24 +466,37 @@ try {
     await desktopPage.getByRole("heading", { name: "Eisen oder Metall", exact: true }).waitFor();
   });
 
-  await check("Desktop: Ergebnismeldung bleibt prüfbar und speichert nichts in der App", async () => {
-    await desktopPage.evaluate(() => {
-      window.open = (url) => {
-        window.__feedbackIssueUrl = url;
-        return null;
-      };
-    });
+  await check("Desktop: Ergebnismeldung wird mit passender Hilfe direkt strukturiert gespeichert", async () => {
     await desktopPage.getByRole("button", { name: "Ergebnis melden", exact: true }).click();
     const dialog = desktopPage.getByRole("dialog", { name: "Ergebnis melden", exact: true });
     await dialog.waitFor();
+    const comment = dialog.getByLabel("Kommentar (optional)");
+    assert.equal(await comment.getAttribute("placeholder"), "Was sollte stattdessen angezeigt werden?");
+    await dialog.getByLabel("Ein wichtiger Entsorgungsweg fehlt").check();
+    assert.equal(await comment.getAttribute("placeholder"), "Welcher Entsorgungsweg fehlt?");
+    await dialog.getByLabel("Die Erklärung ist unklar").check();
+    assert.equal(await comment.getAttribute("placeholder"), "Was ist unklar oder schwer verständlich?");
+    await dialog.getByLabel("Etwas anderes").check();
+    assert.equal(await comment.getAttribute("placeholder"), "Was möchtest du uns mitteilen?");
+    await dialog.screenshot({ path: fileURLToPath(new URL("feedback-dialog.png", artifacts)) });
+    const commentGroupBorder = await dialog.locator(".feedback-comment-group").evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { style: style.borderTopStyle, width: style.borderTopWidth };
+    });
+    assert.deepEqual(commentGroupBorder, { style: "none", width: "0px" });
     await dialog.getByLabel("Das Ergebnis ist falsch").check();
-    await dialog.getByLabel("Kommentar (optional)").fill("Bitte Größe und Material noch klarer trennen.");
-    await dialog.getByRole("button", { name: "Auf GitHub prüfen und senden", exact: true }).click();
-    const issueUrl = new URL(await desktopPage.evaluate(() => window.__feedbackIssueUrl));
-    assert.equal(issueUrl.origin, "https://github.com");
-    assert.equal(issueUrl.pathname, "/DrMilos33/MilosApps-WelcherMuell/issues/new");
-    assert.match(issueUrl.searchParams.get("body"), /Reason: `wrong`/);
-    assert.match(issueUrl.searchParams.get("body"), /Was für Werkzeug\?/);
+    await comment.fill("Bitte Größe und Material noch klarer trennen.");
+    await dialog.getByRole("button", { name: "Abschicken", exact: true }).click();
+    await desktopPage.getByText("Danke – die Meldung wurde gespeichert.", { exact: true }).waitFor();
+    const reports = await (await fetch(`${baseUrl}/__test/feedback`)).json();
+    const report = reports.at(-1);
+    assert.equal(report.reason, "wrong");
+    assert.equal(report.searchQuery, "Was für Werkzeug?");
+    assert.equal(report.comment, "Bitte Größe und Material noch klarer trennen.");
+    assert.equal(report.contentVersion, expectedContentVersion);
+    assert.equal(report.reviewState, "new");
+    assert.equal(Object.hasOwn(report, "ip"), false);
+    assert.equal(Object.hasOwn(report, "userAgent"), false);
     assert.deepEqual(await desktopPage.evaluate(() => window.__storageCalls), []);
     assert.equal(await dialog.isVisible(), false);
   });
@@ -908,6 +927,23 @@ try {
       path: fileURLToPath(new URL("phone-rubber-result.png", artifacts)),
       fullPage: true
     });
+
+    await mobilePage.getByRole("button", { name: "Ergebnis melden", exact: true }).tap();
+    const feedbackDialog = mobilePage.getByRole("dialog", { name: "Ergebnis melden", exact: true });
+    await feedbackDialog.getByLabel("Etwas anderes").check();
+    const feedbackGeometry = await feedbackDialog.evaluate((element) => ({
+      left: Math.round(element.getBoundingClientRect().left),
+      right: Math.round(element.getBoundingClientRect().right),
+      width: Math.round(element.getBoundingClientRect().width),
+      scrollWidth: element.scrollWidth,
+      clientWidth: element.clientWidth,
+      viewportWidth: innerWidth
+    }));
+    assert.ok(feedbackGeometry.left >= 0 && feedbackGeometry.right <= feedbackGeometry.viewportWidth, JSON.stringify(feedbackGeometry));
+    assert.ok(feedbackGeometry.scrollWidth <= feedbackGeometry.clientWidth + 1, JSON.stringify(feedbackGeometry));
+    assert.equal(await feedbackDialog.getByLabel("Kommentar (optional)").getAttribute("placeholder"), "Was möchtest du uns mitteilen?");
+    await feedbackDialog.screenshot({ path: fileURLToPath(new URL("phone-feedback-dialog.png", artifacts)) });
+    await feedbackDialog.getByRole("button", { name: "Abbrechen", exact: true }).tap();
   });
 
   await check("Smartphone: lange Ergebnisbegriffe und Quellenpfeil bleiben kompakt", async () => {

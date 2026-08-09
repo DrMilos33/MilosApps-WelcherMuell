@@ -328,18 +328,21 @@ try {
   await page.getByRole("button", { name: /Metall oder Eisen/ }).click();
   await page.getByRole("heading", { name: "Eisen oder Metall", exact: true }).waitFor();
 
-  await page.evaluate(() => {
-    window.open = (url) => {
-      window.__feedbackIssueUrl = url;
-      return null;
-    };
+  let feedbackRequest = null;
+  await page.route("**/v1/feedback", async (route) => {
+    feedbackRequest = route.request().postDataJSON();
+    await route.fulfill({
+      status: 201,
+      contentType: "application/json",
+      body: JSON.stringify({ status: "accepted", submissionId: feedbackRequest.submissionId })
+    });
   });
   await page.getByRole("button", { name: "Ergebnis melden", exact: true }).click();
   await page.getByLabel("Kommentar (optional)").fill("Externer DEV-Smoke");
-  await page.getByRole("button", { name: "Auf GitHub prüfen und senden", exact: true }).click();
-  const feedbackIssue = new URL(await page.evaluate(() => window.__feedbackIssueUrl));
-  assert.equal(feedbackIssue.origin, "https://github.com");
-  assert.match(feedbackIssue.searchParams.get("body"), /Was für Werkzeug\?/);
+  await page.getByRole("button", { name: "Abschicken", exact: true }).click();
+  assert.equal(feedbackRequest.appKey, "waste-guide");
+  assert.equal(feedbackRequest.query, "Was für Werkzeug?");
+  assert.equal(feedbackRequest.comment, "Externer DEV-Smoke");
 
   await page.getByLabel("Gegenstand oder Material").fill("Haushaltschemikalien");
   await page.getByRole("button", { name: "Suchen" }).click();

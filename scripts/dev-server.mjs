@@ -2,6 +2,7 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import feedbackWorker from "../feedback-worker/src/worker.js";
 
 const repositoryRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const host = process.env.WASTE_GUIDE_HOST || "127.0.0.1";
@@ -19,6 +20,71 @@ const contentTypes = {
   ".webmanifest": "application/manifest+json; charset=utf-8"
 };
 
+const localFeedbackRows = new Map();
+const localFeedbackDb = {
+  prepare() {
+    return {
+      bind(...values) {
+        return {
+          async run() {
+            const [id, createdAt, environment, contentVersion, itemId, itemName, reason, comment, searchQuery, language, resultUrl] = values;
+            if (!localFeedbackRows.has(id)) {
+              localFeedbackRows.set(id, {
+                id,
+                createdAt,
+                environment,
+                contentVersion,
+                itemId,
+                itemName,
+                reason,
+                comment,
+                searchQuery,
+                language,
+                resultUrl,
+                reviewState: "new"
+              });
+            }
+            return { success: true };
+          }
+        };
+      }
+    };
+  }
+};
+
+async function readBody(request, maximum = 8192) {
+  const chunks = [];
+  let length = 0;
+  for await (const chunk of request) {
+    length += chunk.length;
+    if (length > maximum) throw new Error("Request body is too large");
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+}
+
+async function forwardFeedback(request, response, url) {
+  const headers = new Headers();
+  for (const [name, value] of Object.entries(request.headers)) {
+    if (Array.isArray(value)) value.forEach((part) => headers.append(name, part));
+    else if (value !== undefined) headers.set(name, value);
+  }
+  const body = request.method === "GET" || request.method === "HEAD" ? undefined : await readBody(request);
+  const workerUrl = new URL(url);
+  workerUrl.pathname = url.pathname === "/api/feedback" ? "/v1/feedback" : url.pathname.replace(/^\/api\/feedback/, "");
+  const workerRequest = new Request(workerUrl, { method: request.method, headers, body });
+  const workerResponse = await feedbackWorker.fetch(workerRequest, {
+    APP_ENVIRONMENT: "DEV",
+    PRODUCTION_APPROVED: "false",
+    ALLOWED_ORIGINS: `http://${host}:${port}`,
+    ALLOWED_RESULT_PATHS: "/",
+    FEEDBACK_DB: localFeedbackDb,
+    REPORT_LIMIT: { limit: async () => ({ success: true }) }
+  });
+  response.writeHead(workerResponse.status, Object.fromEntries(workerResponse.headers.entries()));
+  response.end(Buffer.from(await workerResponse.arrayBuffer()));
+}
+
 function resolveRequestPath(pathname) {
   const decoded = decodeURIComponent(pathname);
   const relative = decoded === "/" ? "index.html" : decoded.replace(/^\/+/, "");
@@ -28,7 +94,7 @@ function resolveRequestPath(pathname) {
   return null;
 }
 
-const server = createServer((request, response) => {
+const server = createServer(async (request, response) => {
   const url = new URL(request.url || "/", `http://${request.headers.host || `${host}:${port}`}`);
 
   if (url.pathname === "/healthz") {
@@ -43,6 +109,23 @@ const server = createServer((request, response) => {
       contentVersion: "2026.08.09-1",
       productionApproved: false
     }));
+    return;
+  }
+
+  if (url.pathname === "/api/feedback" || url.pathname === "/api/feedback/healthz") {
+    try {
+      await forwardFeedback(request, response, url);
+    } catch (error) {
+      response.writeHead(500, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
+      response.end(JSON.stringify({ status: "error" }));
+      console.error("Lokaler Feedbackadapter ist fehlgeschlagen.", error);
+    }
+    return;
+  }
+
+  if (url.pathname === "/__test/feedback" && request.method === "GET") {
+    response.writeHead(200, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
+    response.end(JSON.stringify([...localFeedbackRows.values()]));
     return;
   }
 

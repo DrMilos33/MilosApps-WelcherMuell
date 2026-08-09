@@ -3,7 +3,8 @@
 `waste-guide` ist eine eigenständige, öffentliche MilosApps-Nachschlage-App für
 private Haushalte. Sie gibt kurze, quellenbasierte Entsorgungshinweise, erklärt
 den Grund und kennzeichnet regionale Unsicherheit sichtbar. Konto, Standort und
-Nutzerdatenbank sind nicht nötig.
+eine Konto- oder Profildatenbank sind nicht nötig. Nur eine bewusst
+abgeschickte Ergebnisrückmeldung wird im app-eigenen Feedbackdienst gespeichert.
 
 ## DEV-Stand
 
@@ -47,16 +48,19 @@ HTTP 200 genügt nicht; fremde Server werden nie beendet.
 
 ## Lokal starten
 
-Voraussetzungen sind Node.js 20 oder neuer und pnpm:
+Voraussetzungen sind Node.js 22 oder neuer und pnpm:
 
 ```powershell
 pnpm install
 pnpm dev
 ```
 
-Es gibt keinen Build-Schritt und keine Laufzeitabhängigkeit. Der kleine
-Node-Server liefert statische ES-Module, JSON-Daten, Manifest, Service Worker
-und einen app-spezifischen Healthcheck aus.
+Es gibt keinen Build-Schritt für die Fach-App. Der kleine Node-Server liefert
+statische ES-Module, JSON-Daten, Manifest, Service Worker und einen
+app-spezifischen Healthcheck aus. Für lokale Tests nimmt er
+Ergebnisrückmeldungen unter `/api/feedback` in einem flüchtigen Testadapter an.
+Der getrennte reale Meldedienst liegt unter `feedback-worker/`; seine
+Cloudflare-/D1-Einrichtung ist in dessen README dokumentiert.
 
 ## Prüfen
 
@@ -93,6 +97,10 @@ ohne Cookies, Portalzustand oder Milos-Login.
 - `public/data/locales/en.v1.json`: vollständige englische Fachübersetzung
 - `src/search.js`: deutsche Normalisierung, gewichtete Suche und
   Tippfehlertoleranz
+- `src/feedback.js`: minimierter, credential-freier Direktversand einer
+  ausdrücklich abgeschickten Ergebnismeldung
+- `feedback-worker/`: app-eigener Cloudflare-Worker, D1-Schema,
+  Auswertungsabfragen, Missbrauchsgrenze und 365-Tage-Löschung
 - `src/i18n.js`: sichtbare DE/EN-Oberfläche und lokalisierte Kataloge
 - `src/shell-session.js`: DE/EN-Reloadzustand über die sichtbare URL, ohne
   Web Storage

@@ -3,7 +3,8 @@
 ## Ziel und Testgrenze
 
 Die QA prüft eine öffentliche, vollständig deutsch- und englischsprachige Nachschlage-App ohne Konto und
-ohne Serverdatenhaltung. Fachliche Aussagen werden gegen den eingecheckten
+ohne gespeicherten Nutzungsverlauf. Nur bewusst abgeschickte
+Ergebnisrückmeldungen gelangen in den app-eigenen Meldedienst. Fachliche Aussagen werden gegen den eingecheckten
 Quellenvertrag und zusätzlich durch einen Live-Erreichbarkeitscheck geprüft.
 Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
 
@@ -41,8 +42,17 @@ Eine erfolgreiche URL-Prüfung ersetzt keine redaktionelle Inhaltsprüfung.
      ausdrücklicher Aktivierung;
    - Teilen nativ, Clipboard-Fallback und Abbruch ohne gespeicherten
      Suchverlauf; kanonischer Ergebnislink und Quellenattribution;
-   - Druckaufruf ohne gespeicherten Suchverlauf.
-5. Online-Quellencheck
+   - Druckaufruf ohne gespeicherten Suchverlauf;
+   - Ergebnismeldung mit grundabhängigem Hilfetext, ohne visuelle Trennlinie,
+     genau einem Direktversand und ohne GitHub-/Login-Zwischenschritt;
+   - strukturierter Prüfdatensatz, Fehlerzustand, keine Browserpersistenz und
+     keine IP-/User-Agent-Felder im App-Datensatz.
+5. Feedback-API und D1
+   - erlaubte Origin, CORS-Preflight, Methode, MIME und Größenlimit;
+   - kuratierte Gründe, kanonische Ergebnis-URL und idempotente Meldungs-ID;
+   - Prepared Statement, Honeypot, Rate-Limit, nichtöffentlicher Leseweg;
+   - Prüfstatus, Summary-View und 365-Tage-Löschung.
+6. Online-Quellencheck
    - HTTPS-Erreichbarkeit aller 28 katalogisierten Primärquellen;
    - ein Netzwerkfehler wird wiederholt und als externer Befund dokumentiert;
    - 4xx, dauerhafte Umleitung oder inhaltliche Änderung erzwingen eine

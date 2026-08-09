@@ -2,9 +2,11 @@
 
 ## Laufzeit
 
-Die App ist eine statische, frameworkfreie ES-Modul-Anwendung. Ein kleiner
+Die Fach-App ist eine statische, frameworkfreie ES-Modul-Anwendung. Ein kleiner
 Node-HTTP-Server dient ausschließlich dem lokalen DEV-/E2E-Betrieb. Es gibt
-keine API, keine Datenbank, keine Anmeldung und keine Cookies. Der öffentliche
+keine Anmeldung und keine Cookies. Ein getrennt deploybarer, app-eigener
+Cloudflare-Worker nimmt nur bewusst abgeschickte Ergebnisrückmeldungen an und
+legt sie strukturiert in einer eigenen D1-Datenbank ab. Der öffentliche
 App-Rahmen wird aus dem fest gepinnten Shared-Vertrag `public-app-shell/v2.0.3`
 lokal vendort; es gibt keinen CDN- oder Cross-Repository-Runtimeimport.
 
@@ -15,6 +17,7 @@ index.html
   ├─ src/app.js ───── UI, DE/EN, URL-Zustand, Offline- und Dialoglogik
   ├─ src/i18n.js ──── vollständige sichtbare Fachübersetzung
   ├─ src/search.js ── Normalisierung, Ranking, Integritätsprüfung
+  ├─ src/feedback.js ── minimierter Direktversand ohne Browser-Secret
   ├─ src/shell-session.js ─ Sprachzustand in der sichtbaren URL, ohne Persistenz
   ├─ offline-sw.js ── nur nach ausdrücklicher Offline-Aktivierung
   ├─ sw.js ────────── eng begrenzte Bereinigung der früheren Auto-Registrierung
@@ -24,6 +27,11 @@ index.html
        ├─ sources.v1.json
        ├─ regions.v1.json
        └─ locales/en.v1.json
+
+feedback-worker/
+  ├─ src/worker.js ── CORS, Validierung, Rate-Limit und D1-Insert
+  ├─ migrations/ ─── Feedbacktabelle, Prüfstatus und Summary-View
+  └─ queries/ ─────── wiederverwendbare Auswertungsabfragen
 ```
 
 `milos-app.json` pinnt Vertrag, Version und Shared-Commit. `shell-lock.json`
@@ -125,7 +133,7 @@ Browsers entfernbar. Das maschinenlesbare Inventar dokumentiert
 außerdem Service Worker, CacheStorage, Web Share und Clipboard mit Zweck,
 Trigger, Laufzeit und Personenbezug.
 
-Da es keine Cookies und keine optionale Persistenz gibt, erscheint kein
+Da es keine Cookies und keine optionale Browserpersistenz gibt, erscheint kein
 Schein-Einwilligungsbanner. Datenschutz bleibt über einen dauerhaften Link und
 den Transparenzdialog erreichbar. Der gemeinsame Teilen-Baustein erhält
 ausschließlich den aktuellen kanonischen `?item=`-Link, Entsorgungsweg und eine
@@ -133,6 +141,24 @@ Quellenattribution; frühere oder aktuelle Suchen und Regionseinstellungen
 werden nicht ungefragt geteilt. Native Freigabe und Nutzerabbruch bleiben
 statusstill; nur Clipboard- oder Fehlerfeedback erscheint als überlagerter
 Toast ohne Layoutsprung.
+
+## Bewusst abgeschicktes Ergebnisfeedback
+
+Der Dialog überträgt erst nach „Abschicken“ eine zufällige Meldungs-ID,
+Item-ID/-Name, Grund, optionalen Kommentar, auslösenden Suchbegriff,
+Inhaltsversion, Sprache und kanonische Ergebnis-URL. Region, Verlauf, IP-Adresse,
+User-Agent, Cookies und Browserkennungen werden nicht in `feedback_reports`
+gespeichert. Weil Freitext dennoch unbeabsichtigt personenbezogene Angaben
+enthalten kann, warnt die UI vor Namen und Kontaktdaten. Ein täglicher
+Worker-Cron löscht Meldungen nach 365 Tagen.
+
+Der Worker akzeptiert nur konfigurierte App-Origins, streng begrenztes JSON und
+kuratierte Gründe. Prepared Statements, eine idempotente UUID, Honeypot und ein
+globales Cloudflare-Rate-Limit begrenzen Missbrauch. Es gibt keinen öffentlichen
+Lese-Endpunkt. Die Prüfung erfolgt in der app-eigenen D1-Ansicht oder mit den
+versionierten Queries; `review_state` trennt neue, geprüfte, erledigte und
+verworfene Meldungen. Worker/D1 und statische App bleiben getrennt
+zurückrollbar.
 
 ## DEV-Sicherheitsgrenze
 

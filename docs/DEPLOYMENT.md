@@ -18,11 +18,16 @@
   `ed898412306e22c6ae1b10ee8953df29f8acd627`
 - Production-Freigabe: `false`
 
-Portal, Shared, Nutzerkonto und Datenbank sind keine Laufzeitabhängigkeiten.
+Portal, Shared und Nutzerkonto sind keine Laufzeitabhängigkeiten. Der aktuell
+veröffentlichte Stand verwendet noch die prüfbare GitHub-Übergabe. Der lokale
+Nachfolgekandidat ersetzt sie durch einen app-eigenen Feedback-Worker mit
+eigener D1-Datenbank; dieser Kandidat wird erst nach gesundem Worker-Health und
+bestätigter Ressourcenidentität als DEV gebaut.
 
 ## Reproduzierbarer Build
 
 ```powershell
+$env:WASTE_GUIDE_FEEDBACK_ENDPOINT='https://<app-eigener-worker>.workers.dev/v1/feedback'
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
 pnpm build:github-pages:dev
 ```
@@ -36,6 +41,11 @@ Pages um und erzeugt:
 - `deployment.json` mit Quellbaum und SHA-256 je Artefaktdatei;
 - externe `meta.json`;
 - `.nojekyll`.
+
+Der Builder verlangt zusätzlich eine credential-freie absolute HTTPS-Adresse,
+die exakt auf `/v1/feedback` endet. Er schreibt sie in das gebaute HTML,
+`meta.json` und `deployment.json`. Ein fehlender oder ungesunder Meldedienst
+führt damit fail-closed zu keinem neuen Pages-Artefakt.
 
 Zur deploybaren Shell gehören `milos-app.json` und die lokal vendorten,
 per `shell-lock.json` verifizierten Dateien. Der 5er-Lock umfasst Komponente,
@@ -70,6 +80,20 @@ Vor einer Aktualisierung gelten zwingend:
 4. den freigegebenen vollständigen SHA explizit an den Builder übergeben;
 5. Artefakt erzeugen, Hashmanifest prüfen und erst dann `dev-pages` bewegen;
 6. Pages-Status `built`, Remote-Smoke und Browser-Direktaufruf prüfen.
+
+## Feedbackdienst und aktueller externer Blocker
+
+`feedback-worker/` enthält Worker, D1-Migration, Summary-View, Auswertungsquery,
+lokale Wrangler-Konfiguration und eine deploybare Konfigurationsvorlage. Lokal
+sind Migration, echter Worker-Health, D1-Insert und anschließende SQL-Abfrage
+reproduzierbar geprüft. Der Dienst akzeptiert keine öffentlichen Leseanfragen.
+
+Extern fehlen aktuell eine geladene Cloudflare-Anmeldung, die app-eigene
+D1-`database_id` und damit die endgültige Worker-HTTPS-Adresse. Deshalb bleiben
+Source-Push und GitHub-Pages-Deploy dieses Kandidaten angehalten; die bestehende
+DEV-App und ihr Rollbackpunkt werden nicht überschrieben. Nach Anmeldung gelten
+die Schritte aus `feedback-worker/README.md`, anschließend direkte CORS-/POST-,
+D1-, Browser- und Fehlerfallprüfung.
 
 ## Rollback
 

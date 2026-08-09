@@ -961,3 +961,26 @@ No-Storage, DE/EN, Offline-Opt-in, 390 × 844 und 360 × 800 bei 200 Prozent.
 Der bytegenaue SVG-Nachweis vergleicht unter Windows den deployten Inhalt mit
 dem Git-Blob des erwarteten Source-SHA und nicht mit einer durch
 `core.autocrlf` materialisierten Arbeitskopie.
+
+## Lokaler Kandidat: direkte Ergebnismeldung
+
+Das Nutzerfeedback zum zweiten GitHub-Schritt wurde als Architekturgrenze
+behandelt. Der Dialog zeigt keinen überlappenden Trennstrich mehr, wechselt den
+Kommentarplatzhalter für `falsch`, `Entsorgungsweg fehlt`, `unklar` und
+`anderes` und besitzt nur noch die primäre Aktion „Abschicken“.
+
+Der neue app-eigene Worker speichert einen minimierten Datensatz in D1. Zehn
+fokussierte Frontend-/Worker-Assertions prüfen Begrenzung, kanonischen Link,
+Origin, CORS, MIME, Honeypot, nicht gebundene IP-/User-Agent-Felder,
+365-Tage-Löschung und Fehlerantworten. Die reale lokale Wrangler-Runde
+migrierte `0001_feedback.sql`, meldete einen gesunden DEV-Service, nahm eine
+Meldung mit HTTP 201 an und lieferte sie anschließend per SQL mit
+`review_state=new`. Die vollständige lokale Browsermatrix blieb 37/37 grün;
+der Direktversand, alle vier Platzhalter, die fehlende Oberkante am
+Kommentarfeld sowie null Browserpersistenz sind darin enthalten.
+
+Externer Status: kein Push oder Deployment. Auf dem Rechner ist weder eine
+Cloudflare-CLI-Sitzung noch `CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID`
+vorhanden. Ohne app-eigene D1-ID und endgültige Worker-HTTPS-Adresse verweigert
+der Pages-Builder bewusst ein Artefakt. Der vorherige gesunde DEV-Stand
+`52f07ad` / `5714c1a` bleibt deshalb unverändert.
