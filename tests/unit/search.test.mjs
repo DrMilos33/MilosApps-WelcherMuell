@@ -192,8 +192,12 @@ describe("Suchqualität", () => {
 
   test("breite Begriffe starten eine sichere, mehrstufige Eingrenzung", () => {
     assert.equal(detectGuidedFlow("Öl")?.id, "oil");
+    assert.equal(detectGuidedFlow("Öle")?.id, "oil");
+    assert.equal(detectGuidedFlow("Ölreste")?.id, "oil");
     assert.equal(detectGuidedFlow("Was für Werkzeug?")?.id, "tool");
+    assert.equal(detectGuidedFlow("Werkzeuge")?.id, "tool");
     assert.equal(detectGuidedFlow("Farbe")?.id, "paint");
+    assert.equal(detectGuidedFlow("Farben")?.id, "paint");
     assert.equal(detectGuidedFlow("Motoröl"), null);
     assert.equal(detectGuidedFlow("nasse Farbe"), null);
   });

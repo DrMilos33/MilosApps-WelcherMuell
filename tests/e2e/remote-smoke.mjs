@@ -305,7 +305,7 @@ try {
   assert.equal(await page.getByText("Elektrogerät", { exact: true }).count(), 0);
   assert.match((await page.locator(".result-destination").textContent()) ?? "", /Biotonne/);
 
-  await page.getByLabel("Gegenstand oder Material").fill("Öl");
+  await page.getByLabel("Gegenstand oder Material").fill("Öle");
   await page.getByRole("button", { name: "Suchen" }).click();
   await page.getByRole("heading", { name: "Welche Art Öl ist es?", exact: true }).waitFor();
   await page.getByRole("button", { name: /Speise- oder Frittieröl/ }).click();
