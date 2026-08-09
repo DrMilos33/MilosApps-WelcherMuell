@@ -45,9 +45,11 @@ export function normalizeText(value) {
 
 export function detectGuidedFlow(value) {
   const query = normalizeText(value);
-  if (/^(oel|oil)$/.test(query)) return { id: "oil", step: "kind" };
-  if (/^(farbe|lack|wandfarbe|paint|varnish)$/.test(query)) return { id: "paint", step: "state" };
-  if (/^(?:was fuer(?: ein)? |welches |welcher )?(?:werkzeug|handwerkzeug|tool|tools)$/.test(query)) {
+  if (/^(?:oel|oele|oelreste?|oil|oils)$/.test(query)) return { id: "oil", step: "kind" };
+  if (/^(?:farbe|farben|farbreste?|lack|lacke|lackreste?|wandfarbe|wandfarben|paint|paints|varnish|varnishes)$/.test(query)) {
+    return { id: "paint", step: "state" };
+  }
+  if (/^(?:was fuer(?: ein)? |welches |welcher )?(?:werkzeuge?|handwerkzeuge?|tools?)$/.test(query)) {
     return { id: "tool", step: "power" };
   }
   return null;
