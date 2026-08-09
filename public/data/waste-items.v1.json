@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contentVersion": "2026.08.03-4",
-  "contentDate": "2026-08-03",
+  "contentVersion": "2026.08.09-1",
+  "contentDate": "2026-08-09",
   "defaultScope": "Private Haushalte in Deutschland",
   "items": [
     {
@@ -175,6 +175,34 @@
       "reviewDue": "2026-10-31"
     },
     {
+      "id": "food-leftovers",
+      "name": "Lebensmittelreste",
+      "aliases": ["Pizzareste", "Essensreste", "Speisereste", "gekochte Reste", "Brotreste", "altes Brot", "Toast", "Toastbrot", "verdorbenes Essen"],
+      "keywords": ["Lebensmittel", "Biomüll", "Küchenabfall", "Essen"],
+      "searchIntents": [
+        {
+          "all": [["Pizzarest", "Essensrest", "Speiserest", "Lebensmittelrest", "Brotrest", "Toastbrot", "foodleftover", "pizzaleftover"]],
+          "exclude": ["Verpack", "Karton", "Schachtel", "wrapper", "packaging", "box"],
+          "score": 118
+        }
+      ],
+      "category": "Lebensmittel",
+      "route": {"type": "organic", "label": "Örtliche Biotonne oder kommunalen Entsorgungsweg prüfen"},
+      "certainty": "check-local",
+      "answer": "Unverpackte Lebensmittelreste nach der örtlichen Regel zur Biotonne geben; Verpackungen vorher vollständig trennen.",
+      "reason": "Lebensmittelreste sind organische Abfälle, doch Kommunen legen fest, welche gekochten Speisen, tierischen Bestandteile oder flüssigen Reste ihre Biotonne annimmt.",
+      "steps": [
+        "Genießbare Reste möglichst aufbrauchen oder weitergeben.",
+        "Verpackung, Folie und Besteck vollständig entfernen und getrennt entsorgen.",
+        "Im örtlichen Abfall-ABC prüfen, ob die konkreten Reste in die Biotonne dürfen."
+      ],
+      "warning": "Flüssige Speiseöle und Fette nicht wie feste Lebensmittelreste behandeln; separat nach Speiseöl oder Frittierfett suchen.",
+      "localVariation": "Die zugelassenen Lebensmittelreste und Sammelbeutel unterscheiden sich kommunal. Im Zweifel die Biotonnenregel der eigenen Stadt oder des Landkreises prüfen.",
+      "sources": ["uba-household-waste"],
+      "reviewedAt": "2026-08-09",
+      "reviewDue": "2026-11-09"
+    },
+    {
       "id": "food-and-wrapper",
       "name": "Schokolade oder Riegel",
       "aliases": [
@@ -185,21 +213,13 @@
         "Müsliriegel",
         "Süßigkeit",
         "Bonbon",
-        "Lebensmittelrest",
-        "Essensrest",
-        "Essensreste",
         "Süßigkeiten",
-        "Essen",
-        "Toast",
-        "Toastbrot",
-        "Brot",
-        "Brotrest",
-        "altes Brot"
+        "verpackte Süßigkeit"
       ],
       "keywords": ["Lebensmittel", "Biomüll", "Verpackung", "Riegel", "Süßwaren", "Backware"],
       "searchIntents": [
         {
-          "all": [["Schokolad", "Schoko", "Kinderriegel", "Riegel", "Süßig", "Bonbon", "Lebensmittel", "Essensrest", "chocolat", "snackbar", "candy", "foodleftover"]],
+          "all": [["Schokolad", "Schoko", "Kinderriegel", "Riegel", "Süßig", "Bonbon", "chocolat", "snackbar", "candy"]],
           "exclude": [],
           "score": 112
         }
@@ -670,8 +690,15 @@
     {
       "id": "liquid-paint",
       "name": "Flüssige Farbe oder Lack",
-      "aliases": ["Farbreste", "Lackreste", "Wandfarbe flüssig", "Nagellack", "Holzlasur", "Farbeimer mit Rest"],
+      "aliases": ["Farbreste", "Lackreste", "Wandfarbe flüssig", "nasse Farbe", "feuchte Farbe", "noch flüssige Farbe", "nicht eingetrocknete Farbe", "Nagellack", "Holzlasur", "Farbeimer mit Rest"],
       "keywords": ["Problemstoff", "Schadstoff", "Lösemittel", "Renovierung"],
+      "searchIntents": [
+        {
+          "all": [["nasseFarbe", "feuchteFarbe", "fluessigeFarbe", "nichtgetrockneteFarbe", "wetpaint", "liquidpaint"]],
+          "exclude": ["eingetrocknet", "ausgehaertet", "getrocknet", "drypaint", "driedpaint"],
+          "score": 123
+        }
+      ],
       "category": "Problemstoff",
       "route": {"type": "problem-waste", "label": "Wertstoffhof oder Schadstoffmobil"},
       "certainty": "caution",
@@ -681,8 +708,8 @@
       "warning": "Unbekannte Chemikalien nicht öffnen oder zusammenkippen.",
       "localVariation": "Annahmeorte, Mengen und Gebühren sind kommunal geregelt.",
       "sources": ["uba-problem-waste"],
-      "reviewedAt": "2026-07-30",
-      "reviewDue": "2026-10-30"
+      "reviewedAt": "2026-08-09",
+      "reviewDue": "2026-11-09"
     },
     {
       "id": "painting",
@@ -729,6 +756,7 @@
       "name": "Eingetrocknete Farbe",
       "aliases": ["trockene Farbe", "leerer Farbeimer", "ausgehärtete Wandfarbe", "getrocknete Dispersionsfarbe"],
       "keywords": ["Farbe", "Renovierung", "Restmüll", "Eimer"],
+      "queryExclusions": ["nass", "feucht", "flüssig", "nicht eingetrocknet", "nicht getrocknet", "wet", "liquid"],
       "category": "Rest / Verpackung",
       "route": {"type": "paint-conditional", "label": "Ausgehärteter Inhalt: Restmüll · leerer Eimer: örtliche Verpackungssammlung"},
       "certainty": "check-local",
@@ -759,9 +787,30 @@
       "reviewDue": "2026-09-30"
     },
     {
+      "id": "contaminated-tool",
+      "name": "Werkzeug mit Öl- oder Chemieresten",
+      "aliases": ["öliges Werkzeug", "Werkzeug mit Farbresten", "Werkzeug mit Chemikalien", "verschmutztes Handwerkzeug"],
+      "keywords": ["Problemstoff", "Werkzeug", "Öl", "Farbe", "Chemikalien"],
+      "category": "Werkzeug / Problemstoff",
+      "route": {"type": "problem-waste", "label": "Problemstoffannahme vorab fragen"},
+      "certainty": "caution",
+      "answer": "Nicht pauschal in Restmüll oder Metallsammlung geben. Art und Menge der anhaftenden Stoffe der örtlichen Problemstoffannahme nennen.",
+      "reason": "Ein Werkzeug kann grundsätzlich verwertbares Metall enthalten, anhaftende Öle, Farben oder unbekannte Chemikalien können den Entsorgungsweg aber sicherheitsrelevant verändern.",
+      "steps": [
+        "Nichts abspülen, vermischen oder ohne Fachhinweis abschaben.",
+        "Produktname und Gefahrensymbole der anhaftenden Substanz notieren.",
+        "Problemstoffannahme oder Wertstoffhof vor dem Transport nach Werkzeugart, Stoff und Menge fragen."
+      ],
+      "warning": "Bei auslaufenden, reagierenden oder unbekannten Stoffen Abstand halten und vor einem Transport fachlichen Rat einholen.",
+      "localVariation": "Ob die Annahmestelle das ganze Werkzeug oder nur getrennt erfasste Reste annimmt, ist kommunal und stoffabhängig.",
+      "sources": ["uba-problem-waste"],
+      "reviewedAt": "2026-08-09",
+      "reviewDue": "2026-11-09"
+    },
+    {
       "id": "used-oil",
       "name": "Altöl oder Motoröl",
-      "aliases": ["Motoröl", "Getriebeöl", "Autoöl", "altes Öl", "Ölkanister"],
+      "aliases": ["Motoröl", "Getriebeöl", "Schmieröl", "Hydrauliköl", "Autoöl", "altes Motoröl", "Ölkanister"],
       "keywords": ["Fahrzeug", "Problemstoff", "Schadstoff", "Werkstatt"],
       "category": "Problemstoff",
       "route": {"type": "problem-waste", "label": "Rückgabe im Handel oder örtliche Problemstoffsammlung"},
@@ -772,8 +821,57 @@
       "warning": "Nie mit anderen Flüssigkeiten mischen oder in den Ausguss schütten.",
       "localVariation": "Kommunale Annahme kann mengenbegrenzt oder kostenpflichtig sein; der Handel hat eigene Rücknahmebedingungen.",
       "sources": ["uba-problem-waste", "bmj-alt-oil-law"],
-      "reviewedAt": "2026-07-30",
-      "reviewDue": "2026-09-30"
+      "reviewedAt": "2026-08-09",
+      "reviewDue": "2026-11-09"
+    },
+    {
+      "id": "cooking-oil",
+      "name": "Speiseöl oder Frittierfett",
+      "aliases": ["Speiseöl", "Frittieröl", "Bratöl", "Olivenöl", "Pflanzenöl", "Frittierfett", "altes Speiseöl", "verdorbenes Speiseöl"],
+      "keywords": ["Küche", "Fett", "Lebensmittel", "Sammelstelle"],
+      "searchIntents": [
+        {
+          "all": [["Speiseoel", "Frittieroel", "Bratoel", "Olivenoel", "Pflanzenoel", "Frittierfett", "cookingoil", "fryingoil"]],
+          "exclude": ["Motor", "Getriebe", "Hydraulik", "Schmier", "Heiz", "engine", "gear", "hydraulic", "lubricant"],
+          "score": 122
+        }
+      ],
+      "category": "Küchenöl",
+      "route": {"type": "food-oil-local", "label": "Dicht sammeln · örtliche Speiseöl- oder Restmüllregel prüfen"},
+      "certainty": "check-local",
+      "answer": "Abgekühlt in einem dichten, geeigneten Behälter sammeln und den örtlichen Weg für Speiseöl oder -fett nutzen.",
+      "reason": "Speiseöl darf nicht in Ausguss oder Toilette. Kommunen nutzen unterschiedliche Wege: München nennt für abgefülltes Öl den Restmüll, Hamburg bietet eigene Speiseöl-Sammelstellen.",
+      "steps": [
+        "Vollständig abkühlen lassen und in einen dichten, bruchsicheren Behälter füllen.",
+        "Im kommunalen Abfall-ABC nach Speiseöl, Frittierfett oder Altspeisefett suchen.",
+        "Nur den lokal genannten Sammel- oder Restmüllweg verwenden."
+      ],
+      "warning": "Nie in Spüle, Toilette, Gully oder Boden schütten. Nicht mit Motoröl oder Chemikalien mischen.",
+      "localVariation": "München und Hamburg belegen unterschiedliche kommunale Wege; daraus wird keine einheitliche Deutschland-Tonne abgeleitet.",
+      "sources": ["munich-awm-cooking-oil", "hamburg-srh-cooking-oil"],
+      "reviewedAt": "2026-08-09",
+      "reviewDue": "2026-11-09"
+    },
+    {
+      "id": "unknown-oil",
+      "name": "Anderes oder unbekanntes Öl",
+      "aliases": ["unbekanntes Öl", "Heizölrest", "Lampenöl", "Kettenöl", "Maschinenöl unbekannter Art"],
+      "keywords": ["Problemstoff", "Öl", "Brennstoff", "Schadstoff"],
+      "category": "Öl / Problemstoff",
+      "route": {"type": "problem-waste", "label": "Örtliche Problemstoffannahme vorab fragen"},
+      "certainty": "caution",
+      "answer": "Nicht raten oder mit anderen Flüssigkeiten mischen. Produktart und Behälter der örtlichen Problemstoffannahme nennen.",
+      "reason": "Für Heiz-, Lampen-, Maschinen- und unbekannte Öle gelten je nach Zusammensetzung und Kommune unterschiedliche Annahmewege.",
+      "steps": [
+        "Im beschrifteten, dicht verschlossenen Originalbehälter lassen.",
+        "Produktname, Verwendungszweck und ungefähre Menge notieren.",
+        "Vor dem Transport Problemstoffannahme oder Wertstoffhof kontaktieren."
+      ],
+      "warning": "Nie in Ausguss, Toilette, Boden oder Restmüll geben und nicht mit Speise- oder Motoröl vermischen.",
+      "localVariation": "Annahmeort, Höchstmenge und Gebühr hängen von Produkt und Kommune ab.",
+      "sources": ["uba-problem-waste"],
+      "reviewedAt": "2026-08-09",
+      "reviewDue": "2026-11-09"
     },
     {
       "id": "spray-can",

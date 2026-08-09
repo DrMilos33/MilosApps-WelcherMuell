@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "language": "en",
-  "contentVersion": "2026.08.03-4",
-  "contentDate": "2026-08-03",
+  "contentVersion": "2026.08.09-1",
+  "contentDate": "2026-08-09",
   "editorialUse": "The app does not reproduce an external dataset, logos, images or lengthy passages. Disposal facts were checked against official pages and rewritten as concise original summaries. Every recommendation links to its source.",
   "items": {
     "yogurt-cup": {
@@ -118,6 +118,24 @@
       "warning": "Do not automatically place it in a yellow bin or yellow bag. Electrical, battery-powered or contaminated items need a different route.",
       "localVariation": "Berlin and Hamburg accept many plastic household items in their recycling bins. Munich directs a plastic watering can to a recycling centre. Other municipalities may require residual waste or another collection system."
     },
+    "food-leftovers": {
+      "name": "Food leftovers",
+      "aliases": ["pizza leftovers", "leftover food", "meal leftovers", "cooked leftovers", "bread leftovers", "stale bread", "toast", "toast bread", "spoiled food"],
+      "keywords": ["food", "organic waste", "kitchen waste", "meal"],
+      "category": "Food",
+      "route": {
+        "label": "Local organic-waste collection or check the municipal route"
+      },
+      "answer": "Use the local organic-waste route for unpackaged food leftovers; completely separate all packaging first.",
+      "reason": "Food leftovers are organic waste, but municipalities decide which cooked meals, animal products or liquid residues their organic-waste collection accepts.",
+      "steps": [
+        "Use up or pass on food that is still safe to eat.",
+        "Completely remove packaging, film and cutlery and dispose of them separately.",
+        "Check the local waste guide to see whether the specific leftovers are accepted with organic waste."
+      ],
+      "warning": "Do not treat liquid cooking oil or fat like solid food leftovers; search separately for cooking oil or frying fat.",
+      "localVariation": "Accepted food residues and collection liners differ by municipality. If unsure, check the organic-waste rule for your city or district."
+    },
     "food-and-wrapper": {
       "name": "Chocolate or snack bar",
       "aliases": [
@@ -127,14 +145,7 @@
         "cereal bar",
         "sweet",
         "candy",
-        "food leftovers",
-        "leftover food",
-        "food",
-        "toast",
-        "toast bread",
-        "bread",
-        "bread leftovers",
-        "stale bread"
+        "packaged confectionery"
       ],
       "keywords": ["food", "organic waste", "packaging", "snack bar", "confectionery", "baked goods"],
       "category": "Food + packaging",
@@ -585,7 +596,7 @@
     },
     "liquid-paint": {
       "name": "Liquid paint or varnish",
-      "aliases": ["paint residue", "varnish residue", "liquid wall paint", "nail polish", "wood stain", "paint tin with residue"],
+      "aliases": ["paint residue", "varnish residue", "liquid wall paint", "wet paint", "damp paint", "paint that is still liquid", "paint that has not dried", "nail polish", "wood stain", "paint tin with residue"],
       "keywords": ["hazardous waste", "pollutant", "solvent", "renovation"],
       "category": "Hazardous waste",
       "route": {
@@ -662,9 +673,27 @@
       "warning": "If there is an immediate poisoning or fire risk, do not transport it: keep your distance and call 112 or the responsible poison centre.",
       "localVariation": "Collection sites, maximum quantities and excluded substances differ."
     },
+    "contaminated-tool": {
+      "name": "Tool with oil or chemical residue",
+      "aliases": ["oily tool", "tool with paint residue", "tool with chemicals", "contaminated hand tool"],
+      "keywords": ["hazardous waste", "tool", "oil", "paint", "chemicals"],
+      "category": "Tool / hazardous waste",
+      "route": {
+        "label": "Ask the hazardous-waste collection in advance"
+      },
+      "answer": "Do not automatically place it in residual waste or scrap metal. Tell the local hazardous-waste service what substance and amount remain on it.",
+      "reason": "A tool may contain recyclable metal, but attached oil, paint or unknown chemicals can change the safe disposal route.",
+      "steps": [
+        "Do not rinse, mix or scrape off anything without professional guidance.",
+        "Note the product name and hazard symbols of the attached substance.",
+        "Before transport, ask the hazardous-waste service or recycling centre about the tool type, substance and amount."
+      ],
+      "warning": "Keep away from leaking, reacting or unknown substances and seek professional advice before transport.",
+      "localVariation": "Whether a collection point accepts the whole tool or only separately collected residue depends on the municipality and substance."
+    },
     "used-oil": {
       "name": "Used oil or engine oil",
-      "aliases": ["engine oil", "gear oil", "car oil", "old oil", "oil container"],
+      "aliases": ["engine oil", "gear oil", "lubricating oil", "hydraulic oil", "car oil", "old engine oil", "oil container"],
       "keywords": ["vehicle", "hazardous waste", "pollutant", "garage"],
       "category": "Hazardous waste",
       "route": {
@@ -679,6 +708,42 @@
       ],
       "warning": "Never mix it with other liquids or pour it down a drain.",
       "localVariation": "Municipal acceptance may have quantity limits or fees; retailers have their own take-back conditions."
+    },
+    "cooking-oil": {
+      "name": "Cooking oil or frying fat",
+      "aliases": ["cooking oil", "frying oil", "olive oil", "vegetable oil", "frying fat", "used cooking oil", "spoiled cooking oil"],
+      "keywords": ["kitchen", "fat", "food", "collection point"],
+      "category": "Kitchen oil",
+      "route": {
+        "label": "Collect tightly closed · check the local cooking-oil or residual-waste route"
+      },
+      "answer": "Let it cool, collect it in a suitable tightly closed container and use the local route for cooking oil or fat.",
+      "reason": "Cooking oil must not enter sinks or toilets. Municipal routes differ: Munich names residual waste for bottled oil, while Hamburg provides dedicated cooking-oil collection points.",
+      "steps": [
+        "Let it cool completely and place it in a tightly closed, shatterproof container.",
+        "Search the municipal waste guide for cooking oil, frying fat or used cooking fat.",
+        "Use only the locally specified collection or residual-waste route."
+      ],
+      "warning": "Never pour it into a sink, toilet, drain or soil. Do not mix it with engine oil or chemicals.",
+      "localVariation": "Munich and Hamburg document different municipal routes; the app does not turn either one into a nationwide bin rule."
+    },
+    "unknown-oil": {
+      "name": "Other or unknown oil",
+      "aliases": ["unknown oil", "heating-oil residue", "lamp oil", "chain oil", "unknown machine oil"],
+      "keywords": ["hazardous waste", "oil", "fuel", "pollutant"],
+      "category": "Oil / hazardous waste",
+      "route": {
+        "label": "Ask the local hazardous-waste collection in advance"
+      },
+      "answer": "Do not guess or mix it with other liquids. Tell the local hazardous-waste service the product type and container.",
+      "reason": "Heating, lamp, machine and unknown oils require different acceptance routes depending on composition and municipality.",
+      "steps": [
+        "Keep it in its labelled, tightly closed original container.",
+        "Note the product name, purpose and approximate amount.",
+        "Contact the hazardous-waste service or recycling centre before transport."
+      ],
+      "warning": "Never put it into a sink, toilet, soil or residual waste and do not mix it with cooking or engine oil.",
+      "localVariation": "Collection point, quantity limit and fee depend on the product and municipality."
     },
     "spray-can": {
       "name": "Aerosol can",
@@ -1158,6 +1223,18 @@
       "publisher": "German Federal Ministry of Justice / Federal Office of Justice",
       "scope": "Germany; take-back of combustion-engine and transmission oil",
       "attribution": "Source: Laws on the Internet, section 8 Waste Oil Ordinance."
+    },
+    "munich-awm-cooking-oil": {
+      "title": "Cooking oil, fats and frying fat — waste guide",
+      "publisher": "Munich municipal waste management (AWM)",
+      "scope": "City of Munich; cooking oil and fat from private households",
+      "attribution": "Local information: Munich municipal waste management; cooking-oil route independently summarised."
+    },
+    "hamburg-srh-cooking-oil": {
+      "title": "EcoHHub — cooking oil and fat collection",
+      "publisher": "Hamburg municipal cleaning service",
+      "scope": "Hamburg; dedicated collection points for cooking oil and fat from private households",
+      "attribution": "Local information: Hamburg municipal cleaning service; cooking-oil collection independently summarised."
     },
     "cologne-sharps-safety": {
       "title": "Drug use in public spaces: what should you do? — questions and answers",

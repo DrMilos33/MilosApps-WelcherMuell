@@ -43,6 +43,16 @@ export function normalizeText(value) {
     .replace(/\s+/g, " ");
 }
 
+export function detectGuidedFlow(value) {
+  const query = normalizeText(value);
+  if (/^(oel|oil)$/.test(query)) return { id: "oil", step: "kind" };
+  if (/^(farbe|lack|wandfarbe|paint|varnish)$/.test(query)) return { id: "paint", step: "state" };
+  if (/^(?:was fuer(?: ein)? |welches |welcher )?(?:werkzeug|handwerkzeug|tool|tools)$/.test(query)) {
+    return { id: "tool", step: "power" };
+  }
+  return null;
+}
+
 export function damerauLevenshtein(left, right) {
   const a = normalizeText(left);
   const b = normalizeText(right);

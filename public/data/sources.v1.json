@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "catalogVersion": "2026.08.03-4",
-  "verifiedAt": "2026-08-03",
+  "catalogVersion": "2026.08.09-1",
+  "verifiedAt": "2026-08-09",
   "editorialUse": "Die App übernimmt keinen externen Datensatz, keine Logos, Bilder oder längeren Textpassagen. Entsorgungstatsachen wurden aus amtlichen Seiten geprüft und eigenständig kurz formuliert. Jeder Hinweis verlinkt die Quelle.",
   "sources": [
     {
@@ -83,8 +83,8 @@
       "url": "https://www.umweltbundesamt.de/themen/weniger-muell-im-haushalt",
       "scope": "Deutschland; Problemabfälle in privaten Haushalten",
       "sourceDate": null,
-      "verifiedAt": "2026-07-30",
-      "reviewDue": "2026-10-30",
+      "verifiedAt": "2026-08-09",
+      "reviewDue": "2026-11-09",
       "license": "UBA-Inhalte grundsätzlich CC BY-NC-ND 4.0, sofern nicht anders gekennzeichnet; Daten nach § 12a EGovG nutzbar. Keine Text- oder Bildübernahme.",
       "attribution": "Quelle: Umweltbundesamt; eigenständige Tatsachenzusammenfassung."
     },
@@ -179,10 +179,34 @@
       "url": "https://www.gesetze-im-internet.de/alt_lv/__8.html",
       "scope": "Deutschland; Rücknahme von Verbrennungsmotoren- und Getriebeöl",
       "sourceDate": null,
-      "verifiedAt": "2026-07-30",
-      "reviewDue": "2026-09-30",
+      "verifiedAt": "2026-08-09",
+      "reviewDue": "2026-11-09",
       "license": "Amtlicher Gesetzestext. Die App gibt die Rechtsfolge knapp in eigenen Worten wieder und verlinkt die aktuelle Fassung.",
       "attribution": "Quelle: Gesetze im Internet, § 8 AltölV."
+    },
+    {
+      "id": "munich-awm-cooking-oil",
+      "title": "Speiseöl, -fette, Frittierfett – Abfalllexikon",
+      "publisher": "Abfallwirtschaftsbetrieb München (AWM)",
+      "url": "https://www.awm-muenchen.de/abfall-entsorgen/abfalllexikon/detailansicht-lexikoneintrag/speiseoel-fette-frittierfett",
+      "scope": "Stadt München; Speiseöl und -fett aus privaten Haushalten",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-09",
+      "reviewDue": "2026-11-09",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Keine Text-, Bild- oder Listenkopie; der örtliche Entsorgungsweg ist eigenständig zusammengefasst und verlinkt.",
+      "attribution": "Örtliche Auskunft: Abfallwirtschaftsbetrieb München; Speiseölweg eigenständig zusammengefasst."
+    },
+    {
+      "id": "hamburg-srh-cooking-oil",
+      "title": "EcoHHub – Abgabe von Speiseöl und -fett",
+      "publisher": "Stadtreinigung Hamburg",
+      "url": "https://www.stadtreinigung.hamburg/ecohhub/",
+      "scope": "Hamburg; besondere Sammelstellen für Speiseöl und -fett aus privaten Haushalten",
+      "sourceDate": null,
+      "verifiedAt": "2026-08-09",
+      "reviewDue": "2026-11-09",
+      "license": "Keine offene Lizenz für eine Datenübernahme festgestellt. Keine Text-, Bild- oder Standortliste übernommen; nur der belegte kommunale Sammelweg wird eigenständig zusammengefasst.",
+      "attribution": "Örtliche Auskunft: Stadtreinigung Hamburg; Speiseölsammlung eigenständig zusammengefasst."
     },
     {
       "id": "cologne-sharps-safety",

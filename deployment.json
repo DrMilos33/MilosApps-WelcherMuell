@@ -5,9 +5,9 @@
   "provider": "GitHub Pages",
   "devUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/",
   "healthUrl": "https://drmilos33.github.io/MilosApps-WelcherMuell/healthz",
-  "sourceCommit": "5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c",
-  "sourceTree": "c62df9e6e2bc8bc842007564dbf13dc15e164f33",
-  "contentVersion": "2026.08.03-4",
+  "sourceCommit": "18385d00695a45baecfd6a36bc8e10579990f822",
+  "sourceTree": "b53d7fa0575a04b71860e360b29e32b0654f01be",
+  "contentVersion": "2026.08.09-1",
   "productionApproved": false,
   "files": [
     {
@@ -24,11 +24,11 @@
     },
     {
       "path": "healthz",
-      "sha256": "3f627a9d9ced0898955b8d7ddf9397c3aeb888518953ced406d60b53e8a5db54"
+      "sha256": "3c7b5e45b17b4fe5c911e08a727bb7e82e09d1fb2984a1c7a6ac1f1896ccbb4f"
     },
     {
       "path": "index.html",
-      "sha256": "5341f4739e07e0661af16a428fbfa9c644ba9951100269f4e9627e5ea9954943"
+      "sha256": "010a751f68967ab28bfbf344145fc9b3193e9839bdd6fbddf855de3cf3e5f48d"
     },
     {
       "path": "manifest.webmanifest",
@@ -36,7 +36,7 @@
     },
     {
       "path": "meta.json",
-      "sha256": "e2ddb99b1c8fdefe1bd9b3e21c4614834c57ab781248a64967c12d69a0a82362"
+      "sha256": "5da5229751c581051084d68d12e1eb5e06a7406ad32963512c6ad27ff1652bb6"
     },
     {
       "path": "milos-app.json",
@@ -48,35 +48,39 @@
     },
     {
       "path": "offline-sw.js",
-      "sha256": "da37da7cef8f346f529dd97203ca10755bb9bd75a875c8269c1baacf693b45f6"
+      "sha256": "92d90f3880822da1f7e8eeec7a2c0c48b9f52439b61cb73efe5e7ec069f95e3a"
     },
     {
       "path": "public/data/locales/en.v1.json",
-      "sha256": "bcc7fda54dd54b40efc87562d3061e5c128867d5092fe4dc5208de93475cceb3"
+      "sha256": "47fad7455351dc57699db6fbcc007de1a6d4f497d15c379d6024e8fafa36e991"
     },
     {
       "path": "public/data/regions.v1.json",
-      "sha256": "e4a3cd6a8d27abb6e41f7c2ff728316fa9fe7991cf1843df5ac19a75e2a648a4"
+      "sha256": "68786e3b0333e0f90ac3cbf5b1dc9febd21416011e703a290eae896847ed340a"
     },
     {
       "path": "public/data/sources.v1.json",
-      "sha256": "0cf80c6db105b51e23c5e8915ea09d0ebcaa8866581339f548fbe1990263473c"
+      "sha256": "3e938b5af36e1cd3e029623bd252bb7ab9248032e479be232746410661e46202"
     },
     {
       "path": "public/data/waste-items.v1.json",
-      "sha256": "c3dc4a0e84271fcb6d88597e8aa9e10a038f052178ddf176d11b8f0eec61177f"
+      "sha256": "de6cacc53d0923b84bf6f1f49bd846f4fbfd6f8de1916ab5941293086596a3f3"
     },
     {
       "path": "src/app.js",
-      "sha256": "123522b635351f115aa04bf71e87912701d3c1ee6fad4ad84809137dcbd85557"
+      "sha256": "c487198d8f57b1538d401ddcdaf7014f893f114310fdd605ccd8f41c74ac8273"
+    },
+    {
+      "path": "src/feedback.js",
+      "sha256": "29ee896ab9d9709d6b74c5bf908fa9c839f489e070f06b383dc8211d79cafb93"
     },
     {
       "path": "src/i18n.js",
-      "sha256": "2161d2c0a08337ae6e06972de29e085cf1571f925b906815f800edbd11adaddd"
+      "sha256": "fc67c9a9ce3851923cdd4ce559fcae8a02deb7895ed46073f7b6c91d81d49b9d"
     },
     {
       "path": "src/search.js",
-      "sha256": "8f25a695a7e73eeb9f320af6d9740ce3c190a6dc70fd3cf5bd6fbb8e17b89104"
+      "sha256": "0498d7ca57def4cd0ad1e3964d819ecadf2b72920aedb67dfd52890ea78322f1"
     },
     {
       "path": "src/shell-session.js",
@@ -84,7 +88,7 @@
     },
     {
       "path": "src/styles.css",
-      "sha256": "9e3528ad1f4b95cc528d9d4298e7a5a9183d4da12f03dbc61e394ea15a01d06c"
+      "sha256": "3b98ea5cc59f1902a78299cd10918795b982db0438c8dfd1f2da77a1f85770f9"
     },
     {
       "path": "sw.js",
