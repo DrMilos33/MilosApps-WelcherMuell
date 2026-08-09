@@ -8,10 +8,11 @@ Production frei. Autoritative Runtime-Basis ist
 `2026.08.03-4`, Quellenreview, Lizenzen, Gültigkeitsgebiet und frühester
 Reviewtermin 30.09.2026 werden durch den technischen Build nicht verändert.
 
-Der Production-Provider ist Cloudflare Pages ohne Functions. Vorgesehener
-Projektname ist `milosapps-waste-guide-production`. Project-ID und öffentliche
-URL sind noch extern zu bestätigen. Bis dahin ist jeder Upload gesperrt;
-dieses Repository enthält bewusst keinen Publish-Befehl.
+Der Production-Provider ist Cloudflare Pages ohne Functions. Projektname ist
+`milosapps-waste-guide-production`; kanonische Produktadresse ist
+`https://welcher-muell.milos-apps.de/`. Die `pages.dev`-Adresse des Projekts
+bleibt ausschließlich technischer Fallback. Dieses Repository enthält bewusst
+keinen Publish-Befehl.
 
 GitHub Pages, `dev-pages`, DEV-URL, DEV-Health und Portalroute bleiben
 unverändert.
@@ -24,18 +25,17 @@ dessen Abstammung von der Runtime-Basis und schreibt nur nach
 
 ```powershell
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
-$env:WASTE_GUIDE_PRODUCTION_URL="https://milosapps-waste-guide-production.pages.dev/"
-$env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="0"
-$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-production-launch"
+$env:WASTE_GUIDE_PRODUCTION_URL="https://welcher-muell.milos-apps.de/"
+$env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="1"
+$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-production-domain"
 pnpm build:cloudflare:production
 pnpm test:production:artifact
 ```
 
-Die Kandidaten-URL wird nicht als bestätigt ausgegeben:
-`deployment.json.targetConfirmed=false`. Nach externer Bestätigung wird mit
-demselben Source-SHA, der bestätigten URL und
-`WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED=1` neu gebaut und vollständig
-verifiziert, bevor ein separater Publish-Schritt überhaupt zulässig ist.
+Der Builder und der Artefaktvalidator akzeptieren fail-closed nur diese
+kanonische Origin-URL. `deployment.json.targetConfirmed=true` dokumentiert die
+bestätigte Zielbindung; Upload, Custom-Domain-Aktivierung und Portalredirect
+bleiben getrennte Publisher-Schritte.
 
 ## Production-Artefaktvertrag
 
@@ -92,20 +92,15 @@ Der Production-Browserlauf bestand Desktop, 390 × 844 sowie 360 × 800 bei
 Windows-Recheckout mit `core.autocrlf=true` bestand den Production-Build,
 beide Verifier und die bytegenauen Vendor-/Lockgrenzen.
 
-Bis Project-ID und tatsächliche Pages-URL extern bestätigt sind, bleibt
-`targetConfirmed=false` und es erfolgt kein Upload. Der exakte Source- und
-Artefakt-SHA wird bei jedem Build in `dist/production/deployment.json`
-festgehalten.
+Der exakte Source- und Artefakt-SHA sowie die kanonische URL werden bei jedem
+Build in `dist/production/deployment.json` festgehalten. Ein Publish ist nur
+mit aktiver Cloudflare-Zielbindung, TLS und anschließender externer
+No-Login-/Health-/CSP-Prüfung zulässig.
 
 ## Rollback
 
-Vor der ersten Veröffentlichung gibt es keine gesunde Production-Revision.
-Ein fehlerhafter Erststand wird deshalb am Cloudflare-Ziel deaktiviert; die
-Production-Portalroute bleibt beziehungsweise wird wieder 404. DEV bleibt auf
-dem gesunden `dev-pages`-Artefakt
-`3e7d427eb9d4159791d741933d57e75e4e88ad8b` und wird nicht bewegt.
-
-Nach dem ersten gesunden Production-Stand wird ausschließlich eine zuvor
-verifizierte Cloudflare-Deploymentrevision erneut aktiviert beziehungsweise
-vorwärts veröffentlicht. Source- und Artefakthistorie werden nie per Force
-umgeschrieben. Portalrollback und DNS gehören den jeweiligen Eigentümern.
+Bei einem Fehler der Custom-Domain-Migration verweist das Portal wieder auf die
+zuvor gesunde Cloudflare-`pages.dev`-Productionrevision. Die neue Custom Domain
+wird deaktiviert; das vorhandene Production-Projekt und DEV bleiben erhalten.
+Source- und Artefakthistorie werden nie per Force umgeschrieben. Portal- und
+DNS-Rollback gehören den jeweiligen Eigentümern.

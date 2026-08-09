@@ -10,6 +10,7 @@ const allowedOutputRoot = resolve(repositoryRoot, "dist");
 const runtimeBaseCommit = "5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c";
 const expectedContentVersion = "2026.08.03-4";
 const projectName = "milosapps-waste-guide-production";
+const canonicalProductionUrl = "https://welcher-muell.milos-apps.de/";
 const expectedSourceCommit = process.env.WASTE_GUIDE_SOURCE_COMMIT;
 const configuredProductionUrl = process.env.WASTE_GUIDE_PRODUCTION_URL;
 const targetConfirmed = process.env.WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED === "1";
@@ -34,6 +35,9 @@ if (
   throw new Error("WASTE_GUIDE_PRODUCTION_URL muss eine credential-freie HTTPS-Origin-URL mit Root-Pfad sein.");
 }
 const publicUrl = productionUrl.toString();
+if (publicUrl !== canonicalProductionUrl) {
+  throw new Error(`WASTE_GUIDE_PRODUCTION_URL muss exakt ${canonicalProductionUrl} sein.`);
+}
 const healthUrl = new URL("healthz", productionUrl).toString();
 
 if (!outputRoot.startsWith(`${allowedOutputRoot}${sep}`)) {

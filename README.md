@@ -17,8 +17,8 @@ Nutzerdatenbank sind nicht nötig.
 - gemeinsame öffentliche Interaktionen: lokal vendortes
   `public-app-essentials/v1.1.5` für kompakten Start, ehrlichen
   Datenschutzhinweis und Teilen
-- Production: durch Kampagne `public-app-production-launch-2026-08`
-  freigegeben; getrennter Cloudflare-Pages-Kandidat noch nicht veröffentlicht
+- Production: getrennt auf Cloudflare Pages veröffentlicht; kanonische URL
+  `https://welcher-muell.milos-apps.de/`
 
 Der unabhängige öffentliche DEV-Stand ist ohne Portal und ohne Login erreichbar:
 
@@ -31,10 +31,10 @@ Repository:  https://github.com/DrMilos33/MilosApps-WelcherMuell
 Deploymentquelle ist
 `5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c`; der getrennte
 Pages-Artefaktcommit ist `3e7d427eb9d4159791d741933d57e75e4e88ad8b`.
-GitHub Pages bleibt ausschließlich der DEV-Host. Der getrennte
-Cloudflare-Pages-Production-Kandidat besitzt bis zur Bestätigung von Project-ID
-und URL keinen veröffentlichten Endpunkt. Seine Reproduktion steht unter
-[Production-Kandidat](docs/PRODUCTION_CANDIDATE.md).
+GitHub Pages bleibt ausschließlich der DEV-Host. Production läuft getrennt im
+Cloudflare-Pages-Projekt `milosapps-waste-guide-production`; dessen technische
+`pages.dev`-Adresse ist nur Fallback, nicht die kanonische Produktadresse. Die
+Reproduktion steht unter [Production-Kandidat](docs/PRODUCTION_CANDIDATE.md).
 
 Der lokale DEV- und E2E-Port bleibt fest auf `4318` reserviert:
 
@@ -81,15 +81,15 @@ Der Production-Kandidat wird getrennt nach `dist/production` gebaut:
 
 ```powershell
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
-$env:WASTE_GUIDE_PRODUCTION_URL="https://milosapps-waste-guide-production.pages.dev/"
-$env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="0"
+$env:WASTE_GUIDE_PRODUCTION_URL="https://welcher-muell.milos-apps.de/"
+$env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="1"
 pnpm build:cloudflare:production
 pnpm test:production:artifact
 pnpm test:e2e:production
 ```
 
-Die URL ist bis zur Cloudflare-Bestätigung nur die explizite Kandidaten-URL;
-der Builder veröffentlicht nichts.
+Der Builder akzeptiert fail-closed nur die kanonische Production-URL und
+veröffentlicht selbst nichts.
 
 `test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler,
 flüchtige Einstellungen, Endgeräteinventar und die app-spezifische

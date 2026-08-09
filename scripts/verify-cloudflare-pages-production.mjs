@@ -10,6 +10,7 @@ const repositoryRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const outputRoot = resolve(repositoryRoot, "dist", "production");
 const expectedContentVersion = "2026.08.03-4";
 const expectedProjectName = "milosapps-waste-guide-production";
+const expectedProductionUrl = "https://welcher-muell.milos-apps.de/";
 
 function sha256(contents) {
   return createHash("sha256").update(contents).digest("hex");
@@ -29,7 +30,7 @@ assert.equal(deployment.functionsAllowed, false);
 assert.equal(deployment.contentVersion, expectedContentVersion);
 assert.match(deployment.sourceCommit, /^[0-9a-f]{40}$/);
 assert.match(deployment.sourceTree, /^[0-9a-f]{40}$/);
-assert.match(deployment.publicUrl, /^https:\/\//);
+assert.equal(deployment.publicUrl, expectedProductionUrl);
 assert.equal(new URL(deployment.publicUrl).pathname, "/");
 assert.equal(deployment.healthUrl, new URL("healthz", deployment.publicUrl).toString());
 
