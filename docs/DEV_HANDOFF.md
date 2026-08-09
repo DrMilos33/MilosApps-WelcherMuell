@@ -10,7 +10,7 @@
 | Sprache | `de-DE/en` |
 | Status | DEV, öffentlich, ohne Anmeldung |
 | Plattformen | Web, mobile/PWA, Desktop |
-| Inhaltsstand | `2026.08.03-4`, 03.08.2026 |
+| Inhaltsstand | `2026.08.09-1`, 09.08.2026 |
 | Gültigkeit | Private Haushalte in Deutschland; belegte Ergänzungen für Berlin, Hamburg und München |
 | öffentliche DEV-URL | `https://drmilos33.github.io/MilosApps-WelcherMuell/` |
 | Healthcheck | `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz` |

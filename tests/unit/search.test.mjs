@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { before, describe, test } from "node:test";
 import {
   damerauLevenshtein,
+  detectGuidedFlow,
   isAmbiguous,
   isDirectSearchMatch,
   normalizeText,
@@ -24,7 +25,7 @@ before(async () => {
 function first(query) {
   return searchItems(items, query, {
     sourcesById,
-    asOf: new Date("2026-08-03T00:00:00Z")
+    asOf: new Date("2026-08-09T00:00:00Z")
   })[0]?.item.id;
 }
 
@@ -54,6 +55,8 @@ describe("Suchqualität", () => {
     ["LED Birne", "led-lamp", "Lampensynonym"],
     ["Glühbirne", "incandescent-bulb", "Abgrenzung zur LED"],
     ["Pizzakartons", "pizza-box", "Plural"],
+    ["Pizzareste", "food-leftovers", "Lebensmittelrest statt Karton"],
+    ["Lebensmittelreste", "food-leftovers", "allgemeiner Lebensmittelbegriff"],
     ["Wohin kommt mein alter Toaster?", "electrical-device", "lange Frage"],
     ["Blaue Glasflasche", "blue-glass", "Material und Farbe"],
     ["E Zigaretten", "e-cigarette", "Bindestrichvariation"],
@@ -107,6 +110,10 @@ describe("Suchqualität", () => {
     ["Flaschenkorken", "cork-household-item", "allgemeiner Kork"],
     ["Kerzenwachs", "wax-household-item", "allgemeines Wachs"],
     ["Mischmaterial", "composite-household-item", "unbekanntes Verbundmaterial"]
+    ,
+    ["Olivenöl", "cooking-oil", "Speiseöl"],
+    ["Motoröl", "used-oil", "Altöl"],
+    ["nasse Farbe", "liquid-paint", "flüssige Farbe wird nicht als trocken geraten"]
   ];
 
   for (const [query, expected, label] of cases) {
@@ -178,9 +185,23 @@ describe("Suchqualität", () => {
       sourcesById,
       asOf: new Date("2026-08-03T00:00:00Z")
     });
-    assert.equal(results[0].item.id, "food-and-wrapper");
+    assert.equal(results[0].item.id, "food-leftovers");
     assert.ok(!results.some(({ item }) => item.id === "electrical-device"));
     assert.deepEqual(suggestCorrections(items, "Toast"), []);
+  });
+
+  test("breite Begriffe starten eine sichere, mehrstufige Eingrenzung", () => {
+    assert.equal(detectGuidedFlow("Öl")?.id, "oil");
+    assert.equal(detectGuidedFlow("Was für Werkzeug?")?.id, "tool");
+    assert.equal(detectGuidedFlow("Farbe")?.id, "paint");
+    assert.equal(detectGuidedFlow("Motoröl"), null);
+    assert.equal(detectGuidedFlow("nasse Farbe"), null);
+  });
+
+  test("nasse Farbe schließt den Trockentreffer sicher aus", () => {
+    const results = searchItems(items, "nasse Farbe");
+    assert.equal(results[0]?.item.id, "liquid-paint");
+    assert.ok(!results.some(({ item }) => item.id === "dried-paint"));
   });
 
   test("Sicherheitsmerkmale schlagen eine allgemeine Materialroute", () => {
@@ -199,7 +220,7 @@ describe("Suchqualität", () => {
       assert.ok(!results.some(({ item }) => item.id === "metal-household-item"), query);
       assert.ok(!results.some(({ item }) => ["metal-packaging", "tin-can", "plastic-packaging"].includes(item.id)), query);
     }
-    assert.equal(searchItems(items, "flüssige Farbe in Metalldose")[0]?.item.id, "household-chemicals");
+    assert.equal(searchItems(items, "flüssige Farbe in Metalldose")[0]?.item.id, "liquid-paint");
   });
 
   test("Materialstämme werden nur am Wortanfang und nicht mitten in fremden Wörtern erkannt", () => {

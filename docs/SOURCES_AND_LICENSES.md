@@ -2,9 +2,9 @@
 
 ## Inhaltsstand
 
-- Inhaltsversion: `2026.08.03-4`
-- redaktionell erweitert: 03.08.2026
-- Umfang: 58 Entsorgungseinträge, 28 Quellen
+- Inhaltsversion: `2026.08.09-1`
+- redaktionell erweitert: 09.08.2026
+- Umfang: 62 Entsorgungseinträge, 30 Quellen
 - früheste erneute Prüfung: 30.09.2026
 - allgemeine Geltung: private Haushalte in Deutschland
 - regionale Ergänzungen: Berlin, Hamburg und München
@@ -29,8 +29,7 @@ Fachliche Aussagen stammen ausschließlich von:
   gebrauchten Spritzen.
 
 UBA- und BMG-Rechteseiten sind zusätzlich als Lizenznachweis katalogisiert.
-Am 03.08.2026 beantworteten alle 28 URLs den automatisierten Live-Check mit
-HTTP 200. Für die Erweiterung um kleine Gummi- und Alltagsgegenstände wurden
+Für die Erweiterung um kleine Gummi- und Alltagsgegenstände wurden
 insbesondere das Abfalllexikon des Abfallwirtschaftsbetriebs München sowie die
 UBA-Hinweise zu Haushaltsabfällen geprüft. Autoreifen sind anhand der eigenen
 UBA-Fachseite ausdrücklich vom gewöhnlichen Haus- und Sperrmüllfall getrennt.
@@ -74,6 +73,18 @@ Bauschutt und Leder; Hamburgs Recyclinghofseite ergänzt kommunale Annahme- und
 Mengenhinweise. Kork, Wachs und Verbundmaterial bleiben mangels bundesweit
 einheitlicher Sammlung bewusst beim belegten örtlichen Prüfschritt. Aus keinem
 dieser kommunalen Beispiele wird eine Deutschland-Tonne abgeleitet.
+
+Mit Inhaltsversion `2026.08.09-1` wurden Lebensmittelreste, Speiseöl, Altöl,
+unbekannte Öle, flüssige Farbe und verunreinigte Werkzeuge als getrennte
+Entscheidungsfälle ergänzt. Der bundesweite Altölweg folgt § 8 AltölV. Für
+Speiseöl werden die unterschiedlichen amtlichen Wege in München und Hamburg
+bewusst nicht verallgemeinert: Das Ergebnis verlangt einen örtlichen
+Prüfschritt und verbietet den Ausguss in Spüle oder Toilette. Flüssige oder
+nicht sicher eingetrocknete Farbe wird nie über den Trockentreffer entsorgt.
+Die neuen AWM- und Stadtreinigung-Hamburg-Seiten sind mit Geltungsgebiet,
+Prüfdatum, Lizenzstatus und Attribution im Quellenkatalog erfasst.
+Am 09.08.2026 beantworteten alle 30 katalogisierten amtlichen und kommunalen
+URLs den automatisierten Live-Check mit HTTP 200.
 
 ## Lizenz und Attribution
 

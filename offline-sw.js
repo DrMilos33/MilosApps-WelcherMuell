@@ -1,4 +1,4 @@
-const CACHE_NAME = "waste-guide-2026-08-03-search-v6";
+const CACHE_NAME = "waste-guide-2026-08-09-search-v7";
 const APP_SHELL = [
   "/",
   "/index.html",
@@ -12,6 +12,7 @@ const APP_SHELL = [
   "/src/app.js",
   "/src/i18n.js",
   "/src/search.js",
+  "/src/feedback.js",
   "/src/shell-session.js",
   "/vendor/milosapps-shell/v2/bootstrap.js",
   "/vendor/milosapps-shell/v2/milos-app-shell.js",

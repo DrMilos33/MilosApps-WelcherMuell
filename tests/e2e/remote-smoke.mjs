@@ -8,7 +8,7 @@ const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT;
 if (!/^[0-9a-f]{40}$/.test(expectedSourceCommit ?? "")) {
   throw new Error("WASTE_GUIDE_EXPECTED_SOURCE_COMMIT muss den vollständigen deployten Quellcommit enthalten.");
 }
-const expectedContentVersion = "2026.08.03-4";
+const expectedContentVersion = "2026.08.09-1";
 const expectedEssentialsVersion = "1.1.5";
 const expectedEssentialsCommit = "2942132ad3bf6cf39edc9f52ed918de6a230be23";
 const configuredUrl = process.env.WASTE_GUIDE_REMOTE_URL;
@@ -50,7 +50,7 @@ assert.equal(metadata.appKey, "waste-guide");
 assert.equal(metadata.devUrl, baseUrl.toString());
 assert.equal(metadata.healthcheck, healthUrl.toString());
 assert.equal(metadata.productionApproved, false);
-assert.equal(metadata.contentDate, "2026-08-03");
+assert.equal(metadata.contentDate, "2026-08-09");
 assert.equal(metadata.deployment?.sourceCommit, expectedSourceCommit);
 
 const manifestResponse = await fetch(new URL("milos-app.json", baseUrl), { redirect: "error" });

@@ -60,6 +60,7 @@ describe("redaktioneller Datenvertrag", () => {
       "sports-ball",
       "contact-lenses",
       "plastic-household-item",
+      "food-leftovers",
       "food-and-wrapper",
       "painting",
       "poster",
@@ -70,7 +71,10 @@ describe("redaktioneller Datenvertrag", () => {
       "leather-household-item",
       "cork-household-item",
       "wax-household-item",
-      "composite-household-item"
+      "composite-household-item",
+      "cooking-oil",
+      "unknown-oil",
+      "contaminated-tool"
     ]) {
       assert.ok(ids.has(id), `${id} fehlt im Alltagsbestand`);
     }
@@ -133,6 +137,8 @@ describe("redaktioneller Datenvertrag", () => {
       "liquid-paint",
       "household-chemicals",
       "used-oil",
+      "unknown-oil",
+      "contaminated-tool",
       "spray-can",
       "needle"
     ];

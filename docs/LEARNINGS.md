@@ -538,6 +538,41 @@ Fehlklassifikationen. Sie ersetzt weder einen redaktionellen Eintrag noch eine
 kommunale Quelle. Ist Funktion, Gefahr oder Ortsregel unklar, bleibt der sichere
 nächste Prüfschritt richtiger als eine erfundene Tonne.
 
+### Allgemeinbegriffe sind kleine Entscheidungsbäume, keine Synonyme
+
+Ein Begriff wie `Öl`, `Farbe` oder `Werkzeug` bezeichnet keine eindeutige
+Entsorgungsart. Mehr Schlagwörter würden hier nur die Wahrscheinlichkeit einer
+gefährlichen Fehlzuordnung erhöhen. Die Suche erkennt deshalb den Oberbegriff,
+fragt nur die fachlich trennenden Merkmale ab und wechselt dann zu einem
+redaktionellen, quellengebundenen Eintrag. Konkrete Eingaben umgehen den Baum.
+
+Evidenz: `Öl` trennt Speise-, Motor- und unbekanntes Öl; `Farbe` trennt nass,
+vollständig trocken und unsicher; `Werkzeug` fragt nacheinander nach Strom,
+Schadstoffanhaftung und Hauptmaterial. `Motoröl`, `Olivenöl` und `nasse Farbe`
+bleiben direkte Treffer. 98 fokussierte Such-/Feedbackassertions und 37
+Browserprüfungen sichern die Verzweigungen und Rücknavigation ab.
+
+Gültigkeitsgrenze: Der Baum ist nur so vollständig wie seine redaktionell
+belegten Endpunkte. Er ist kein generischer Chatbot und darf unbekannte Stoffe
+nicht durch freie Textinterpretation einer Tonne zuweisen.
+
+### Fehlerfeedback braucht einen ehrlichen Speicherort
+
+Ohne Nutzerkonto oder eigenes Backend kann eine App keine dauerhafte
+Meldesammlung versprechen. Ein expliziter Übergang zu einer vorausgefüllten
+Repository-Meldung ist dagegen prüfbar: Grund, optionaler Kommentar, Item-ID,
+Inhaltsversion und Ergebnislink werden erst bei Nutzeraktion erzeugt; in der
+App bleibt nichts gespeichert. Native GitHub-Anmeldung und endgültiges
+Absenden bleiben sichtbar außerhalb der App.
+
+Evidenz: Unit-Tests begrenzen Kommentare auf 500 Zeichen und entfernen
+Verlaufsparameter. Browser-E2E bestätigt den Dialog, die auswählbaren Gründe,
+den kanonischen Link und null Web-Storage-/Cookiezugriffe.
+
+Gültigkeitsgrenze: Nur tatsächlich bei GitHub abgesendete Meldungen stehen zur
+späteren Analyse zur Verfügung. Eine anonyme In-App-Sammlung würde einen
+eigenen Backend-, Datenschutz- und Missbrauchsschutzvertrag benötigen.
+
 ## Weitergabe
 
 Die allgemein relevanten Punkte zu dreistufiger Quellenpflege, Suchgewichtung,

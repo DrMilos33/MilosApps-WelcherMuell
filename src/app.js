@@ -1,5 +1,6 @@
 import "../vendor/milosapps-shell/v2/bootstrap.js";
 import {
+  detectGuidedFlow,
   isAmbiguous,
   isDirectSearchMatch,
   normalizeText,
@@ -8,6 +9,7 @@ import {
   suggestedAlternatives,
   validateItemIntegrity
 } from "./search.js";
+import { buildFeedbackIssueUrl } from "./feedback.js";
 import {
   localizeCatalogs,
   normalizeLanguage,
@@ -45,6 +47,12 @@ const elements = {
   aboutContent: document.querySelector("#about-content"),
   showAbout: document.querySelector("#show-about"),
   closeAbout: document.querySelector("#close-about"),
+  feedbackDialog: document.querySelector("#feedback-dialog"),
+  feedbackForm: document.querySelector("#feedback-form"),
+  feedbackContext: document.querySelector("#feedback-context"),
+  feedbackComment: document.querySelector("#feedback-comment"),
+  closeFeedback: document.querySelector("#close-feedback"),
+  cancelFeedback: document.querySelector("#cancel-feedback"),
   trust: document.querySelector(".trust-section"),
   trustHint: document.querySelector(".summary-hint"),
   toast: document.querySelector("#toast")
@@ -54,6 +62,7 @@ const state = {
   language: normalizeLanguage(document.documentElement.lang),
   catalogs: null,
   contentDate: null,
+  contentVersion: null,
   items: [],
   sources: [],
   sourcesById: new Map(),
@@ -61,12 +70,80 @@ const state = {
   regions: [],
   selectedRegion: "de",
   currentItemId: null,
+  feedbackItemId: null,
   lastQuery: "",
   view: { type: "idle" },
   toastTimer: null
 };
 
 const t = (key, values) => translate(state.language, key, values);
+
+const GUIDED_FLOWS = Object.freeze({
+  oil: {
+    total: 1,
+    steps: {
+      kind: {
+        title: "guideOilTitle",
+        message: "guideOilMessage",
+        options: [
+          { label: "guideOilCooking", itemId: "cooking-oil" },
+          { label: "guideOilMotor", itemId: "used-oil" },
+          { label: "guideOilOther", itemId: "unknown-oil" }
+        ]
+      }
+    }
+  },
+  paint: {
+    total: 1,
+    steps: {
+      state: {
+        title: "guidePaintTitle",
+        message: "guidePaintMessage",
+        options: [
+          { label: "guidePaintWet", itemId: "liquid-paint" },
+          { label: "guidePaintDry", itemId: "dried-paint" },
+          { label: "guidePaintUnknown", itemId: "liquid-paint" }
+        ]
+      }
+    }
+  },
+  tool: {
+    total: 3,
+    steps: {
+      power: {
+        number: 1,
+        title: "guideToolPowerTitle",
+        message: "guideToolPowerMessage",
+        options: [
+          { label: "guideToolPowerYes", itemId: "electrical-device" },
+          { label: "guideToolPowerNo", next: "hazard" },
+          { label: "guideToolUnsure", next: "hazard" }
+        ]
+      },
+      hazard: {
+        number: 2,
+        title: "guideToolHazardTitle",
+        message: "guideToolHazardMessage",
+        options: [
+          { label: "guideToolHazardYes", itemId: "contaminated-tool" },
+          { label: "guideToolHazardNo", next: "material" },
+          { label: "guideToolUnsure", itemId: "contaminated-tool" }
+        ]
+      },
+      material: {
+        number: 3,
+        title: "guideToolMaterialTitle",
+        message: "guideToolMaterialMessage",
+        options: [
+          { label: "guideToolMetal", itemId: "metal-household-item" },
+          { label: "guideToolWood", itemId: "wood-household-item" },
+          { label: "guideToolPlastic", itemId: "plastic-household-item" },
+          { label: "guideToolMixed", itemId: "composite-household-item" }
+        ]
+      }
+    }
+  }
+});
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -218,6 +295,38 @@ function renderFallbackGuide() {
     </section>`;
 }
 
+function renderGuidedFlow(flowId, stepId, query, history = []) {
+  const flow = GUIDED_FLOWS[flowId];
+  const step = flow?.steps?.[stepId];
+  if (!step) return false;
+  state.currentItemId = null;
+  state.view = { type: "guide", flowId, stepId, query, history };
+  elements.resultKicker.textContent = t("guideKicker");
+  elements.resultKicker.hidden = false;
+  elements.resultsTitle.textContent = t(step.title);
+  elements.status.textContent = t(step.message);
+  elements.status.hidden = false;
+  elements.reset.hidden = false;
+  elements.resultsSection.hidden = false;
+  elements.resultsSection.dataset.view = "guide";
+  const stepNumber = step.number ?? 1;
+  elements.results.innerHTML = `
+    <section class="guided-guide" aria-label="${escapeHtml(t("guideProgress", { current: stepNumber, total: flow.total }))}">
+      <div class="guided-options">
+        ${step.options.map((option) => `
+          <button type="button" class="guided-choice" ${option.itemId ? `data-guide-item="${escapeHtml(option.itemId)}"` : `data-guide-next="${escapeHtml(option.next)}"`}>
+            <span>${escapeHtml(t(option.label))}</span><span aria-hidden="true">→</span>
+          </button>`).join("")}
+      </div>
+      <div class="guided-footer">
+        <span>${escapeHtml(t("guideProgress", { current: stepNumber, total: flow.total }))}</span>
+        ${history.length > 0 ? `<button type="button" class="text-button" data-guide-back>${escapeHtml(t("guideBack"))}</button>` : ""}
+      </div>
+    </section>`;
+  elements.resultsTitle.focus();
+  return true;
+}
+
 function renderIdle() {
   emptyState({
     title: t("resultIdleTitle"),
@@ -257,6 +366,9 @@ function recognizedSubject(item) {
   const compactQuery = normalizedQuery.replaceAll(" ", "");
   if (item.id === "rubber-household-item" && /^(gummiband|gummibaender|rubberband|rubberbands|elasticband|elasticbands)$/.test(compactQuery)) {
     return t("recognizedRubberBand");
+  }
+  if (item.id === "food-leftovers" && /^(toast|toastbrot|bread|toast bread)$/.test(normalizedQuery)) {
+    return item.aliases.find((label) => normalizeText(label) === normalizedQuery) ?? item.name;
   }
   const mayUseExactLabel = new Set(["plastic-household-item", "food-and-wrapper", "poster"]);
   if (mayUseExactLabel.has(item.id) || (item.id === "electrical-device" && normalizedQuery === "toaster")) {
@@ -367,7 +479,6 @@ function renderItem(
             <h3 class="result-subject" id="item-${escapeHtml(item.id)}" tabindex="-1">${escapeHtml(recognizedSubject(item))}</h3>
             <span class="result-category">${escapeHtml(item.category)}</span>
           </div>
-          <svg class="result-arrow" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h13M14 7l5 5-5 5" /></svg>
           <div class="result-path-part result-path-destination">
             <strong class="result-destination">${renderDestination(destination, certainty)}</strong>
           </div>
@@ -382,7 +493,7 @@ function renderItem(
       </div>
       <div class="result-details">
         <details><summary>${escapeHtml(t("sourcesAndValidity", { count: sources.length }))}</summary><ul class="source-list">${sources.map(renderSource).join("")}</ul><p><strong>${escapeHtml(t("editorialStatus", { reviewed: formatDate(item.reviewedAt), reviewDue: formatDate(item.reviewDue) }))}</strong></p></details>
-        <div class="result-actions"><milos-share-button data-share-item="${escapeHtml(item.id)}"></milos-share-button><button class="secondary-button" type="button" data-print="${escapeHtml(item.id)}">${escapeHtml(t("print"))}</button></div>
+        <div class="result-actions"><milos-share-button data-share-item="${escapeHtml(item.id)}"></milos-share-button><button class="secondary-button" type="button" data-feedback="${escapeHtml(item.id)}">${escapeHtml(t("feedbackButton"))}</button><button class="secondary-button" type="button" data-print="${escapeHtml(item.id)}">${escapeHtml(t("print"))}</button></div>
       </div>
     </article>`;
 }
@@ -512,6 +623,12 @@ function runSearch(rawQuery, options = {}) {
     elements.resultsTitle.focus();
     return;
   }
+  const guidedFlow = detectGuidedFlow(query);
+  if (guidedFlow) {
+    renderGuidedFlow(guidedFlow.id, guidedFlow.step, query);
+    updateUrlForNonSpecificResult(options);
+    return;
+  }
   const results = searchItems(state.items, query, { sourcesById: state.sourcesById, asOf: new Date(), limit: 8 });
   const directResults = results.filter(isDirectSearchMatch);
   if (directResults.length === 0) {
@@ -537,6 +654,21 @@ function runSearch(rawQuery, options = {}) {
     query,
     relatedItems: suggestedAlternatives(state.items, primaryItem, query)
   });
+}
+
+function openFeedback(itemId) {
+  const item = state.items.find((candidate) => candidate.id === itemId);
+  if (!item) return;
+  state.feedbackItemId = item.id;
+  elements.feedbackForm.reset();
+  elements.feedbackContext.textContent = t("feedbackContext", { name: item.name });
+  elements.feedbackDialog.showModal();
+  elements.feedbackForm.querySelector('input[name="feedback-reason"]:checked')?.focus();
+}
+
+function closeFeedback() {
+  if (elements.feedbackDialog.open) elements.feedbackDialog.close();
+  state.feedbackItemId = null;
 }
 
 function resetSearch({ updateUrl: shouldUpdateUrl = true, focus = true } = {}) {
@@ -586,6 +718,10 @@ function rerenderView() {
     if (corrections.length > 0) renderCorrections(corrections, state.view.query);
     return;
   }
+  if (state.view.type === "guide") {
+    renderGuidedFlow(state.view.flowId, state.view.stepId, state.view.query, state.view.history);
+    return;
+  }
   if (state.view.type === "short") {
     emptyState({ title: t("shortTitle"), message: t("shortMessage"), kicker: t("shortKicker"), type: "short", query: state.view.query });
     return;
@@ -624,6 +760,28 @@ function bindEvents() {
     button.addEventListener("click", () => runSearch(button.dataset[state.language === "en" ? "queryEn" : "queryDe"]));
   });
   elements.results.addEventListener("click", (event) => {
+    const guidedItem = event.target.closest("[data-guide-item]");
+    if (guidedItem) {
+      const item = state.items.find((candidate) => candidate.id === guidedItem.dataset.guideItem);
+      if (item) renderOne(item, { query: state.view.query ?? state.lastQuery });
+      return;
+    }
+    const guidedNext = event.target.closest("[data-guide-next]");
+    if (guidedNext && state.view.type === "guide") {
+      renderGuidedFlow(
+        state.view.flowId,
+        guidedNext.dataset.guideNext,
+        state.view.query,
+        [...state.view.history, state.view.stepId]
+      );
+      return;
+    }
+    if (event.target.closest("[data-guide-back]") && state.view.type === "guide") {
+      const history = [...state.view.history];
+      const previous = history.pop();
+      if (previous) renderGuidedFlow(state.view.flowId, previous, state.view.query, history);
+      return;
+    }
     const correction = event.target.closest("[data-correction-query]");
     if (correction) {
       runSearch(correction.dataset.correctionQuery);
@@ -638,6 +796,11 @@ function bindEvents() {
     if (selected) {
       const item = state.items.find((candidate) => candidate.id === selected.dataset.selectItem);
       if (item) renderOne(item);
+      return;
+    }
+    const feedback = event.target.closest("[data-feedback]");
+    if (feedback) {
+      openFeedback(feedback.dataset.feedback);
       return;
     }
     if (event.target.closest("[data-print]")) window.print();
@@ -663,6 +826,33 @@ function bindEvents() {
   elements.closeAbout.addEventListener("click", () => elements.aboutDialog.close());
   elements.aboutDialog.addEventListener("click", (event) => {
     if (event.target === elements.aboutDialog) elements.aboutDialog.close();
+  });
+  elements.closeFeedback.addEventListener("click", closeFeedback);
+  elements.cancelFeedback.addEventListener("click", closeFeedback);
+  elements.feedbackDialog.addEventListener("click", (event) => {
+    if (event.target === elements.feedbackDialog) closeFeedback();
+  });
+  elements.feedbackDialog.addEventListener("cancel", () => {
+    state.feedbackItemId = null;
+  });
+  elements.feedbackForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const item = state.items.find((candidate) => candidate.id === state.feedbackItemId);
+    if (!item) return;
+    const formData = new FormData(elements.feedbackForm);
+    const issueUrl = buildFeedbackIssueUrl({
+      itemId: item.id,
+      itemName: item.name,
+      reason: String(formData.get("feedback-reason") ?? "wrong"),
+      comment: elements.feedbackComment.value,
+      query: state.lastQuery,
+      contentVersion: state.contentVersion,
+      language: state.language,
+      resultUrl: window.location.href
+    });
+    window.open(issueUrl, "_blank", "noopener,noreferrer");
+    closeFeedback();
+    showToast(t("feedbackOpened"));
   });
   elements.trust.addEventListener("toggle", () => {
     elements.trustHint.textContent = t(elements.trust.open ? "trustHide" : "trustShow");
@@ -733,6 +923,7 @@ async function initialize() {
     const [itemsCatalog, sourcesCatalog, regionsCatalog, localeCatalog] = await Promise.all(Object.values(DATA_PATHS).map(loadJson));
     state.catalogs = { itemsCatalog, sourcesCatalog, regionsCatalog, localeCatalog };
     state.contentDate = itemsCatalog.contentDate;
+    state.contentVersion = itemsCatalog.contentVersion;
     rebuildLocalizedCatalogs();
     state.selectedRegion = "de";
     elements.contentDate.textContent = t("contentDate", { date: formatDate(state.contentDate) });

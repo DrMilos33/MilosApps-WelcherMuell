@@ -7,8 +7,8 @@ Nutzerdatenbank sind nicht nötig.
 
 ## DEV-Stand
 
-- Inhaltsversion: `2026.08.03-4`, Stand 03.08.2026
-- 58 redaktionelle Einträge und 28 amtliche oder kommunale Quellen
+- Inhaltsversion: `2026.08.09-1`, Stand 09.08.2026
+- 62 redaktionelle Einträge und 30 amtliche oder kommunale Quellen
 - allgemeiner Geltungsbereich: private Haushalte in Deutschland
 - belegte regionale Ergänzungen: Berlin, Hamburg und München
 - Plattformen: Web, Smartphone/PWA und Desktop

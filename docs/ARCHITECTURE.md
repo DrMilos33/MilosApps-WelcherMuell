@@ -143,7 +143,7 @@ Port `4318` ist fest. Der Server meldet auf `/healthz`:
   "status": "ok",
   "appKey": "waste-guide",
   "environment": "DEV",
-  "contentVersion": "2026.08.03-4",
+  "contentVersion": "2026.08.09-1",
   "productionApproved": false
 }
 ```

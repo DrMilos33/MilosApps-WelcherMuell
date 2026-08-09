@@ -8,7 +8,7 @@
 - Health: `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz`
 - Repository: `DrMilos33/MilosApps-WelcherMuell`
 - Quellcommit: `5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c`
-- Inhaltsversion: `2026.08.03-4`
+- Inhaltsversion: `2026.08.09-1`
 - Artefaktbranch: `dev-pages`
 - gesunder Artefaktcommit:
   `3e7d427eb9d4159791d741933d57e75e4e88ad8b`

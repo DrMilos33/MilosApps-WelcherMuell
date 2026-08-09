@@ -49,7 +49,6 @@
             <h1 id="hero-title" data-i18n="heroTitle">Welcher Müll?</h1>
             <p class="hero-prompt" data-i18n="heroPrompt">Wohin damit?</p>
           </div>
-          <p class="hero-copy" data-i18n="heroCopy">Gegenstand eingeben – wir zeigen den passenden Weg oder einen sicheren Prüfschritt.</p>
         </section>
 
         <div class="search-dock">
@@ -154,6 +153,39 @@
             </button>
           </div>
           <div class="dialog-content" id="about-content"><p data-i18n="aboutLoading">Die Quelleninformationen werden geladen.</p></div>
+        </dialog>
+
+        <dialog class="feedback-dialog" id="feedback-dialog" aria-labelledby="feedback-title">
+          <form id="feedback-form">
+            <div class="dialog-header">
+              <div>
+                <p class="section-kicker" data-i18n="feedbackKicker">Ergebnis verbessern</p>
+                <h2 id="feedback-title" data-i18n="feedbackTitle">Ergebnis melden</h2>
+              </div>
+              <button class="icon-button" id="close-feedback" type="button" aria-label="Meldung schließen" data-i18n-aria-label="feedbackClose">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+              </button>
+            </div>
+            <div class="dialog-content feedback-content">
+              <p id="feedback-context"></p>
+              <fieldset class="feedback-reasons">
+                <legend data-i18n="feedbackReasonLegend">Was stimmt nicht?</legend>
+                <label><input type="radio" name="feedback-reason" value="wrong" checked><span data-i18n="feedbackWrong">Das Ergebnis ist falsch</span></label>
+                <label><input type="radio" name="feedback-reason" value="missing"><span data-i18n="feedbackMissing">Ein wichtiger Entsorgungsweg fehlt</span></label>
+                <label><input type="radio" name="feedback-reason" value="unclear"><span data-i18n="feedbackUnclear">Die Erklärung ist unklar</span></label>
+                <label><input type="radio" name="feedback-reason" value="other"><span data-i18n="feedbackOther">Etwas anderes</span></label>
+              </fieldset>
+              <label class="field-group" for="feedback-comment">
+                <span data-i18n="feedbackComment">Kommentar (optional)</span>
+                <textarea id="feedback-comment" name="feedback-comment" rows="4" maxlength="500" data-i18n-placeholder="feedbackCommentPlaceholder" placeholder="Was sollte stattdessen angezeigt werden?"></textarea>
+              </label>
+              <p class="field-help" data-i18n="feedbackPrivacy">Die App speichert nichts. Erst der nächste Schritt öffnet eine vorausgefüllte GitHub-Meldung; gespeichert wird sie dort nur, wenn du sie absendest.</p>
+              <div class="dialog-actions">
+                <button class="text-button" id="cancel-feedback" type="button" data-i18n="feedbackCancel">Abbrechen</button>
+                <button type="submit" data-i18n="feedbackContinue">Auf GitHub prüfen und senden</button>
+              </div>
+            </div>
+          </form>
         </dialog>
 
         <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>

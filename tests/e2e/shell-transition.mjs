@@ -10,7 +10,7 @@ const externalRun = Boolean(configuredBaseUrl);
 const baseUrl = configuredBaseUrl
   ? configuredBaseUrl.replace(/\/$/, "")
   : `http://${host}:${port}`;
-const expectedContentVersion = "2026.08.03-4";
+const expectedContentVersion = "2026.08.09-1";
 const expectedSourceCommit = process.env.WASTE_GUIDE_EXPECTED_SOURCE_COMMIT?.trim() || null;
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",

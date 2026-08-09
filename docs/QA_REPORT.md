@@ -918,3 +918,35 @@ Gefahrstoff, Carbonplatte ohne Holzroute sowie 360 × 800 bei 200 Prozent mit
 `clientWidth=scrollWidth=360`, mindestens 44-Pixel-Materialzielen und null
 Konsolenfehlern. Portal-DEV blieb für `GET` und `HEAD` ein 302 auf die
 unabhängige App-URL; Production blieb HTTP 404.
+
+## Sichere Allgemeinbegriffe, Rückfragen und Ergebnismeldung · Inhaltsversion 2026.08.09-1
+
+Die grüne Ausgangsbasis bestand aus 115 Unit-/Inhalts-/Suchtests und 34
+Browserprüfungen. Rote Regressionen belegten anschließend die fehlenden
+Alltagswege für `Öl`, `Olivenöl`, `Pizzareste` und `nasse Farbe` sowie das
+Fehlen einer mehrstufigen Werkzeug-Eingrenzung und einer analysierbaren
+Ergebnismeldung.
+
+Runde 1 ergänzte vier getrennte redaktionelle Fälle: Lebensmittelreste,
+Speiseöl, unbekanntes Öl und verunreinigtes Werkzeug. Motoröl bleibt über § 8
+AltölV getrennt; Speiseöl zeigt wegen der belegten Unterschiede zwischen
+München und Hamburg keinen erfundenen bundesweiten Tonnenweg. `Öl`, `Farbe`
+und `Werkzeug` öffnen eine kurze, tastaturbedienbare Entscheidung, während
+konkrete Begriffe wie `Motoröl`, `Olivenöl` und `nasse Farbe` direkt zum
+belegten Treffer führen. Flüssige Farbe schließt den Trockentreffer explizit
+aus.
+
+Runde 2 verdichtete den Ergebniskopf: Der breite Richtungspfeil entfiel, der
+Quellen-Aufklapper erhielt einen kompakten eigenen Marker und lange Begriffe
+brechen bei 390 Pixel nicht mehr mitten im Wort um. Eine Meldeschaltfläche
+öffnet erst nach ausdrücklicher Auswahl eine vorausgefüllte GitHub-Issue-Seite
+mit Grund und optionalem Kommentar. Die App speichert weder Meldung noch
+Suchverlauf; der Nutzer kann die Meldung vor dem Absenden prüfen.
+
+Lokaler Abschluss: 124/124 Unit-/Daten-/Such-/DE-EN-/Speichertests, Shell- und
+Essentials-Verifier PASS, 37/37 Browser-E2E und 30/30 amtliche Quellen mit HTTP
+200. Die Browsermatrix umfasst Desktop, 390 × 844, 360 × 800 bei 200 Prozent,
+Dark Mode, Tastatur, Screenreader-Namen, 44-Pixel-Ziele, Reduced Motion,
+Offline-Opt-in, Rücknavigation und null Konsolenfehler. Der DEV-Publish wird
+erst aus dem nach diesen Gates erzeugten Quellcommit gebaut; Production ist
+nicht Teil dieser Änderung.

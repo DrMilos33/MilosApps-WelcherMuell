@@ -124,7 +124,10 @@ test("englische Suche nutzt übersetzte Namen, Synonyme und Hinweise", () => {
   assert.equal(searchItems(localized.items, "plastic", { sourcesById })[0].item.id, "plastic-household-item");
   assert.equal(searchItems(localized.items, "oil painting", { sourcesById })[0].item.id, "painting");
   assert.equal(searchItems(localized.items, "chocolate bar", { sourcesById })[0].item.id, "food-and-wrapper");
-  assert.equal(searchItems(localized.items, "toast", { sourcesById })[0].item.id, "food-and-wrapper");
+  assert.equal(searchItems(localized.items, "toast", { sourcesById })[0].item.id, "food-leftovers");
+  assert.equal(searchItems(localized.items, "cooking oil", { sourcesById })[0].item.id, "cooking-oil");
+  assert.equal(searchItems(localized.items, "engine oil", { sourcesById })[0].item.id, "used-oil");
+  assert.equal(searchItems(localized.items, "wet paint", { sourcesById })[0].item.id, "liquid-paint");
   assert.equal(searchItems(localized.items, "poster", { sourcesById })[0].item.id, "poster");
   assert.ok(!searchItems(localized.items, "poster", { sourcesById }).some(({ item }) => item.id === "electrical-device"));
   assert.equal(localized.regions.find((region) => region.id === "de").label, "Germany — general guidance");

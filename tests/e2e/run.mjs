@@ -8,7 +8,7 @@ import { chromium } from "playwright";
 const host = "127.0.0.1";
 const port = 4318;
 const baseUrl = `http://${host}:${port}`;
-const expectedContentVersion = "2026.08.03-4";
+const expectedContentVersion = "2026.08.09-1";
 const artifacts = new URL("../../test-results/qa/", import.meta.url);
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -432,7 +432,54 @@ try {
     await desktopPage.getByRole("heading", { name: "Toast", exact: true }).waitFor();
     assert.equal(await desktopPage.getByText("Elektrogerät", { exact: true }).count(), 0);
     assert.equal(await desktopPage.getByText(/Wertstoffhof oder Rücknahme im Handel/).count(), 0);
-    await desktopPage.getByText(/örtliche Biotonne/).waitFor();
+    await desktopPage.getByText(/örtliche Biotonne/i).waitFor();
+  });
+
+  await check("Desktop: Öl, Pizzareste, nasse Farbe und Werkzeug werden sicher eingegrenzt", async () => {
+    await submitSearch(desktopPage, "Öl");
+    await desktopPage.getByRole("heading", { name: "Welche Art Öl ist es?", exact: true }).waitFor();
+    await desktopPage.getByRole("button", { name: /Speise- oder Frittieröl/ }).click();
+    await desktopPage.getByRole("heading", { name: "Speiseöl oder Frittierfett", exact: true }).waitFor();
+    await desktopPage.getByText(/Nie in Spüle, Toilette/i).waitFor();
+
+    await submitSearch(desktopPage, "Pizzareste");
+    await desktopPage.getByRole("heading", { name: "Lebensmittelreste", exact: true }).waitFor();
+    assert.equal(await desktopPage.locator("#results").getByText("Pizzakarton", { exact: true }).count(), 0);
+
+    await submitSearch(desktopPage, "nasse Farbe");
+    await desktopPage.getByRole("heading", { name: "Flüssige Farbe oder Lack", exact: true }).waitFor();
+    assert.equal(await desktopPage.getByRole("heading", { name: "Eingetrocknete Farbe", exact: true }).count(), 0);
+
+    await submitSearch(desktopPage, "Was für Werkzeug?");
+    await desktopPage.getByRole("heading", { name: "Hat das Werkzeug Strom?", exact: true }).waitFor();
+    await desktopPage.getByRole("button", { name: /reines Handwerkzeug/ }).click();
+    await desktopPage.getByRole("heading", { name: "Haften Öl, Farbe oder Chemikalien daran?", exact: true }).waitFor();
+    await desktopPage.getByRole("button", { name: /sauber und leer/ }).click();
+    await desktopPage.getByRole("heading", { name: "Woraus besteht es hauptsächlich?", exact: true }).waitFor();
+    await desktopPage.getByRole("button", { name: /Metall oder Eisen/ }).click();
+    await desktopPage.getByRole("heading", { name: "Eisen oder Metall", exact: true }).waitFor();
+  });
+
+  await check("Desktop: Ergebnismeldung bleibt prüfbar und speichert nichts in der App", async () => {
+    await desktopPage.evaluate(() => {
+      window.open = (url) => {
+        window.__feedbackIssueUrl = url;
+        return null;
+      };
+    });
+    await desktopPage.getByRole("button", { name: "Ergebnis melden", exact: true }).click();
+    const dialog = desktopPage.getByRole("dialog", { name: "Ergebnis melden", exact: true });
+    await dialog.waitFor();
+    await dialog.getByLabel("Das Ergebnis ist falsch").check();
+    await dialog.getByLabel("Kommentar (optional)").fill("Bitte Größe und Material noch klarer trennen.");
+    await dialog.getByRole("button", { name: "Auf GitHub prüfen und senden", exact: true }).click();
+    const issueUrl = new URL(await desktopPage.evaluate(() => window.__feedbackIssueUrl));
+    assert.equal(issueUrl.origin, "https://github.com");
+    assert.equal(issueUrl.pathname, "/DrMilos33/MilosApps-WelcherMuell/issues/new");
+    assert.match(issueUrl.searchParams.get("body"), /Reason: `wrong`/);
+    assert.match(issueUrl.searchParams.get("body"), /Was für Werkzeug\?/);
+    assert.deepEqual(await desktopPage.evaluate(() => window.__storageCalls), []);
+    assert.equal(await dialog.isVisible(), false);
   });
 
   await check("Desktop: Poster erhält den Materialcheck und ähnliche Wörter werden nicht geraten", async () => {
@@ -493,7 +540,7 @@ try {
     assert.equal(await desktopPage.locator('[data-item-id="metal-household-item"]').count(), 0);
 
     await submitSearch(desktopPage, "flüssige Farbe in Metalldose");
-    await desktopPage.getByRole("heading", { name: "Haushaltschemikalien", exact: true }).waitFor();
+    await desktopPage.getByRole("heading", { name: "Flüssige Farbe oder Lack", exact: true }).waitFor();
     assert.equal(await desktopPage.locator('[data-item-id="metal-packaging"]').count(), 0);
     assert.equal(await desktopPage.locator('[data-item-id="tin-can"]').count(), 0);
 
@@ -502,7 +549,7 @@ try {
     assert.equal(await desktopPage.locator('[data-item-id="wood-household-item"]').count(), 0);
 
     await submitSearch(desktopPage, "Eissen");
-    await desktopPage.getByRole("heading", { name: "Meintest du einen dieser Begriffe?", exact: true }).waitFor();
+    await desktopPage.getByRole("heading", { name: "Meintest du „Eisen“?", exact: true }).waitFor();
     assert.equal(await desktopPage.getByRole("button", { name: "Eisen suchen", exact: true }).count(), 1);
     assert.equal(await desktopPage.locator(".result-immediate").count(), 0);
   });
@@ -863,6 +910,30 @@ try {
     });
   });
 
+  await check("Smartphone: lange Ergebnisbegriffe und Quellenpfeil bleiben kompakt", async () => {
+    await mobilePage.setViewportSize({ width: 390, height: 844 });
+    await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
+    await submitSearch(mobilePage, "Haushaltschemikalien");
+    const subject = mobilePage.getByRole("heading", { name: "Haushaltschemikalien", exact: true });
+    await subject.waitFor();
+    const geometry = await subject.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      const lineHeight = Number.parseFloat(getComputedStyle(element).lineHeight);
+      const summary = document.querySelector(".result-details summary").getBoundingClientRect();
+      return {
+        lines: Math.round(rect.height / lineHeight),
+        summaryHeight: Math.round(summary.height),
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+        oldArrowCount: document.querySelectorAll(".result-arrow").length
+      };
+    });
+    assert.equal(geometry.lines, 1, JSON.stringify(geometry));
+    assert.ok(geometry.summaryHeight <= 48, JSON.stringify(geometry));
+    assert.equal(geometry.oldArrowCount, 0);
+    assert.ok(geometry.scrollWidth <= geometry.clientWidth + 1, JSON.stringify(geometry));
+  });
+
   await check("200-Prozent-Zoom-Äquivalent: Desktop-Reflow bei halbierter CSS-Breite", async () => {
     await mobilePage.setViewportSize({ width: 640, height: 720 });
     await mobilePage.goto(baseUrl, { waitUntil: "networkidle" });
@@ -1018,6 +1089,13 @@ try {
     }));
     assert.ok(fallbackGeometry.scrollWidth <= fallbackGeometry.clientWidth + 1, `Materialauswahl läuft bei 200 % über: ${JSON.stringify(fallbackGeometry)}`);
     assert.deepEqual(fallbackGeometry.buttons.filter(({ height, right }) => height < 44 || right > fallbackGeometry.clientWidth + 1), []);
+    await submitSearch(mobilePage, "Haushaltschemikalien");
+    await mobilePage.getByRole("heading", { name: "Haushaltschemikalien", exact: true }).waitFor();
+    const longWordGeometry = await mobilePage.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth
+    }));
+    assert.ok(longWordGeometry.scrollWidth <= longWordGeometry.clientWidth + 1, `Langwort läuft bei 200 % über: ${JSON.stringify(longWordGeometry)}`);
     await mobilePage.evaluate(() => {
       document.documentElement.style.fontSize = "";
     });
