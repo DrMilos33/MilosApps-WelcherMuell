@@ -7,12 +7,12 @@
 - URL: `https://drmilos33.github.io/MilosApps-WelcherMuell/`
 - Health: `https://drmilos33.github.io/MilosApps-WelcherMuell/healthz`
 - Repository: `DrMilos33/MilosApps-WelcherMuell`
-- Quellcommit: `0b6fe0a9350aa6fe8478879f316913291c80aac2`
+- Quellcommit: `52f07ad9c81808f8840ce964f5516fa31f4b0980`
 - Inhaltsversion: `2026.08.09-1`
 - Artefaktbranch: `dev-pages`
 - gesunder Artefaktcommit:
-  `d5bf8bea48f925eb64877ceff4168044575dc4e4`
-- Pages-Actions-Run `31287160146`, Artefaktcommit `d5bf8be`, Status
+  `5714c1ad95fdb6e8fd03aa03ba0be64b3c9751d3`
+- Pages-Actions-Run `31287280796`, Artefaktcommit `5714c1a`, Status
   `built`/`success` am 09.08.2026
 - Shell: vendortes `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`
@@ -74,7 +74,7 @@ Vor einer Aktualisierung gelten zwingend:
 ## Rollback
 
 Aktuelle gesunde DEV-Revision ist
-`d5bf8bea48f925eb64877ceff4168044575dc4e4`. Direkter Rollback vor der
+`5714c1ad95fdb6e8fd03aa03ba0be64b3c9751d3`. Direkter Rollback vor der
 geführten Allgemeinsuche ist `3e7d427eb9d4159791d741933d57e75e4e88ad8b`;
 der Rollback vor der allgemeinen Materialsuche ist `d6c9deea4eb87899106b0eeb4a94d0a3a6c37822`;
 der Rollback vor der bestätigbaren Tippfehlerkorrektur ist

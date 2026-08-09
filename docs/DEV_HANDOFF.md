@@ -29,12 +29,12 @@ Die vollständigen maschinenlesbaren Angaben stehen in `meta.json`.
   `https://github.com/DrMilos33/MilosApps-WelcherMuell`
 - Quellbranch: `codex/waste-guide-dev`
 - vollständig deployter Quellcommit:
-  `0b6fe0a9350aa6fe8478879f316913291c80aac2`
-- Quellbaum: `51c7f54560013a569a309341de9c2925c70c75ca`
+  `52f07ad9c81808f8840ce964f5516fa31f4b0980`
+- Quellbaum: `69469440e064b2cddf68942a099166fa39b1cd0e`
 - Artefaktbranch: `dev-pages`
 - Pages-Artefaktcommit:
-  `d5bf8bea48f925eb64877ceff4168044575dc4e4`
-- GitHub-Pages-Actions-Run `31287160146`: Artefaktcommit `d5bf8be`,
+  `5714c1ad95fdb6e8fd03aa03ba0be64b3c9751d3`
+- GitHub-Pages-Actions-Run `31287280796`: Artefaktcommit `5714c1a`,
   Status `built`/`success`
 - Shell-Pin: `public-app-shell/v2.0.3`, Shared-Commit
   `ed898412306e22c6ae1b10ee8953df29f8acd627`, 5er-Lock verifiziert
@@ -53,7 +53,7 @@ Artefaktnachweis.
 Die absolute URL `/healthz` antwortete nach dem Pages-Build ohne Umleitung mit:
 
 ```json
-{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.09-1","productionApproved":false,"sourceCommit":"0b6fe0a9350aa6fe8478879f316913291c80aac2"}
+{"status":"ok","appKey":"waste-guide","environment":"DEV","contentVersion":"2026.08.09-1","productionApproved":false,"sourceCommit":"52f07ad9c81808f8840ce964f5516fa31f4b0980"}
 ```
 
 Portal und E2E müssen mindestens App-Key, Umgebung, Inhaltsversion,
@@ -64,13 +64,14 @@ Artefakthealthcheck und kein Prozessmonitor.
 ## Externe Verifikation
 
 Am 09.08.2026 bestätigte ein frischer cookie-loser HTTPS-Browserlauf Source
-`0b6fe0a9350aa6fe8478879f316913291c80aac2` und Artefakt
-`d5bf8bea48f925eb64877ceff4168044575dc4e4`: allgemeines Öl mit sicherer
+`52f07ad9c81808f8840ce964f5516fa31f4b0980` und Artefakt
+`5714c1ad95fdb6e8fd03aa03ba0be64b3c9751d3`: allgemeines Öl einschließlich
+Plural-/Restformen mit sicherer
 Auswahl, `Pizzareste → Lebensmittelreste`, `nasse Farbe` ohne Trockentreffer,
 dreistufige Werkzeug-Eingrenzung, prüfbare Ergebnismeldung ohne App-Speicherung,
 DE/EN, Offline-Opt-in, 390 × 844 sowie 360 × 800 bei 200 Prozent ohne
 horizontalen Überlauf. Health und alle Laufzeitartefakte antworteten HTTP 200;
-der Pages-Run `31287160146` endete `success`.
+der Pages-Run `31287280796` endete `success`.
 
 Am 01.08.2026 wurden nach terminalem Pages-Status `built` geprüft:
 
