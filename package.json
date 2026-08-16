@@ -2,6 +2,7 @@
   "name": "milosapps-welcher-muell",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.19.0",
   "type": "module",
   "description": "Quellenbasierte, öffentliche Entsorgungs-Nachschlage-App",
   "scripts": {
