@@ -631,6 +631,20 @@ h3 {
   font-weight: 650;
 }
 
+.result-card :where(
+  .result-category,
+  .result-subject,
+  .answer,
+  .result-reason p,
+  .result-steps li,
+  .related-intro p,
+  .result-scope
+) {
+  overflow-wrap: anywhere;
+  word-break: normal;
+  hyphens: auto;
+}
+
 .result-scope {
   margin: 1rem 0 0;
   color: var(--muted);
