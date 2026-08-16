@@ -14,7 +14,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  official-sources:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/check-sources.mjs
+
   full-gate:
+    needs: official-sources
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -38,7 +49,6 @@ jobs:
       - run: pnpm test:shell
       - run: pnpm test:essentials
       - run: pnpm test
-      - run: pnpm test:sources:online
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - run: pnpm build:cloudflare:production
