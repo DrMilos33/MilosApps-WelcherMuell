@@ -278,6 +278,18 @@ try {
     await page.locator(".result-immediate").first().waitFor();
     await page.locator(".trust-section > summary").click();
     const geometry = await page.evaluate(() => {
+      const describe = (element, box = element.getBoundingClientRect()) => ({
+        tag: element.tagName,
+        id: element.id,
+        className: typeof element.className === "string" ? element.className : "",
+        text: element.textContent?.trim().slice(0, 80),
+        left: Math.ceil(box.left),
+        right: Math.ceil(box.right),
+        width: Math.ceil(box.width),
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth,
+        overflowX: getComputedStyle(element).overflowX
+      });
       const visible = [...document.querySelectorAll("body *")]
         .map((element) => ({
           element,
@@ -292,21 +304,47 @@ try {
           && box.height > 0
         );
       const maxRight = Math.ceil(Math.max(...visible.map(({ box }) => box.right)));
+      const shell = document.querySelector("milos-app-shell");
+      const shadowElements = shell?.shadowRoot ? [...shell.shadowRoot.querySelectorAll("*")] : [];
+      const pseudoOffenders = [...document.querySelectorAll("body *")]
+        .flatMap((element) => ["::before", "::after"].map((pseudo) => {
+          const style = getComputedStyle(element, pseudo);
+          return {
+            element: `${element.tagName.toLowerCase()}#${element.id}.${typeof element.className === "string" ? element.className : ""}${pseudo}`,
+            content: style.content,
+            display: style.display,
+            position: style.position,
+            width: style.width,
+            minWidth: style.minWidth,
+            maxWidth: style.maxWidth,
+            left: style.left,
+            right: style.right,
+            transform: style.transform,
+            whiteSpace: style.whiteSpace
+          };
+        }))
+        .filter(({ content, display }) => content !== "none" && content !== "normal" && display !== "none")
+        .slice(0, 24);
       return {
         clientWidth: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
         maxRight,
         offenders: visible
           .filter(({ box }) => box.right > document.documentElement.clientWidth + 0.5)
-          .map(({ element, box }) => ({
-            tag: element.tagName,
-            id: element.id,
-            className: element.className,
-            text: element.textContent?.trim().slice(0, 80),
-            left: Math.ceil(box.left),
-            right: Math.ceil(box.right),
-            width: Math.ceil(box.width)
-          }))
+          .map(({ element, box }) => describe(element, box)),
+        scrollContainers: [document.documentElement, document.body, ...document.querySelectorAll("body *")]
+          .filter((element) => element.scrollWidth > element.clientWidth + 1)
+          .map((element) => describe(element))
+          .slice(0, 24),
+        shellOffenders: shadowElements
+          .map((element) => describe(element))
+          .filter(({ left, right, width }) => width > 0 && (left < -0.5 || right > document.documentElement.clientWidth + 0.5))
+          .slice(0, 24),
+        shadowScrollContainers: shadowElements
+          .filter((element) => element.scrollWidth > element.clientWidth + 1)
+          .map((element) => describe(element))
+          .slice(0, 24),
+        pseudoOffenders
       };
     });
     assert.equal(geometry.clientWidth, 360);
