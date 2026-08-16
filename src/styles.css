@@ -993,10 +993,7 @@ h3 {
 }
 
 .crawl-sources {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.75rem;
+  display: block;
   margin-top: 0.65rem;
   color: var(--muted);
   font-size: 0.88rem;
@@ -1004,13 +1001,13 @@ h3 {
 }
 
 .crawl-sources p {
-  margin: 0;
+  margin: 0 0 0.2rem;
   font-weight: 800;
 }
 
 .crawl-sources ul {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.25rem 1rem;
   margin: 0;
   padding: 0;
@@ -1368,6 +1365,10 @@ dialog::backdrop {
   }
 
   .trust-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .crawl-sources ul {
     grid-template-columns: 1fr;
   }
 

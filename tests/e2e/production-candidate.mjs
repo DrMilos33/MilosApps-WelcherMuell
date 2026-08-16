@@ -310,7 +310,7 @@ try {
       };
     });
     assert.equal(geometry.clientWidth, 360);
-    assert.equal(geometry.scrollWidth, 360);
+    assert.equal(geometry.scrollWidth, 360, JSON.stringify(geometry));
     assert.ok(geometry.maxRight <= 360, JSON.stringify(geometry));
     assert.deepEqual(errors, []);
     await context.close();
