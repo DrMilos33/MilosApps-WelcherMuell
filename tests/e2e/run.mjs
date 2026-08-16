@@ -528,8 +528,10 @@ try {
     await desktopPage.getByRole("heading", { name: "Meintest du etwas anderes?", exact: true }).waitFor();
     assert.equal(await desktopPage.getByRole("button", { name: "Kunststoffverpackung auswählen" }).count(), 1);
     assert.equal(await desktopPage.getByRole("heading", { name: "Elektrogerät", exact: true }).count(), 0);
-    const relatedTop = await desktopPage.locator(".related-results").evaluate((element) => element.getBoundingClientRect().top);
-    const reasonTop = await desktopPage.locator(".result-reason").evaluate((element) => element.getBoundingClientRect().top);
+    const { relatedTop, reasonTop } = await desktopPage.evaluate(() => ({
+      relatedTop: document.querySelector(".related-results").getBoundingClientRect().top,
+      reasonTop: document.querySelector(".result-reason").getBoundingClientRect().top
+    }));
     assert.ok(relatedTop < reasonTop, "Die kuratierte Alternative muss vor den langen Erläuterungen stehen.");
     await desktopPage.getByRole("button", { name: "Kunststoffverpackung auswählen" }).click();
     await desktopPage.getByRole("heading", { name: "Kunststoffverpackung", exact: true }).waitFor();
