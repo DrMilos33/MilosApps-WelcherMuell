@@ -8,8 +8,7 @@
   "vars": {
     "APP_ENVIRONMENT": "PRODUCTION",
     "PRODUCTION_APPROVED": "true",
-    "ALLOWED_ORIGINS": "https://milos-apps.de",
-    "ALLOWED_RESULT_PATHS": "/welcher-muell"
+    "ALLOWED_RESULT_BASES": "https://welcher-muell.milos-apps.de/,https://milos-apps.de/welcher-muell"
   },
   "d1_databases": [
     {

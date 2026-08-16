@@ -39,9 +39,11 @@ bleibt portabel.
 - Worker: `milosapps-waste-guide-feedback-production`
 - HTTPS: `https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev`
 - D1: `milosapps-waste-guide-feedback-production`, EU-Jurisdiktion
-- erlaubte Browser-Origin: ausschließlich `https://milos-apps.de`; zusätzlich
-  wird der exakte Ergebnis-Pfad `/welcher-muell` geprüft
-- erlaubter Ergebnispfad: ausschließlich `/`
+- erlaubte Übergangsbasen: exakt `https://welcher-muell.milos-apps.de/` und
+  `https://milos-apps.de/welcher-muell`; Origin und Pfad werden als Paar
+  geprüft, nicht als frei kombinierbare Listen
+- fremde Pfade auf `milos-apps.de`, Kreuzkombinationen und abweichende
+  Browser-/Ergebnis-Origins werden fail-closed abgewiesen
 - Health: `/healthz`, `environment=PRODUCTION`, `productionApproved=true`
 
 Die versionierte Vorlage `wrangler.production.jsonc.example` wird lokal nach

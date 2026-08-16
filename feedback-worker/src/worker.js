@@ -16,18 +16,39 @@ function json(body, status, headers = {}) {
   });
 }
 
-function configuredOrigins(env) {
-  return new Set(String(env.ALLOWED_ORIGINS ?? "")
+function configuredResultBases(env) {
+  const entries = String(env.ALLOWED_RESULT_BASES ?? "")
     .split(",")
-    .map((origin) => origin.trim())
-    .filter(Boolean));
+    .map((base) => base.trim())
+    .filter(Boolean);
+  if (entries.length === 0) return new Set();
+
+  const bases = new Set();
+  for (const entry of entries) {
+    let url;
+    try {
+      url = new URL(entry);
+    } catch {
+      return new Set();
+    }
+    const localDev = environmentName(env) === "DEV" &&
+      url.protocol === "http:" && url.hostname === "127.0.0.1";
+    if (
+      (url.protocol !== "https:" && !localDev) ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash ||
+      (url.pathname !== "/" && !/^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/?$/i.test(url.pathname)) ||
+      url.toString() !== entry
+    ) return new Set();
+    bases.add(entry);
+  }
+  return bases;
 }
 
-function configuredResultPaths(env) {
-  return new Set(String(env.ALLOWED_RESULT_PATHS ?? "")
-    .split(",")
-    .map((path) => path.trim())
-    .filter((path) => path === "/" || /^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/?$/i.test(path)));
+function configuredOrigins(env) {
+  return new Set([...configuredResultBases(env)].map((base) => new URL(base).origin));
 }
 
 function environmentName(env) {
@@ -56,28 +77,28 @@ function cleanString(value, maximum, { required = false } = {}) {
   return clean;
 }
 
-function validResultUrl(value, itemId, language, env) {
+function validResultUrl(value, itemId, language, env, requestOrigin = "") {
   let url;
   try {
     url = new URL(value);
   } catch {
     return false;
   }
-  const allowed = configuredOrigins(env);
+  const resultBase = `${url.origin}${url.pathname}`;
   if (
-    !allowed.has(url.origin) ||
-    !configuredResultPaths(env).has(url.pathname) ||
+    !configuredResultBases(env).has(resultBase) ||
+    (requestOrigin && url.origin !== requestOrigin) ||
     url.username ||
     url.password ||
     url.hash
   ) return false;
-  const expected = new URL(url.pathname, url.origin);
+  const expected = new URL(resultBase);
   expected.searchParams.set("item", itemId);
   if (language === "en") expected.searchParams.set("lang", "en");
   return url.toString() === expected.toString();
 }
 
-export function validateFeedbackPayload(value, env) {
+export function validateFeedbackPayload(value, env, requestOrigin = "") {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   if (value.schemaVersion !== 1 || value.appKey !== "waste-guide") return null;
 
@@ -103,7 +124,7 @@ export function validateFeedbackPayload(value, env) {
     !language ||
     !resultUrl ||
     website === null ||
-    !validResultUrl(resultUrl, itemId, language, env)
+    !validResultUrl(resultUrl, itemId, language, env, requestOrigin)
   ) return null;
 
   return {
@@ -142,7 +163,7 @@ async function acceptFeedback(request, env, cors) {
   } catch {
     return json({ status: "rejected", code: "invalid-json" }, 400, cors);
   }
-  const payload = validateFeedbackPayload(decoded, env);
+  const payload = validateFeedbackPayload(decoded, env, request.headers.get("origin") ?? "");
   if (!payload) return json({ status: "rejected", code: "invalid-feedback" }, 422, cors);
 
   // A filled hidden field is acknowledged without storing it, so simple form bots

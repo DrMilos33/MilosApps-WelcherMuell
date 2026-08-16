@@ -8,8 +8,7 @@
   "vars": {
     "APP_ENVIRONMENT": "DEV",
     "PRODUCTION_APPROVED": "false",
-    "ALLOWED_ORIGINS": "https://drmilos33.github.io",
-    "ALLOWED_RESULT_PATHS": "/MilosApps-WelcherMuell/"
+    "ALLOWED_RESULT_BASES": "https://drmilos33.github.io/MilosApps-WelcherMuell/"
   },
   "d1_databases": [
     {

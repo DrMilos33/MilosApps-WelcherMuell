@@ -76,8 +76,7 @@ async function forwardFeedback(request, response, url) {
   const workerResponse = await feedbackWorker.fetch(workerRequest, {
     APP_ENVIRONMENT: "DEV",
     PRODUCTION_APPROVED: "false",
-    ALLOWED_ORIGINS: `http://${host}:${port}`,
-    ALLOWED_RESULT_PATHS: "/",
+    ALLOWED_RESULT_BASES: `http://${host}:${port}/`,
     FEEDBACK_DB: localFeedbackDb,
     REPORT_LIMIT: { limit: async () => ({ success: true }) }
   });
