@@ -145,6 +145,43 @@ test("Worker liefert CORS-Preflight, Health und fail-closed Methoden", async () 
   assert.equal((await blockedPost.json()).code, "production-not-approved");
 });
 
+test("Production speichert ausschließlich auf der kanonischen Production-Origin", async () => {
+  const productionOrigin = "https://welcher-muell.milos-apps.de";
+  const fixture = createEnv();
+  fixture.env.APP_ENVIRONMENT = "PRODUCTION";
+  fixture.env.PRODUCTION_APPROVED = "true";
+  fixture.env.ALLOWED_ORIGINS = productionOrigin;
+  fixture.env.ALLOWED_RESULT_PATHS = "/";
+  const payload = validPayload({
+    resultUrl: `${productionOrigin}/?item=liquid-paint`
+  });
+  const response = await worker.fetch(
+    request(payload, { requestOrigin: productionOrigin }),
+    fixture.env
+  );
+  assert.equal(response.status, 201);
+  assert.equal(fixture.inserts.length, 1);
+  assert.equal(fixture.inserts[0][2], "PRODUCTION");
+
+  const devOrigin = await worker.fetch(request(payload), fixture.env);
+  assert.equal(devOrigin.status, 403);
+});
+
+test("Production-Konfiguration trennt Worker, Origin und D1 fail-closed von DEV", async () => {
+  const config = JSON.parse(await readFile(
+    new URL("../../feedback-worker/wrangler.production.jsonc.example", import.meta.url),
+    "utf8"
+  ));
+  assert.equal(config.name, "milosapps-waste-guide-feedback-production");
+  assert.equal(config.vars.APP_ENVIRONMENT, "PRODUCTION");
+  assert.equal(config.vars.PRODUCTION_APPROVED, "true");
+  assert.equal(config.vars.ALLOWED_ORIGINS, "https://welcher-muell.milos-apps.de");
+  assert.equal(config.vars.ALLOWED_RESULT_PATHS, "/");
+  assert.equal(config.d1_databases[0].database_name, "milosapps-waste-guide-feedback-production");
+  assert.notEqual(config.d1_databases[0].database_name, "milosapps-waste-guide-feedback-dev");
+  assert.equal(config.d1_databases[0].database_id, "REPLACE_WITH_PRODUCTION_D1_DATABASE_ID");
+});
+
 test("Schema bietet Warteschlange, Zusammenfassung und begrenzte Aufbewahrung", async () => {
   const schema = await readFile(new URL("../../feedback-worker/migrations/0001_feedback.sql", import.meta.url), "utf8");
   assert.match(schema, /CREATE TABLE feedback_reports/);

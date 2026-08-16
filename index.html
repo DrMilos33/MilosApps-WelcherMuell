@@ -138,6 +138,14 @@
             <article><span class="trust-number" aria-hidden="true">02</span><h3 data-i18n="trustTwoTitle">Region sichtbar</h3><p data-i18n="trustTwoText">Örtliche Systeme werden nur gezeigt, wenn eine kommunale Quelle sie bestätigt.</p></article>
             <article><span class="trust-number" aria-hidden="true">03</span><h3 data-i18n="trustThreeTitle">Sicherheitsfälle zuerst</h3><p data-i18n="trustThreeText">Akkus, Elektrogeräte, Chemikalien und Medikamente bekommen klare Warnhinweise.</p></article>
           </div>
+          <div class="crawl-sources" aria-labelledby="crawl-sources-title">
+            <p id="crawl-sources-title" data-i18n="trustSourceIntro">Ausgewählte amtliche Grundlagen</p>
+            <ul>
+              <li><a href="https://www.umweltbundesamt.de/umwelttipps-fuer-den-alltag/richtiger-muelltrennung-ressourcen-schonen-umwelt" target="_blank" rel="noreferrer" data-i18n="trustSourceSeparation">Umweltbundesamt: Mülltrennung</a></li>
+              <li><a href="https://www.umweltbundesamt.de/themen/abfall-ressourcen/produktverantwortung-in-der-abfallwirtschaft/verpackungen/fragen-antworten-verpackungen-verpackungsabfaelle" target="_blank" rel="noreferrer" data-i18n="trustSourcePackaging">Umweltbundesamt: Verpackungen</a></li>
+              <li><a href="https://www.bundesgesundheitsministerium.de/arzneimittelentsorgung-und-aufbewahrung" target="_blank" rel="noreferrer" data-i18n="trustSourceMedicine">Bundesgesundheitsministerium: Arzneimittel</a></li>
+            </ul>
+          </div>
           <div class="meta-actions">
             <button class="text-button" id="show-about" type="button" data-i18n="aboutButton">Alle Quellen &amp; Datenschutz</button>
           </div>
@@ -197,7 +205,7 @@
         <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
       </main>
     </milos-app-shell>
-    <noscript><div class="noscript">Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.</div></noscript>
+    <noscript><div class="noscript">Diese App benötigt JavaScript für die lokale Suche. Nur eine ausdrücklich abgeschickte Ergebnismeldung wird an den app-eigenen Meldedienst gesendet.</div></noscript>
     <script type="module" src="./vendor/milosapps-essentials/v1/bootstrap.js"></script>
     <script type="module" src="./src/shell-session.js"></script>
     <script type="module" src="./vendor/milosapps-shell/v2/bootstrap.js"></script>

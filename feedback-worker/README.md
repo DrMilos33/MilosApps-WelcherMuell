@@ -34,6 +34,20 @@ Der echte Cloudflare-Ressourcen-Identifier bleibt in der ignorierten Datei
 `wrangler.deploy.jsonc`; sie enthält keine Secrets. Die versionierte Vorlage
 bleibt portabel.
 
+## Getrenntes Production-Ziel
+
+- Worker: `milosapps-waste-guide-feedback-production`
+- HTTPS: `https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev`
+- D1: `milosapps-waste-guide-feedback-production`, EU-Jurisdiktion
+- erlaubte Origin: ausschließlich `https://welcher-muell.milos-apps.de`
+- erlaubter Ergebnispfad: ausschließlich `/`
+- Health: `/healthz`, `environment=PRODUCTION`, `productionApproved=true`
+
+Die versionierte Vorlage `wrangler.production.jsonc.example` wird lokal nach
+`wrangler.production.jsonc` kopiert und ausschließlich mit der ID der
+Production-D1 ergänzt. DEV- und Production-Ressourcen dürfen nicht dieselbe
+Datenbank-ID verwenden.
+
 ## Einmalig für DEV bereitstellen
 
 Cloudflare-Anmeldung und ein app-eigenes Ziel sind Voraussetzung:

@@ -1,68 +1,63 @@
-# Cloudflare-Pages-Production-Kandidat
+# Cloudflare-Pages-Production-Refresh
 
-## Freigabe und Grenze
+## Freigabe und unveränderte Fachgrenze
 
-Die Kampagne `public-app-production-launch-2026-08` gibt `waste-guide` für
-Production frei. Autoritative Runtime-Basis ist
-`5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c`; Inhaltsversion
-`2026.08.03-4`, Quellenreview, Lizenzen, Gültigkeitsgebiet und frühester
-Reviewtermin 30.09.2026 werden durch den technischen Build nicht verändert.
+Die Kampagne `public-app-production-launch-2026-08` gibt den Refresh der
+bereits veröffentlichten App frei. Autoritative Runtime-Basis ist
+`e573e7711e69f5b59603f611e64adc9f29c490e3`; Inhaltsversion
+`2026.08.09-1`, Quellenreview, Lizenzen, Geltungsgebiet und frühester
+Reviewtermin 30.09.2026 werden durch den technischen Production-Build nicht
+erneuert.
 
-Der Production-Provider ist Cloudflare Pages ohne Functions. Projektname ist
-`milosapps-waste-guide-production`; kanonische Produktadresse ist
-`https://welcher-muell.milos-apps.de/`. Die `pages.dev`-Adresse des Projekts
-bleibt ausschließlich technischer Fallback. Dieses Repository enthält bewusst
-keinen Publish-Befehl.
+Cloudflare Pages liefert die statische App ohne Functions aus dem Projekt
+`milosapps-waste-guide-production` unter der kanonischen Adresse
+`https://welcher-muell.milos-apps.de/`. GitHub Pages, `dev-pages`, Portalroute
+und DEV-Daten bleiben unverändert.
 
-GitHub Pages, `dev-pages`, DEV-URL, DEV-Health und Portalroute bleiben
-unverändert.
+Ergebnisrückmeldungen gehen ausschließlich an den getrennten Worker
+`milosapps-waste-guide-feedback-production` und dessen getrennte EU-D1-
+Datenbank `milosapps-waste-guide-feedback-production`. Production liest und
+beschreibt nie die DEV-Datenbank.
 
 ## Reproduzierbarer Build
-
-Der Builder liest ausschließlich einen vollständigen eingecheckten SHA, prüft
-dessen Abstammung von der Runtime-Basis und schreibt nur nach
-`dist/production`. Repo-Root und GitHub-Unterpfad sind keine Ausgabeziele.
 
 ```powershell
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
 $env:WASTE_GUIDE_PRODUCTION_URL="https://welcher-muell.milos-apps.de/"
 $env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="1"
-$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-production-domain"
+$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-production-refresh"
+$env:WASTE_GUIDE_FEEDBACK_ENDPOINT="https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/v1/feedback"
 pnpm build:cloudflare:production
 pnpm test:production:artifact
+pnpm test:e2e:production
 ```
 
-Der Builder und der Artefaktvalidator akzeptieren fail-closed nur diese
-kanonische Origin-URL. `deployment.json.targetConfirmed=true` dokumentiert die
-bestätigte Zielbindung; Upload, Custom-Domain-Aktivierung und Portalredirect
-bleiben getrennte Publisher-Schritte.
+Der Builder liest nur einen vollständigen eingecheckten SHA, prüft dessen
+Abstammung von der Runtime-Basis und schreibt ausschließlich nach
+`dist/production`. URL, Feedback-Endpunkt und Branch werden fail-closed gegen
+die bestätigten Production-Ziele geprüft.
 
-## Production-Artefaktvertrag
+## Artefakt- und Sicherheitsvertrag
 
-Der Output enthält:
+- App-, Shell- und Essentials-Verträge weisen `production` und
+  `productionApproved=true` aus; Pins bleiben unverändert.
+- `/healthz` und `deployment.json` binden App-Key, Source-SHA,
+  Inhaltsversion, Datei-Hashes und Gesamtdigest.
+- `_headers` setzt eine strikte CSP ohne Inline-Ausnahmen; `connect-src`
+  erlaubt neben Same-Origin genau den Production-Feedback-Origin.
+- `robots.txt`, `sitemap.xml`, Canonical und initiales statisches
+  Erklär-/Quellenmarkup sind crawlbar.
+- `adsEnabled=false`; es werden weder AdSense-Script noch `ads.txt`
+  ausgeliefert, solange keine AdSense-Freigabe und Publisher-ID existieren.
+- Der Production-Offlinecache ist von DEV getrennt. Keine Functions,
+  Runtime-CDNs oder Shared-Datenbanken werden verwendet.
 
-- Shell- und Essentials-Manifeste sowie beide Bootstrap-Dateien mit
-  `production` und `productionApproved=true`;
-- neu berechnete Shell-/Essentials-Locks, ohne veränderten Shared-Pin;
-- Production-Marker und den kanonischen Datenschutzlink im HTML;
-- `/healthz` mit App-Key, Inhaltsversion, Source-SHA und Production-Freigabe;
-- `deployment.json` mit Source-Tree, Datei-Hashes und Gesamtdigest;
-- `device-storage-inventory.json` mit dem tatsächlichen Production-Cache;
-- einen eigenen Production-Service-Worker-Cache;
-- `_headers` mit strikter Same-Origin-CSP, Securityheadern, JSON-/JavaScript-
-  MIME und `no-store` für Health- und Deploymentidentität.
-
-Es gibt keine Functions, keine Datenbank, keine Secrets, kein CDN und keinen
-Runtimeimport aus einem anderen Repository.
-
-## Full Gate vor Veröffentlichung
-
-Einmalig auf dem finalen eingecheckten Kandidaten-SHA:
+## Full Gate
 
 ```powershell
-pnpm test
 pnpm test:shell
 pnpm test:essentials
+pnpm test
 pnpm test:e2e
 pnpm test:sources:online
 pnpm build:cloudflare:production
@@ -70,37 +65,23 @@ pnpm test:production:artifact
 pnpm test:e2e:production
 ```
 
-Zusätzlich läuft derselbe Production-Build samt beiden Artefakt-Validatoren in
-einem frischen Windows-Recheckout mit `core.autocrlf=true`. Der Browserlauf
-deckt Desktop, 390 × 844, 360 × 800 bei 200 Prozent, DE/EN, Tastatur-/Zielgröße,
-No-Login/No-Storage, explizites Offline, Production-Shell, Privacy, CSP und MIME
-ab. Ein Cloudflare-Publish und externe Production-Smokes folgen erst nach
-bestätigtem Ziel.
-
-## Lokaler Release-Nachweis
-
-Der technische Full-Gate bestand 115/115 Unit-, Inhalts-, Such-, Speicher- und
-DE/EN-Tests, 34/34 bestehende Browser-E2E-Prüfungen, den fokussierten
-Loader-/Shell-Übergang, beide vendorten Vertragsverifier und 28/28 amtliche
-Quellen mit HTTP 200. Ein erster Quellenabruf war transient fehlgeschlagen;
-der direkte Wiederholungsabruf und die anschließende vollständige
-Quellenmatrix waren grün.
-
-Der Production-Browserlauf bestand Desktop, 390 × 844 sowie 360 × 800 bei
-200 Prozent inklusive DE/EN, No-Login, No-Storage, Offline, Privacy, CSP, MIME,
-44-Pixel-Zielen und ohne horizontalen Überlauf. Ein frischer
-Windows-Recheckout mit `core.autocrlf=true` bestand den Production-Build,
-beide Verifier und die bytegenauen Vendor-/Lockgrenzen.
-
-Der exakte Source- und Artefakt-SHA sowie die kanonische URL werden bei jedem
-Build in `dist/production/deployment.json` festgehalten. Ein Publish ist nur
-mit aktiver Cloudflare-Zielbindung, TLS und anschließender externer
-No-Login-/Health-/CSP-Prüfung zulässig.
+Zusätzlich werden der Production-Worker samt D1-Migration, Health, CORS und
+einem wieder gelöschten QA-Datensatz geprüft. Ein frischer Windows-Recheckout
+mit `core.autocrlf=true` wiederholt den Build und die Vertrags-/Hashgates.
+Nach dem Upload folgen externe No-Login-, DE/EN-, Responsive-, Offline-, CSP-,
+Canonical-/robots-/sitemap- und Feedback-Smokes.
 
 ## Rollback
 
-Bei einem Fehler der Custom-Domain-Migration verweist das Portal wieder auf die
-zuvor gesunde Cloudflare-`pages.dev`-Productionrevision. Die neue Custom Domain
-wird deaktiviert; das vorhandene Production-Projekt und DEV bleiben erhalten.
-Source- und Artefakthistorie werden nie per Force umgeschrieben. Portal- und
-DNS-Rollback gehören den jeweiligen Eigentümern.
+Letzte gesunde Cloudflare-Pages-Revision vor dem Refresh ist Deployment
+`0a065c1a-003d-4226-a4fb-02d8aee75ca7` mit Source
+`6628fd743cfda96da4f2788281f12b6b81831077`, Inhaltsversion `2026.08.03-4`
+und Artefaktdigest
+`ca6305cbb313f964f9ca39f438d313c3cdf9ae42e87ed7c5a2ee428d51956906`.
+Sie bleibt unter
+`https://0a065c1a.milosapps-waste-guide-production.pages.dev/` erreichbar.
+
+Bei einem App-Fehler wird genau dieses Pages-Deployment wieder aktiviert. Der
+Production-Feedback-Worker wird separat auf seine letzte gesunde Version
+zurückgesetzt; die D1-Datenbank wird dabei nicht gelöscht. Kein Force-Push,
+keine Portalmutation und keine Änderung am DEV-Lifecycle gehören zum Rollback.

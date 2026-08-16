@@ -8,9 +8,11 @@ import { fileURLToPath } from "node:url";
 
 const repositoryRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const outputRoot = resolve(repositoryRoot, "dist", "production");
-const expectedContentVersion = "2026.08.03-4";
+const expectedContentVersion = "2026.08.09-1";
 const expectedProjectName = "milosapps-waste-guide-production";
 const expectedProductionUrl = "https://welcher-muell.milos-apps.de/";
+const expectedFeedbackEndpoint = "https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/v1/feedback";
+const expectedFeedbackOrigin = new URL(expectedFeedbackEndpoint).origin;
 
 function sha256(contents) {
   return createHash("sha256").update(contents).digest("hex");
@@ -25,6 +27,7 @@ assert.equal(deployment.appKey, "waste-guide");
 assert.equal(deployment.environment, "PRODUCTION");
 assert.equal(deployment.provider, "Cloudflare Pages");
 assert.equal(deployment.projectName, expectedProjectName);
+assert.equal(deployment.targetConfirmed, true);
 assert.equal(deployment.productionApproved, true);
 assert.equal(deployment.functionsAllowed, false);
 assert.equal(deployment.contentVersion, expectedContentVersion);
@@ -33,6 +36,13 @@ assert.match(deployment.sourceTree, /^[0-9a-f]{40}$/);
 assert.equal(deployment.publicUrl, expectedProductionUrl);
 assert.equal(new URL(deployment.publicUrl).pathname, "/");
 assert.equal(deployment.healthUrl, new URL("healthz", deployment.publicUrl).toString());
+assert.equal(deployment.adsEnabled, false);
+assert.deepEqual(deployment.feedback, {
+  endpoint: expectedFeedbackEndpoint,
+  healthUrl: "https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/healthz",
+  database: "milosapps-waste-guide-feedback-production",
+  dataJurisdiction: "EU"
+});
 
 const actualFiles = [];
 async function collect(directory) {
@@ -73,6 +83,16 @@ assert.equal(metadata.status, "PRODUCTION");
 assert.equal(metadata.productionUrl, deployment.publicUrl);
 assert.equal(metadata.healthcheck, deployment.healthUrl);
 assert.equal(metadata.productionApproved, true);
+assert.equal(metadata.adsEnabled, false);
+assert.deepEqual(metadata.feedback, {
+  provider: "Cloudflare Worker + D1",
+  environment: "PRODUCTION",
+  endpoint: expectedFeedbackEndpoint,
+  healthUrl: deployment.feedback.healthUrl,
+  database: deployment.feedback.database,
+  dataJurisdiction: "EU",
+  productionApproved: true
+});
 assert.equal(metadata.deployment.environment, "PRODUCTION");
 assert.equal(metadata.deployment.targetConfirmed, deployment.targetConfirmed);
 assert.equal(storage.productionApproved, true);
@@ -80,7 +100,13 @@ assert.equal(storage.browserStorage.cookies, false);
 assert.equal(storage.browserStorage.localStorage, false);
 assert.equal(storage.browserStorage.sessionStorage, false);
 assert.equal(storage.browserStorage.indexedDB, false);
-assert.equal(storage.deviceAccess.find((entry) => entry.api === "CacheStorage")?.identifier, "waste-guide-production-2026-08-03-search-v6");
+assert.equal(storage.deviceAccess.find((entry) => entry.api === "CacheStorage")?.identifier, "waste-guide-production-2026-08-09-feedback-v8");
+assert.match(storage.serverData.resultFeedback.deploymentStatus, /PRODUCTION/);
+const feedbackService = storage.externalServices.find((entry) => entry.service === "App-owned Cloudflare Worker and D1");
+assert.equal(feedbackService.endpoint, expectedFeedbackEndpoint);
+assert.equal(feedbackService.healthUrl, deployment.feedback.healthUrl);
+assert.equal(feedbackService.database, deployment.feedback.database);
+assert.equal(feedbackService.dataJurisdiction, "EU");
 assert.deepEqual(health, {
   status: "ok",
   appKey: "waste-guide",
@@ -94,8 +120,16 @@ const index = await readFile(resolve(outputRoot, "index.html"), "utf8");
 const notFound = await readFile(resolve(outputRoot, "404.html"), "utf8");
 assert.match(index, /<html lang="de" data-milos-environment="production" data-milos-production-approved="true">/);
 assert.match(index, /data-milos-privacy-info href="https:\/\/milos-apps\.de\/datenschutz"/);
+assert.match(index, /<link rel="canonical" href="https:\/\/welcher-muell\.milos-apps\.de\/">/);
+assert.match(index, /<meta name="robots" content="index,follow,max-image-preview:large">/);
+assert.match(index, /<meta name="waste-guide-ads-enabled" content="false">/);
+assert.match(index, new RegExp(`<meta name="waste-guide-feedback-endpoint" content="${expectedFeedbackEndpoint.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}">`));
+assert.match(index, /data-i18n="trustSourceSeparation"/);
+assert.match(index, /data-i18n="trustSourcePackaging"/);
+assert.match(index, /data-i18n="trustSourceMedicine"/);
 assert.doesNotMatch(index, /https:\/\/dev\.milos-apps\.de\/datenschutz/);
 assert.doesNotMatch(index, /MilosApps-WelcherMuell\//);
+assert.doesNotMatch(index, /pagead2|adsbygoogle|googlesyndication/i);
 assert.equal((index.match(/milos-app-essentials\.css/g) ?? []).length, 1);
 assert.equal((index.match(/milos-app-essentials-theme\.css/g) ?? []).length, 1);
 assert.match(notFound, /<html lang="de" data-milos-environment="production" data-milos-production-approved="true">/);
@@ -113,15 +147,24 @@ for (const bootstrap of [shellBootstrap, essentialsBootstrap]) {
 assert.match(essentialsBootstrap, /"privacyUrl": "https:\/\/milos-apps\.de\/datenschutz"/);
 
 const offlineWorker = await readFile(resolve(outputRoot, "offline-sw.js"), "utf8");
-assert.match(offlineWorker, /waste-guide-production-2026-08-03-search-v6/);
-assert.doesNotMatch(offlineWorker, /waste-guide-2026-08-03-search-v6/);
+assert.match(offlineWorker, /waste-guide-production-2026-08-09-feedback-v8/);
+assert.doesNotMatch(offlineWorker, /waste-guide-2026-08-09-feedback-v8/);
+
+const robots = await readFile(resolve(outputRoot, "robots.txt"), "utf8");
+const sitemap = await readFile(resolve(outputRoot, "sitemap.xml"), "utf8");
+assert.equal(robots, "User-agent: *\nAllow: /\nSitemap: https://welcher-muell.milos-apps.de/sitemap.xml\n");
+assert.match(sitemap, /<loc>https:\/\/welcher-muell\.milos-apps\.de\/<\/loc>/);
+assert.match(sitemap, /<lastmod>2026-08-09<\/lastmod>/);
+assert.equal(existsSync(resolve(outputRoot, "ads.txt")), false, "Ohne AdSense-Freigabe darf kein ads.txt ausgeliefert werden");
 
 const headers = await readFile(resolve(outputRoot, "_headers"), "utf8");
 assert.match(headers, /^\/\*\r?\n/m);
 assert.match(headers, /Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self';/);
 assert.match(headers, /frame-ancestors 'none'/);
 assert.match(headers, /worker-src 'self'/);
-assert.doesNotMatch(headers, /unsafe-inline|unsafe-eval|data:|https:\/\//);
+assert.match(headers, new RegExp(`connect-src 'self' ${expectedFeedbackOrigin.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+assert.doesNotMatch(headers, /unsafe-inline|unsafe-eval|data:/);
+assert.equal((headers.match(/https:\/\//g) ?? []).length, 1, "CSP darf nur den exakten Feedback-Origin öffnen");
 assert.match(headers, /\/healthz\r?\n  Content-Type: application\/json; charset=utf-8\r?\n  Cache-Control: no-store/);
 assert.match(headers, /X-Content-Type-Options: nosniff/);
 assert.match(headers, /Permissions-Policy: geolocation=\(\), camera=\(\), microphone=\(\)/);

@@ -1,0 +1,35 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "milosapps-waste-guide-feedback-production",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-08-08",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "APP_ENVIRONMENT": "PRODUCTION",
+    "PRODUCTION_APPROVED": "true",
+    "ALLOWED_ORIGINS": "https://welcher-muell.milos-apps.de",
+    "ALLOWED_RESULT_PATHS": "/"
+  },
+  "d1_databases": [
+    {
+      "binding": "FEEDBACK_DB",
+      "database_name": "milosapps-waste-guide-feedback-production",
+      "database_id": "REPLACE_WITH_PRODUCTION_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "REPORT_LIMIT",
+      "namespace_id": "431802",
+      "simple": {
+        "limit": 30,
+        "period": 60
+      }
+    }
+  ],
+  "triggers": {
+    "crons": ["17 3 * * *"]
+  }
+}

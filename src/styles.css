@@ -992,6 +992,36 @@ h3 {
   overflow-wrap: anywhere;
 }
 
+.crawl-sources {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  margin-top: 0.65rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.crawl-sources p {
+  margin: 0;
+  font-weight: 800;
+}
+
+.crawl-sources ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.crawl-sources a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
 .trust-number {
   display: inline-block;
   margin-bottom: 0.6rem;

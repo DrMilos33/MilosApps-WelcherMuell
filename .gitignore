@@ -5,6 +5,7 @@ playwright-report/
 test-results/
 .wrangler/
 feedback-worker/wrangler.deploy.jsonc
+feedback-worker/wrangler.production.jsonc
 feedback-worker/export/
 .env
 .env.*

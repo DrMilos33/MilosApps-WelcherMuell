@@ -61,6 +61,10 @@ export const UI_MESSAGES = Object.freeze({
     trustThreeTitle: "Sicherheitsfälle zuerst",
     trustThreeText:
       "Akkus, Elektrogeräte, Chemikalien und Medikamente bekommen klare Warnhinweise.",
+    trustSourceIntro: "Ausgewählte amtliche Grundlagen",
+    trustSourceSeparation: "Umweltbundesamt: Mülltrennung",
+    trustSourcePackaging: "Umweltbundesamt: Verpackungen",
+    trustSourceMedicine: "Bundesgesundheitsministerium: Arzneimittel",
     aboutButton: "Alle Quellen & Datenschutz",
     footerText: "Quellenbasierte Entsorgungshilfe für private Haushalte.",
     footerNav: "Rechtliches",
@@ -72,7 +76,7 @@ export const UI_MESSAGES = Object.freeze({
     aboutClose: "Dialog schließen",
     aboutLoading: "Die Quelleninformationen werden geladen.",
     noscript:
-      "Diese App benötigt JavaScript für die lokale Suche. Es werden dabei keine Nutzerdaten an einen Server gesendet.",
+      "Diese App benötigt JavaScript für die lokale Suche. Nur eine ausdrücklich abgeschickte Ergebnismeldung wird an den app-eigenen Meldedienst gesendet.",
     dateMissing: "nicht angegeben",
     certaintyConfirmed: "Bundesweit belegt",
     certaintyLocal: "Örtlich prüfen",
@@ -288,6 +292,10 @@ export const UI_MESSAGES = Object.freeze({
     trustThreeTitle: "Safety cases come first",
     trustThreeText:
       "Batteries, electrical devices, chemicals and medicine receive clear warnings.",
+    trustSourceIntro: "Selected official foundations",
+    trustSourceSeparation: "German Environment Agency: waste separation",
+    trustSourcePackaging: "German Environment Agency: packaging",
+    trustSourceMedicine: "Federal Ministry of Health: medicine",
     aboutButton: "All sources & privacy",
     footerText: "Source-based disposal guidance for private households.",
     footerNav: "Legal",
@@ -299,7 +307,7 @@ export const UI_MESSAGES = Object.freeze({
     aboutClose: "Close dialog",
     aboutLoading: "Loading source information.",
     noscript:
-      "This app needs JavaScript for local search. No user data is sent to a server.",
+      "This app needs JavaScript for local search. Only an explicitly submitted result report is sent to the app-owned feedback service.",
     dateMissing: "not specified",
     certaintyConfirmed: "Verified nationwide",
     certaintyLocal: "Check locally",

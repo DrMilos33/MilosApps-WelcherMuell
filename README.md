@@ -30,8 +30,8 @@ Repository:  https://github.com/DrMilos33/MilosApps-WelcherMuell
 ```
 
 Deploymentquelle ist
-`5a5a0e272b39872ca66fc7d2ad41ccff73af5a7c`; der getrennte
-Pages-Artefaktcommit ist `3e7d427eb9d4159791d741933d57e75e4e88ad8b`.
+`e573e7711e69f5b59603f611e64adc9f29c490e3`; der getrennte
+Pages-Artefaktcommit ist `e3feb2bb88d170d5f492c948d5877fba76de0fd7`.
 GitHub Pages bleibt ausschließlich der DEV-Host. Production läuft getrennt im
 Cloudflare-Pages-Projekt `milosapps-waste-guide-production`; dessen technische
 `pages.dev`-Adresse ist nur Fallback, nicht die kanonische Produktadresse. Die
@@ -87,6 +87,8 @@ Der Production-Kandidat wird getrennt nach `dist/production` gebaut:
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
 $env:WASTE_GUIDE_PRODUCTION_URL="https://welcher-muell.milos-apps.de/"
 $env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="1"
+$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-production-refresh"
+$env:WASTE_GUIDE_FEEDBACK_ENDPOINT="https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/v1/feedback"
 pnpm build:cloudflare:production
 pnpm test:production:artifact
 pnpm test:e2e:production
