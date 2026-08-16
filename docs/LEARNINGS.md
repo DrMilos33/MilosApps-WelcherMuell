@@ -579,6 +579,25 @@ Cloudflare-Identität, D1-Ressource und HTTPS-Endpunkt extern feststehen, bleibt
 der neue Stand ein lokaler Kandidat; die öffentliche App darf keinen
 Speichererfolg vortäuschen.
 
+### Deutscher Text-Reflow darf nicht von Browserwörterbüchern abhängen
+
+`hyphens:auto` ist kein belastbarer alleiniger Schutz: Windows trennte lange
+deutsche Begriffe im 200-Prozent-Test, der Linux-Browser desselben Builds aber
+nicht. Die sichtbaren Boxen blieben im Viewport, während Text aus anonymen
+Flexboxen und Komposita den dokumentweiten Scrollbereich vergrößerte. Ein
+vererbtes `overflow-wrap:anywhere` im App-Inhaltsknoten wirkt nur bei realer
+Platznot und schützt zugleich Ergebnis, Warnung, Region und Quellenübersicht.
+
+Evidenz: Das erweiterte Gate meldete zunächst 389 statt 360 Pixel und machte
+die überbreiten Textcontainer einschließlich Shadow-DOM-Hauptzeile sichtbar.
+Nach der App-Regel bestanden Linux-CI, lokaler Browser und frischer
+Windows-Checkout; `Haushaltschemikalien`, `Kunststoff-Nichtverpackung` und
+lange Regionalhinweise bleiben lesbar.
+
+Gültigkeitsgrenze: Beliebige Worttrennung ist ein Notfall-Reflow und kein
+Ersatz für kurze Texte oder sprachgerechte Trennstellen. Sie wird deshalb nur
+wirksam, wenn ein Wort den verfügbaren Raum tatsächlich überschreitet.
+
 ## Weitergabe
 
 Die allgemein relevanten Punkte zu dreistufiger Quellenpflege, Suchgewichtung,

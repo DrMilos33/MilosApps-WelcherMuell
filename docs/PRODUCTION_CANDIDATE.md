@@ -77,6 +77,40 @@ mit `core.autocrlf=true` wiederholt den Build und die Vertrags-/Hashgates.
 Nach dem Upload folgen externe No-Login-, DE/EN-, Responsive-, Offline-, CSP-,
 Canonical-/robots-/sitemap- und Feedback-Smokes.
 
+## Production-verifiziert am 17.08.2026
+
+- Source: `4979aa479a9e06470464b51606aa27abe3e3794f`
+- Source-Tree: `ac67e12d7f5615e1d7026bd3529c8a125dcc3646`
+- Artefaktdigest: `d3f82047366492abfa02f2be67960e8cec47c75fecc0ca8f16384dace92df129`
+  über 41 statische Dateien
+- GitHub Actions: Run `31975577262`, vollständig erfolgreich
+- Cloudflare Pages: Deployment
+  `f43504a6-a9b4-47af-9316-920f0e5e33e6`, Production/main, Source
+  `4979aa4`
+- Worker: Version `a13e7598-a8d1-4c35-b647-405bfcc506f3`
+- D1: `milosapps-waste-guide-feedback-production`, EU-Jurisdiktion,
+  Migration `0001_feedback.sql`
+
+`/healthz` antwortet mit HTTP 200 und exakt App-Key `waste-guide`, Umgebung
+`PRODUCTION`, Inhaltsversion `2026.08.09-1`, `productionApproved=true` und dem
+vollständigen Source-SHA. Root, `deployment.json`, `robots.txt` und
+`sitemap.xml` liefern HTTP 200; CSP, Securityheader, Canonical, MIME und
+`adsEnabled=false` sind extern belegt.
+
+Die frische Browser-QA bestätigte No-Login/null Cookies, DE/EN, Loader 32 px,
+Shell-Icon 38 px, 390 × 844 und 360 × 800 ohne horizontalen Überlauf sowie
+null Browserwarnungen. Das Linux-CI-Gate prüfte zusätzlich den
+360-×-800-Zustand bei 200 Prozent Textzoom. Live-Suchen nach `Öl`, `Toiaster`,
+`Toast`, `Poster`, `Pizzareste`, `nasse Farbe`, `Werkzeug`, `Eisen` und
+`Plastik` lieferten die vorgesehenen sicheren Treffer, Vorschläge oder
+Entscheidungsbäume.
+
+Worker-Health und CORS waren grün. Ein klar markierter Production-QA-Datensatz
+wurde per HTTP 201 angenommen, als `review_state=new` aus D1 gelesen und
+anschließend gezielt gelöscht; die Kontrollabfrage ergab null verbleibende
+QA-Zeilen. Das bestätigt den direkten Meldungsweg, ohne Testdaten dauerhaft
+aufzubewahren.
+
 ## Rollback
 
 Letzte gesunde Cloudflare-Pages-Revision vor dem Refresh ist Deployment
@@ -88,6 +122,8 @@ Sie bleibt unter
 `https://0a065c1a.milosapps-waste-guide-production.pages.dev/` erreichbar.
 
 Bei einem App-Fehler wird genau dieses Pages-Deployment wieder aktiviert. Der
-Production-Feedback-Worker wird separat auf seine letzte gesunde Version
-zurückgesetzt; die D1-Datenbank wird dabei nicht gelöscht. Kein Force-Push,
-keine Portalmutation und keine Änderung am DEV-Lifecycle gehören zum Rollback.
+Production-Feedback-Worker wurde in diesem Refresh erstmals angelegt; sein
+Rollback besteht im Deaktivieren des Workers, während die D1-Datenbank erhalten
+bleibt. Die aktuell gesunde Worker-Version ist
+`a13e7598-a8d1-4c35-b647-405bfcc506f3`. Kein Force-Push, keine Portalmutation
+und keine Änderung am DEV-Lifecycle gehören zum Rollback.

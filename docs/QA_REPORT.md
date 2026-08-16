@@ -1001,3 +1001,37 @@ keine Oberkante, `clientWidth=scrollWidth=390`, es gab null Konsolenfehler und
 der eine Klick auf „Abschicken“ erzeugte in D1 einen Datensatz mit
 `review_state=new`. Der eindeutig markierte QA-Datensatz wurde danach gelöscht;
 die Datenbank enthielt anschließend null Meldungen.
+
+## Production-Refresh · 17.08.2026
+
+Der getrennte Production-Build aus Runtime-Basis `e573e771…` übernimmt die
+fachlich geprüfte Inhaltsversion `2026.08.09-1`, ohne Quellenreview oder
+Reviewtermin künstlich zu erneuern. Production weist in Manifesten,
+Bootstrap, Health und Deploymentmetadaten konsistent
+`productionApproved=true` aus; DEV und GitHub Pages blieben unverändert.
+
+Das finale Full Gate auf `4979aa479a9e06470464b51606aa27abe3e3794f`
+bestand 134/134 Unit-/Daten-/Such-/Workerprüfungen, beide Shared-Verifier,
+37/37 App-E2E, 4/4 Production-E2E und die 30-Quellen-Prüfung. GitHub Actions
+Run `31975577262` war vollständig grün. Ein frischer Windows-Checkout mit
+`core.autocrlf=true` reproduzierte Source-Tree `ac67e12…` und Artefaktdigest
+`d3f82047…` exakt.
+
+Die Linux-Runde fand einen echten 200-Prozent-Textzoom-Überlauf bei langen
+deutschen Begriffen. Browserabhängige automatische Silbentrennung war nicht
+zuverlässig; `overflow-wrap:anywhere` gilt nun sicher für den App-Inhalt. Eine
+zusätzliche E2E-Race wurde behoben, indem zwei Positionswerte während Smooth
+Scroll im selben Browser-Frame gemessen werden. Der erneute vollständige Lauf
+war grün.
+
+Extern ist Cloudflare-Pages-Deployment
+`f43504a6-a9b4-47af-9316-920f0e5e33e6` aktiv. App, Health,
+Deploymentmetadaten, robots und sitemap antworten mit HTTP 200; CSP,
+Securityheader, Canonical und MIME stimmen. Die frische Browserprüfung war für
+die kritischen Suchfälle, 390 × 844, 360 × 800, 44-Pixel-Shellziele, Loader,
+DE/EN, No-Login/null Cookies und Browserlogs grün.
+
+Der getrennte Production-Worker nahm den markierten QA-Datensatz mit HTTP 201
+an; D1 bestätigte Umgebung, Inhaltsversion, Item, Grund, Suche, Kommentar,
+kanonische URL und `review_state=new`. Nach dem Beleg wurde ausschließlich
+diese QA-Zeile gelöscht und null verbleibende QA-Zeilen bestätigt.
