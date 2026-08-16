@@ -12,8 +12,13 @@ const maxAttempts = Math.min(
 const failures = [];
 const sourceCheckUserAgent = "MilosApps-Waste-Guide-Source-Check/0.1 (+manual editorial verification)";
 
-function shouldRetry(error) {
+function retryableStatus(error) {
   const status = Number(/^HTTP (\d{3})$/.exec(error.message)?.[1]);
+  return !status || status === 408 || status === 429 || status >= 500;
+}
+
+function curlFailureIsTransient(error) {
+  const status = Number(/^curl HTTP (\d{3})$/.exec(error.message)?.[1]);
   return !status || status === 408 || status === 429 || status >= 500;
 }
 
@@ -63,15 +68,19 @@ async function checkSource(source) {
       await response.body?.cancel();
       return;
     } catch (error) {
-      const retry = attempt < maxAttempts && shouldRetry(error);
+      const retry = attempt < maxAttempts && retryableStatus(error);
       if (!retry) {
         try {
           const status = checkWithCurl(source);
           console.log(`OK ${source.id} ${status} ${source.url} (curl fallback)`);
         } catch (curlError) {
           const fetchMessage = error.name === "AbortError" ? "Zeitüberschreitung" : error.message;
-          failures.push(`${source.id}: fetch ${fetchMessage}; curl ${curlError.message}`);
-          console.error(`FEHLER ${source.id} ${failures.at(-1)}`);
+          const message = `${source.id}: fetch ${fetchMessage}; curl ${curlError.message}`;
+          failures.push({
+            message,
+            evidenceEligible: retryableStatus(error) && curlFailureIsTransient(curlError)
+          });
+          console.error(`FEHLER ${source.id} ${message}`);
         }
         return;
       }
@@ -94,7 +103,13 @@ await Promise.all(workers);
 
 if (failures.length > 0) {
   console.error(`\n${failures.length} Quellenprüfung(en) fehlgeschlagen.`);
-  process.exitCode = 1;
+  if (failures.every((failure) => failure.evidenceEligible)) {
+    console.error("Ausschließlich Transport-, Rate-Limit- oder Serverfehler; unveränderliche aktuelle Evidenz muss separat passen.");
+    process.exitCode = 2;
+  } else {
+    console.error("Mindestens eine Quelle lieferte einen endgültigen Clientfehler; frühere Evidenz ist unzulässig.");
+    process.exitCode = 1;
+  }
 } else {
   console.log(`\n${catalog.sources.length} amtliche Quellen erreichbar.`);
 }

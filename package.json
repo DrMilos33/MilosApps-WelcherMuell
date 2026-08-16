@@ -12,6 +12,7 @@
     "test:shell": "node vendor/milosapps-shell/v2/verify.mjs --app-root . --manifest milos-app.json",
     "test:essentials": "node vendor/milosapps-essentials/v1/verify.mjs --app-root . --manifest milos-essentials.json",
     "test:sources:online": "node scripts/check-sources.mjs",
+    "test:sources:evidence": "node scripts/verify-source-evidence-reuse.mjs",
     "test:e2e": "node tests/e2e/run.mjs",
     "test:e2e:shell-transition": "node tests/e2e/shell-transition.mjs",
     "test:e2e:production": "node tests/e2e/production-candidate.mjs",

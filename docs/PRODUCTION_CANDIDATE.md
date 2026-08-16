@@ -65,6 +65,12 @@ pnpm test:production:artifact
 pnpm test:e2e:production
 ```
 
+Kann ausschließlich ein externer Transport-, Rate-Limit- oder 5xx-Fehler den
+Onlinecheck blockieren, darf CI nur die an Commit `742b99a…`, den unveränderten
+`public/data`-Tree und die dokumentierte 30/30-HTTP-200-Matrix gebundene
+Evidenz prüfen. Ein endgültiger 4xx-Fehler oder jede Datenänderung verbietet
+diese Wiederverwendung fail-closed.
+
 Zusätzlich werden der Production-Worker samt D1-Migration, Health, CORS und
 einem wieder gelöschten QA-Datensatz geprüft. Ein frischer Windows-Recheckout
 mit `core.autocrlf=true` wiederholt den Build und die Vertrags-/Hashgates.

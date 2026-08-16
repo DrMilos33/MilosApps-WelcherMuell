@@ -19,10 +19,28 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node scripts/check-sources.mjs
+      - name: Verify official sources online or current immutable evidence
+        run: |
+          set +e
+          node scripts/check-sources.mjs
+          source_status=$?
+          set -e
+
+          if [ "$source_status" -eq 0 ]; then
+            exit 0
+          fi
+
+          if [ "$source_status" -ne 2 ]; then
+            echo "Online source verification failed with a final HTTP error; prior evidence is forbidden."
+            exit "$source_status"
+          fi
+
+          node scripts/verify-source-evidence-reuse.mjs
 
   full-gate:
     needs: official-sources
