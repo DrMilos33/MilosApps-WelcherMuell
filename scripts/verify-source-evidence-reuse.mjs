@@ -36,7 +36,7 @@ for (const source of catalog.sources) {
 
 const qaReport = git(["show", `${evidence.commit}:docs/QA_REPORT.md`]);
 const sourcesDocument = git(["show", `${evidence.commit}:docs/SOURCES_AND_LICENSES.md`]);
-assert.match(qaReport, /30\/30 amtliche Quellen mit HTTP 200/);
+assert.match(qaReport, /30\/30 amtliche Quellen mit HTTP\s+200/);
 assert.match(sourcesDocument, /Am 09\.08\.2026 beantworteten alle 30 katalogisierten amtlichen und kommunalen/);
 
 console.log(JSON.stringify({
