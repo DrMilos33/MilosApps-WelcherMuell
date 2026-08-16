@@ -276,11 +276,39 @@ try {
     });
     await submit(page, "Plastik");
     await page.locator(".result-immediate").first().waitFor();
-    const geometry = await page.evaluate(() => ({
-      clientWidth: document.documentElement.clientWidth,
-      scrollWidth: document.documentElement.scrollWidth,
-      maxRight: Math.ceil(Math.max(...[...document.querySelectorAll("body *")].map((element) => element.getBoundingClientRect().right)))
-    }));
+    await page.locator(".trust-section > summary").click();
+    const geometry = await page.evaluate(() => {
+      const visible = [...document.querySelectorAll("body *")]
+        .map((element) => ({
+          element,
+          box: element.getBoundingClientRect(),
+          style: getComputedStyle(element)
+        }))
+        .filter(({ element, box, style }) =>
+          element.checkVisibility()
+          && style.display !== "none"
+          && style.visibility !== "hidden"
+          && box.width > 0
+          && box.height > 0
+        );
+      const maxRight = Math.ceil(Math.max(...visible.map(({ box }) => box.right)));
+      return {
+        clientWidth: document.documentElement.clientWidth,
+        scrollWidth: document.documentElement.scrollWidth,
+        maxRight,
+        offenders: visible
+          .filter(({ box }) => box.right > document.documentElement.clientWidth + 0.5)
+          .map(({ element, box }) => ({
+            tag: element.tagName,
+            id: element.id,
+            className: element.className,
+            text: element.textContent?.trim().slice(0, 80),
+            left: Math.ceil(box.left),
+            right: Math.ceil(box.right),
+            width: Math.ceil(box.width)
+          }))
+      };
+    });
     assert.equal(geometry.clientWidth, 360);
     assert.equal(geometry.scrollWidth, 360);
     assert.ok(geometry.maxRight <= 360, JSON.stringify(geometry));

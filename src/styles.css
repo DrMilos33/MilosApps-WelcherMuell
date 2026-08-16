@@ -1000,6 +1000,7 @@ h3 {
   margin-top: 0.65rem;
   color: var(--muted);
   font-size: 0.88rem;
+  min-width: 0;
 }
 
 .crawl-sources p {
@@ -1014,12 +1015,21 @@ h3 {
   margin: 0;
   padding: 0;
   list-style: none;
+  width: 100%;
+  min-width: 0;
+}
+
+.crawl-sources li,
+.crawl-sources a {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .crawl-sources a {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
+  overflow-wrap: anywhere;
 }
 
 .trust-number {
