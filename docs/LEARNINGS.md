@@ -598,6 +598,22 @@ Gültigkeitsgrenze: Beliebige Worttrennung ist ein Notfall-Reflow und kein
 Ersatz für kurze Texte oder sprachgerechte Trennstellen. Sie wird deshalb nur
 wirksam, wenn ein Wort den verfügbaren Raum tatsächlich überschreitet.
 
+### Same-host-Prefixe brauchen originbewusste Offline- und Feedbackgrenzen
+
+Bei einer Migration von einer eigenen Subdomain auf einen Pfad derselben
+Portal-Origin genügt es nicht, nur Canonical und Links zu ändern. Manifest,
+Module, Loader, Health, Sitemap, Offline-Precache und Service-Worker-Scope
+müssen denselben Prefix verwenden. Besonders gefährlich ist eine originweite
+Altbereinigung nach Dateinamensuffix: Auf einem gemeinsamen Host könnte sie
+Service Worker anderer Apps abmelden. Der sichere Vergleich bindet den
+vollständigen app-eigenen Scriptpfad.
+
+CORS prüft nur Origins, nicht Pfade. Ein app-eigener Meldedienst auf einer
+gemeinsamen Browser-Origin braucht deshalb zusätzlich eine explizite Liste
+zulässiger Ergebnis-Pfade. Für Waste Guide sind ausschließlich
+`https://milos-apps.de` und `/welcher-muell` gemeinsam gültig; die ehemalige
+Subdomain bleibt nach der Migration nur Redirectquelle.
+
 ## Weitergabe
 
 Die allgemein relevanten Punkte zu dreistufiger Quellenpflege, Suchgewichtung,

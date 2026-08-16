@@ -27,7 +27,7 @@ function configuredResultPaths(env) {
   return new Set(String(env.ALLOWED_RESULT_PATHS ?? "")
     .split(",")
     .map((path) => path.trim())
-    .filter((path) => path.startsWith("/") && path.endsWith("/")));
+    .filter((path) => path === "/" || /^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*\/?$/i.test(path)));
 }
 
 function environmentName(env) {

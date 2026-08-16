@@ -146,14 +146,15 @@ test("Worker liefert CORS-Preflight, Health und fail-closed Methoden", async () 
 });
 
 test("Production speichert ausschließlich auf der kanonischen Production-Origin", async () => {
-  const productionOrigin = "https://welcher-muell.milos-apps.de";
+  const productionOrigin = "https://milos-apps.de";
+  const productionPath = "/welcher-muell";
   const fixture = createEnv();
   fixture.env.APP_ENVIRONMENT = "PRODUCTION";
   fixture.env.PRODUCTION_APPROVED = "true";
   fixture.env.ALLOWED_ORIGINS = productionOrigin;
-  fixture.env.ALLOWED_RESULT_PATHS = "/";
+  fixture.env.ALLOWED_RESULT_PATHS = productionPath;
   const payload = validPayload({
-    resultUrl: `${productionOrigin}/?item=liquid-paint`
+    resultUrl: `${productionOrigin}${productionPath}?item=liquid-paint`
   });
   const response = await worker.fetch(
     request(payload, { requestOrigin: productionOrigin }),
@@ -165,6 +166,13 @@ test("Production speichert ausschließlich auf der kanonischen Production-Origin
 
   const devOrigin = await worker.fetch(request(payload), fixture.env);
   assert.equal(devOrigin.status, 403);
+
+  assert.equal(validateFeedbackPayload(validPayload({
+    resultUrl: `${productionOrigin}/?item=liquid-paint`
+  }), fixture.env), null, "Die gemeinsame Origin darf keinen fremden Ergebnispfad freigeben.");
+  assert.equal(validateFeedbackPayload(validPayload({
+    resultUrl: `https://welcher-muell.milos-apps.de/?item=liquid-paint`
+  }), fixture.env), null, "Die Legacy-Origin darf nach der Migration keine Meldung direkt annehmen.");
 });
 
 test("Production-Konfiguration trennt Worker, Origin und D1 fail-closed von DEV", async () => {
@@ -175,8 +183,8 @@ test("Production-Konfiguration trennt Worker, Origin und D1 fail-closed von DEV"
   assert.equal(config.name, "milosapps-waste-guide-feedback-production");
   assert.equal(config.vars.APP_ENVIRONMENT, "PRODUCTION");
   assert.equal(config.vars.PRODUCTION_APPROVED, "true");
-  assert.equal(config.vars.ALLOWED_ORIGINS, "https://welcher-muell.milos-apps.de");
-  assert.equal(config.vars.ALLOWED_RESULT_PATHS, "/");
+  assert.equal(config.vars.ALLOWED_ORIGINS, "https://milos-apps.de");
+  assert.equal(config.vars.ALLOWED_RESULT_PATHS, "/welcher-muell");
   assert.equal(config.d1_databases[0].database_name, "milosapps-waste-guide-feedback-production");
   assert.notEqual(config.d1_databases[0].database_name, "milosapps-waste-guide-feedback-dev");
   assert.equal(config.d1_databases[0].database_id, "REPLACE_WITH_PRODUCTION_D1_DATABASE_ID");

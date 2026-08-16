@@ -1035,3 +1035,26 @@ Der getrennte Production-Worker nahm den markierten QA-Datensatz mit HTTP 201
 an; D1 bestätigte Umgebung, Inhaltsversion, Item, Grund, Suche, Kommentar,
 kanonische URL und `review_state=new`. Nach dem Beleg wurde ausschließlich
 diese QA-Zeile gelöscht und null verbleibende QA-Zeilen bestätigt.
+
+## Same-host-Production-Ownerkandidat · 17.08.2026
+
+Der neue, noch nicht veröffentlichte Production-Builder setzt Canonical,
+Open Graph, Manifest, Health, Sitemap, Assets, Module und Offlinepfade
+einheitlich auf `https://milos-apps.de/welcher-muell`. Rootgebundene
+App-Assets werden im Artefakt abgewiesen. Der Service Worker verwendet den
+Scope `/welcher-muell`, einen app-eigenen Cache und entfernt nur noch den
+exakten früheren Waste-Guide-Scriptpfad; andere Same-host-Registrierungen
+bleiben unangetastet.
+
+Die Feedbacktests belegen die doppelte Grenze aus Browser-Origin
+`https://milos-apps.de` und Ergebnispfad `/welcher-muell`. Die alte Subdomain
+und andere Pfade derselben Origin werden fail-closed abgewiesen. Es gibt
+weiterhin kein Ads-, CMP-, Analyse- oder Tracking-Script; die vorgesehene
+Zugriffszählung ist ausschließlich serverseitiger Portal-Scope.
+
+Lokaler Abschluss: Shell- und Essentials-Verifier PASS, 134/134 Unit-/Daten-/
+Such-/Workerprüfungen, 37/37 App-E2E sowie 4/4 Production-Prefix-E2E. Die
+Production-Matrix umfasst Desktop, 390 × 844, 360 × 800 bei 200 Prozent,
+DE/EN, Loader, 44-Pixel-Ziele, CSP/MIME und explizites Offline am kanonischen
+Pfad. Ein Deployment ist bis zur bestätigten Portal-Originroute ausdrücklich
+gesperrt.

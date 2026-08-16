@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - codex/waste-guide-production-refresh
+      - codex/waste-guide-same-host-production
 
 permissions:
   contents: read
@@ -48,9 +48,9 @@ jobs:
     timeout-minutes: 20
     env:
       WASTE_GUIDE_SOURCE_COMMIT: ${{ github.sha }}
-      WASTE_GUIDE_PRODUCTION_URL: https://welcher-muell.milos-apps.de/
+      WASTE_GUIDE_PRODUCTION_URL: https://milos-apps.de/welcher-muell
       WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED: "1"
-      WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH: codex/waste-guide-production-refresh
+      WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH: codex/waste-guide-same-host-production
       WASTE_GUIDE_FEEDBACK_ENDPOINT: https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/v1/feedback
     steps:
       - uses: actions/checkout@v4

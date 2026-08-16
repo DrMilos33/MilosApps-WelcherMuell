@@ -11,6 +11,8 @@ const outputRoot = resolve(repositoryRoot, "dist", "production");
 const deployment = JSON.parse(await readFile(resolve(outputRoot, "deployment.json"), "utf8"));
 const headersSource = await readFile(resolve(outputRoot, "_headers"), "utf8");
 const expectedContentVersion = "2026.08.09-1";
+const expectedProductionUrl = "https://milos-apps.de/welcher-muell";
+const publicPath = "/welcher-muell";
 const expectedFeedbackEndpoint = "https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/v1/feedback";
 const chromeCandidates = [
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -61,7 +63,16 @@ const contentTypes = {
 
 const server = createServer((request, response) => {
   const url = new URL(request.url || "/", "http://127.0.0.1");
-  const relativePath = url.pathname === "/" ? "index.html" : decodeURIComponent(url.pathname).replace(/^\/+/, "");
+  let originPath;
+  if (url.pathname === publicPath || url.pathname === `${publicPath}/`) {
+    originPath = "/";
+  } else if (url.pathname.startsWith(`${publicPath}/`)) {
+    originPath = url.pathname.slice(publicPath.length);
+  } else {
+    response.writeHead(404, { "content-type": "text/plain; charset=utf-8" }).end("Nicht gefunden");
+    return;
+  }
+  const relativePath = originPath === "/" ? "index.html" : decodeURIComponent(originPath).replace(/^\/+/, "");
   const candidate = normalize(resolve(outputRoot, relativePath));
   if (candidate !== outputRoot && !candidate.startsWith(`${outputRoot}${sep}`)) {
     response.writeHead(404).end();
@@ -71,7 +82,7 @@ const server = createServer((request, response) => {
     response.writeHead(404, { ...commonHeaders, "content-type": "text/plain; charset=utf-8" }).end("Nicht gefunden");
     return;
   }
-  const routeHeaders = url.pathname === "/healthz" ? healthHeaders : parseHeaderBlock(url.pathname);
+  const routeHeaders = originPath === "/healthz" ? healthHeaders : parseHeaderBlock(originPath);
   const responseHeaders = {
     ...commonHeaders,
     "content-type": contentTypes[extname(candidate)] || "application/octet-stream",
@@ -86,7 +97,7 @@ await new Promise((resolvePromise, reject) => {
   server.listen(0, "127.0.0.1", resolvePromise);
 });
 const address = server.address();
-const baseUrl = `http://127.0.0.1:${address.port}/`;
+const baseUrl = `http://127.0.0.1:${address.port}${publicPath}`;
 
 const browser = await chromium.launch({ executablePath, headless: true });
 const results = [];
@@ -117,7 +128,7 @@ async function submit(page, query) {
 
 try {
   await check("Production-Health, CSP, MIME und Identität", async () => {
-    const healthResponse = await fetch(`${baseUrl}healthz`);
+    const healthResponse = await fetch(`${baseUrl}/healthz`);
     assert.equal(healthResponse.status, 200);
     assert.equal(healthResponse.headers.get("content-type"), "application/json; charset=utf-8");
     assert.equal(healthResponse.headers.get("cache-control"), "no-store");
@@ -142,16 +153,24 @@ try {
       ["vendor/milosapps-essentials/v1/milos-app-essentials.css", "text/css; charset=utf-8"],
       ["assets/icon.svg", "image/svg+xml"]
     ]) {
-      const response = await fetch(`${baseUrl}${path}`);
+      const response = await fetch(`${baseUrl}/${path}`);
       assert.equal(response.status, 200, path);
       assert.equal(response.headers.get("content-type"), expectedType, path);
     }
-    const robots = await fetch(`${baseUrl}robots.txt`);
-    const sitemap = await fetch(`${baseUrl}sitemap.xml`);
+    assert.equal((await fetch(`http://127.0.0.1:${address.port}/assets/icon.svg`)).status, 404);
+    const manifestResponse = await fetch(`${baseUrl}/manifest.webmanifest`);
+    assert.equal(manifestResponse.status, 200);
+    assert.equal(manifestResponse.headers.get("content-type"), "application/manifest+json; charset=utf-8");
+    assert.deepEqual(
+      (({ id, start_url, scope }) => ({ id, start_url, scope }))(await manifestResponse.json()),
+      { id: publicPath, start_url: publicPath, scope: publicPath }
+    );
+    const robots = await fetch(`${baseUrl}/robots.txt`);
+    const sitemap = await fetch(`${baseUrl}/sitemap.xml`);
     assert.equal(robots.headers.get("content-type"), "text/plain; charset=utf-8");
     assert.equal(sitemap.headers.get("content-type"), "application/xml; charset=utf-8");
-    assert.match(await robots.text(), /Sitemap: https:\/\/welcher-muell\.milos-apps\.de\/sitemap\.xml/);
-    assert.match(await sitemap.text(), /<loc>https:\/\/welcher-muell\.milos-apps\.de\/<\/loc>/);
+    assert.match(await robots.text(), /Sitemap: https:\/\/milos-apps\.de\/welcher-muell\/sitemap\.xml/);
+    assert.match(await sitemap.text(), /<loc>https:\/\/milos-apps\.de\/welcher-muell<\/loc>/);
   });
 
   await check("Desktop Production-Shell, Suche, DE/EN und Datenschutz", async () => {
@@ -176,7 +195,9 @@ try {
     assert.equal(await page.locator("html").getAttribute("data-milos-production-approved"), "true");
     assert.equal(await page.locator("body").getAttribute("data-milos-essentials-loading"), null);
     assert.equal(await page.locator("h1").count(), 1);
-    assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), "https://welcher-muell.milos-apps.de/");
+    assert.equal(await page.locator('link[rel="canonical"]').getAttribute("href"), expectedProductionUrl);
+    assert.equal(await page.locator('meta[property="og:url"]').getAttribute("content"), expectedProductionUrl);
+    assert.equal(await page.locator('meta[property="og:image"]').getAttribute("content"), `${expectedProductionUrl}/assets/preview.svg`);
     assert.equal(await page.locator('meta[name="robots"]').getAttribute("content"), "index,follow,max-image-preview:large");
     assert.equal(await page.locator('meta[name="waste-guide-ads-enabled"]').getAttribute("content"), "false");
     assert.equal(await page.locator('meta[name="waste-guide-feedback-endpoint"]').getAttribute("content"), expectedFeedbackEndpoint);
@@ -197,6 +218,7 @@ try {
       apps: "https://milos-apps.de/apps",
       privacy: "https://milos-apps.de/datenschutz"
     });
+    assert.ok((await page.locator('link[rel="manifest"]').getAttribute("href")).endsWith(`${publicPath}/manifest.webmanifest`));
     await submit(page, "Eisen");
     await page.getByRole("heading", { name: /Eisen|Iron/ }).waitFor();
     assert.match(await page.locator("#results").innerText(), /Wertstofftonne|Wertstoffhof/);
@@ -250,12 +272,18 @@ try {
     await page.getByRole("button", { name: /Offline aktivieren|Enable offline use/ }).click();
     await page.getByText(/Offline aktiviert|Offline enabled/, { exact: true }).first().waitFor();
     const offlineState = await page.evaluate(async () => ({
-      registrations: (await navigator.serviceWorker.getRegistrations()).map((registration) => registration.active?.scriptURL),
+      registrations: (await navigator.serviceWorker.getRegistrations()).map((registration) => ({
+        scriptUrl: registration.active?.scriptURL,
+        scope: registration.scope
+      })),
       caches: await caches.keys()
     }));
     assert.equal(offlineState.registrations.length, 1);
-    assert.match(offlineState.registrations[0], /offline-sw\.js$/);
-    assert.deepEqual(offlineState.caches, ["waste-guide-production-2026-08-09-feedback-v8"]);
+    assert.deepEqual(offlineState.registrations[0], {
+      scriptUrl: `${baseUrl}/offline-sw.js`,
+      scope: baseUrl
+    });
+    assert.deepEqual(offlineState.caches, ["waste-guide-production-same-host-2026-08-09-feedback-v9"]);
     await context.setOffline(true);
     await page.reload({ waitUntil: "domcontentloaded" });
     await page.locator("body:not([data-milos-essentials-loading])").waitFor();

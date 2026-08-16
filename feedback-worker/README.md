@@ -39,7 +39,8 @@ bleibt portabel.
 - Worker: `milosapps-waste-guide-feedback-production`
 - HTTPS: `https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev`
 - D1: `milosapps-waste-guide-feedback-production`, EU-Jurisdiktion
-- erlaubte Origin: ausschließlich `https://welcher-muell.milos-apps.de`
+- erlaubte Browser-Origin: ausschließlich `https://milos-apps.de`; zusätzlich
+  wird der exakte Ergebnis-Pfad `/welcher-muell` geprüft
 - erlaubter Ergebnispfad: ausschließlich `/`
 - Health: `/healthz`, `environment=PRODUCTION`, `productionApproved=true`
 

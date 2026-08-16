@@ -920,10 +920,12 @@ async function loadJson(url) {
 
 async function removeLegacyOfflineState() {
   if (!("serviceWorker" in navigator)) return;
+  const appBasePath = new URL("../", import.meta.url).pathname;
+  const legacyScriptPath = `${appBasePath}sw.js`;
   const registrations = await navigator.serviceWorker.getRegistrations();
   const legacy = registrations.filter((registration) => {
     const scriptUrl = registration.active?.scriptURL ?? registration.waiting?.scriptURL ?? registration.installing?.scriptURL ?? "";
-    return new URL(scriptUrl, window.location.href).pathname.endsWith("/sw.js");
+    return new URL(scriptUrl, window.location.href).pathname === legacyScriptPath;
   });
   if (legacy.length === 0) return;
   await Promise.all(legacy.map((registration) => registration.unregister()));
@@ -939,7 +941,10 @@ async function enableOffline() {
   elements.offlineSettingStatus.textContent = t("offlineEnabling");
   try {
     if (!("serviceWorker" in navigator)) throw new Error("Service worker unavailable");
-    await navigator.serviceWorker.register(new URL("../offline-sw.js", import.meta.url));
+    const appBasePath = new URL("../", import.meta.url).pathname;
+    const productionScope = appBasePath === "/" ? "/" : appBasePath.replace(/\/$/, "");
+    const scope = document.documentElement.dataset.milosEnvironment === "production" ? productionScope : appBasePath;
+    await navigator.serviceWorker.register(new URL("../offline-sw.js", import.meta.url), { scope });
     await navigator.serviceWorker.ready;
     elements.enableOffline.textContent = t("offlineReady");
     elements.offlineSettingStatus.textContent = t("offlineReadyHelp");

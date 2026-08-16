@@ -110,7 +110,9 @@ describe("public-app-essentials/v1", () => {
     assert.equal(storageInventory.optionalState.language.storage, "url-only");
     assert.ok(storageInventory.deviceAccess.every((entry) => entry.strictlyNecessary === true));
     assert.match(storageInventory.legacyPolicy, /never reads or writes/);
-    assert.match(appSource, /register\(new URL\("\.\.\/offline-sw\.js"/);
+    assert.match(appSource, /register\(new URL\("\.\.\/offline-sw\.js"[^;]+\{ scope \}\)/);
+    assert.match(appSource, /pathname === legacyScriptPath/);
+    assert.doesNotMatch(appSource, /pathname\.endsWith\("\/sw\.js"\)/);
     assert.doesNotMatch(appSource, /register\(new URL\("\.\.\/sw\.js"/);
     assert.match(legacyWorkerSource, /self\.registration\.unregister\(\)/);
     assert.match(legacyWorkerSource, /name\.startsWith\("waste-guide-"\)/);

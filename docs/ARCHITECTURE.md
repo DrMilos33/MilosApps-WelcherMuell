@@ -72,6 +72,14 @@ Shared-Runtimes samt Manifesten und Locks. Inhalt und Shell werden gemeinsam
 Migrationspfad, der eine frühere automatische Registrierung und deren
 öffentliche App-Caches entfernt.
 
+Der Same-host-Production-Build legt alle öffentlichen App-URLs unter
+`/welcher-muell` ab. Manifest-ID, Start-URL, Service-Worker-Scope, Offline-
+Cachepfade, Canonical, Open Graph, Health und Sitemap verwenden denselben
+Prefix. Die Bereinigung alter Service Worker vergleicht den exakten
+app-eigenen Scriptpfad statt eines originweiten Dateinamensuffixes; dadurch
+bleiben andere Apps auf `milos-apps.de` unangetastet. Die statische App zählt
+keine Zugriffe. Eine rein serverseitige Zählung gehört dem Portal.
+
 ## Suche
 
 Namen und Synonyme haben mehr Gewicht als generische Schlagwörter. Die Suche

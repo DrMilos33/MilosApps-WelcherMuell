@@ -1,4 +1,4 @@
-# Cloudflare-Pages-Production-Refresh
+# Cloudflare-Pages-Same-host-Kandidat
 
 ## Freigabe und unveränderte Fachgrenze
 
@@ -10,9 +10,17 @@ Reviewtermin 30.09.2026 werden durch den technischen Production-Build nicht
 erneuert.
 
 Cloudflare Pages liefert die statische App ohne Functions aus dem Projekt
-`milosapps-waste-guide-production` unter der kanonischen Adresse
-`https://welcher-muell.milos-apps.de/`. GitHub Pages, `dev-pages`, Portalroute
-und DEV-Daten bleiben unverändert.
+`milosapps-waste-guide-production`. Der neue Owner-Kandidat setzt als
+kanonische Adresse `https://milos-apps.de/welcher-muell`; das Portal soll den
+öffentlichen Prefix serverseitig auf den Root dieses statischen Artefakts
+abbilden. Bis der gemeinsame Originvertrag bestätigt ist, werden weder Pages,
+Feedback-Worker noch Portal verändert. GitHub Pages, `dev-pages` und DEV-Daten
+bleiben unverändert.
+
+Die bisherige Adresse `https://welcher-muell.milos-apps.de/` und
+`/apps/waste-guide` werden erst im gemeinsamen Portal-/Edge-Fenster permanente
+Legacyweiterleitungen. Der App-Kandidat erzeugt diese fremden Routen bewusst
+nicht selbst.
 
 Ergebnisrückmeldungen gehen ausschließlich an den getrennten Worker
 `milosapps-waste-guide-feedback-production` und dessen getrennte EU-D1-
@@ -23,9 +31,9 @@ beschreibt nie die DEV-Datenbank.
 
 ```powershell
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
-$env:WASTE_GUIDE_PRODUCTION_URL="https://welcher-muell.milos-apps.de/"
+$env:WASTE_GUIDE_PRODUCTION_URL="https://milos-apps.de/welcher-muell"
 $env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="1"
-$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-production-refresh"
+$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-same-host-production"
 $env:WASTE_GUIDE_FEEDBACK_ENDPOINT="https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/v1/feedback"
 pnpm build:cloudflare:production
 pnpm test:production:artifact
@@ -41,16 +49,42 @@ die bestätigten Production-Ziele geprüft.
 
 - App-, Shell- und Essentials-Verträge weisen `production` und
   `productionApproved=true` aus; Pins bleiben unverändert.
-- `/healthz` und `deployment.json` binden App-Key, Source-SHA,
+- `/welcher-muell/healthz` und `deployment.json` binden App-Key, Source-SHA,
   Inhaltsversion, Datei-Hashes und Gesamtdigest.
 - `_headers` setzt eine strikte CSP ohne Inline-Ausnahmen; `connect-src`
   erlaubt neben Same-Origin genau den Production-Feedback-Origin.
-- `robots.txt`, `sitemap.xml`, Canonical und initiales statisches
-  Erklär-/Quellenmarkup sind crawlbar.
+- Canonical, Open-Graph-URL/-Bild, Manifest, Assets und Module sind auf
+  `/welcher-muell` festgelegt. `robots.txt` verweist auf das App-Sitemap unter
+  diesem Prefix; die autoritative Root-robots-/Root-sitemap-Einbindung bleibt
+  Aufgabe des gemeinsamen Portalvertrags. `sitemap.xml` und initiales
+  statisches Erklär-/Quellenmarkup sind crawlbar.
 - `adsEnabled=false`; es werden weder AdSense-Script noch `ads.txt`
   ausgeliefert, solange keine AdSense-Freigabe und Publisher-ID existieren.
-- Der Production-Offlinecache ist von DEV getrennt. Keine Functions,
-  Runtime-CDNs oder Shared-Datenbanken werden verwendet.
+- Der Production-Offlinecache besitzt einen app-eigenen Namen und einen auf
+  `/welcher-muell` begrenzten Scope. Die Altbereinigung vergleicht den exakten
+  app-eigenen `sw.js`-Pfad und kann keine Service Worker anderer Same-host-Apps
+  entfernen.
+- Feedback-CORS erlaubt ausschließlich die Browser-Origin
+  `https://milos-apps.de`; zusätzlich muss die Ergebnis-URL exakt den Pfad
+  `/welcher-muell` besitzen. Die bisherige Subdomain wird nicht parallel
+  freigegeben.
+- Es gibt keine Client-Telemetrie, kein Ads-/CMP-Script und kein Tracking. Die
+  gewünschte Zugriffszählung liegt ausschließlich serverseitig beim Portal.
+- Keine Functions, Runtime-CDNs oder Shared-Datenbanken werden verwendet.
+
+## Publikations-Hold
+
+Der Commit und sein Artefakt dürfen vor der bestätigten Portal-Originroute
+nicht deployt werden. Vor Umschaltung müssen Portal und App gemeinsam belegen:
+
+1. `/welcher-muell` und alle Prefix-Assets werden ohne HTML-Fallback für
+   fehlende Dateien auf den Pages-Origin abgebildet;
+2. Health, Manifest, Module, MIME, CSP und `Service-Worker-Allowed` bleiben
+   beim Reverse-Proxy erhalten;
+3. der Production-Feedback-Worker wird atomar auf Origin
+   `https://milos-apps.de` und Ergebnispfad `/welcher-muell` umgestellt;
+4. erst nach grünem Same-host-Smoke werden alte Subdomain und
+   `/apps/waste-guide` als 308 aktiviert.
 
 ## Full Gate
 

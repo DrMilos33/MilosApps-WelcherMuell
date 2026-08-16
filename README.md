@@ -18,8 +18,9 @@ abgeschickte Ergebnisrückmeldung wird im app-eigenen Feedbackdienst gespeichert
 - gemeinsame öffentliche Interaktionen: lokal vendortes
   `public-app-essentials/v1.1.5` für kompakten Start, ehrlichen
   Datenschutzhinweis und Teilen
-- Production: getrennt auf Cloudflare Pages veröffentlicht; kanonische URL
-  `https://welcher-muell.milos-apps.de/`
+- Production: getrenntes statisches Cloudflare-Pages-Artefakt; die vorbereitete
+  kanonische Same-host-URL ist `https://milos-apps.de/welcher-muell`. Die
+  Umschaltung bleibt bis zur bestätigten Portal-Originroute gesperrt.
 
 Der unabhängige öffentliche DEV-Stand ist ohne Portal und ohne Login erreichbar:
 
@@ -85,9 +86,9 @@ Der Production-Kandidat wird getrennt nach `dist/production` gebaut:
 
 ```powershell
 $env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
-$env:WASTE_GUIDE_PRODUCTION_URL="https://welcher-muell.milos-apps.de/"
+$env:WASTE_GUIDE_PRODUCTION_URL="https://milos-apps.de/welcher-muell"
 $env:WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED="1"
-$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-production-refresh"
+$env:WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH="codex/waste-guide-same-host-production"
 $env:WASTE_GUIDE_FEEDBACK_ENDPOINT="https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/v1/feedback"
 pnpm build:cloudflare:production
 pnpm test:production:artifact
@@ -95,7 +96,10 @@ pnpm test:e2e:production
 ```
 
 Der Builder akzeptiert fail-closed nur die kanonische Production-URL und
-veröffentlicht selbst nichts.
+veröffentlicht selbst nichts. Das erzeugte Artefakt ist vollständig auf den
+öffentlichen Prefix `/welcher-muell` begrenzt; die Portal-Originroute muss
+diesen Prefix erst bestätigt auf den Root des statischen Pages-Artefakts
+abbilden.
 
 `test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler,
 flüchtige Einstellungen, Endgeräteinventar und die app-spezifische
