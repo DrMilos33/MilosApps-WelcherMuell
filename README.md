@@ -18,9 +18,9 @@ abgeschickte Ergebnisrückmeldung wird im app-eigenen Feedbackdienst gespeichert
 - gemeinsame öffentliche Interaktionen: lokal vendortes
   `public-app-essentials/v1.1.5` für kompakten Start, ehrlichen
   Datenschutzhinweis und Teilen
-- Production: getrenntes statisches Cloudflare-Pages-Artefakt; die vorbereitete
-  kanonische Same-host-URL ist `https://milos-apps.de/welcher-muell`. Die
-  Umschaltung bleibt bis zur bestätigten Portal-Originroute gesperrt.
+- Production: kanonisch unter `https://milos-apps.de/welcher-muell`; das Portal
+  liefert den statischen, revisionsgebundenen Cloudflare-Pages-Origin aus.
+  Frühere App-Domains bleiben ausschließlich als permanente Legacywege erhalten.
 
 Der unabhängige öffentliche DEV-Stand ist ohne Portal und ohne Login erreichbar:
 
@@ -97,9 +97,8 @@ pnpm test:e2e:production
 
 Der Builder akzeptiert fail-closed nur die kanonische Production-URL und
 veröffentlicht selbst nichts. Das erzeugte Artefakt ist vollständig auf den
-öffentlichen Prefix `/welcher-muell` begrenzt; die Portal-Originroute muss
-diesen Prefix erst bestätigt auf den Root des statischen Pages-Artefakts
-abbilden.
+öffentlichen Prefix `/welcher-muell` begrenzt; die bestätigte Portal-Originroute
+bildet diesen Prefix auf den Root des statischen Pages-Artefakts ab.
 
 `test` prüft Inhalt, Quellenvertrag, DE/EN, Suche, Synonyme, Tippfehler,
 flüchtige Einstellungen, Endgeräteinventar und die app-spezifische

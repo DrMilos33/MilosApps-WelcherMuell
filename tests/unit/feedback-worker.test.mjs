@@ -144,7 +144,7 @@ test("Worker liefert CORS-Preflight, Health und fail-closed Methoden", async () 
   assert.equal((await blockedPost.json()).code, "production-not-approved");
 });
 
-test("Production akzeptiert ausschließlich die zwei gepaarten Übergangsbasen", async () => {
+test("Production akzeptiert ausschließlich die kanonische Ergebnisbasis", async () => {
   const legacyOrigin = "https://welcher-muell.milos-apps.de";
   const legacyBase = `${legacyOrigin}/`;
   const productionOrigin = "https://milos-apps.de";
@@ -152,7 +152,7 @@ test("Production akzeptiert ausschließlich die zwei gepaarten Übergangsbasen",
   const fixture = createEnv();
   fixture.env.APP_ENVIRONMENT = "PRODUCTION";
   fixture.env.PRODUCTION_APPROVED = "true";
-  fixture.env.ALLOWED_RESULT_BASES = `${legacyBase},${productionOrigin}${productionPath}`;
+  fixture.env.ALLOWED_RESULT_BASES = `${productionOrigin}${productionPath}`;
   const payload = validPayload({
     resultUrl: `${productionOrigin}${productionPath}?item=liquid-paint`
   });
@@ -164,19 +164,14 @@ test("Production akzeptiert ausschließlich die zwei gepaarten Übergangsbasen",
   assert.equal(fixture.inserts.length, 1);
   assert.equal(fixture.inserts[0][2], "PRODUCTION");
 
-  const legacyPayload = validPayload({
-    submissionId: "8e853730-f895-4b61-87a0-005530291b6a",
-    resultUrl: `${legacyBase}?item=liquid-paint`
-  });
-  const legacyResponse = await worker.fetch(
-    request(legacyPayload, { requestOrigin: legacyOrigin }),
-    fixture.env
-  );
-  assert.equal(legacyResponse.status, 201);
-  assert.equal(fixture.inserts.length, 2);
-
   const devOrigin = await worker.fetch(request(payload), fixture.env);
   assert.equal(devOrigin.status, 403);
+
+  const legacyResponse = await worker.fetch(
+    request(validPayload({ resultUrl: `${legacyBase}?item=liquid-paint` }), { requestOrigin: legacyOrigin }),
+    fixture.env
+  );
+  assert.equal(legacyResponse.status, 403, "Die abgelöste Legacy-Origin darf kein Feedback mehr senden.");
 
   assert.equal(validateFeedbackPayload(validPayload({
     resultUrl: `${productionOrigin}/?item=liquid-paint`
@@ -189,7 +184,7 @@ test("Production akzeptiert ausschließlich die zwei gepaarten Übergangsbasen",
     request(payload, { requestOrigin: legacyOrigin }),
     fixture.env
   );
-  assert.equal(crossedBrowserOrigin.status, 422, "Browser-Origin und Ergebnis-Origin müssen dasselbe Paar bilden.");
+  assert.equal(crossedBrowserOrigin.status, 403, "Die Legacy-Browser-Origin muss bereits am CORS-Gate scheitern.");
 
   const foreignSameHostPath = await worker.fetch(
     request(validPayload({
@@ -208,10 +203,7 @@ test("Production-Konfiguration trennt Worker, Origin und D1 fail-closed von DEV"
   assert.equal(config.name, "milosapps-waste-guide-feedback-production");
   assert.equal(config.vars.APP_ENVIRONMENT, "PRODUCTION");
   assert.equal(config.vars.PRODUCTION_APPROVED, "true");
-  assert.equal(
-    config.vars.ALLOWED_RESULT_BASES,
-    "https://welcher-muell.milos-apps.de/,https://milos-apps.de/welcher-muell"
-  );
+  assert.equal(config.vars.ALLOWED_RESULT_BASES, "https://milos-apps.de/welcher-muell");
   assert.equal(config.vars.ALLOWED_ORIGINS, undefined);
   assert.equal(config.vars.ALLOWED_RESULT_PATHS, undefined);
   assert.equal(config.d1_databases[0].database_name, "milosapps-waste-guide-feedback-production");

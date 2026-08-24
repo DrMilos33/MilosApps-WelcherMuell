@@ -72,10 +72,10 @@ die bestätigten Production-Ziele geprüft.
   gewünschte Zugriffszählung liegt ausschließlich serverseitig beim Portal.
 - Keine Functions, Runtime-CDNs oder Shared-Datenbanken werden verwendet.
 
-## Publikations-Hold
+## Publikations-Hold – am 24.08.2026 erfüllt
 
-Der Commit und sein Artefakt dürfen vor der bestätigten Portal-Originroute
-nicht deployt werden. Vor Umschaltung müssen Portal und App gemeinsam belegen:
+Der Commit und sein Artefakt durften vor der bestätigten Portal-Originroute
+nicht deployt werden. Vor Umschaltung mussten Portal und App gemeinsam belegen:
 
 1. `/welcher-muell` und alle Prefix-Assets werden ohne HTML-Fallback für
    fehlende Dateien auf den Pages-Origin abgebildet;
@@ -145,7 +145,38 @@ anschließend gezielt gelöscht; die Kontrollabfrage ergab null verbleibende
 QA-Zeilen. Das bestätigt den direkten Meldungsweg, ohne Testdaten dauerhaft
 aufzubewahren.
 
-## Rollback
+## Kanonische Umschaltung am 24.08.2026
+
+Nach der extern bestätigten Portalroute liefert die App weiterhin aus der
+revisionsgebundenen, beaconfreien Preview
+`https://7bd3fbc3.milosapps-waste-guide-production.pages.dev`. Der
+Production-Branch desselben Pages-Projekts wird getrennt als minimales
+Legacyredirect-Artefakt gebaut:
+
+```powershell
+$env:WASTE_GUIDE_SOURCE_COMMIT=(git rev-parse HEAD)
+$env:WASTE_GUIDE_LEGACY_REDIRECT_SOURCE_BRANCH="codex/waste-guide-canonical-cutover"
+pnpm build:cloudflare:legacy-redirect
+pnpm test:production:legacy-redirect
+```
+
+Das Artefakt enthält weder App-HTML noch Functions oder `_worker.js`. Seine
+einzige Pages-Regel leitet jeden Pfad mit HTTP 308 auf denselben Suffix unter
+`https://milos-apps.de/welcher-muell/` weiter; die externe Cloudflare-Prüfung
+belegt zusätzlich die unveränderte Query. Dadurch werden sowohl
+`welcher-muell.milos-apps.de` als auch die Production-`pages.dev`-Adresse zu
+Legacywegen, ohne den Portal-Origin zu verändern.
+
+Parallel akzeptiert der Feedback-Worker nach der Umschaltung ausschließlich
+das gepaarte Ergebnisziel `https://milos-apps.de/welcher-muell`. Die alte
+Subdomain, Kreuzkombinationen und fremde Same-host-Pfade bleiben fail-closed.
+D1-Schema und gespeicherte Meldungen werden nicht verändert.
+
+Der unmittelbare Cutover-Rollback aktiviert das letzte App-Deployment
+`62bb90b0-9ebe-4d04-b6c1-a6ead5656eee` und die Worker-Übergangsversion
+`833300f9-1c49-4af7-9e99-5f25843f472f` erneut.
+
+## Historischer App-Rollback
 
 Letzte gesunde Cloudflare-Pages-Revision vor dem Refresh ist Deployment
 `0a065c1a-003d-4226-a4fb-02d8aee75ca7` mit Source

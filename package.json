@@ -23,7 +23,9 @@
     "test:all": "pnpm test:shell && pnpm test:essentials && node --test tests/unit/*.test.mjs && node tests/e2e/run.mjs",
     "build:github-pages:dev": "node scripts/build-github-pages-dev.mjs",
     "build:cloudflare:production": "node scripts/build-cloudflare-pages-production.mjs",
-    "test:production:artifact": "node scripts/verify-cloudflare-pages-production.mjs"
+    "test:production:artifact": "node scripts/verify-cloudflare-pages-production.mjs",
+    "build:cloudflare:legacy-redirect": "node scripts/build-cloudflare-pages-legacy-redirect.mjs",
+    "test:production:legacy-redirect": "node scripts/verify-cloudflare-pages-legacy-redirect.mjs"
   },
   "engines": {
     "node": ">=22"

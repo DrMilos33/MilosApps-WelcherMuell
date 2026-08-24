@@ -39,8 +39,8 @@ bleibt portabel.
 - Worker: `milosapps-waste-guide-feedback-production`
 - HTTPS: `https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev`
 - D1: `milosapps-waste-guide-feedback-production`, EU-Jurisdiktion
-- erlaubte Übergangsbasen: exakt `https://welcher-muell.milos-apps.de/` und
-  `https://milos-apps.de/welcher-muell`; Origin und Pfad werden als Paar
+- erlaubte kanonische Ergebnisbasis: ausschließlich
+  `https://milos-apps.de/welcher-muell`; Origin und Pfad werden als ein Paar
   geprüft, nicht als frei kombinierbare Listen
 - fremde Pfade auf `milos-apps.de`, Kreuzkombinationen und abweichende
   Browser-/Ergebnis-Origins werden fail-closed abgewiesen

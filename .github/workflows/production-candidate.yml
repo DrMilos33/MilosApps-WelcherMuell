@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - codex/waste-guide-same-host-production
+      - codex/waste-guide-canonical-cutover
 
 permissions:
   contents: read
@@ -52,6 +53,7 @@ jobs:
       WASTE_GUIDE_CLOUDFLARE_TARGET_CONFIRMED: "1"
       WASTE_GUIDE_PRODUCTION_SOURCE_BRANCH: codex/waste-guide-same-host-production
       WASTE_GUIDE_FEEDBACK_ENDPOINT: https://milosapps-waste-guide-feedback-production.pascalcasiddu.workers.dev/v1/feedback
+      WASTE_GUIDE_LEGACY_REDIRECT_SOURCE_BRANCH: codex/waste-guide-canonical-cutover
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,9 +74,17 @@ jobs:
       - run: pnpm build:cloudflare:production
       - run: pnpm test:production:artifact
       - run: pnpm test:e2e:production
+      - run: pnpm build:cloudflare:legacy-redirect
+      - run: pnpm test:production:legacy-redirect
       - uses: actions/upload-artifact@v4
         with:
           name: waste-guide-production-candidate-${{ github.sha }}
           path: dist/production
+          if-no-files-found: error
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: waste-guide-production-legacy-redirect-${{ github.sha }}
+          path: dist/production-legacy-redirect
           if-no-files-found: error
           retention-days: 7
